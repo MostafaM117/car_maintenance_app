@@ -18,10 +18,10 @@ class _HomePageState extends State<HomePage> {
       // backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Home Page'),
+        title: const Text('Home Page'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () {
               FirebaseAuth.instance.signOut();
             },
@@ -31,10 +31,6 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Text("signed in as ${user.email}"),
-            // Text("signed in as ${users.doc()}"),
-            // ElevatedButton(onPressed: (){
-            //   // getUserData(user.email);
-            // }, child: Text("press"))
           ],
         ),
       ),
