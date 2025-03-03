@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "575174458424",
+    "project_id": "car-maintenance-app-eb5bb",
+    "storage_bucket": "car-maintenance-app-eb5bb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575174458424:android:5f38c5f251f94d526abacd",
+        "android_client_info": {
+          "package_name": "com.android.application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF3-k-w5eXrpWxolT0LCa4Iwm_0M6c75s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575174458424:android:eb74706725ec12d96abacd",
+        "android_client_info": {
+          "package_name": "com.example.car_maintenance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAF3-k-w5eXrpWxolT0LCa4Iwm_0M6c75s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
