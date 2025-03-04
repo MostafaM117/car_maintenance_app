@@ -27,12 +27,14 @@ class CarProvider extends ChangeNotifier {
   Car get car => _car;
 
   void updateCar({
+    String? id,
     String? make,
     String? model,
     int? year,
     double? mileage,
   }) {
     _car = Car(
+      id: id ?? _car.id,
       make: make ?? _car.make,
       model: model ?? _car.model,
       year: year ?? _car.year,
