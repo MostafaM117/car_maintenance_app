@@ -1,5 +1,5 @@
-import 'package:car_maintenance/register_page.dart';
-import 'package:car_maintenance/login_page.dart';
+import 'package:car_maintenance/screens/register_page.dart';
+import 'package:car_maintenance/screens/login_page.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
@@ -12,17 +12,17 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   bool showLoginPage = true;
 
-  void togglescreens(){
+  void togglescreens() {
     setState(() {
-      showLoginPage =!showLoginPage;
+      showLoginPage = !showLoginPage;
     });
-    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if(showLoginPage){
-    return LoginPage(showRegisterPage: togglescreens);
-    }
-    else{
+    if (showLoginPage) {
+      return LoginPage(showRegisterPage: togglescreens);
+    } else {
       return RegisterPage(showLoginPage: togglescreens);
     }
   }

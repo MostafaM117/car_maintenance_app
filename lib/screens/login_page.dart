@@ -1,4 +1,4 @@
-import 'package:car_maintenance/forgot_password.dart';
+import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

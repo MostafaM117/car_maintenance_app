@@ -1,5 +1,5 @@
-import 'package:car_maintenance/auth_page.dart';
-import 'package:car_maintenance/home_page.dart';
+import 'package:car_maintenance/screens/auth_page.dart';
+import 'package:car_maintenance/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -10,15 +10,14 @@ class RedirectingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(), 
-        builder: (context, snapshot){
-          if(snapshot.hasData){
-            return HomePage();
-          }
-          else{
-            return AuthPage();
-          }
-        }),
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return HomePage();
+            } else {
+              return AuthPage();
+            }
+          }),
     );
   }
 }

@@ -11,21 +11,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser!;
-  final CollectionReference users = FirebaseFirestore.instance.collection('users');
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Colors.white,
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Home Page'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            )]),
+      appBar:
+          AppBar(centerTitle: true, title: const Text('Home Page'), actions: [
+        IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+        )
+      ]),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
