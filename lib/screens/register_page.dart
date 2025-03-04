@@ -30,38 +30,47 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  bool confirmpassword(){
-    if(_passwordcontroller.text.trim() == _confirmpasswordcontroller.text.trim()){
+  bool confirmpassword() {
+    if (_passwordcontroller.text.trim() ==
+        _confirmpasswordcontroller.text.trim()) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
-  Future signup() async{
-    if(confirmpassword()){
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _emailcontroller.text.trim(), 
-      password: _passwordcontroller.text.trim()
-      );
+
+  Future signup() async {
+    if (confirmpassword()) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailcontroller.text.trim(),
+          password: _passwordcontroller.text.trim());
     }
     createuser(
-      _firstnamecontroller.text.trim(), _lastnamecontroller.text.trim(), int.parse(_agecontroller.text.trim()),_emailcontroller.text.trim(), _passwordcontroller.text.trim(), );
+      _firstnamecontroller.text.trim(),
+      _lastnamecontroller.text.trim(),
+      int.parse(_agecontroller.text.trim()),
+      _emailcontroller.text.trim(),
+      _passwordcontroller.text.trim(),
+    );
   }
-  Future createuser(String firstname, String lastname, int age, String email, String password)async{
+
+  Future createuser(String firstname, String lastname, int age, String email,
+      String password) async {
     await FirebaseFirestore.instance.collection('users').add({
       'firstname': firstname,
       'lastname': lastname,
       'age': age,
       'email': email,
-      'password': password 
+      'password': password
     });
   }
+
   void _toggletoviewpassword() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +83,10 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(
                 height: 80.0,
               ),
-              const Text("Sign up with your details", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
+              const Text(
+                "Sign up with your details",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
               const SizedBox(height: 16.0),
               // First Name
               Padding(
@@ -82,10 +94,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: 'First Name',
-                    enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                    enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
                     focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   controller: _firstnamecontroller,
                 ),
@@ -96,10 +109,11 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Last Name',
-                    enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                    enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
                     focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   controller: _lastnamecontroller,
                 ),
@@ -110,13 +124,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Age',
-                    enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                    enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
                     focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   keyboardType: TextInputType.number,
-                  inputFormatters: [ 
+                  inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(2),
                   ],
@@ -129,12 +144,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Email address',
-                    enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
-                  focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                  
                   controller: _emailcontroller,
                 ),
               ),
@@ -146,14 +161,17 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: InputDecoration(
                     labelText: 'Password',
                     suffixIcon: IconButton(
-                      onPressed: (){
-                        _toggletoviewpassword();
-                      }, 
-                      icon: Icon(_obscureText? Icons.visibility_off: Icons.visibility)),
-                    enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                        onPressed: () {
+                          _toggletoviewpassword();
+                        },
+                        icon: Icon(_obscureText
+                            ? Icons.visibility_off
+                            : Icons.visibility)),
+                    enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
                     focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   controller: _passwordcontroller,
                 ),
@@ -165,10 +183,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Confirm Password',
-                    enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(30))),
+                    enabledBorder: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30))),
                     focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   controller: _confirmpasswordcontroller,
                 ),
@@ -177,38 +196,43 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: 180,
                 height: 60,
                 child: ElevatedButton(
-                  onPressed: (){
+                  onPressed: () {
                     signup();
-                    },
+                  },
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                  child:
-                  const Text("Register now", 
-                  style:TextStyle(color: Colors.white, fontSize: 18),),
+                    backgroundColor: Colors.green,
                   ),
+                  child: const Text(
+                    "Register now",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
               ),
-                const SizedBox(
-                  height: 5.0,
+              const SizedBox(
+                height: 5.0,
+              ),
+              const SizedBox(
+                child: Text(
+                  "or",
+                  style: TextStyle(fontSize: 18),
                 ),
-                const SizedBox(
-                  child: Text("or", style: TextStyle(fontSize: 18),),
-                ),
-                const SizedBox(
-                  height: 5.0,
-                ),
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
               SizedBox(
                 width: 120,
                 child: ElevatedButton(
-                  onPressed: (){
-                    widget.showLoginPage();
+                    onPressed: () {
+                      widget.showLoginPage();
                     },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                  ),
-                  child: const Text("Login", 
-                  style:TextStyle(color: Colors.white, fontSize: 18),)
-                  ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text(
+                      "Login",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    )),
               ),
             ],
           ),
