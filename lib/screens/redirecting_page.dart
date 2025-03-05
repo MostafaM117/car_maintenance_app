@@ -1,3 +1,4 @@
+import 'package:car_maintenance/main.dart';
 import 'package:car_maintenance/screens/auth_page.dart';
 import 'package:car_maintenance/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +14,7 @@ class RedirectingPage extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return HomePage();
+              return MainScreen();
             } else {
               return AuthPage();
             }
