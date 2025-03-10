@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
+import 'package:car_maintenance/notificaions/notificaion.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,10 +36,18 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Text("Signed in as ${user.email}"),
+            FloatingActionButton(
+                onPressed: () {
+                  NotificationService().showNotification(
+                    title: 'Welcome',
+                    body: 'You are successfully logged in',
+                  );
+                },
+                child: const Text('Trigger Notification')),
           ],
         ),
       ),
-     floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // Navigate to Chatbot screen
           Navigator.push(

@@ -1,0 +1,2 @@
+C:/Users/Ahmed emad/Desktop/Car_app - Copy/android/app/.cxx/Debug/441v3a5y/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/Ahmed emad/Desktop/Car_app - Copy/android/app/.cxx/Debug/441v3a5y/x86_64/CMakeFiles/rebuild_cache.dir
