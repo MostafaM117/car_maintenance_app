@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-     floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // Navigate to Chatbot screen
           Navigator.push(
