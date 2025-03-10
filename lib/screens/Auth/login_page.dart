@@ -1,5 +1,5 @@
+import 'package:car_maintenance/screens/Auth/auth_service.dart';
 import 'package:car_maintenance/services/forgot_password.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,63 +15,28 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordcontroller = TextEditingController();
   bool _obscureText = true;
 
-  Future signIn() async {
-    final String email = _emailcontroller.text.trim();
-    final String password = _passwordcontroller.text.trim();
-    // await FirebaseAuth.instance.
-    // signInWithEmailAndPassword(email: _emailcontroller.text.trim(), password: _passwordcontroller.text.trim());
-    if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An email address is required')),
-      );
-      return;
-    }
-    if (password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter your password')),
-      );
-      return;
-    }
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailcontroller.text.trim(),
-          password: _passwordcontroller.text.trim());
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Logged in successfully'),
-        backgroundColor: Colors.green,
-      ));
-    } on FirebaseAuthException catch (e) {
-      print('Error code : ${e.code}');
-      if (e.code == 'too-many-requests') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-                'This device is temporarily blocked due to too many failed login attempts, try again later.'),
-            backgroundColor: Colors.red,
-          ),
+
+  void _toggletoviewpassword() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  Future<void> handleGoogleSignIn() async{
+    showDialog(
+      context: context,
+      barrierDismissible: false, 
+      builder: (context){
+        return Center(
+          child: CircularProgressIndicator(),
         );
-      } else if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('No user found with this email'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } else if (e.code == 'invalid-credential') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Incorrect email or Password'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } else if (e.code == 'invalid-email') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Please enter a valid email address'),
-          ),
-        );
+      });
+      try{
+      await AuthService().signInWithGoogle(context);
+      } catch(e){
+        print("Error during Google Sign-In: $e");
       }
-    }
+      Navigator.of(context).pop();
   }
 
   @override
@@ -79,12 +44,6 @@ class _LoginPageState extends State<LoginPage> {
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
     super.dispose();
-  }
-
-  void _toggletoviewpassword() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
   }
 
   @override
@@ -171,7 +130,11 @@ class _LoginPageState extends State<LoginPage> {
                 height: 60,
                 child: ElevatedButton(
                     onPressed: () {
-                      signIn();
+                      AuthService().signInWithEmailAndPassword(
+                        context,
+                        _emailcontroller.text.trim(),
+                        _passwordcontroller.text.trim(),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
@@ -207,6 +170,51 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 5.0,
+              ),
+              Row(
+                children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 8),
+                child: const SizedBox(
+                  // width: 30,
+                  child: Text("Login with",style: TextStyle(fontWeight: FontWeight.bold),),
+                ),
+              ),
+                  SizedBox(
+                    width: 80,
+                    child: ElevatedButton(
+                      onPressed: handleGoogleSignIn
+                      // () {AuthService().signInWithGoogle(context);}
+                        ,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      child: Image.asset("assets/Google_logo.png"),
+                    ),
+                  ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: const SizedBox(
+                  // width: 30,
+                  child: Text("or",style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+                  SizedBox(
+                    width: 80,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      child: Image.asset("assets/apple_logo.png"),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
