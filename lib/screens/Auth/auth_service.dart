@@ -55,6 +55,7 @@ class AuthService {
       _showSnackBar(context, e.toString(), Colors.red, Duration(milliseconds: 4000));
         }
     }
+    return null;
   }
 
   Future<UserCredential> signInWithEmailAndPassword(BuildContext context ,String email, password)async{
