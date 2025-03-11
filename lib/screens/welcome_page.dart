@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import 'Auth/login_page.dart';
+import 'Auth/register_page.dart';
 
 class Welcome_page extends StatelessWidget {
   @override
@@ -73,7 +75,22 @@ class Welcome_page extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginPage(
+                        showRegisterPage: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterPage(showLoginPage: () {  },)),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
                 child: Text(
                   'Get Started',
                   style: TextStyle(
