@@ -2,35 +2,47 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter/material.dart';
 
-class NotificationService {
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+class NotiService {
+  final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  //initializing code
-  Future<void> initialize() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
+  bool _isInitialized = false;
+
+  bool get isInitialized => _isInitialized;
+
+  // Initialize Notifications
+  Future<void> initNotification() async {
+    if (_isInitialized) return;
+
+    const AndroidInitializationSettings initSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings initializationSettingsIOS =
+
+    const DarwinInitializationSettings initSettingsIOS =
         DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
+
+    const InitializationSettings initSettings = InitializationSettings(
+      android: initSettingsAndroid,
+      iOS: initSettingsIOS,
     );
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    final initialized = await notificationsPlugin.initialize(initSettings);
+
+    if (initialized != null) {
+      _isInitialized = true; // Mark as initialized
+    }
   }
 
-// notification detail setup
+  // Notification Details Setup
   NotificationDetails notificationDetails() {
     return const NotificationDetails(
       android: AndroidNotificationDetails(
-        'your channel id',
-        'your channel name',
-        channelDescription: 'your channel description',
+        'channelId',
+        'channelName',
+        channelDescription: 'channelDescription',
         importance: Importance.max,
         priority: Priority.high,
       ),
@@ -38,17 +50,19 @@ class NotificationService {
     );
   }
 
-  // show notification
+  // Show Notification
   Future<void> showNotification({
     int id = 0,
     String? title,
     String? body,
   }) async {
-    return flutterLocalNotificationsPlugin.show(
+    if (!_isInitialized) await initNotification(); // Ensure initialization
+
+    await notificationsPlugin.show(
       id,
       title,
       body,
-      const NotificationDetails(),
+      notificationDetails(), // Use defined notification details
     );
   }
 }

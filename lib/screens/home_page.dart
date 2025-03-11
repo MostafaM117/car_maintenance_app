@@ -36,14 +36,18 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Text("Signed in as ${user.email}"),
-            FloatingActionButton(
-                onPressed: () {
-                  NotificationService().showNotification(
-                    title: 'Welcome',
-                    body: 'You are successfully logged in',
-                  );
-                },
-                child: const Text('Trigger Notification')),
+            Center(
+              //button to test notification functionality
+              // to be removed in production
+              child: FloatingActionButton(
+                  onPressed: () {
+                    NotiService().showNotification(
+                      title: 'Welcome',
+                      body: 'You are successfully logged in',
+                    );
+                  },
+                  child: const Text('Trigger Notification')),
+            ),
           ],
         ),
       ),
