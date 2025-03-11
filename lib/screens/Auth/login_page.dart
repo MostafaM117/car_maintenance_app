@@ -192,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                       ),
-                      child: Image.asset("assets/Google_logo.png"),
+                      child: Image.asset("assets/images/Google_logo.png"),
                     ),
                   ),
               Padding(
@@ -211,7 +211,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                       ),
-                      child: Image.asset("assets/apple_logo.png"),
+                      child: Image.asset("assets/images/apple_logo.png"),
                     ),
                   ),
                 ],
