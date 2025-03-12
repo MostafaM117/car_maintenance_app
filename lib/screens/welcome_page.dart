@@ -1,6 +1,7 @@
 import 'package:car_maintenance/screens/Auth/auth_page.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../widgets/custom_widgets.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -64,41 +65,29 @@ class _WelcomePageState extends State<WelcomePage> {
                     ),
                   ],
                 ),
+              ), Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenWidth * 0.160,
+                vertical: screenHeight * 0.01,
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: screenHeight * 0.05),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.buttonColor,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth * 0.160,
-                        vertical: screenHeight * 0.01,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context, 
-                        MaterialPageRoute(
-                          builder: (context) => AuthPage()
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Get Started',
-                      style: TextStyle(
-                        color: AppColors.buttonText,
-                        fontSize: screenWidth * 0.06,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
+              margin: EdgeInsets.only(
+                bottom: screenHeight * 0.05,
               ),
+              child: buildButton(
+                'Get Started',
+                AppColors.buttonColor,
+                AppColors.buttonText,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AuthPage()),
+                  );
+                },
+              ),
+            ),
+          ),
             ],
           ),
         );

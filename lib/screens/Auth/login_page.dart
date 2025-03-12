@@ -2,6 +2,9 @@ import 'package:car_maintenance/screens/Auth/auth_service.dart';
 import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:flutter/material.dart';
 
+import '../../constants/app_colors.dart';
+import '../../widgets/custom_widgets.dart';
+
 class LoginPage extends StatefulWidget {
   final VoidCallback showRegisterPage;
   const LoginPage({super.key, required this.showRegisterPage});
@@ -15,28 +18,27 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordcontroller = TextEditingController();
   bool _obscureText = true;
 
-
   void _toggletoviewpassword() {
     setState(() {
       _obscureText = !_obscureText;
     });
   }
 
-  Future<void> handleGoogleSignIn() async{
+  Future<void> handleGoogleSignIn() async {
     showDialog(
-      context: context,
-      barrierDismissible: false, 
-      builder: (context){
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      });
-      try{
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+    try {
       await AuthService().signInWithGoogle(context);
-      } catch(e){
-        print("Error during Google Sign-In: $e");
-      }
-      Navigator.of(context).pop();
+    } catch (e) {
+      print("Error during Google Sign-In: $e");
+    }
+    Navigator.of(context).pop();
   }
 
   @override
@@ -49,173 +51,98 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 37, vertical: 50),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 250.0,
+              const SizedBox(height: 85),
+              Text(
+                'Sign in to appName',
+                style: textStyleWhite.copyWith(fontSize: 24),
               ),
-              const Text(
-                "Hello There",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              const SizedBox(height: 12),
+              Text(
+                'Welcome back! Please enter your details!',
+                style: textStyleWhite.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white.withOpacity(0.9),
+                ),
               ),
-              const SizedBox(height: 16.0),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                      labelText: 'Email address',
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      )),
+              const SizedBox(height: 30),
+              buildInputField(
                   controller: _emailcontroller,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
+                  iconWidget:
+                      Image.asset('assets/images/inbox 1.png', height: 24),
+                  hintText: 'Enter your email or phone number'),
+              const SizedBox(height: 20),
+              buildInputField(
                   controller: _passwordcontroller,
+                  iconWidget:
+                      Image.asset('assets/images/lock 1.png', height: 24),
+                  hintText: 'Enter your password',
                   obscureText: _obscureText,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          _toggletoviewpassword();
-                        },
-                        icon: Icon(_obscureText
-                            ? Icons.visibility_off
-                            : Icons.visibility)),
-                    enabledBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  togglePasswordView: _toggletoviewpassword),
+              const SizedBox(height: 15),
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForgotPassword(),
                     ),
+                  ),
+                  child: Text(
+                    'Forget Password? Reset it',
+                    style: textStyleWhite.copyWith(
+                        fontSize: 12, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ForgotPassword(),
-                            ));
-                      },
-                      child: const Text(
-                        "forgot password?",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )),
-                  SizedBox(
-                    width: 15,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                width: 160,
-                height: 60,
-                child: ElevatedButton(
-                    onPressed: () {
-                      AuthService().signInWithEmailAndPassword(
-                        context,
-                        _emailcontroller.text.trim(),
-                        _passwordcontroller.text.trim(),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                    ),
-                    child: const Text(
-                      "Login",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    )),
-              ),
-              const SizedBox(
-                height: 5.0,
-              ),
-              const SizedBox(
-                child: Text(
-                  "or",
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
-              const SizedBox(
-                height: 5.0,
-              ),
-              SizedBox(
-                width: 120,
-                child: ElevatedButton(
+              const SizedBox(height: 150),
+              buildButton(
+                  'Sign In', AppColors.buttonColor, AppColors.buttonText,
                   onPressed: () {
+                AuthService().signInWithEmailAndPassword(
+                  context,
+                  _emailcontroller.text.trim(),
+                  _passwordcontroller.text.trim(),
+                );
+              }),
+              const SizedBox(height: 15),
+              buildOrSeparator(),
+              const SizedBox(height: 15),
+              googleButton(handleGoogleSignIn),
+              const SizedBox(height: 15),
+              appleButton(() {}),
+              const SizedBox(height: 15),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
                     widget.showRegisterPage();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                  ),
-                  child: const Text(
-                    "Sign up",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 5.0,
-              ),
-              Row(
-                children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 8),
-                child: const SizedBox(
-                  // width: 30,
-                  child: Text("Login with",style: TextStyle(fontWeight: FontWeight.bold),),
-                ),
-              ),
-                  SizedBox(
-                    width: 80,
-                    child: ElevatedButton(
-                      onPressed: handleGoogleSignIn
-                      // () {AuthService().signInWithGoogle(context);}
-                        ,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      child: Image.asset("assets/images/Google_logo.png"),
+                  child: Text.rich(
+                    TextSpan(
+                      text: 'Don’t have an account? ',
+                      style: textStyleWhite.copyWith(
+                          fontSize: 12, fontWeight: FontWeight.w500),
+                      children: [
+                        TextSpan(
+                          text: 'Sign Up',
+                          style: textStyleWhite.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: const SizedBox(
-                  // width: 30,
-                  child: Text("or",style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
-              ),
-                  SizedBox(
-                    width: 80,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      child: Image.asset("assets/images/apple_logo.png"),
-                    ),
-                  ),
-                ],
-              ),
+              )
             ],
           ),
         ),
