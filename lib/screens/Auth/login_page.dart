@@ -54,7 +54,8 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 37, vertical: 50),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
