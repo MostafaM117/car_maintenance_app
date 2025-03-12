@@ -27,6 +27,8 @@ class AuthService {
       default: return "An error occurred while trying to sign in, try again later.";
     }
   }
+
+  // signInWithGoogle
   Future<UserCredential?> signInWithGoogle (BuildContext context) async{
     try{
       await GoogleSignIn().signOut();
@@ -41,6 +43,8 @@ class AuthService {
       idToken: gAuth.idToken,
     );
     UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+    _showSnackBar(context, 'Signed in successfully', Colors.green.shade400, Duration(milliseconds: 1000));
+    Navigator.pop(context);
     return userCredential;
     } catch(e){
       if(e.toString() == 'Exception: Google Sign In Canceled'){
@@ -58,6 +62,7 @@ class AuthService {
     return null;
   }
 
+  // signInWithEmailAndPassword
   Future<UserCredential> signInWithEmailAndPassword(BuildContext context ,String email, password)async{
     if (email.isEmpty){
       _showSnackBar(context, 'An email address is required', Colors.grey.shade700, Duration(milliseconds: 3000));
@@ -70,6 +75,7 @@ class AuthService {
     try{
       UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       _showSnackBar(context, 'Signed in successfully', Colors.green.shade400, Duration(milliseconds: 1000));
+      Navigator.pop(context);
       return userCredential;
     } on FirebaseAuthException catch(e){
       String errorMessage = _suitableErrorMessage(e.code);
