@@ -1,3 +1,4 @@
+import 'package:car_maintenance/screens/Auth/auth_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder:(context) => AuthPage(),));
               FirebaseAuth.instance.signOut();
             },
           )
@@ -38,7 +40,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-     floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // Navigate to Chatbot screen
           Navigator.push(

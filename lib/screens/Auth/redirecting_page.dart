@@ -1,6 +1,7 @@
-import 'package:car_maintenance/main.dart';
-import 'package:car_maintenance/screens/auth_page.dart';
-import 'package:car_maintenance/screens/home_page.dart';
+import 'package:car_maintenance/screens/Auth/auth_page.dart';
+import 'package:car_maintenance/screens/Auth/check_auth_status.dart';
+import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
+import 'package:car_maintenance/screens/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class RedirectingPage extends StatelessWidget {
             if (snapshot.hasData) {
               return MainScreen();
             } else {
-              return AuthPage();
+              return WelcomePage();
             }
           }),
     );

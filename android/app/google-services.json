@@ -12,7 +12,20 @@
           "package_name": "com.android.application"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "575174458424-8o73qp0k30nc2jed7074r92trsrq7aoc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.application",
+            "certificate_hash": "70bf34c91e658da2f0f5e9c0c59cedd239dcd422"
+          }
+        },
+        {
+          "client_id": "575174458424-hmn88i6cu3idu28h3ns4a20956lp4sjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAF3-k-w5eXrpWxolT0LCa4Iwm_0M6c75s"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "575174458424-97pj6mov77m4lo2juc7metk66t3u5k0g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "575174458424-u4vnuc6gdi715gbculaghjvj18j1mia8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carMaintenance"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +56,20 @@
           "package_name": "com.example.car_maintenance"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "575174458424-ll2j3vuut4gljpf48ui7ad0mfa44eifn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.car_maintenance",
+            "certificate_hash": "70bf34c91e658da2f0f5e9c0c59cedd239dcd422"
+          }
+        },
+        {
+          "client_id": "575174458424-hmn88i6cu3idu28h3ns4a20956lp4sjd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAF3-k-w5eXrpWxolT0LCa4Iwm_0M6c75s"
@@ -39,7 +77,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "575174458424-97pj6mov77m4lo2juc7metk66t3u5k0g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "575174458424-u4vnuc6gdi715gbculaghjvj18j1mia8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.carMaintenance"
+              }
+            }
+          ]
         }
       }
     }
