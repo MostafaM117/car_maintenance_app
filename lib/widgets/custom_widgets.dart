@@ -3,16 +3,16 @@ import '../constants/app_colors.dart';
 
 final textStyleWhite = const TextStyle(
   color: AppColors.primaryText,
-  fontSize: 24,
+  fontSize: 18,
   fontFamily: 'Inter',
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w400,
 );
 
 final textStyleGray = const TextStyle(
   color: Color(0x7F2C2B33),
-  fontSize: 15,
+  fontSize: 12,
   fontFamily: 'Inter',
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w600,
 );
 
 Widget buildInputField({
@@ -23,7 +23,7 @@ Widget buildInputField({
   required Image iconWidget,
 }) {
   return Container(
-    height: 55,
+    height: 50,
     decoration: BoxDecoration(
       color: AppColors.secondaryText,
       borderRadius: BorderRadius.circular(22),
@@ -91,7 +91,7 @@ void showErrorDialog(BuildContext context, String message) {
 Widget googleButton(VoidCallback onPressed) {
   return SizedBox(
     width: double.infinity,
-    height: 55,
+    height: 50,
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.secondaryText.withOpacity(0.11),
@@ -107,7 +107,7 @@ Widget googleButton(VoidCallback onPressed) {
 Widget appleButton(VoidCallback onPressed) {
   return SizedBox(
     width: double.infinity,
-    height: 55,
+    height: 50,
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.background,
@@ -131,7 +131,7 @@ Widget buildButton(
 }) {
   return SizedBox(
     width: double.infinity,
-    height: 55,
+    height: 50,
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
