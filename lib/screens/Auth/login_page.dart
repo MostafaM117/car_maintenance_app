@@ -40,6 +40,26 @@ class _LoginPageState extends State<LoginPage> {
     }
     Navigator.of(context).pop();
   }
+  Future<void> handleSignIn() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        });
+    try {
+      await AuthService().signInWithEmailAndPassword(
+                  context,
+                  _emailcontroller.text.trim(),
+                  _passwordcontroller.text.trim(),
+                );
+    } catch (e) {
+      print("Error during SignIn: $e");
+    }
+    Navigator.of(context).pop();
+  }
 
   @override
   void dispose() {
@@ -85,7 +105,8 @@ class _LoginPageState extends State<LoginPage> {
                       Image.asset('assets/images/lock 1.png', height: 24),
                   hintText: 'Enter your password',
                   obscureText: _obscureText,
-                  togglePasswordView: _toggletoviewpassword),
+                  togglePasswordView: _toggletoviewpassword
+                  ),
               const SizedBox(height: 15),
               Align(
                 alignment: Alignment.centerRight,
@@ -107,11 +128,7 @@ class _LoginPageState extends State<LoginPage> {
               buildButton(
                   'Sign In', AppColors.buttonColor, AppColors.buttonText,
                   onPressed: () {
-                AuthService().signInWithEmailAndPassword(
-                  context,
-                  _emailcontroller.text.trim(),
-                  _passwordcontroller.text.trim(),
-                );
+                handleSignIn;
               }),
               const SizedBox(height: 15),
               buildOrSeparator(),

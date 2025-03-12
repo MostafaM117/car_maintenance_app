@@ -1,4 +1,4 @@
-import 'package:car_maintenance/screens/Auth/register_page.dart';
+import 'package:car_maintenance/screens/Auth/Signup_page.dart';
 import 'package:car_maintenance/screens/Auth/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +23,7 @@ class _AuthPageState extends State<AuthPage> {
     if (showLoginPage) {
       return LoginPage(showRegisterPage: togglescreens);
     } else {
-      return RegisterPage(showLoginPage: togglescreens);
+      return SignupPage(showLoginPage: togglescreens);
     }
   }
 }
