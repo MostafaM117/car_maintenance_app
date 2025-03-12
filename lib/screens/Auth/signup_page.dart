@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class RegisterPage extends StatefulWidget {
+class SignupPage extends StatefulWidget {
   final VoidCallback showLoginPage;
-  const RegisterPage({super.key, required this.showLoginPage});
+  const SignupPage({super.key, required this.showLoginPage});
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _SignupPageState extends State<SignupPage> {
   final _firstnamecontroller = TextEditingController();
   final _lastnamecontroller = TextEditingController();
   final _agecontroller = TextEditingController();
