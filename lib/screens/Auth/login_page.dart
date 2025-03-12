@@ -6,8 +6,8 @@ import '../../constants/app_colors.dart';
 import '../../widgets/custom_widgets.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback showRegisterPage;
-  const LoginPage({super.key, required this.showRegisterPage});
+  final VoidCallback showSignupPage;
+  const LoginPage({super.key, required this.showSignupPage});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    widget.showRegisterPage();
+                    widget.showSignupPage();
                   },
                   child: Text.rich(
                     TextSpan(

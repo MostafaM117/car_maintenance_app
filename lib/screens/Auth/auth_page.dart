@@ -1,4 +1,4 @@
-import 'package:car_maintenance/screens/Auth/register_page.dart';
+import 'package:car_maintenance/screens/Auth/signup_page.dart';
 import 'package:car_maintenance/screens/Auth/login_page.dart';
 import 'package:flutter/material.dart';
 
@@ -21,9 +21,9 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     if (showLoginPage) {
-      return LoginPage(showRegisterPage: togglescreens);
+      return LoginPage(showSignupPage: togglescreens);
     } else {
-      return RegisterPage(showLoginPage: togglescreens);
+      return SignupPage(showLoginPage: togglescreens);
     }
   }
 }

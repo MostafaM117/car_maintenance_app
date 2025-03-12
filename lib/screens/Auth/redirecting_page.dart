@@ -1,5 +1,3 @@
-import 'package:car_maintenance/screens/Auth/auth_page.dart';
-import 'package:car_maintenance/screens/Auth/check_auth_status.dart';
 import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:car_maintenance/screens/welcome_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
