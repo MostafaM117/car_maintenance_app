@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
+import 'package:car_maintenance/forms/carform.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -37,12 +38,27 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Text("Signed in as ${user.email}"),
+            SizedBox(height: 20),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddCarScreen()),
+                );
+              },
+              icon: Icon(Icons.directions_car),
+              label: Text('Add Car'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Navigate to Chatbot screen
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const Chatbot()),
@@ -50,7 +66,7 @@ class _HomePageState extends State<HomePage> {
         },
         label: const Text('Chatbot'),
         icon: const Icon(Icons.chat),
-        backgroundColor: Color(0xFFD1A3FF), // Light purple
+        backgroundColor: Color(0xFFD1A3FF),
       ),
     );
   }
