@@ -11,19 +11,18 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final _firstnamecontroller = TextEditingController();
-  final _lastnamecontroller = TextEditingController();
-  final _agecontroller = TextEditingController();
+  final _usernameController = TextEditingController();
   final _emailcontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
   final _confirmpasswordcontroller = TextEditingController();
   bool _obscureText = true;
+  bool _isCheckingUsername = false;
+  bool _isUsernameAvailable = true;
+  String _usernameErrorText = '';
 
   @override
   void dispose() {
-    _firstnamecontroller.dispose();
-    _lastnamecontroller.dispose();
-    _agecontroller.dispose();
+    _usernameController.dispose();
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
     _confirmpasswordcontroller.dispose();
@@ -39,29 +38,84 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  Future signup() async {
-    if (confirmpassword()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailcontroller.text.trim(),
-          password: _passwordcontroller.text.trim());
+
+  Future<bool> isUsernameUnique(String username) async {
+    setState(() {
+      _isCheckingUsername = true;
+      _isUsernameAvailable = true;
+      _usernameErrorText = '';
+    });
+    
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: username)
+          .get();
+      
+      setState(() {
+        _isCheckingUsername = false;
+        _isUsernameAvailable = querySnapshot.docs.isEmpty;
+        if (!_isUsernameAvailable) {
+          _usernameErrorText = 'Username is already taken';
+        }
+      });
+      
+      return querySnapshot.docs.isEmpty;
+    } catch (e) {
+      setState(() {
+        _isCheckingUsername = false;
+        _usernameErrorText = 'Error checking username';
+      });
+      return false;
     }
-    createuser(
-      _firstnamecontroller.text.trim(),
-      _lastnamecontroller.text.trim(),
-      int.parse(_agecontroller.text.trim()),
-      _emailcontroller.text.trim(),
-      _passwordcontroller.text.trim(),
-    );
   }
 
-  Future createuser(String firstname, String lastname, int age, String email,
-      String password) async {
-    await FirebaseFirestore.instance.collection('users').add({
-      'firstname': firstname,
-      'lastname': lastname,
-      'age': age,
+  Future signup() async {
+    if (_usernameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a username')),
+      );
+      return;
+    }
+    
+    final isUnique = await isUsernameUnique(_usernameController.text.trim());
+    if (!isUnique) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Username is already taken')),
+      );
+      return;
+    }
+    
+    if (!confirmpassword()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Passwords do not match')),
+      );
+      return;
+    }
+    
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailcontroller.text.trim(),
+          password: _passwordcontroller.text.trim());
+      
+      await createuser(
+        _usernameController.text.trim(),
+        _emailcontroller.text.trim(),
+        userCredential.user!.uid,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+    }
+  }
+
+  Future createuser(String username, String email, String uid) async {
+    await FirebaseFirestore.instance.collection('users').doc(uid).set({
+      'username': username,
       'email': email,
-      'password': password
+      'uid': uid,
+      'password': _passwordcontroller.text.trim(),
     });
   }
 
@@ -88,56 +142,37 @@ class _SignupPageState extends State<SignupPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
               const SizedBox(height: 16.0),
-              // First Name
+              
+              // Username
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: TextField(
                   decoration: InputDecoration(
-                    labelText: 'First Name',
+                    labelText: 'Username',
+                    errorText: _usernameErrorText.isNotEmpty ? _usernameErrorText : null,
+                    suffixIcon: _isCheckingUsername 
+                      ? Container(
+                          width: 20,
+                          height: 20,
+                          padding: EdgeInsets.all(8),
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ) 
+                      : null,
                     enabledBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(30))),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  controller: _firstnamecontroller,
+                  controller: _usernameController,
+                  onChanged: (value) {
+                    if (value.length > 3) {
+                      isUsernameUnique(value);
+                    }
+                  },
                 ),
               ),
-              // Last Name
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Last Name',
-                    enabledBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  controller: _lastnamecontroller,
-                ),
-              ),
-              // Age
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Age',
-                    enabledBorder: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(30))),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(2),
-                  ],
-                  controller: _agecontroller,
-                ),
-              ),
+              
               // Email address
               Padding(
                 padding: const EdgeInsets.all(10.0),
