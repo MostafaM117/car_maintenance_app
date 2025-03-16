@@ -92,6 +92,18 @@ class _SignupPageState extends State<SignupPage> {
       );
       return;
     }
+    if (_emailcontroller.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An email address is required')),
+      );
+      return;
+    }
+    if (_passwordcontroller.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a password to sign up')),
+      );
+      return;
+    }
     
     try {
       UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -103,6 +115,8 @@ class _SignupPageState extends State<SignupPage> {
         _emailcontroller.text.trim(),
         userCredential.user!.uid,
       );
+      Navigator.pop(context);
+      ;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
