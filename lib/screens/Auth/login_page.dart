@@ -54,12 +54,12 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 85),
+              const SizedBox(height: 50),
               Text(
                 'Sign in to appName',
                 style: textStyleWhite.copyWith(fontSize: 24),
@@ -77,7 +77,8 @@ class _LoginPageState extends State<LoginPage> {
               buildInputField(
                   controller: _emailcontroller,
                   iconWidget:
-                      Image.asset('assets/images/inbox 1.png', height: 24),
+                      Image.asset('assets/images/inbox 1.png', height: 24)
+                      ,
                   hintText: 'Enter your email or phone number'),
               const SizedBox(height: 20),
               buildInputField(
@@ -98,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   child: Text(
-                    'Forget Password? Reset it',
+                    'Forgot Password?',
                     style: textStyleWhite.copyWith(
                         fontSize: 12, fontWeight: FontWeight.w500),
                   ),
@@ -133,10 +134,10 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 12, fontWeight: FontWeight.w500),
                       children: [
                         TextSpan(
-                          text: 'Sign Up',
+                          text: 'Sign up',
                           style: textStyleWhite.copyWith(
                             fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ],
