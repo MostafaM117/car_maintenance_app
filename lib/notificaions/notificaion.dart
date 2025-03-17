@@ -1,6 +1,7 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter/material.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
 
 class NotiService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -13,6 +14,15 @@ class NotiService {
   // Initialize Notifications
   Future<void> initNotification() async {
     if (_isInitialized) return;
+
+    // Initialize the timezone
+    tz.initializeTimeZones();
+    try {
+      final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(currentTimeZone));
+    } catch (e) {
+      print("Error setting time zone: $e");
+    }
 
     const AndroidInitializationSettings initSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -29,11 +39,8 @@ class NotiService {
       iOS: initSettingsIOS,
     );
 
-    final initialized = await notificationsPlugin.initialize(initSettings);
-
-    if (initialized != null) {
-      _isInitialized = true; // Mark as initialized
-    }
+    await notificationsPlugin.initialize(initSettings);
+    _isInitialized = true; // Mark as initialized
   }
 
   // Notification Details Setup
@@ -64,5 +71,46 @@ class NotiService {
       body,
       notificationDetails(), // Use defined notification details
     );
+  }
+
+  // Schedule Notification
+  Future<void> scheduleNotification({
+    int id = 1,
+    required String title,
+    required String body,
+    required int hour,
+    required int minute,
+  }) async {
+    if (!_isInitialized) await initNotification();
+
+    // Get current date/time
+    final now = tz.TZDateTime.now(tz.local);
+    print("Current time: $now");
+
+    var scheduledDate =
+        tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
+
+    // If scheduled time is in the past, schedule it for the next day
+    if (scheduledDate.isBefore(now)) {
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
+    }
+
+    await notificationsPlugin.zonedSchedule(
+      id,
+      title,
+      body,
+      scheduledDate,
+      notificationDetails(), // Use defined notification details
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+
+    print("Notification scheduled for $scheduledDate");
+  }
+
+  // Cancel all notifications
+  Future<void> cancelNotification() async {
+    await notificationsPlugin.cancelAll();
   }
 }

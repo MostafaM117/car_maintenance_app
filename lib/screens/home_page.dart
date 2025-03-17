@@ -39,14 +39,29 @@ class _HomePageState extends State<HomePage> {
             Center(
               //button to test notification functionality
               // to be removed in production
-              child: FloatingActionButton(
-                  onPressed: () {
-                    NotiService().showNotification(
-                      title: 'Welcome',
-                      body: 'You are successfully logged in',
-                    );
-                  },
-                  child: const Text('Trigger Notification')),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingActionButton(
+                      onPressed: () {
+                        NotiService().showNotification(
+                          title: 'Welcome',
+                          body: 'You are successfully logged in',
+                        );
+                      },
+                      child: const Text('Trigger Notification')),
+                  FloatingActionButton(
+                      onPressed: () {
+                        NotiService().scheduleNotification(
+                          title: 'Maintenance Reminder',
+                          body: 'Your car needs maintenance',
+                          hour: 20,
+                          minute: 56,
+                        );
+                      },
+                      child: const Text('Schedule Notification')),
+                ],
+              ),
             ),
           ],
         ),
