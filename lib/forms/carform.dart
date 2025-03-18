@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -191,7 +192,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
       
       try {
         await _saveCar();
-        Navigator.pop(context);
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen() ));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error adding car: ${e.toString()}')),
@@ -240,6 +241,9 @@ class _AddCarScreenState extends State<AddCarScreen> {
       'lastMaintenance': Timestamp.fromDate(lastMaintenanceDate),
       'userId': user.uid,
       'username': username,
+    });
+    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+      'carAdded': true,
     });
   }
 }

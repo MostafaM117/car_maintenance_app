@@ -81,7 +81,7 @@ class _SignupPageState extends State<SignupPage> {
     final isUnique = await isUsernameUnique(_usernameController.text.trim());
     if (!isUnique) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Username is already taken')),
+        SnackBar(content: Text('Username is already taken, try another one')),
       );
       return;
     }
@@ -130,6 +130,7 @@ class _SignupPageState extends State<SignupPage> {
       'email': email,
       'uid': uid,
       'password': _passwordcontroller.text.trim(),
+      'carAdded': false,
     });
   }
 

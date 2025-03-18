@@ -58,6 +58,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "575174458424-ijoshd72jslqhtts3dild9u9mp04i5mo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.car_maintenance",
+            "certificate_hash": "a74ac2d24a7e192a809b74e12d9503afc8c31df3"
+          }
+        },
+        {
           "client_id": "575174458424-ll2j3vuut4gljpf48ui7ad0mfa44eifn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

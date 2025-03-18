@@ -1,3 +1,6 @@
+import 'package:car_maintenance/screens/Auth/redirecting_page.dart';
+import 'package:car_maintenance/screens/welcome_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +46,26 @@ class AuthService {
       idToken: gAuth.idToken,
     );
     UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
-    _showSnackBar(context, 'Signed in successfully', Colors.green.shade400, Duration(milliseconds: 1000));
+        User? user = userCredential.user;
+    if (user != null){
+
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+    final userExists = await userDoc.get();
+    if (userExists.exists){
+      _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2000));
+    }
+    else if (!userExists.exists) {
+      _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 2000));
+      await userDoc.set({
+        "email": userCredential.user!.email,
+        "username": null,
+        "carAdded": false,
+      });
+    }
+    // _showSnackBar(context, 'Signed in successfully', Colors.green.shade400, Duration(milliseconds: 1000));
     Navigator.pop(context);
+    }
+    //Check for new users
     return userCredential;
     } catch(e){
       if(e.toString() == 'Exception: Google Sign In Canceled'){
@@ -81,6 +102,25 @@ class AuthService {
       String errorMessage = _suitableErrorMessage(e.code);
       _showSnackBar(context, errorMessage, Colors.red, Duration(milliseconds: 3000));
       throw Exception(errorMessage);
+    }
+  }
+  // Sign out
+  Future<void> signOut(BuildContext context) async {
+    try{
+      _showSnackBar(context, 'Signed out', Colors.red, Duration(milliseconds: 2000));
+      await FirebaseAuth.instance.signOut();
+      final GoogleSignIn gSignIn = GoogleSignIn();
+      if (await gSignIn.isSignedIn()){
+      
+      await gSignIn.disconnect();
+      await gSignIn.signOut();
+        // Navigator.pop(context);
+      }
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RedirectingPage()));
+      // await _firebaseAuth.signOut();
+    } catch(e){
+      print("Error while signing out: $e");
+      _showSnackBar(context, e.toString(), Colors.red, Duration(milliseconds: 3000));
     }
   }
 }
