@@ -116,6 +116,13 @@ class _SignupPageState extends State<SignupPage> {
         userCredential.user!.uid,
       );
       Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Registred Successfully, Complete Your First time setup'), 
+          duration:Duration(milliseconds: 4000),
+          backgroundColor: Colors.green.shade400,
+          ),
+      );
       ;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

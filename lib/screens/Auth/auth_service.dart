@@ -1,5 +1,4 @@
 import 'package:car_maintenance/screens/Auth/redirecting_page.dart';
-import 'package:car_maintenance/screens/welcome_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -52,10 +51,10 @@ class AuthService {
     final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
     final userExists = await userDoc.get();
     if (userExists.exists){
-      _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2000));
+      _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
     }
     else if (!userExists.exists) {
-      _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 2000));
+      _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
       await userDoc.set({
         "email": userCredential.user!.email,
         "username": null,
@@ -114,10 +113,8 @@ class AuthService {
       
       await gSignIn.disconnect();
       await gSignIn.signOut();
-        // Navigator.pop(context);
       }
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RedirectingPage()));
-      // await _firebaseAuth.signOut();
     } catch(e){
       print("Error while signing out: $e");
       _showSnackBar(context, e.toString(), Colors.red, Duration(milliseconds: 3000));

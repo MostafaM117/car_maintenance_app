@@ -18,12 +18,6 @@ class RedirectingPage extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(body: Center(child: CircularProgressIndicator()));
             }
-            // if (snapshot.hasData) {
-            //   return MainScreen();
-            // } 
-            // else {
-            //   return WelcomePage();
-            // }
             if(!snapshot.hasData || snapshot.data == null) {
               print("AuthWrapper: No user signed in, navigating to WelcomePage...");
               return const WelcomePage();
@@ -35,9 +29,6 @@ class RedirectingPage extends StatelessWidget {
                 if(userSnaphot.connectionState == ConnectionState.waiting) {
                   return const Scaffold(body: Center(child: CircularProgressIndicator()));
                 }
-                // if(userSnaphot.data!["username"] == null) {
-                //   return CompleteSigninData();
-                // }
                 if (!userSnaphot.hasData || !userSnaphot.data!.exists){
                   FirebaseFirestore.instance.collection('users').doc(user.uid).set({
                     'username': null,
