@@ -1,4 +1,5 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/Auth/auth_service.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,9 @@ class Profile extends StatelessWidget {
             ),
             buildButton(
               'Sign Out', Colors.red.shade700, Colors.white,
-              onPressed: () {}
+              onPressed: () {
+                AuthService().signOut(context);
+              }
             ),
           ],
         ),
