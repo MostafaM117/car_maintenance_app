@@ -1,3 +1,6 @@
+import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/Auth/auth_service.dart';
+import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatelessWidget {
@@ -10,10 +13,21 @@ class Profile extends StatelessWidget {
         title: Text('Profile'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Text(
-          'Welcome to Profile Page',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              height: 100,
+            ),
+            buildButton(
+              'Sign Out', Colors.red.shade700, Colors.white,
+              onPressed: () {
+                AuthService().signOut(context);
+              }
+            ),
+          ],
         ),
       ),
     );

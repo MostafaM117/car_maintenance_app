@@ -23,14 +23,14 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Home Page'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              AuthService().signOut(context);
-            },
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.logout),
+        //     onPressed: () {
+        //       AuthService().signOut(context);
+        //     },
+        //   )
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
