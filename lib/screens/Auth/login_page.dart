@@ -105,7 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 150),
+              const SizedBox(height: 80),
               buildButton(
                   'Sign In', AppColors.buttonColor, AppColors.buttonText,
                   onPressed: () {
