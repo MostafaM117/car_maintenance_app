@@ -20,7 +20,7 @@ Widget buildInputField({
   required String hintText,
   bool obscureText = false,
   VoidCallback? togglePasswordView,
-  required Image iconWidget,
+  required Widget iconWidget,
 }) {
   return Container(
     height: 50,
@@ -116,7 +116,11 @@ Widget appleButton(VoidCallback onPressed) {
           borderRadius: BorderRadius.circular(25),
         ),
       ),
-      icon:Icon(Icons.apple, color: Colors.white, size: 30,),
+      icon: Icon(
+        Icons.apple,
+        color: Colors.white,
+        size: 30,
+      ),
       label: Text('Continue with Apple', style: textStyleWhite),
       onPressed: onPressed,
     ),
