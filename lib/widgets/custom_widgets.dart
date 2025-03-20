@@ -14,44 +14,64 @@ final textStyleGray = const TextStyle(
   fontFamily: 'Inter',
   fontWeight: FontWeight.w600,
 );
-
 Widget buildInputField({
   required TextEditingController controller,
   required String hintText,
   bool obscureText = false,
   VoidCallback? togglePasswordView,
-  required Image iconWidget,
+  required Widget iconWidget,
+  String? errorText,
+  Widget? suffixWidget,
 }) {
-  return Container(
-    height: 50,
-    decoration: BoxDecoration(
-      color: AppColors.secondaryText,
-      borderRadius: BorderRadius.circular(22),
-    ),
-    child: Row(
-      children: [
-        const SizedBox(width: 24),
-        iconWidget,
-        const SizedBox(width: 20),
-        Expanded(
-          child: TextField(
-            controller: controller,
-            obscureText: obscureText,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: hintText,
-              hintStyle: textStyleGray,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Container(
+        height: 50,
+        decoration: BoxDecoration(
+          color: AppColors.secondaryText,
+          borderRadius: BorderRadius.circular(22),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 24),
+            iconWidget,
+            const SizedBox(width: 20),
+            Expanded(
+              child: TextField(
+                controller: controller,
+                obscureText: obscureText,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: hintText,
+                  hintStyle: textStyleGray,
+                ),
+              ),
             ),
+            if (suffixWidget != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: suffixWidget,
+              ),
+            if (togglePasswordView != null)
+              IconButton(
+                icon: Icon(
+                    obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.black54),
+                onPressed: togglePasswordView,
+              ),
+          ],
+        ),
+      ),
+      if (errorText != null && errorText.isNotEmpty)
+        Padding(
+          padding: const EdgeInsets.only(left: 24.0, top: 4.0),
+          child: Text(
+            errorText,
+            style: const TextStyle(color: Colors.red, fontSize: 12),
           ),
         ),
-        if (togglePasswordView != null)
-          IconButton(
-            icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility,
-                color: Colors.black54),
-            onPressed: togglePasswordView,
-          ),
-      ],
-    ),
+    ],
   );
 }
 
@@ -116,7 +136,11 @@ Widget appleButton(VoidCallback onPressed) {
           borderRadius: BorderRadius.circular(25),
         ),
       ),
-      icon:Icon(Icons.apple, color: Colors.white, size: 30,),
+      icon: Icon(
+        Icons.apple,
+        color: Colors.white,
+        size: 30,
+      ),
       label: Text('Continue with Apple', style: textStyleWhite),
       onPressed: onPressed,
     ),
