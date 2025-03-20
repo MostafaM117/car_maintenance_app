@@ -1,4 +1,4 @@
-import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/auth_page.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_page.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../widgets/custom_widgets.dart';

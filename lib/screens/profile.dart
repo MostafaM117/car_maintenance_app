@@ -1,6 +1,6 @@
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/account_management.dart';
-import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/auth_service.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/account_management.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 

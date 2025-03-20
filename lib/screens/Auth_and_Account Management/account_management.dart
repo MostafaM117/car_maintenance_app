@@ -1,4 +1,4 @@
-import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/auth_service.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
