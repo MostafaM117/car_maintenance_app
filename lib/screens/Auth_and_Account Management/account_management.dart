@@ -1,4 +1,5 @@
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
+import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,7 @@ class _AccountManagementState extends State<AccountManagement> {
   bool _isediting = false;
   User? _user = FirebaseAuth.instance.currentUser;
 
+ //_getcurrentusername
   Future<void> _getcurrentusername() async {
     if(_user != null){
       DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(_user!.uid).get();
@@ -116,7 +118,7 @@ class _AccountManagementState extends State<AccountManagement> {
             buildButton(
               'Edit Password', Colors.red.shade700, Colors.white,
               onPressed: () {
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword()));
               }
             ),
             SizedBox(
