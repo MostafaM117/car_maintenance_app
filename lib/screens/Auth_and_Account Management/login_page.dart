@@ -1,6 +1,7 @@
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../constants/app_colors.dart';
 import '../../widgets/custom_widgets.dart';
@@ -54,8 +55,7 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -76,15 +76,20 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 30),
               buildInputField(
                   controller: _emailcontroller,
-                  iconWidget:
-                      Image.asset('assets/images/inbox 1.png', height: 24)
-                      ,
-                  hintText: 'Enter your email or phone number'),
+                  iconWidget: SvgPicture.asset(
+                    'assets/svg/inpox.svg',
+                    width: 24,
+                    height: 24,
+                  ),
+                  hintText: 'Enter your email '),
               const SizedBox(height: 20),
               buildInputField(
                   controller: _passwordcontroller,
-                  iconWidget:
-                      Image.asset('assets/images/lock 1.png', height: 24),
+                  iconWidget: SvgPicture.asset(
+                    'assets/svg/lock.svg',
+                    width: 20,
+                    height: 24,
+                  ),
                   hintText: 'Enter your password',
                   obscureText: _obscureText,
                   togglePasswordView: _toggletoviewpassword),
@@ -105,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 150),
+              const SizedBox(height: 80),
               buildButton(
                   'Sign In', AppColors.buttonColor, AppColors.buttonText,
                   onPressed: () {
