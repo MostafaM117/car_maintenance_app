@@ -1,4 +1,4 @@
-import 'package:car_maintenance/screens/Auth/redirecting_page.dart';
+import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/redirecting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'models/firebase_options.dart';

@@ -1,5 +1,5 @@
-import 'package:car_maintenance/screens/Auth/signup_page.dart';
-import 'package:car_maintenance/screens/Auth/login_page.dart';
+import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/signup_page.dart';
+import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/login_page.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {

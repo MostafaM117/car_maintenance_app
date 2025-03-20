@@ -1,5 +1,6 @@
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:car_maintenance/screens/Auth/auth_service.dart';
+import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/account_management.dart';
+import 'package:car_maintenance/screens/Auth%20&%20Account%20Management/auth_service.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -16,10 +17,16 @@ class Profile extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            buildButton(
+              'Manage Your Account', Colors.red.shade700, Colors.white,
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> AccountManagement()));
+              }
+            ),
             SizedBox(
-              height: 100,
+              height: 30,
             ),
             buildButton(
               'Sign Out', Colors.red.shade700, Colors.white,
