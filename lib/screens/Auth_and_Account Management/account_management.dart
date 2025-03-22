@@ -30,20 +30,20 @@ class _AccountManagementState extends State<AccountManagement> {
   }
   //Update current username
   Future<void> _updateUsername() async {
-    if(_user ==null){ return; }
+    if(_user == null){ return; }
     String newUsername = _usernameEditcontroller.text.trim();
     if(newUsername.isEmpty){
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Username cannot be empty')),
+        SnackBar(content: Text('Username cannot be empty'), backgroundColor: Colors.red,),
       );
       return;
-    }
-    
+    } 
       await FirebaseFirestore.instance
       .collection('users')
       .doc(_user!.uid)
       .update({'username': newUsername});
   }
+  // Press edit username to edit
   void _toggleEdit() {
     setState(() {
       _isediting = !_isediting; 
@@ -104,12 +104,21 @@ class _AccountManagementState extends State<AccountManagement> {
                   ],
                   ),
                 onPressed: () {
+                  if(_usernameEditcontroller.text.trim().isEmpty){
+                  ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Username can\'t be empty'), backgroundColor: Colors.red,),
+                  );
+                  }
+                  else{
                   _toggleEdit();
                   _updateUsername();
-                  _isediting ? print("editing") : 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Username updated successfully'), backgroundColor: Colors.green.shade400,),
+                  _isediting ? ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Your username must be unique'), duration: Duration(milliseconds: 1000),),
+                  )
+                  : ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Username updated successfully'), duration: Duration(milliseconds: 1000),backgroundColor: Colors.green.shade400,),
                   );
+                  }
                 }
               ),
             ),
