@@ -13,6 +13,7 @@ class MaintenanceDatePicker extends StatefulWidget {
 
 class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
   DateTime? lastMaintenanceDate;
+
   Future<void> _selectDate(BuildContext context) async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -31,23 +32,39 @@ class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _selectDate(context),
-      child: Container(
-        width: double.infinity,
-        height: 50,
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: AppColors.buttonColor,
-          borderRadius: BorderRadius.circular(25),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Last periodic Maintenance ',
+          style: TextStyle(
+            color: AppColors.primaryText,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        alignment: Alignment.centerLeft,
-        child: Text(
-            lastMaintenanceDate == null
-                ? 'Select Maintenance Date'
-                : '${lastMaintenanceDate!.day}/${lastMaintenanceDate!.month}/${lastMaintenanceDate!.year}',
-            style: textStyleGray),
-      ),
+        const SizedBox(height: 8),
+
+        GestureDetector(
+          onTap: () => _selectDate(context),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: AppColors.buttonColor,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            alignment: Alignment.centerLeft,
+            child: Text(
+              lastMaintenanceDate == null
+                  ? 'Select Maintenance Date'
+                  : '${lastMaintenanceDate!.day}/${lastMaintenanceDate!.month}/${lastMaintenanceDate!.year}',
+              style: textStyleGray,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
