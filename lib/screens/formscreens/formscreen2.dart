@@ -82,16 +82,6 @@ class _CarMileagePageState extends State<CarMileagePage> {
                   totalCount: 8,
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Current car mileage (Approx.)',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-                const SizedBox(height: 8),
                 buildTextField(
                   label: 'Current car mileage (Approx.)',
                   controller: mileageController,
