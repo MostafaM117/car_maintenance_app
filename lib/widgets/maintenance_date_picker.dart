@@ -1,0 +1,53 @@
+import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';
+import 'custom_widgets.dart';
+
+class MaintenanceDatePicker extends StatefulWidget {
+  final Function(DateTime) onDateSelected;
+
+  const MaintenanceDatePicker({super.key, required this.onDateSelected});
+
+  @override
+  _MaintenanceDatePickerState createState() => _MaintenanceDatePickerState();
+}
+
+class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
+  DateTime? lastMaintenanceDate;
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: lastMaintenanceDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null && picked != lastMaintenanceDate) {
+      setState(() {
+        lastMaintenanceDate = picked;
+        widget.onDateSelected(picked);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _selectDate(context),
+      child: Container(
+        width: double.infinity,
+        height: 50,
+        padding: EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: AppColors.buttonColor,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        alignment: Alignment.centerLeft,
+        child: Text(
+            lastMaintenanceDate == null
+                ? 'Select Maintenance Date'
+                : '${lastMaintenanceDate!.day}/${lastMaintenanceDate!.month}/${lastMaintenanceDate!.year}',
+            style: textStyleGray),
+      ),
+    );
+  }
+}
