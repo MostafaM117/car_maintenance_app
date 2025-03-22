@@ -1,3 +1,4 @@
+import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../widgets/ProgressStepsBar.dart';
@@ -130,10 +131,9 @@ int _filledFieldsCount() {
                       ? AppColors.buttonColor
                       : AppColors.secondaryText,
                   AppColors.buttonText,
-                  onPressed: isFormComplete
-                      ? () {
-                          Navigator.pop(context);
-                        }
+                  onPressed: isFormComplete? () {
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> MainScreen()), 
+                  (route) => false);}
                       : () {},
                 ),
               ],
