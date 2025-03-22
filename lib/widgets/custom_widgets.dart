@@ -171,3 +171,84 @@ Widget buildButton(
     ),
   );
 }
+Widget buildDropdownField({
+  String? label,
+  required String? value,
+  required List<String> options,
+  required ValueChanged<String?> onChanged,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (label != null)
+        Text(
+          label,
+          style: textStyleWhite.copyWith(fontSize: 16),
+        ),
+      SizedBox(
+        width: double.infinity,
+        child: Container(
+          height: 50,
+          decoration: BoxDecoration(
+            color: AppColors.secondaryText,
+            borderRadius: BorderRadius.circular(22),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: value,
+              hint: Text('Select Answer', style: textStyleGray),
+              dropdownColor: AppColors.secondaryText,
+              iconEnabledColor: AppColors.buttonText,
+              style: textStyleWhite.copyWith(color: AppColors.buttonText),
+              onChanged: onChanged,
+              items: options.map((String option) {
+                return DropdownMenuItem<String>(
+                  value: option,
+                  child: Text(option,
+                      style:
+                          textStyleWhite.copyWith(color: AppColors.buttonText)),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget buildTextField({
+  required TextEditingController controller,
+  required String hintText,
+  String ?label,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label!,
+        style: textStyleWhite.copyWith(fontSize: 16),
+      ),
+      SizedBox(
+        width: double.infinity,
+        height: 50,
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: textStyleGray,
+            filled: true,
+            fillColor: AppColors.buttonColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: BorderSide.none,
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          ),
+          style: TextStyle(color: AppColors.buttonText),
+        ),
+      ),
+    ],
+  );
+}
