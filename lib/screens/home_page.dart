@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text("Signed in as ${user.email}"),
             Center(
-              //button to test notification functionality
+              //buttons to test notification functionality
               // to be removed in production
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -55,11 +55,11 @@ class _HomePageState extends State<HomePage> {
                         NotiService().scheduleNotification(
                           title: 'Maintenance Reminder',
                           body: 'Your car needs maintenance',
-                          hour: 20,
-                          minute: 56,
+                          hour: 1,
+                          minute: 36,
                         );
                       },
-                      child: const Text('Schedule Notification')),
+                      child: const Text('Testing Schedule Notification')),
                 ],
               ),
             ),

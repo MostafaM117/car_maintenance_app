@@ -1,29 +1,19 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:car_maintenance/Back-end/firestore_service.dart';
+import 'package:car_maintenance/models/maintenanceModel.dart';
 
-class MaintenanceInstance {
-  String maint_ID;
-  String maint_Desc;
-  Int maint_Date;
-  bool Case;
-
-  MaintenanceInstance({
-    required this.maint_ID,
-    required this.maint_Date,
-    required this.maint_Desc,
-    required this.Case,
-  });
-}
-
-class Maintenance_Screen extends StatefulWidget {
-  const Maintenance_Screen({super.key});
+class MaintenanceScreen extends StatefulWidget {
+  const MaintenanceScreen({super.key});
 
   @override
-  State<Maintenance_Screen> createState() => _Maintenance_ScreenState();
+  State<MaintenanceScreen> createState() => _MaintenanceScreenState();
 }
 
-class _Maintenance_ScreenState extends State<Maintenance_Screen> {
+class _MaintenanceScreenState extends State<MaintenanceScreen> {
+  final FirestoreService firestoreService = FirestoreService();
+  final TextEditingController maintenanceController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -33,14 +23,57 @@ class _Maintenance_ScreenState extends State<Maintenance_Screen> {
           title: Text('Your Maintenance Schedule'),
           bottom: TabBar(tabs: [
             Tab(text: 'Upcoming'),
-            Tab(
-              text: 'History',
-            )
+            Tab(text: 'Add New'),
           ]),
         ),
         body: TabBarView(children: <Widget>[
-          Column(),
-          Column(),
+          Expanded(
+            child: StreamBuilder<List<MaintenanceList>>(
+              stream: firestoreService.getMaintenanceList(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data == null) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                final maintList = snapshot.data!;
+                //debug print
+                if (maintList.isEmpty) {
+                  print("Maintenance list is empty!");
+                  return Center(
+                      child: Text("No maintenance records available."));
+                }
+                return ListView.builder(
+                  itemCount: maintList.length,
+                  itemBuilder: (context, index) {
+                    final maintenanceItem = maintList[index];
+                    return Card(
+                      child: ListTile(
+                        title: Text(maintenanceItem.mileage.toString()),
+                        subtitle: Text(maintenanceItem.description),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+          // add special case maintenance? to be tweaked
+          Column(
+            children: [
+              TextField(
+                controller: maintenanceController,
+                decoration: InputDecoration(
+                  hintText: 'Enter Maintenance Description',
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  firestoreService
+                      .addMaintenanceList(maintenanceController.text);
+                },
+                child: Text('Add Maintenance'),
+              ),
+            ],
+          ),
         ]),
       ),
     );

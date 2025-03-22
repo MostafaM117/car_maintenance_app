@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
@@ -11,9 +12,20 @@ class NotiService {
 
   bool get isInitialized => _isInitialized;
 
+  // Request Notification Permissions
+  Future<void> requestPermissions() async {
+    final status = await Permission.notification.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
+      print("Notification permission denied!");
+    }
+  }
+
   // Initialize Notifications
   Future<void> initNotification() async {
     if (_isInitialized) return;
+
+    // Request permission before initializing
+    await requestPermissions();
 
     // Initialize the timezone
     tz.initializeTimeZones();
@@ -86,6 +98,7 @@ class NotiService {
     // Get current date/time
     final now = tz.TZDateTime.now(tz.local);
     print("Current time: $now");
+    print("Local timezone: ${tz.local}"); // Debug: Check timezone
 
     var scheduledDate =
         tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
