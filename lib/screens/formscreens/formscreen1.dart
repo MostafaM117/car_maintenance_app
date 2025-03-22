@@ -1,3 +1,5 @@
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
+import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/app_colors.dart';
@@ -157,7 +159,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 AppColors.secondaryText,
                 AppColors.buttonText,
                 onPressed: () {
-                  Navigator.pop(context);
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MainScreen()));
                 },
               ),
             ],

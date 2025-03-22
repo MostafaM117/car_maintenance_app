@@ -23,6 +23,8 @@ class RedirectingPage extends StatelessWidget {
               print("AuthWrapper: No user signed in, navigating to WelcomePage...");
               return const WelcomePage();
             }
+            else{
+              
             final user = snapshot.data!;
             return FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance.collection('users').doc(snapshot.data!.uid).get(), 
@@ -30,24 +32,25 @@ class RedirectingPage extends StatelessWidget {
                 if(userSnaphot.connectionState == ConnectionState.waiting) {
                   return const Scaffold(body: Center(child: CircularProgressIndicator()));
                 }
-                if (!userSnaphot.hasData || !userSnaphot.data!.exists){
+                else if (!userSnaphot.hasData || !userSnaphot.data!.exists){
                   FirebaseFirestore.instance.collection('users').doc(user.uid).set({
                     'username': null,
                     'email': user.email,
                     'carAdded': false,
                   });
                   return CompleteSigninData();
-                  
                 }
                 final userData = userSnaphot.data!.data() as Map<String, dynamic>; 
                 if(userData["username"] == null){
                   return CompleteSigninData();
                 }
-                if(userData["carAdded"] == false){
+                else if(userData["carAdded"] == false){
+                  print('You haven\'t added your first car yet.');
                   return AddCarScreen();
                 }
                 return MainScreen();
               });
+            }
           }),
     );
   }

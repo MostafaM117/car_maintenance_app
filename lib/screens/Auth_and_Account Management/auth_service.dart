@@ -33,6 +33,7 @@ class AuthService {
   // signInWithGoogle
   Future<UserCredential?> signInWithGoogle (BuildContext context) async{
     try{
+      final GoogleSignIn gSignIn = GoogleSignIn();
       await GoogleSignIn().signOut();
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
     if(gUser == null){
@@ -110,8 +111,6 @@ class AuthService {
       await FirebaseAuth.instance.signOut();
       final GoogleSignIn gSignIn = GoogleSignIn();
       if (await gSignIn.isSignedIn()){
-      
-      await gSignIn.disconnect();
       await gSignIn.signOut();
       }
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RedirectingPage()));
