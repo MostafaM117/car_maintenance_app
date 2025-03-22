@@ -41,17 +41,17 @@ class _CarMileagePageState extends State<CarMileagePage> {
     });
   }
 
-  int _filledFieldsCount() {
-    int count = widget.filledSteps;
+int _filledFieldsCount() {
+  int newCount = 0;
 
-    if (mileageController.text.isNotEmpty) count++;
-    if (avgerageController.text.isNotEmpty) count++;
-    if (lastMaintenance != null) count++;
-    if (lastTireChange != null) count++;
-    if (lastBatteryChange != null) count++;
+  if (mileageController.text.isNotEmpty) newCount++;
+  if (avgerageController.text.isNotEmpty) newCount++;
+  if (lastMaintenance != null) newCount++;
+  if (lastTireChange != null) newCount++;
+  if (lastBatteryChange != null) newCount++;
 
-    return count;
-  }
+  return widget.filledSteps + (newCount * 2);
+}
 
   @override
   void initState() {
@@ -72,28 +72,28 @@ class _CarMileagePageState extends State<CarMileagePage> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ProgressStepsBar(
                   filledCount: _filledFieldsCount(),
-                  totalCount: 8,
+                  totalCount: 16,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 15),
                 buildTextField(
                   label: 'Current car mileage (Approx.)',
                   controller: mileageController,
                   hintText: 'Mileage (KM)',
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 15),
                 buildTextField(
                   label: 'Average monthly usage (KM)',
                   controller: avgerageController,
                   hintText: 'Average (KM)',
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 15),
                 MaintenanceDatePicker(
                   onDateSelected: (DateTime date) {
                     setState(() {
@@ -103,7 +103,7 @@ class _CarMileagePageState extends State<CarMileagePage> {
                     });
                   },
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 15),
                 buildDropdownField(
                   label: 'Last tires change was at a mileage reading of',
                   value: lastTireChange,
@@ -113,7 +113,7 @@ class _CarMileagePageState extends State<CarMileagePage> {
                     checkFormCompletion();
                   },
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 15),
                 buildDropdownField(
                   label: 'Last change of battery',
                   value: lastBatteryChange,
@@ -123,7 +123,7 @@ class _CarMileagePageState extends State<CarMileagePage> {
                     checkFormCompletion();
                   },
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 50),
                 buildButton(
                   'Submit',
                   isFormComplete

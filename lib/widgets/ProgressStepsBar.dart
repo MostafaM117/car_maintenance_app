@@ -19,7 +19,7 @@ class ProgressStepsBar extends StatelessWidget {
 
         return Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 3),
             child: Container(
               height: 50,
               decoration: ShapeDecoration(

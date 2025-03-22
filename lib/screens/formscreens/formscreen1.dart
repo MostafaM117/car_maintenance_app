@@ -4,6 +4,7 @@ import '../../constants/app_colors.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/ProgressStepsBar.dart';
 import '../../widgets/custom_widgets.dart';
+import '../../widgets/transition_widgets.dart';
 import 'formscreen2.dart';
 
 class AddCarScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
     if (_selectedMake != null) count++;
     if (_selectedModel != null) count++;
     if (_selectedYear != null) count++;
-    return count;
+    return count *2;
   }
 
   void loadUsername() async {
@@ -54,14 +55,14 @@ class _AddCarScreenState extends State<AddCarScreen> {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Progress Bar
               ProgressStepsBar(
                 filledCount: _filledFieldsCount(),
-                totalCount: 8,
+                totalCount: 16,
               ),
               const SizedBox(height: 24),
 
@@ -84,7 +85,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   fontFamily: 'Inter',
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height:20),
 
               // Car Make
               buildDropdownField(
@@ -99,7 +100,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 },
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 15),
 
               // Car Model
               buildDropdownField(
@@ -113,7 +114,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     });
                   }),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 15),
 
               // Model Year
               buildDropdownField(
@@ -127,7 +128,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 },
               ),
 
-              const SizedBox(height: 55),
+              const SizedBox(height: 60),
 
               // Continue Button
               buildButton(
@@ -140,10 +141,9 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     ? () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (_) => CarMileagePage(
-                                    filledSteps: _filledFieldsCount(),
-                                  )),
+                          FadeinTransition(CarMileagePage(
+                            filledSteps: _filledFieldsCount(),
+                          )),
                         );
                       }
                     : () {},

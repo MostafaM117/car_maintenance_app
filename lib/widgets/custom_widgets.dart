@@ -27,7 +27,7 @@ Widget buildInputField({
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        height: 50,
+        height: 45,
         decoration: BoxDecoration(
           color: AppColors.secondaryText,
           borderRadius: BorderRadius.circular(22),
@@ -111,7 +111,7 @@ void showErrorDialog(BuildContext context, String message) {
 Widget googleButton(VoidCallback onPressed) {
   return SizedBox(
     width: double.infinity,
-    height: 50,
+    height: 45,
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.secondaryText.withOpacity(0.11),
@@ -127,7 +127,7 @@ Widget googleButton(VoidCallback onPressed) {
 Widget appleButton(VoidCallback onPressed) {
   return SizedBox(
     width: double.infinity,
-    height: 50,
+    height: 45,
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.background,
@@ -155,7 +155,7 @@ Widget buildButton(
 }) {
   return SizedBox(
     width: double.infinity,
-    height: 50,
+    height: 45,
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
@@ -171,6 +171,7 @@ Widget buildButton(
     ),
   );
 }
+
 Widget buildDropdownField({
   String? label,
   required String? value,
@@ -186,9 +187,12 @@ Widget buildDropdownField({
           style: textStyleWhite.copyWith(fontSize: 16),
         ),
       SizedBox(
+        height: 8,
+      ),
+      SizedBox(
         width: double.infinity,
         child: Container(
-          height: 50,
+          height: 45,
           decoration: BoxDecoration(
             color: AppColors.secondaryText,
             borderRadius: BorderRadius.circular(22),
@@ -221,7 +225,7 @@ Widget buildDropdownField({
 Widget buildTextField({
   required TextEditingController controller,
   required String hintText,
-  String ?label,
+  String? label,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -231,8 +235,11 @@ Widget buildTextField({
         style: textStyleWhite.copyWith(fontSize: 16),
       ),
       SizedBox(
+        height: 8,
+      ),
+      SizedBox(
         width: double.infinity,
-        height: 50,
+        height: 45,
         child: TextField(
           controller: controller,
           decoration: InputDecoration(
