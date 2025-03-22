@@ -17,7 +17,7 @@ class _AccountManagementState extends State<AccountManagement> {
   bool _isediting = false;
   User? _user = FirebaseAuth.instance.currentUser;
 
- //_getcurrentusername
+ //Get current username
   Future<void> _getcurrentusername() async {
     if(_user != null){
       DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(_user!.uid).get();
@@ -28,6 +28,7 @@ class _AccountManagementState extends State<AccountManagement> {
       }
     }
   }
+  //Update current username
   Future<void> _updateUsername() async {
     if(_user ==null){ return; }
     String newUsername = _usernameEditcontroller.text.trim();
