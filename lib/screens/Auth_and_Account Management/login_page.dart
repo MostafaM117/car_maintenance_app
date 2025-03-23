@@ -67,10 +67,9 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 12),
               Text(
                 'Welcome back! Please enter your details!',
-                style: textStyleWhite.copyWith(
+                style: textStyleGray.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white.withOpacity(0.9),
                 ),
               ),
               const SizedBox(height: 30),

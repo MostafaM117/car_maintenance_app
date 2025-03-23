@@ -28,9 +28,15 @@ Widget buildInputField({
     children: [
       Container(
         height: 45,
-        decoration: BoxDecoration(
+        decoration: ShapeDecoration(
           color: AppColors.secondaryText,
-          borderRadius: BorderRadius.circular(22),
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              width: 1,
+              color: AppColors.borderSide,
+            ),
+            borderRadius: BorderRadius.circular(22),
+          ),
         ),
         child: Row(
           children: [
@@ -114,7 +120,8 @@ Widget googleButton(VoidCallback onPressed) {
     height: 45,
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.secondaryText.withOpacity(0.11),
+        backgroundColor: AppColors.background,
+        side: const BorderSide(color: AppColors.borderSide),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       ),
       icon: Image.asset('assets/images/Google_logo.png', height: 25),
@@ -131,7 +138,7 @@ Widget appleButton(VoidCallback onPressed) {
     child: ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.background,
-        side: const BorderSide(color: AppColors.buttonColor),
+        side: const BorderSide(color: AppColors.borderSide),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25),
         ),
@@ -151,7 +158,7 @@ Widget buildButton(
   String text,
   Color backgroundColor,
   Color textColor, {
-  required VoidCallback onPressed,
+  required VoidCallback? onPressed,
 }) {
   return SizedBox(
     width: double.infinity,
@@ -186,32 +193,36 @@ Widget buildDropdownField({
           label,
           style: textStyleWhite.copyWith(fontSize: 16),
         ),
-      SizedBox(
-        height: 8,
-      ),
+      // SizedBox(
+      //   height: 8,
+      // ),
       SizedBox(
         width: double.infinity,
         child: Container(
           height: 45,
-          decoration: BoxDecoration(
+          decoration: ShapeDecoration(
             color: AppColors.secondaryText,
-            borderRadius: BorderRadius.circular(22),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(
+                width: 1,
+                color: AppColors.borderSide,
+              ),
+              borderRadius: BorderRadius.circular(22),
+            ),
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
               hint: Text('Select Answer', style: textStyleGray),
-              dropdownColor: AppColors.secondaryText,
-              iconEnabledColor: AppColors.buttonText,
-              style: textStyleWhite.copyWith(color: AppColors.buttonText),
+              dropdownColor: AppColors.lightGray,
+              iconEnabledColor: AppColors.primaryText,
+              style: textStyleGray,
               onChanged: onChanged,
               items: options.map((String option) {
                 return DropdownMenuItem<String>(
                   value: option,
-                  child: Text(option,
-                      style:
-                          textStyleWhite.copyWith(color: AppColors.buttonText)),
+                  child: Text(option, style: textStyleWhite),
                 );
               }).toList(),
             ),
@@ -221,39 +232,45 @@ Widget buildDropdownField({
     ],
   );
 }
-
 Widget buildTextField({
   required TextEditingController controller,
   required String hintText,
   String? label,
+  required String? Function(dynamic value) validator,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(
-        label!,
-        style: textStyleWhite.copyWith(fontSize: 16),
-      ),
-      SizedBox(
-        height: 8,
-      ),
-      SizedBox(
-        width: double.infinity,
+      if (label != null)
+        Text(
+          label,
+          style: textStyleWhite.copyWith(fontSize: 16),
+        ),
+      SizedBox(height: 8),
+      Container(
         height: 45,
+        decoration: ShapeDecoration(
+          color: AppColors.secondaryText,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              width: 1,
+              color: AppColors.borderSide,
+            ),
+            borderRadius: BorderRadius.circular(22),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        alignment: Alignment.center,
         child: TextField(
           controller: controller,
           decoration: InputDecoration(
+            border: InputBorder.none,
+            isCollapsed: true,
             hintText: hintText,
             hintStyle: textStyleGray,
-            filled: true,
-            fillColor: AppColors.buttonColor,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide.none,
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16),
           ),
-          style: TextStyle(color: AppColors.buttonText),
+          style: textStyleGray,
+          textAlignVertical: TextAlignVertical.center,
         ),
       ),
     ],

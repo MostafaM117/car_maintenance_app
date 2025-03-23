@@ -44,16 +44,21 @@ class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
           ),
         ),
         const SizedBox(height: 8),
-
         GestureDetector(
           onTap: () => _selectDate(context),
           child: Container(
             width: double.infinity,
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: AppColors.buttonColor,
-              borderRadius: BorderRadius.circular(25),
+            decoration: ShapeDecoration(
+              color: AppColors.secondaryText,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  width: 1,
+                  color: AppColors.borderSide,
+                ),
+                borderRadius: BorderRadius.circular(22),
+              ),
             ),
             alignment: Alignment.centerLeft,
             child: Text(
