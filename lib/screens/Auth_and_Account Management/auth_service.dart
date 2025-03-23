@@ -113,7 +113,7 @@ class AuthService {
       if (await gSignIn.isSignedIn()){
       await gSignIn.signOut();
       }
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RedirectingPage()));
+      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RedirectingPage()));
     } catch(e){
       print("Error while signing out: $e");
       _showSnackBar(context, e.toString(), Colors.red, Duration(milliseconds: 3000));
