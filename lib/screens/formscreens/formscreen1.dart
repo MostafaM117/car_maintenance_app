@@ -1,5 +1,3 @@
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
-import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/app_colors.dart';
@@ -35,7 +33,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
     if (_selectedMake != null) count++;
     if (_selectedModel != null) count++;
     if (_selectedYear != null) count++;
-    return count *2;
+    return count * 2;
   }
 
   void loadUsername() async {
@@ -79,15 +77,11 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
+              Text(
                 'Please confirm your car details so our support team can reach you soon.',
-                style: TextStyle(
-                  color: AppColors.secondaryText,
-                  fontSize: 14,
-                  fontFamily: 'Inter',
-                ),
+                style: textStyleGray,
               ),
-              const SizedBox(height:20),
+              const SizedBox(height: 20),
 
               // Car Make
               buildDropdownField(
@@ -137,7 +131,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 'Continue',
                 isFormComplete
                     ? AppColors.buttonColor
-                    : AppColors.secondaryText,
+                    : AppColors.borderSide,
                 AppColors.buttonText,
                 onPressed: isFormComplete
                     ? () {
@@ -145,6 +139,9 @@ class _AddCarScreenState extends State<AddCarScreen> {
                           context,
                           FadeinTransition(CarMileagePage(
                             filledSteps: _filledFieldsCount(),
+                            selectedMake: _selectedMake!,
+                            selectedModel: _selectedModel!,
+                            selectedYear: _selectedYear!,
                           )),
                         );
                       }
@@ -156,10 +153,10 @@ class _AddCarScreenState extends State<AddCarScreen> {
               // Dismiss Button
               buildButton(
                 'Dismiss',
-                AppColors.secondaryText,
                 AppColors.buttonText,
+                AppColors.buttonColor,
                 onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> MainScreen()));
+                  Navigator.pop(context);
                 },
               ),
             ],

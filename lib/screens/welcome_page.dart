@@ -26,7 +26,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   width: screenWidth * 0.9,
                   height: screenHeight * 0.4,
                   decoration: ShapeDecoration(
-                    color: AppColors.buttonColor,
+                    color: AppColors.lightGray,
                     shape: OvalBorder(),
                   ),
                 ),

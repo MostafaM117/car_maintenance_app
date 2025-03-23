@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,8 @@ class CarService {
   final String? selectedModel;
   final int? selectedYear;
   final DateTime? lastMaintenanceDate;
+  final String? lastTireChange;
+  final String? lastBatteryChange;
 
   CarService({
     required this.context,
@@ -23,6 +24,8 @@ class CarService {
     required this.selectedModel,
     required this.selectedYear,
     required this.lastMaintenanceDate,
+    required this.lastTireChange,
+    required this.lastBatteryChange,
   });
 
   Future<void> submitForm(Function(bool) setLoading) async {
@@ -34,7 +37,7 @@ class CarService {
         return;
       }
 
-      setLoading(true); 
+      setLoading(true);
 
       try {
         await saveCar();
@@ -45,7 +48,7 @@ class CarService {
           SnackBar(content: Text('Error adding car: ${e.toString()}')),
         );
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     }
   }
@@ -85,6 +88,8 @@ class CarService {
       'mileage': double.parse(mileageController.text.trim()),
       'avgKmPerMonth': double.parse(avgKmPerMonthController.text.trim()),
       'lastMaintenance': Timestamp.fromDate(lastMaintenanceDateTime),
+      'lastTireChange': lastTireChange,
+      'lastBatteryChange': lastBatteryChange,
       'userId': user.uid,
       'username': username,
     });

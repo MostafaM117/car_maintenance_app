@@ -24,14 +24,14 @@ class ProgressStepsBar extends StatelessWidget {
               height: 50,
               decoration: ShapeDecoration(
                 color: isFilled
-                    ? AppColors.primaryText
-                    : AppColors.secondaryText.withOpacity(0.3),
+                    ? AppColors.buttonColor
+                    : AppColors.background.withOpacity(0.3),
                 shape: RoundedRectangleBorder(
                   side: BorderSide(
-                    width: 2,
+                    width: 1,
                     color: isFilled
                         ? AppColors.secondaryText
-                        : AppColors.secondaryText.withOpacity(0.5),
+                        : AppColors.borderSide,
                   ),
                   borderRadius: BorderRadius.circular(80),
                 ),

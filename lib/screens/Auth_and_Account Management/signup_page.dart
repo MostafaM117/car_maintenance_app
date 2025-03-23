@@ -171,10 +171,9 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 12),
               Text(
                 'Welcome! Please enter your details!',
-                style: textStyleWhite.copyWith(
+                style: textStyleGray.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
-                  color: Colors.white.withOpacity(0.9),
                 ),
               ),
               const SizedBox(height: 30),
@@ -236,11 +235,7 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 15),
               Text(
                 'By signing up, You agree to our Terms of Service and privacy Policy',
-                style: textStyleWhite.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.white.withOpacity(0.9),
-                ),
+                style: textStyleGray
               ),
               const SizedBox(height: 60),
 
