@@ -160,7 +160,7 @@ class _CarMileagePageState extends State<CarMileagePage> {
 
                   // Tire change dropdown
                   buildDropdownField(
-                    label: 'Last tires change was at a mileage reading of',
+                    label: 'Last tires pair change was',
                     value: lastTireChange,
                     options: options,
                     onChanged: (val) {
@@ -174,7 +174,7 @@ class _CarMileagePageState extends State<CarMileagePage> {
 
                   // Battery change dropdown
                   buildDropdownField(
-                    label: 'Last change of battery',
+                    label: 'Last change of battery was',
                     value: lastBatteryChange,
                     options: options,
                     onChanged: (val) {
