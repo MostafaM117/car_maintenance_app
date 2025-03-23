@@ -45,14 +45,15 @@ Widget buildInputField({
             const SizedBox(width: 20),
             Expanded(
               child: TextField(
-                controller: controller,
-                obscureText: obscureText,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintText: hintText,
-                  hintStyle: textStyleGray,
-                ),
-              ),
+                  controller: controller,
+                  obscureText: obscureText,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: hintText,
+                    hintStyle: textStyleGray,
+                    contentPadding: EdgeInsets.only(bottom: 12),
+                  ),
+                  textAlignVertical: TextAlignVertical.center),
             ),
             if (suffixWidget != null)
               Padding(
@@ -84,16 +85,16 @@ Widget buildInputField({
 Widget buildOrSeparator() {
   return Row(
     children: [
-      const Expanded(child: Divider(color: Colors.white, thickness: 1)),
+      const Expanded(child: Divider(color: Colors.black, thickness: 1)),
       const Padding(
         padding: EdgeInsets.symmetric(horizontal: 12),
         child: Text(
           'or',
           style: TextStyle(
-              color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
+              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
         ),
       ),
-      const Expanded(child: Divider(color: Colors.white, thickness: 1)),
+      const Expanded(child: Divider(color: Colors.black, thickness: 1)),
     ],
   );
 }
@@ -232,6 +233,7 @@ Widget buildDropdownField({
     ],
   );
 }
+
 Widget buildTextField({
   required TextEditingController controller,
   required String hintText,
