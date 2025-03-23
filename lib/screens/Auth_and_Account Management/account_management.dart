@@ -137,7 +137,7 @@ class _AccountManagementState extends State<AccountManagement> {
             buildButton(
               'Delete My Account', Colors.red.shade700, Colors.white,
               onPressed: () {
-                AuthService().signOut(context);
+                // AuthService().signOut(context);
               }
             ),
           ],

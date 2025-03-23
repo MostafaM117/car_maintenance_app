@@ -41,8 +41,8 @@ class CarService {
 
       try {
         await saveCar();
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => MainScreen()));
+        Navigator.pushAndRemoveUntil(
+            context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error adding car: ${e.toString()}')),
