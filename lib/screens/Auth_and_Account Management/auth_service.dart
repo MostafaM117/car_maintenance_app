@@ -33,8 +33,7 @@ class AuthService {
   // signInWithGoogle
   Future<UserCredential?> signInWithGoogle (BuildContext context) async{
     try{
-      final GoogleSignIn gSignIn = GoogleSignIn();
-      await GoogleSignIn().signOut();
+    await GoogleSignIn().signOut();
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
     if(gUser == null){
       _showSnackBar(context, 'Google Sign In Canceled', Colors.red, Duration(milliseconds: 2200));
@@ -45,10 +44,11 @@ class AuthService {
       accessToken: gAuth.accessToken,
       idToken: gAuth.idToken,
     );
+    
     UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
-        User? user = userCredential.user;
-    if (user != null){
+    User? user = userCredential.user;
 
+    if (user != null){
     final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
     final userExists = await userDoc.get();
     if (userExists.exists){
@@ -62,7 +62,6 @@ class AuthService {
         "carAdded": false,
       });
     }
-    // _showSnackBar(context, 'Signed in successfully', Colors.green.shade400, Duration(milliseconds: 1000));
     Navigator.pop(context);
     }
     //Check for new users
@@ -107,13 +106,10 @@ class AuthService {
   // Sign out
   Future<void> signOut(BuildContext context) async {
     try{
-      _showSnackBar(context, 'Signed out', Colors.red, Duration(milliseconds: 2000));
       await FirebaseAuth.instance.signOut();
-      final GoogleSignIn gSignIn = GoogleSignIn();
-      if (await gSignIn.isSignedIn()){
-      await gSignIn.signOut();
-      }
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RedirectingPage()));
+      await GoogleSignIn().signOut();
+      _showSnackBar(context, 'Signed out', Colors.red, Duration(milliseconds: 2000));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RedirectingPage()), (route) => false );
     } catch(e){
       print("Error while signing out: $e");
       _showSnackBar(context, e.toString(), Colors.red, Duration(milliseconds: 3000));

@@ -42,72 +42,72 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  Future<bool> isUsernameUnique(String username) async {
-    setState(() {
-      _isCheckingUsername = true;
-      _isUsernameAvailable = true;
-      _usernameErrorText = '';
-    });
+  // Future<bool> isUsernameUnique(String username) async {
+  //   setState(() {
+  //     _isCheckingUsername = true;
+  //     _isUsernameAvailable = true;
+  //     _usernameErrorText = '';
+  //   });
 
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .get();
+  //   try {
+  //     final querySnapshot = await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .where('username', isEqualTo: username)
+  //         .get();
 
-      setState(() {
-        _isCheckingUsername = false;
-        _isUsernameAvailable = querySnapshot.docs.isEmpty;
-        if (!_isUsernameAvailable) {
-          _usernameErrorText = 'Username is already taken';
-        }
-      });
+  //     setState(() {
+  //       _isCheckingUsername = false;
+  //       _isUsernameAvailable = querySnapshot.docs.isEmpty;
+  //       if (!_isUsernameAvailable) {
+  //         _usernameErrorText = 'Username is already taken';
+  //       }
+  //     });
 
-      return querySnapshot.docs.isEmpty;
-    } catch (e) {
-      setState(() {
-        _isCheckingUsername = false;
-        _usernameErrorText = 'Error checking username';
-      });
-      return false;
-    }
-  }
+  //     return querySnapshot.docs.isEmpty;
+  //   } catch (e) {
+  //     setState(() {
+  //       _isCheckingUsername = false;
+  //       _usernameErrorText = 'Error checking username';
+  //     });
+  //     return false;
+  //   }
+  // }
 
-  Future signup() async {
+  Future <UserCredential?> signup() async {
     if (_usernameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a username')),
       );
-      return;
+      // return null;
     }
 
-    final isUnique = await isUsernameUnique(_usernameController.text.trim());
-    if (!isUnique) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Username is already taken, try another one')),
-      );
-      return;
-    }
+    // final isUnique = await isUsernameUnique(_usernameController.text.trim());
+    // if (!isUnique) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('Username is already taken, try another one')),
+    //   );
+    //   return;
+    // }
 
-    if (!confirmpassword()) {
+    else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Passwords do not match')),
       );
-      return;
+      // return;
     }
-    if (_emailcontroller.text.trim().isEmpty) {
+    else if (_emailcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An email address is required')),
       );
-      return;
+      // return;
     }
-    if (_passwordcontroller.text.trim().isEmpty) {
+    else if (_passwordcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a password to sign up')),
       );
-      return;
+      // return;
     }
-
+    else {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -128,13 +128,21 @@ class _SignupPageState extends State<SignupPage> {
           backgroundColor: Colors.green.shade400,
         ),
       );
-      ;
+      return userCredential;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      if(e.toString().contains('email-already-in-use')){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('This email is already registered')),
+        );
+      }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
       );
+      }
     }
   }
+    }
 
   Future createuser(String username, String email, String uid) async {
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
