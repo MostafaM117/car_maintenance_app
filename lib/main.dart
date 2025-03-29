@@ -2,9 +2,11 @@ import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirectin
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'models/firebase_options.dart';
+import 'notifications/notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotiService().initNotification();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
