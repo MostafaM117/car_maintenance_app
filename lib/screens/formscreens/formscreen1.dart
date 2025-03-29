@@ -1,6 +1,5 @@
 import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../../constants/app_colors.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/ProgressStepsBar.dart';
@@ -130,9 +129,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
               // Continue Button
               buildButton(
                 'Continue',
-                isFormComplete
-                    ? AppColors.buttonColor
-                    : AppColors.borderSide,
+                isFormComplete ? AppColors.buttonColor : AppColors.borderSide,
                 AppColors.buttonText,
                 onPressed: isFormComplete
                     ? () {
@@ -157,7 +154,10 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 AppColors.buttonText,
                 AppColors.buttonColor,
                 onPressed: () {
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> MainScreen()), (route) => false);
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                      (route) => false);
                 },
               ),
             ],

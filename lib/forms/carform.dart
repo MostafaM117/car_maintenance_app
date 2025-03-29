@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
+import 'package:car_maintenance/models/CarData.dart';
 
 class CarService {
   final BuildContext context;
@@ -42,7 +43,9 @@ class CarService {
       try {
         await saveCar();
         Navigator.pushAndRemoveUntil(
-            context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
+            context,
+            MaterialPageRoute(builder: (context) => MainScreen()),
+            (route) => false);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error adding car: ${e.toString()}')),
@@ -97,5 +100,9 @@ class CarService {
     await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
       'carAdded': true,
     });
+    // Save selected values globally
+    CarData().selectedMake = selectedMake.toString();
+    CarData().selectedModel = selectedModel.toString();
+    CarData().selectedYear = selectedYear.toString();
   }
 }

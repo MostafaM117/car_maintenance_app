@@ -1,9 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
+import 'package:car_maintenance/models/CarData.dart';
+// import 'package:car_maintenance/forms/carform.dart';
+// import 'package:car_maintenance/screens/formscreens/formscreen1.dart';
 
 class FirestoreService {
-  final CollectionReference maintCollection = FirebaseFirestore.instance
-      .collection('Maintenance_Schedule_Nissan_Sunny');
+  final CollectionReference maintCollection;
+
+  FirestoreService(CarData carData)
+      : maintCollection = FirebaseFirestore.instance
+            .collection('Maintenance_Schedule_${carData.maintID}'); //attempt 1
+  // final CollectionReference maintCollection = FirebaseFirestore.instance
+  //     .collection('Maintenance_Schedule_Nissan_Sunny');
 
   //add special cases
   Future<void> addMaintenanceList(String description) async {
