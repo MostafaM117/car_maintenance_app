@@ -1,7 +1,7 @@
 import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:flutter/material.dart';
-
 import '../../constants/app_colors.dart';
+import '../../models/car_data.dart'; 
 import '../../services/user_data_helper.dart';
 import '../../widgets/ProgressStepsBar.dart';
 import '../../widgets/custom_widgets.dart';
@@ -18,16 +18,11 @@ class _AddCarScreenState extends State<AddCarScreen> {
   String? _selectedModel;
   int? _selectedYear;
 
-  final Map<String, List<String>> _carModels = {
-    'Chevrolet': ['Camaro', 'Aveo'],
-    'Hyundai': ['Elantra', 'Sonata'],
-  };
-
-  final List<int> _years = [2020, 2021, 2022, 2023, 2024, 2025];
+  // Use the CarData class for models and makes
+  final List<String> _carMakes = CarData.getAllMakes();
   String? username;
   bool get isFormComplete =>
       _selectedMake != null && _selectedModel != null && _selectedYear != null;
-  // loadUsername();
 
   int _filledFieldsCount() {
     int count = 0;
@@ -88,11 +83,12 @@ class _AddCarScreenState extends State<AddCarScreen> {
               buildDropdownField(
                 label: 'Car Make',
                 value: _selectedMake,
-                options: _carModels.keys.toList(),
+                options: _carMakes,
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedMake = newValue;
-                    _selectedModel = null; // Reset model when make changes
+                    _selectedModel = null; 
+                    _selectedYear = null; 
                   });
                 },
               ),
@@ -103,21 +99,26 @@ class _AddCarScreenState extends State<AddCarScreen> {
               buildDropdownField(
                   label: 'Car Model',
                   value: _selectedModel,
-                  options:
-                      _selectedMake == null ? [] : _carModels[_selectedMake]!,
+                  options: _selectedMake == null 
+                      ? [] 
+                      : CarData.getModelsForMake(_selectedMake),
                   onChanged: (String? newValue) {
                     setState(() {
                       _selectedModel = newValue;
+                      _selectedYear = null; 
                     });
                   }),
 
               const SizedBox(height: 15),
 
-              // Model Year
               buildDropdownField(
                 label: 'Model Year',
                 value: _selectedYear?.toString(),
-                options: _years.map((year) => year.toString()).toList(),
+                options: (_selectedMake == null || _selectedModel == null)
+                    ? []
+                    : CarData.getYearsForModel(_selectedMake, _selectedModel)
+                        .map((year) => year.toString())
+                        .toList(),
                 onChanged: (value) {
                   setState(() {
                     _selectedYear = int.tryParse(value!);
