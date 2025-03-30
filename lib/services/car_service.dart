@@ -1,11 +1,9 @@
-export '../services/car_service.dart';
-export '../services/car_image_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
-import 'package:car_maintenance/models/MaintID.dart';
 
+/// Service responsible for car data submission and form handling
 class CarService {
   final BuildContext context;
   final GlobalKey<FormState> formKey;
@@ -35,7 +33,7 @@ class CarService {
     if (formKey.currentState!.validate()) {
       if (lastMaintenanceDate == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Please select last maintenance date')),
+          const SnackBar(content: Text('Please select last maintenance date')),
         );
         return;
       }
@@ -45,9 +43,7 @@ class CarService {
       try {
         await saveCar();
         Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => MainScreen()),
-            (route) => false);
+            context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error adding car: ${e.toString()}')),
@@ -102,9 +98,5 @@ class CarService {
     await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
       'carAdded': true,
     });
-    // Save selected values globally
-    MaintID().selectedMake = selectedMake.toString();
-    MaintID().selectedModel = selectedModel.toString();
-    MaintID().selectedYear = selectedYear.toString();
   }
-}
+} 

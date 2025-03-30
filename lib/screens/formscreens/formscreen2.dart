@@ -1,5 +1,7 @@
-import 'package:car_maintenance/forms/carform.dart' show CarService;
+import 'package:car_maintenance/forms/carform.dart' as form;
 // import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
+import 'package:car_maintenance/services/car_service.dart';
+import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/widgets/ProgressStepsBar.dart';
@@ -80,7 +82,7 @@ class _CarMileagePageState extends State<CarMileagePage> {
   }
 
   void _submitForm() async {
-    final carService = CarService(
+    final carService = form.CarService(
       context: context,
       formKey: _formKey,
       mileageController: mileageController,

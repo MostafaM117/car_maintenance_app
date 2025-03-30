@@ -1,11 +1,11 @@
-class CarData {
-  static final CarData _instance = CarData._internal();
+class MaintID {
+  static final MaintID _instance = MaintID._internal();
 
-  factory CarData() {
+  factory MaintID() {
     return _instance;
   }
 
-  CarData._internal();
+  MaintID._internal();
 
   String selectedMake = '';
   String selectedModel = '';
