@@ -93,7 +93,7 @@ class _CompleteSigninDataState extends State<CompleteSigninData> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text("Please enter a unique username"),
+            Text("Welcome To Motorgy App, Please enter your username"),
             TextField(
               controller: _usernameController,
               decoration: InputDecoration(

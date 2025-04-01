@@ -1,9 +1,13 @@
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
 import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 class AccountManagement extends StatefulWidget {
   const AccountManagement({super.key});
@@ -48,6 +52,76 @@ class _AccountManagementState extends State<AccountManagement> {
     setState(() {
       _isediting = !_isediting; 
     });
+  }
+  // Delete Account 
+  Future <void> _deleteAccount(BuildContext context) async{
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    User? user = auth.currentUser;
+    if(user == null){ 
+      return;
+      }
+    try{
+      AuthCredential credential;
+      //Reauth
+      if(user.providerData.any((info)=> info.providerId == "google.com")){
+        //Google Reauth
+        final GoogleSignIn Gsignin = GoogleSignIn();
+        final GoogleSignInAccount? GUser = await Gsignin.signIn();
+        if(GUser == null){
+          throw FirebaseAuthException(code: "ERROR_ABORTED_BY_USER");
+        }
+        final GoogleSignInAuthentication googleAuth = await GUser.authentication;
+        credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+      } else if(user.email != null){
+        String email = user.email!;
+        String? password = await showPasswordDialog(context);
+        if(password == null) return;
+        credential = EmailAuthProvider.credential(email: email, password: password);
+      }
+      else{
+        throw FirebaseAuthException(code: "UNKNOWN_PROVIDER");
+      }
+      await user.reauthenticateWithCredential(credential);
+      await firestore.collection('users').doc(user.uid).delete();
+      await user.delete();
+      await auth.signOut();
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> RedirectingPage()), (route)=> false);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Account deleted successfully.")));
+    }
+    catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
+    }
+  }
+  // Show Password Dialog
+  Future<String?> showPasswordDialog(BuildContext context) async {
+    TextEditingController passwordcontroller = TextEditingController();
+    return showDialog(
+      context: context, 
+      builder: (context){
+        return AlertDialog(
+          title: Text("Please Enter Your Password"),
+          content: TextField(
+            controller: passwordcontroller,
+            obscureText: true,
+            decoration: InputDecoration(labelText: 'Password'),
+          ),
+          actions: [
+            TextButton(
+              child: Text("Cancel"), 
+              onPressed: (){
+                Navigator.pop(context);
+              },),
+              TextButton(child: Text("Confirm"),
+              onPressed: (){
+                Navigator.pop(context, passwordcontroller.text);
+              },)
+          ],
+          );
+      });
   }
   @override
   void initState() {
@@ -113,7 +187,7 @@ class _AccountManagementState extends State<AccountManagement> {
                   _toggleEdit();
                   _updateUsername();
                   _isediting ? ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Your username must be unique'), duration: Duration(milliseconds: 1000),),
+                    SnackBar(content: Text('Now you can edit your username'), duration: Duration(milliseconds: 1000),),
                   )
                   : ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Username updated successfully'), duration: Duration(milliseconds: 1000),backgroundColor: Colors.green.shade400,),
@@ -137,7 +211,21 @@ class _AccountManagementState extends State<AccountManagement> {
             buildButton(
               'Delete My Account', Colors.red.shade700, Colors.white,
               onPressed: () {
-                // AuthService().signOut(context);
+                showDialog(context: context, builder: (BuildContext context){
+                  return AlertDialog(
+                    title: Text('Delete Account'),
+                    content: Text('Are you sure you want to delete your account? \nThis action will delete the account totally and will remove all related data.'),
+                    actions: [
+                      TextButton(onPressed: () {
+                        _deleteAccount(context);
+                      },
+                      child: Text("Yes"),),
+                      TextButton(onPressed: (){
+                        Navigator.pop(context);
+                      }, child: Text('Cancel'))
+                    ],
+                  );
+                });
               }
             ),
           ],
