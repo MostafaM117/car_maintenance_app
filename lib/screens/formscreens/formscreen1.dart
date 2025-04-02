@@ -1,7 +1,7 @@
 import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
-import '../../models/car_data.dart'; 
+import '../../models/car_data.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/ProgressStepsBar.dart';
 import '../../widgets/custom_widgets.dart';
@@ -87,8 +87,8 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedMake = newValue;
-                    _selectedModel = null; 
-                    _selectedYear = null; 
+                    _selectedModel = null;
+                    _selectedYear = null;
                   });
                 },
               ),
@@ -99,13 +99,13 @@ class _AddCarScreenState extends State<AddCarScreen> {
               buildDropdownField(
                   label: 'Car Model',
                   value: _selectedModel,
-                  options: _selectedMake == null 
-                      ? [] 
+                  options: _selectedMake == null
+                      ? []
                       : CarData.getModelsForMake(_selectedMake),
                   onChanged: (String? newValue) {
                     setState(() {
                       _selectedModel = newValue;
-                      _selectedYear = null; 
+                      _selectedYear = null;
                     });
                   }),
 
