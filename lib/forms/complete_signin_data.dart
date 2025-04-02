@@ -14,39 +14,39 @@ class CompleteSigninData extends StatefulWidget {
 class _CompleteSigninDataState extends State<CompleteSigninData> {
   final _usernameController = TextEditingController();
   bool _isCheckingUsername = false;
-  bool _isUsernameAvailable = true;
+  // bool _isUsernameAvailable = true;
   String _usernameErrorText = '';
 
-  Future<bool> CheckUserName(String username) async {
-    setState(() {
-      _isCheckingUsername = true;
-      _isUsernameAvailable = true;
-      _usernameErrorText = '';
-    });
+  // Future<bool> CheckUserName(String username) async {
+  //   setState(() {
+  //     _isCheckingUsername = true;
+  //     _isUsernameAvailable = true;
+  //     _usernameErrorText = '';
+  //   });
     
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .where('username', isEqualTo: username)
-          .get();
+  //   try {
+  //     final querySnapshot = await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .where('username', isEqualTo: username)
+  //         .get();
       
-      setState(() {
-        _isCheckingUsername = false;
-        _isUsernameAvailable = querySnapshot.docs.isEmpty;
-        if (!_isUsernameAvailable) {
-          _usernameErrorText = 'Username is already taken';
-        }
-      });
+  //     setState(() {
+  //       _isCheckingUsername = false;
+  //       _isUsernameAvailable = querySnapshot.docs.isEmpty;
+  //       if (!_isUsernameAvailable) {
+  //         _usernameErrorText = 'Username is already taken';
+  //       }
+  //     });
       
-      return querySnapshot.docs.isEmpty;
-    } catch (e) {
-      setState(() {
-        _isCheckingUsername = false;
-        _usernameErrorText = 'Error checking username';
-      });
-      return false;
-    }
-  }
+  //     return querySnapshot.docs.isEmpty;
+  //   } catch (e) {
+  //     setState(() {
+  //       _isCheckingUsername = false;
+  //       _usernameErrorText = 'Error checking username';
+  //     });
+  //     return false;
+  //   }
+  // }
   Future<void> _saveUserName() async{
     if (_usernameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -55,13 +55,13 @@ class _CompleteSigninDataState extends State<CompleteSigninData> {
       return;
     }
     
-    final isUnique = await CheckUserName(_usernameController.text.trim());
-    if (!isUnique) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Username is already taken, try another one')),
-      );
-      return;
-    }
+    // final isUnique = await CheckUserName(_usernameController.text.trim());
+    // if (!isUnique) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text('Username is already taken, try another one')),
+    //   );
+    //   return;
+    // }
     // Save the username to Firestore
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
