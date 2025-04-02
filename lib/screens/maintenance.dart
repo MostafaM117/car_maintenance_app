@@ -1,3 +1,5 @@
+import 'package:car_maintenance/models/MaintID.dart';
+// import 'package:car_maintenance/forms/carform.dart';
 import 'package:car_maintenance/notifications/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
@@ -11,7 +13,14 @@ class MaintenanceScreen extends StatefulWidget {
 }
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
-  final FirestoreService firestoreService = FirestoreService();
+  late FirestoreService firestoreService;
+
+  @override
+  void initState() {
+    super.initState();
+    firestoreService = FirestoreService(MaintID());
+  }
+
   final TextEditingController maintenanceController = TextEditingController();
 
   @override
