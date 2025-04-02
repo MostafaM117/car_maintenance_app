@@ -20,7 +20,7 @@ class RedirectingPage extends StatelessWidget {
             return const Scaffold(body: Center(child: CircularProgressIndicator()));
             }
             if(!snapshot.hasData || snapshot.data == null) {
-              print("AuthWrapper: No user signed in, navigating to WelcomePage...");
+              // print("AuthWrapper: No user signed in, navigating to WelcomePage...");
               return const WelcomePage();
             }
             else{
