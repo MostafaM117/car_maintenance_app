@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+class DeleteAccount{
+  final passwordcontroller = TextEditingController();
 // Delete Account 
 Future <void> deleteAccount(BuildContext context) async{
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -27,10 +29,13 @@ Future <void> deleteAccount(BuildContext context) async{
           accessToken: googleAuth.accessToken,
           idToken: googleAuth.idToken,
         );
-      } else if(user.email != null){
+      } 
+      else if(user.email != null){
         String email = user.email!;
         String? password = await showPasswordDialog(context);
-        if(password == null) return;
+        if(password == null) {
+          return;
+          }
         credential = EmailAuthProvider.credential(email: email, password: password);
       }
       else{
@@ -44,35 +49,47 @@ Future <void> deleteAccount(BuildContext context) async{
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Account deleted successfully.")));
     }
     catch(e){
-      if(e.toString().contains('supplied auth credential is incorrect')){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Incorrect password. Please try again.")));
-        showPasswordDialog(context);
-      }
-      else if(e.toString().contains('channel-error')){
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("password can\'t be empty")));
-        showPasswordDialog(context);
-      }
-
-      else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
-      }
+      // if(e.toString().contains('supplied auth credential is incorrect')){
+      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Incorrect password. Please try again.")));
+      //   showPasswordDialog(context);
+      // }
+      // else{
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
+      // }
       print(e.toString());
     }
   }
 
   // Show Password Dialog
   Future<String?> showPasswordDialog(BuildContext context) async {
-    TextEditingController passwordcontroller = TextEditingController();
+      String? errorText; 
+    // TextEditingController passwordcontroller = TextEditingController();
+      final formKey = GlobalKey<FormState>();
     return showDialog(
       context: context, 
       builder: (context){
-        return AlertDialog(
+        return StatefulBuilder(
+          builder: (context, setState){
+          return AlertDialog(
           title: Text("Enter Your Password to confirm"),
-          content: TextField(
-            controller: passwordcontroller,
-            obscureText: true,
-            decoration: InputDecoration(labelText: 'Password'),
+          content: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: passwordcontroller,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    errorText: errorText,
+                    border: OutlineInputBorder()
+                    ),
+                ),
+              ],
+            ),
           ),
+
           actions: [
             TextButton(
               child: Text("Cancel"), 
@@ -81,9 +98,17 @@ Future <void> deleteAccount(BuildContext context) async{
               },),
               TextButton(child: Text("Confirm"),
               onPressed: (){
+                if(passwordcontroller.text.isEmpty){
+                  setState((){
+                  errorText = "Password can't be empty";
+                  });
+                  return;
+                }  
                 Navigator.pop(context, passwordcontroller.text);
               },)
           ],
           );
+          });
       });
   }
+}

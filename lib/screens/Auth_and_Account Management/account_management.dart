@@ -143,7 +143,7 @@ class _AccountManagementState extends State<AccountManagement> {
                     content: Text('Are you sure you want to delete your account? \nThis action will delete the account totally and will remove all related data.'),
                     actions: [
                       TextButton(onPressed: () {
-                        deleteAccount(context);
+                        DeleteAccount().deleteAccount(context) ;
                       },
                       child: Text("Yes"),),
                       TextButton(onPressed: (){
