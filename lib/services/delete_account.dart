@@ -16,7 +16,7 @@ Future <void> deleteAccount(BuildContext context) async{
       }
     try{
       AuthCredential credential;
-      //Reauth
+      //Reauthentication
       if(user.providerData.any((info)=> info.providerId == "google.com")){
         //Google Reauth
         final GoogleSignIn Gsignin = GoogleSignIn();
@@ -30,9 +30,10 @@ Future <void> deleteAccount(BuildContext context) async{
           idToken: googleAuth.idToken,
         );
       } 
+      // Reauth with email and password
       else if(user.email != null){
         String email = user.email!;
-        String? password = await showPasswordDialog(context);
+        String? password = await showPasswordDialog(context, email);
         if(password == null) {
           return;
           }
@@ -49,21 +50,30 @@ Future <void> deleteAccount(BuildContext context) async{
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Account deleted successfully.")));
     }
     catch(e){
-      // if(e.toString().contains('supplied auth credential is incorrect')){
-      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Incorrect password. Please try again.")));
-      //   showPasswordDialog(context);
-      // }
-      // else{
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
-      // }
+      if(e.toString().contains('We have blocked all requests')){
+        AlertDialog(
+          title: Text("Account Blocked"),
+          content: Text("We have blocked all requests from your account. Please contact support for assistance."),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("OK"),
+            )
+          ],
+        );
+      }
+      else{
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
       print(e.toString());
+      } 
     }
   }
 
   // Show Password Dialog
-  Future<String?> showPasswordDialog(BuildContext context) async {
+  Future<String?> showPasswordDialog(BuildContext context, String email) async {
       String? errorText; 
-    // TextEditingController passwordcontroller = TextEditingController();
       final formKey = GlobalKey<FormState>();
     return showDialog(
       context: context, 
@@ -77,12 +87,13 @@ Future <void> deleteAccount(BuildContext context) async{
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
+                TextField(
                   controller: passwordcontroller,
                   obscureText: true,
                   decoration: InputDecoration(
                     labelText: 'Password',
                     errorText: errorText,
+                    // errorStyle: TextStyle(fontSize: 11),
                     border: OutlineInputBorder()
                     ),
                 ),
@@ -95,16 +106,34 @@ Future <void> deleteAccount(BuildContext context) async{
               child: Text("Cancel"), 
               onPressed: (){
                 Navigator.pop(context);
-              },),
+              },
+              ),
               TextButton(child: Text("Confirm"),
-              onPressed: (){
-                if(passwordcontroller.text.isEmpty){
+              onPressed: () async{
+                String password = passwordcontroller.text.trim();
+                if(password.isEmpty){
                   setState((){
-                  errorText = "Password can't be empty";
+                  errorText = "Password can't be empty.";
                   });
                   return;
-                }  
-                Navigator.pop(context, passwordcontroller.text);
+                }
+                try{
+                  AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+                  await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(credential);
+                  Navigator.pop(context, password);
+                }
+                catch(e){
+                  if(e.toString().contains('We have blocked all requests')){
+                  setState((){
+                    errorText = "Request blocked, Try again later.";
+                  });
+                  }
+                  else{
+                    setState((){
+                    errorText = "Incorrect password.";
+                    });
+                  }
+                }
               },)
           ],
           );
