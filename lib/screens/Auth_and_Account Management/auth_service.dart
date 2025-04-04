@@ -23,7 +23,7 @@ class AuthService {
     switch (errorcode) {
       case "invalid-email": return "Please enter a valid email address";
       case "invalid-credential": return "Incorrect email or Password";
-      case "too-many-requests": return "This device is temporarily blocked due to too many failed login attempts, try again later.";
+      case "too-many-requests": return "This device is temporarily blocked, try again later.";
       case "network-request-failed":
         return "Network error. Please check your connection.";
       default: return "An error occurred while trying to sign in, try again later.";
