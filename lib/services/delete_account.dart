@@ -6,6 +6,20 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class DeleteAccount{
   final passwordcontroller = TextEditingController();
+// Loading Indicator while deleting
+  void showLoadingIndicator(BuildContext context){
+    showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    });
+  }
+  void dismissLoadingIndicator(BuildContext context) {
+  Navigator.of(context).pop();
+}
 // Delete Account 
 Future <void> deleteAccount(BuildContext context) async{
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -16,13 +30,25 @@ Future <void> deleteAccount(BuildContext context) async{
       }
     try{
       AuthCredential credential;
+      showLoadingIndicator(context);
       //Reauthentication
       if(user.providerData.any((info)=> info.providerId == "google.com")){
         //Google Reauth
         final GoogleSignIn Gsignin = GoogleSignIn();
+        await Gsignin.signOut();
         final GoogleSignInAccount? GUser = await Gsignin.signIn();
         if(GUser == null){
-          throw FirebaseAuthException(code: "ERROR_ABORTED_BY_USER");
+          dismissLoadingIndicator(context);
+          // Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+            content: Text("Reauthentication Canceled"),
+            backgroundColor: Colors.red,
+            duration: Duration(milliseconds: 2200),
+          ));
+          throw Exception('Google Sign In Canceled');
+          // throw FirebaseAuthException(code: "ERROR_ABORTED_BY_USER");
+          
         }
         final GoogleSignInAuthentication googleAuth = await GUser.authentication;
         credential = GoogleAuthProvider.credential(
@@ -35,14 +61,17 @@ Future <void> deleteAccount(BuildContext context) async{
         String email = user.email!;
         String? password = await showPasswordDialog(context, email);
         if(password == null) {
+          dismissLoadingIndicator(context);
           return;
           }
         credential = EmailAuthProvider.credential(email: email, password: password);
       }
       else{
+        dismissLoadingIndicator(context);
         throw FirebaseAuthException(code: "UNKNOWN_PROVIDER");
       }
       await user.reauthenticateWithCredential(credential);
+      dismissLoadingIndicator(context);
       await firestore.collection('users').doc(user.uid).delete();
       await user.delete();
       await auth.signOut();
@@ -50,23 +79,30 @@ Future <void> deleteAccount(BuildContext context) async{
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Account deleted successfully.")));
     }
     catch(e){
-      if(e.toString().contains('We have blocked all requests')){
-        AlertDialog(
-          title: Text("Account Blocked"),
-          content: Text("We have blocked all requests from your account. Please contact support for assistance."),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text("OK"),
+      dismissLoadingIndicator(context);
+      if(e.toString().contains('Google Sign In Canceled')){
+        return;
+      }
+      else if(e.toString().contains('We have blocked all requests')){
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Actions blocked from this account, try again later.")));
+        return;
+      }
+      else if(e.toString().contains('supplied credentials do not correspond to the previously signed in user')){
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("The choosen account is not correct."),
+            backgroundColor: Colors.red,
             )
-          ],
-        );
+            );
+        return;
       }
       else{
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
-      print(e.toString());
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: ${e.toString()}")));
+        print('err ${e.toString()}');
+        return;
       } 
     }
   }
