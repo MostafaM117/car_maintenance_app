@@ -18,11 +18,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    HomePage(),
-    MaintenanceScreen(),
-    Chatbot(),
-    Market(),
+  final List<Widget> _pages = [
+    const HomePage(),
+    const MaintenanceScreen(),
+    const Chatbot(),
+    const Market(),
     Profile(),
   ];
 
@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   final List<String> _icons = [
-    'assets/svg/inpox.svg',
+    'assets/svg/home.svg',
     'assets/svg/mnt.svg',
     'assets/svg/chat.svg',
     'assets/svg/shop.svg',

@@ -1,38 +1,160 @@
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/account_management.dart';
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
-import 'package:car_maintenance/widgets/custom_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-class Profile extends StatelessWidget {
+import '../services/user_data_helper.dart';
+import '../widgets/custom_widgets.dart';
+import 'Auth_and_Account Management/account_management.dart';
+import 'Auth_and_Account Management/auth_service.dart';
+class Profile extends StatefulWidget {
   const Profile({super.key});
 
   @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  String username = 'Loading...';
+  final user = FirebaseAuth.instance.currentUser!;
+  final CollectionReference users =
+      FirebaseFirestore.instance.collection('users');
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsername();
+  }
+
+  void loadUsername() async {
+    String? fetchedUsername = await getUsername();
+    setState(() {
+      username = fetchedUsername ?? 'User';
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // Create button data inside the build method
+    final List<Map<String, dynamic>> buttonData = [
+      {
+        'text': 'Manage your account',
+        'onPressed': () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AccountManagement()),
+            ),
+      },
+      {
+        'text': 'My Cars',
+        'onPressed': () => ()
+      },
+      {
+        'text': 'User Guide',
+        'onPressed': () =>()
+      },
+      {
+        'text': 'Log Out',
+        'onPressed': () {
+          AuthService().signOut(context);
+        },
+      },
+    ];
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.topCenter,
           children: [
-            buildButton(
-              'Manage Your Account', Colors.red.shade700, Colors.white,
-              onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context)=> AccountManagement()));
-              }
+            // Main container
+            Container(
+              margin: const EdgeInsets.only(top: 100),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height - 75,
+              decoration: ShapeDecoration(
+                color: AppColors.secondaryText,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 1, color: Color(0xFFE7E7E7)),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50),
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // الإيميل داخل الكونتينر من فوق
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Text(
+                        '${user.email}',
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.7),
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 130),
+                    for (var button in buttonData)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: buildButton(
+                          button['text'],
+                          button['text'] == 'Log Out'
+                              ? AppColors.buttonColor
+                              : AppColors.secondaryText.withOpacity(0.9),
+                          button['text'] == 'Log Out'
+                              ? AppColors.secondaryText
+                              : Colors.black,
+                          onPressed: button['onPressed'],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
-            SizedBox(
-              height: 30,
-            ),
-            buildButton(
-              'Sign Out', Colors.red.shade700, Colors.white,
-              onPressed: () {
-                AuthService().signOut(context);
-              }
+
+            // صورة واسم المستخدم خارج الكونتينر
+            Positioned(
+              top: 20,
+              left: 16,
+              right: 00,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // صورة البروفايل
+                  Container(
+                    width: 130,
+                    height: 130,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.secondaryText,
+                      border: Border.all(
+                        color: AppColors.borderSide,
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  // اسم المستخدم
+                  Expanded(
+                    child: Text(
+                      username,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryText,
+                        fontFamily: 'Inter',
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
