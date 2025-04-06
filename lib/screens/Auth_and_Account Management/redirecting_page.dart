@@ -33,18 +33,18 @@ class RedirectingPage extends StatelessWidget {
                   return const Scaffold(body: Center(child: CircularProgressIndicator()));
                 }
                 else if (!userSnaphot.hasData || !userSnaphot.data!.exists){
+                  String? fullname = user.displayName;
+                  String? username = fullname?.replaceAll('_', ' ');
                   FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-                    'username': null,
+                    'username': username,
                     'email': user.email,
+                    "uid": user.uid,
                     'carAdded': false,
                   });
-                  return CompleteSigninData();
+                  return AddCarScreen();
                 }
                 final userData = userSnaphot.data!.data() as Map<String, dynamic>; 
-                if(userData["username"] == null){
-                  return CompleteSigninData();
-                }
-                else if(userData["carAdded"] == false){
+                if(userData["carAdded"] == false){
                   print('You haven\'t added your first car yet.');
                   return AddCarScreen();
                 }
