@@ -236,13 +236,9 @@ Widget buildDropdownField({
 
 Widget buildTextField({
   required TextEditingController controller,
-  String? hintText,
+  required String hintText,
   String? label,
   required String? Function(dynamic value) validator,
-  Widget? suffixIcon,
-  Key? key,
-  bool isEnabled = true,
-  String? prefixText,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,7 +248,7 @@ Widget buildTextField({
           label,
           style: textStyleWhite.copyWith(fontSize: 16),
         ),
-      const SizedBox(height: 8),
+      SizedBox(height: 8),
       Container(
         height: 45,
         decoration: ShapeDecoration(
@@ -267,26 +263,16 @@ Widget buildTextField({
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16),
         alignment: Alignment.center,
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  border: InputBorder.none,
-                  isCollapsed: true,
-                  prefixText: prefixText,
-                  prefixStyle:textStyleGray ,
-                  hintText: hintText,
-                  hintStyle: textStyleGray,
-                ),
-                style: textStyleWhite,
-                enabled: isEnabled,
-                textAlignVertical: TextAlignVertical.center,
-              ),
-            ),
-            if (suffixIcon != null) suffixIcon,
-          ],
+        child: TextField(
+          controller: controller,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            isCollapsed: true,
+            hintText: hintText,
+            hintStyle: textStyleGray,
+          ),
+          style: textStyleGray,
+          textAlignVertical: TextAlignVertical.center,
         ),
       ),
     ],

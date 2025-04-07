@@ -1,5 +1,3 @@
-// lib/screens/profile.dart
-
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,9 +6,6 @@ import '../services/user_data_helper.dart';
 import '../widgets/custom_widgets.dart';
 import 'Auth_and_Account Management/account_management.dart';
 import 'Auth_and_Account Management/auth_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
-
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
@@ -23,23 +18,11 @@ class _ProfileState extends State<Profile> {
   final user = FirebaseAuth.instance.currentUser!;
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
-  File? _profileImage;
 
   @override
   void initState() {
     super.initState();
     loadUsername();
-    _loadImage();
-  }
-
-  void _loadImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? imagePath = prefs.getString('profileImagePath');
-    if (imagePath != null) {
-      setState(() {
-        _profileImage = File(imagePath);
-      });
-    }
   }
 
   void loadUsername() async {
@@ -51,6 +34,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    // Create button data inside the build method
     final List<Map<String, dynamic>> buttonData = [
       {
         'text': 'Manage your account',
@@ -61,11 +45,11 @@ class _ProfileState extends State<Profile> {
       },
       {
         'text': 'My Cars',
-        'onPressed': () => () {},
+        'onPressed': () => ()
       },
       {
         'text': 'User Guide',
-        'onPressed': () => () {},
+        'onPressed': () =>()
       },
       {
         'text': 'Log Out',
@@ -80,6 +64,7 @@ class _ProfileState extends State<Profile> {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
+            // Main container
             Container(
               margin: const EdgeInsets.only(top: 100),
               width: double.infinity,
@@ -100,6 +85,7 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // الإيميل داخل الكونتينر من فوق
                     Align(
                       alignment: Alignment.topRight,
                       child: Text(
@@ -131,6 +117,8 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ),
+
+            // صورة واسم المستخدم خارج الكونتينر
             Positioned(
               top: 20,
               left: 16,
@@ -138,25 +126,21 @@ class _ProfileState extends State<Profile> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  // صورة البروفايل
                   Container(
                     width: 130,
                     height: 130,
-                    child: _profileImage != null
-                        ? CircleAvatar(
-                            radius: 40,
-                            backgroundImage: FileImage(_profileImage!),
-                          )
-                        : CircleAvatar(
-                            radius: 40,
-                            backgroundColor: AppColors.secondaryText,
-                            child: Icon(
-                              Icons.person,
-                              color: Colors.white,
-                              size: 50,
-                            ),
-                          ),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.secondaryText,
+                      border: Border.all(
+                        color: AppColors.borderSide,
+                        width: 1,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 15),
+                  // اسم المستخدم
                   Expanded(
                     child: Text(
                       username,
