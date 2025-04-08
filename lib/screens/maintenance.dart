@@ -34,7 +34,60 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     super.dispose();
   }
 
-  final TextEditingController maintenanceController = TextEditingController();
+  void _showAddMaintenanceDialog(BuildContext context) {
+    final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController mileageController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Add Maintenance'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: mileageController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(labelText: 'Mileage'),
+              ),
+              TextField(
+                controller: descriptionController,
+                decoration: InputDecoration(labelText: 'Description'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final mileage = int.tryParse(mileageController.text);
+                final description = descriptionController.text.trim();
+
+                if (description.isNotEmpty) {
+                  firestoreService.addMaintenanceList(
+                    description,
+                    false,
+                    mileage!,
+                  );
+                  NotiService().showNotification(
+                    title: 'Maintenance Added!',
+                    body: description,
+                  );
+                }
+
+                Navigator.of(context).pop();
+              },
+              child: Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,60 +98,65 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
           title: Text('Your Maintenance Schedule'),
           bottom: TabBar(tabs: [
             Tab(text: 'Upcoming'),
-            Tab(text: 'Add New'),
+            Tab(text: 'History'),
           ]),
         ),
         body: TabBarView(children: <Widget>[
-          // ✅ هنا شيلنا Expanded
-          StreamBuilder<List<MaintenanceList>>(
-            stream: firestoreService.getMaintenanceList(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data == null) {
-                return Center(child: CircularProgressIndicator());
-              }
-              final maintList = snapshot.data!;
-              if (maintList.isEmpty) {
-                return Center(child: Text("No maintenance records available."));
-              }
-              return ListView.builder(
-                itemCount: maintList.length,
-                itemBuilder: (context, index) {
-                  final maintenanceItem = maintList[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(maintenanceItem.mileage.toString()),
-                      subtitle: Text(maintenanceItem.description),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
           Column(
             children: [
+              Expanded(
+                child: StreamBuilder<List<MaintenanceList>>(
+                  stream: firestoreService.getMaintenanceList(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data == null) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    final maintList = snapshot.data!;
+                    if (maintList.isEmpty) {
+                      return Center(
+                          child: Text("No maintenance records available."));
+                    }
+                    return ListView.builder(
+                      itemCount: maintList.length,
+                      itemBuilder: (context, index) {
+                        final maintenanceItem = maintList[index];
+                        bool isChecked = false; // Default value for checkbox
+                        return Card(
+                          child: ListTile(
+                            title: Text(maintenanceItem.mileage.toString()),
+                            subtitle: Text(maintenanceItem.description),
+                            trailing: Checkbox(
+                              value: isChecked,
+                              onChanged: (bool? isDone) {
+                                setState(() {
+                                  isChecked = isDone!;
+                                  //logic to move it to history
+                                });
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: maintenanceController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Maintenance Description',
-                    border: OutlineInputBorder(),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.black12,
+                    shape: CircleBorder(),
+                    onPressed: () => _showAddMaintenanceDialog(context),
+                    child: Icon(Icons.add),
                   ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  NotiService().showNotification(
-                    title: 'Maintenance Added!',
-                    body: maintenanceController.text,
-                  );
-                  firestoreService
-                      .addMaintenanceList(maintenanceController.text);
-                },
-                child: Text('Add Maintenance'),
-              ),
             ],
           ),
+          // ✅ History Tab: now empty
+          Center(child: Text('No history yet.')),
         ]),
       ),
     );

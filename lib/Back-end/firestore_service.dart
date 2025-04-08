@@ -12,9 +12,10 @@ class FirestoreService {
             .collection('Maintenance_Schedule_${MaintID().maintID}');
 
   //add special cases
-  Future<void> addMaintenanceList(String description) async {
-    await maintCollection
-        .add({"Description": description, "Periodic": false, "mileage": 0});
+  Future<void> addMaintenanceList(
+      String description, bool periodic, int mileage) async {
+    await maintCollection.add(
+        {"Description": description, "Periodic": false, "mileage": mileage});
   }
 
   //get lists
