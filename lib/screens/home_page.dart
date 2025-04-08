@@ -6,6 +6,7 @@ import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
 import 'package:car_maintenance/widgets/car_image_widget.dart'; // Updated import for car image widget
 import 'package:car_maintenance/services/car_image_service.dart'; // Import service for car images
 import 'formscreens/formscreen1.dart';
+import 'package:car_maintenance/models/MaintID.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -143,6 +144,15 @@ class _HomePageState extends State<HomePage> {
                               cars.firstWhere((car) => car['id'] == value);
                           setState(() {
                             selectedCar = selectedCarData;
+                            // Update MaintID with selected car details
+                            // We should change the image changer to Swap car in account screen not home
+                            MaintID().selectedMake =
+                                selectedCar!['make'].toString();
+                            MaintID().selectedModel =
+                                selectedCar!['model'].toString();
+                            MaintID().selectedYear =
+                                selectedCar!['year'].toString();
+                            print(MaintID().maintID);
                           });
                         } else {
                           setState(() {

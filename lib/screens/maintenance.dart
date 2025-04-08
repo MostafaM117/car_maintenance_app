@@ -18,6 +18,20 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   void initState() {
     super.initState();
     firestoreService = FirestoreService(MaintID());
+    // Listen for changes in MaintID and update the FirestoreService accordingly
+    MaintID().addListener(_updateService);
+  }
+
+  void _updateService() {
+    setState(() {
+      firestoreService = FirestoreService(MaintID());
+    });
+  }
+
+  @override
+  void dispose() {
+    MaintID().removeListener(_updateService);
+    super.dispose();
   }
 
   final TextEditingController maintenanceController = TextEditingController();
@@ -78,7 +92,8 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                     title: 'Maintenance Added!',
                     body: maintenanceController.text,
                   );
-                  firestoreService.addMaintenanceList(maintenanceController.text);
+                  firestoreService
+                      .addMaintenanceList(maintenanceController.text);
                 },
                 child: Text('Add Maintenance'),
               ),
