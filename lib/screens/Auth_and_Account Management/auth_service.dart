@@ -56,11 +56,6 @@ class AuthService {
     }
     else if (!userExists.exists) {
       _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
-      // await userDoc.set({
-      //   // "username" : username,
-      //   "email": userCredential.user!.email,
-      //   "carAdded": false,
-      // });
     }
     Navigator.pop(context);
     }
