@@ -61,8 +61,8 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 50),
               Text(
-                'Sign in to appName',
-                style: textStyleWhite.copyWith(fontSize: 24),
+                'Sign in to Motorgy',
+                style: textStyleWhite.copyWith(fontSize: 24,fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(
@@ -124,8 +124,8 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 15),
               googleButton(handleGoogleSignIn),
               const SizedBox(height: 15),
-              appleButton(() {}),
-              const SizedBox(height: 15),
+              // appleButton(() {}),
+              // const SizedBox(height: 15),
               Center(
                 child: GestureDetector(
                   onTap: () {
