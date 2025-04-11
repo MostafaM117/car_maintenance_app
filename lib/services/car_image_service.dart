@@ -9,7 +9,7 @@ class CarImageService {
     String basePath = 'assets/images/cars/';
     String imagePath = '';
 
-    // Toyota models
+    // Toyota models 
     if (make == 'Toyota' && model == 'Corolla') {
       if (year >= 2019) {
         imagePath = '${basePath}Toyota_Corolla_2019_2025.png';
@@ -20,7 +20,7 @@ class CarImageService {
       imagePath = '${basePath}Toyota_Yaris_2015_2019.png';
     }
 
-    // Kia models
+    // Kia models 
     else if (make == 'Kia' && model == 'Cerato') {
       if (year >= 2019 && year <= 2021) {
         imagePath = '${basePath}Kia_Cerato_2019_2021.png';
@@ -41,33 +41,37 @@ class CarImageService {
       }
     }
 
-    // Hyundai models
+    // Hyundai models 
     else if (make == 'Hyundai' && model == 'Accent RB') {
       imagePath = '${basePath}Hyundai_Accent_RB_2014_2025.png';
     } else if (make == 'Hyundai' && model == 'Elantra HD') {
       imagePath = '${basePath}Hyundai_Elantra_HD_2017_2024.png';
     } else if (make == 'Hyundai' && model == 'Elantra AD') {
-      if (year >= 2023) {
-        imagePath = '${basePath}Hyundai_Elantra_AD_2023_2025.png';
-      } else if (year >= 2017 && year <= 2022) {
-        imagePath = '${basePath}Hyundai_Elantra_AD_2017_2022.png';
+      if (year >= 2019) {
+        imagePath = '${basePath}Hyundai_Elantra_AD_2019_2025.png';
+      } else if (year == 2017 || year == 2018) {
+        imagePath = '${basePath}Hyundai_Elantra_AD_2017_2018.png';
+      }
+    } else if (make == 'Hyundai' && model == 'Elantra CN7') {
+      imagePath = '${basePath}Hyundai_Elantra_CN7_2021_2025.png';
+    } else if (make == 'Hyundai' && model == 'Tucson') {
+      if (year >= 2021) {
+        imagePath = '${basePath}Hyundai_Tucson_2021_2025.png';
       } else {
-        imagePath = '${basePath}Hyundai_Elantra_AD_2015_2016.png';
+        imagePath = '${basePath}Hyundai_Tucson_2017_2020.png';
       }
     }
 
-    // Nissan models
+    // Nissan models 
     else if (make == 'Nissan' && model == 'Sunny') {
       imagePath = '${basePath}Nissan_Sunny_2017_2025.png';
     } else if (make == 'Nissan' && model == 'Sentra') {
       imagePath = '${basePath}Nissan_Sentra_2015_2025.png';
     }
 
-    // Chevrolet models
+    // Chevrolet models 
     else if (make == 'Chevrolet' && model == 'Optra') {
-      if (year == 2025) {
-        imagePath = '${basePath}Chevrolet_Optra_2025.png';
-      } else {
+      if (year >= 2015) {
         imagePath = '${basePath}Chevrolet_Optra_2015_2023.png';
       }
     } else if (make == 'Chevrolet' && model == 'Aveo') {
@@ -81,12 +85,25 @@ class CarImageService {
       imagePath = '${basePath}MG_ZS_2019_2025.png';
     }
 
-    // Fiat models
+    // Fiat models 
     else if (make == 'Fiat' && model == 'Tipo') {
       imagePath = '${basePath}Fiat_Tipo_2017_2025.png';
     }
+    
+    // Renault models 
+    else if (make == 'Renault' && model == 'Megane') {
+      imagePath = '${basePath}Renault_Megane_2017_2025.png';
+    } else if (make == 'Renault' && model == 'Logan') {
+      if (year >= 2018) {
+        imagePath = '${basePath}Renault_Logan_2018_2022.png';
+      } else {
+        imagePath = '${basePath}Renault_Logan_2015_2017.png';
+      }
+    } else if (make == 'Renault' && model == 'Fluence') {
+      imagePath = '${basePath}Renault_Fluence_2014_2017.png';
+    }
 
-    // Default pattern for other cars
+    // Default pattern
     else {
       imagePath = '${basePath}${make}_${model.replaceAll(' ', '_')}.png';
     }
@@ -94,7 +111,7 @@ class CarImageService {
     return imagePath;
   }
 
-  /// Get car image widget with proper error handling
+  /// Get car image widget 
   static Widget getCarImageWidget(
     String? make,
     String? model,
@@ -113,7 +130,6 @@ class CarImageService {
       height: height,
       fit: fit,
       errorBuilder: (context, error, stackTrace) {
-        // Fallback to a car icon if image can't be loaded
         return Icon(
           Icons.directions_car,
           size: fallbackIconSize,
