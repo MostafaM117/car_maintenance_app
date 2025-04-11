@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
 import 'package:car_maintenance/widgets/car_image_widget.dart'; // Updated import for car image widget
 import 'package:car_maintenance/services/car_image_service.dart'; // Import service for car images
+import 'package:car_maintenance/widgets/mileage_display.dart';
 import '../services/user_data_helper.dart';
 import '../widgets/SubtractWave_widget.dart';
 import 'formscreens/formscreen1.dart';
+import 'package:car_maintenance/models/MaintID.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -66,7 +68,7 @@ class _HomePageState extends State<HomePage> {
             //   svgAssetPath: 'assets/svg/notification.svg',
             //   onTap: (){},
             // ),
-            // Add Car Button (original UI)
+            // Add Car Button
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -105,6 +107,28 @@ class _HomePageState extends State<HomePage> {
                       fit: BoxFit.contain,
                     ),
                   ),
+                  SizedBox(height: 5),
+                  Text(
+                    'ID: ${selectedCar!['id'].toString().substring(selectedCar!['id'].toString().length - 4)}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  MileageDisplay(
+                    carId: selectedCar!['id'],
+                    currentMileage: selectedCar!['mileage'] ?? 0,
+                    onMileageUpdated: (newMileage) {
+                      setState(() {
+                        selectedCar = {
+                          ...selectedCar!,
+                          'mileage': newMileage,
+                        };
+                      });
+                    },
+                  ),
                 ],
               ),
 
@@ -133,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                 List<Map<String, dynamic>> cars = [];
                 for (var doc in snapshot.data!.docs) {
                   Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
-                  car['id'] = doc.id; // Add document ID to identify the car
+                  car['id'] = doc.id; 
                   cars.add(car);
                 }
 
@@ -142,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                   bool found =
                       cars.any((car) => car['id'] == selectedCar!['id']);
                   if (!found) {
-                    // Need to use Future.microtask to avoid changing state during build
+                    
                     Future.microtask(() => setState(() => selectedCar = null));
                   }
                 }
@@ -164,6 +188,15 @@ class _HomePageState extends State<HomePage> {
                               cars.firstWhere((car) => car['id'] == value);
                           setState(() {
                             selectedCar = selectedCarData;
+                            // Update MaintID with selected car details
+                            // We should change the image changer to Swap car in account screen not home
+                            MaintID().selectedMake =
+                                selectedCar!['make'].toString();
+                            MaintID().selectedModel =
+                                selectedCar!['model'].toString();
+                            MaintID().selectedYear =
+                                selectedCar!['year'].toString();
+                            print(MaintID().maintID);
                           });
                         } else {
                           setState(() {
