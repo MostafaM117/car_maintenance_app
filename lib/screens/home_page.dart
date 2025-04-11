@@ -3,8 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
-import 'package:car_maintenance/widgets/car_image_widget.dart'; // Updated import for car image widget
-import 'package:car_maintenance/services/car_image_service.dart'; // Import service for car images
+import 'package:car_maintenance/widgets/car_image_widget.dart'; 
+import 'package:car_maintenance/services/car_image_service.dart'; 
+import 'package:car_maintenance/widgets/mileage_display.dart';
 
 import 'formscreens/formscreen1.dart';
 
@@ -20,7 +21,6 @@ class _HomePageState extends State<HomePage> {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
       
-  // Track currently selected car for image display
   Map<String, dynamic>? selectedCar;
 
   @override
@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
             Text("Signed in as ${user.email}"),
             SizedBox(height: 20),
             
-            // Add Car Button (original UI)
+            // Add Car Button 
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -85,12 +85,33 @@ class _HomePageState extends State<HomePage> {
                       fit: BoxFit.contain,
                     ),
                   ),
+                  SizedBox(height: 5),
+                  Text(
+                    'ID: ${selectedCar!['id'].toString().substring(selectedCar!['id'].toString().length - 4)}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  MileageDisplay(
+                    carId: selectedCar!['id'],
+                    currentMileage: selectedCar!['mileage'] ?? 0,
+                    onMileageUpdated: (newMileage) {
+                      setState(() {
+                        selectedCar = {
+                          ...selectedCar!,
+                          'mileage': newMileage,
+                        };
+                      });
+                    },
+                  ),
                 ],
               ),
             
             SizedBox(height: 20),
             
-            // Simple car selector dropdown
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('cars')
@@ -109,19 +130,17 @@ class _HomePageState extends State<HomePage> {
                   return Text('No cars found. Add a car to see its image.');
                 }
                 
-                // Convert documents to List of Maps
                 List<Map<String, dynamic>> cars = [];
                 for (var doc in snapshot.data!.docs) {
                   Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
-                  car['id'] = doc.id; // Add document ID to identify the car
+                  car['id'] = doc.id; 
                   cars.add(car);
                 }
                 
-                // Reset selectedCar if it's not in the list anymore
                 if (selectedCar != null) {
                   bool found = cars.any((car) => car['id'] == selectedCar!['id']);
                   if (!found) {
-                    // Need to use Future.microtask to avoid changing state during build
+                    
                     Future.microtask(() => setState(() => selectedCar = null));
                   }
                 }

@@ -54,12 +54,20 @@ class CarImageService {
       imagePath = '${basePath}Hyundai_Elantra_HD_2017_2024.png';
     }
     else if (make == 'Hyundai' && model == 'Elantra AD') {
-      if (year >= 2023) {
-        imagePath = '${basePath}Hyundai_Elantra_AD_2023_2025.png';
-      } else if (year >= 2017 && year <= 2022) {
-        imagePath = '${basePath}Hyundai_Elantra_AD_2017_2022.png';
+      if (year >= 2019) {
+        imagePath = '${basePath}Hyundai_Elantra_AD_2019_2025.png';
+      } else if (year == 2017 || year == 2018) {
+        imagePath = '${basePath}Hyundai_Elantra_AD_2017_2018.png';
+      }
+    }
+    else if (make == 'Hyundai' && model == 'Elantra CN7') {
+      imagePath = '${basePath}Hyundai_Elantra_CN7_2021_2025.png';
+    }
+    else if (make == 'Hyundai' && model == 'Tucson') {
+      if (year >= 2021) {
+        imagePath = '${basePath}Hyundai_Tucson_2021_2025.png';
       } else {
-        imagePath = '${basePath}Hyundai_Elantra_AD_2015_2016.png';
+        imagePath = '${basePath}Hyundai_Tucson_2017_2020.png';
       }
     }
     
@@ -73,9 +81,7 @@ class CarImageService {
     
     // Chevrolet models
     else if (make == 'Chevrolet' && model == 'Optra') {
-      if (year == 2025) {
-        imagePath = '${basePath}Chevrolet_Optra_2025.png';
-      } else {
+      if (year >= 2015) {
         imagePath = '${basePath}Chevrolet_Optra_2015_2023.png';
       }
     }
@@ -94,6 +100,21 @@ class CarImageService {
     // Fiat models
     else if (make == 'Fiat' && model == 'Tipo') {
       imagePath = '${basePath}Fiat_Tipo_2017_2025.png';
+    }
+    
+    // Renault models
+    else if (make == 'Renault' && model == 'Megane') {
+      imagePath = '${basePath}Renault_Megane_2017_2025.png';
+    }
+    else if (make == 'Renault' && model == 'Logan') {
+      if (year >= 2018) {
+        imagePath = '${basePath}Renault_Logan_2018_2022.png';
+      } else {
+        imagePath = '${basePath}Renault_Logan_2015_2017.png';
+      }
+    }
+    else if (make == 'Renault' && model == 'Fluence') {
+      imagePath = '${basePath}Renault_Fluence_2014_2017.png';
     }
     
     // Default pattern for other cars
