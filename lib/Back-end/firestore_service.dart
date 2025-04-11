@@ -12,10 +12,14 @@ class FirestoreService {
             .collection('Maintenance_Schedule_${MaintID().maintID}');
 
   //add special cases
-  Future<void> addMaintenanceList(
-      String description, bool periodic, int mileage) async {
-    await maintCollection.add(
-        {"Description": description, "Periodic": false, "mileage": mileage});
+  Future<void> addMaintenanceList(String description, bool periodic,
+      int mileage, DateTime expectedDate) async {
+    await maintCollection.add({
+      "Description": description,
+      "Periodic": false,
+      "mileage": mileage,
+      "expectedDate": expectedDate
+    });
   }
 
   //get lists
@@ -32,6 +36,8 @@ class FirestoreService {
           description: data['Description'] ?? '',
           mileage: (data['mileage'] ?? 0) as int,
           periodic: (data['Periodic'] ?? false) as bool,
+          expectedDate: (data['expectedDate'])?.toDate() ??
+              DateTime.now().add(Duration(days: 30)),
         );
       }).toList();
     });

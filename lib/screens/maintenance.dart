@@ -34,6 +34,17 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     super.dispose();
   }
 
+  void addMaintenanceHistory(
+      String description, bool periodic, int mileage, DateTime expectedDate) {
+    ({
+      // logic to add special cases to the history tab
+      "Description": description,
+      "Periodic": false,
+      "mileage": mileage,
+      "expectedDate": expectedDate
+    });
+  }
+
   void _showAddMaintenanceDialog(BuildContext context) {
     final TextEditingController descriptionController = TextEditingController();
     final TextEditingController mileageController = TextEditingController();
@@ -66,12 +77,15 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
               onPressed: () {
                 final mileage = int.tryParse(mileageController.text);
                 final description = descriptionController.text.trim();
+                final expectedDate = DateTime
+                    .now(); //will be changed after implementing the tracker
 
                 if (description.isNotEmpty) {
-                  firestoreService.addMaintenanceList(
+                  addMaintenanceHistory(
                     description,
                     false,
                     mileage!,
+                    expectedDate,
                   );
                   NotiService().showNotification(
                     title: 'Maintenance Added!',
@@ -120,11 +134,19 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       itemCount: maintList.length,
                       itemBuilder: (context, index) {
                         final maintenanceItem = maintList[index];
-                        bool isChecked = false; // Default value for checkbox
+                        bool isChecked = false;
                         return Card(
                           child: ListTile(
                             title: Text(maintenanceItem.mileage.toString()),
-                            subtitle: Text(maintenanceItem.description),
+                            subtitle: Column(
+                              children: [
+                                Text(
+                                  (maintenanceItem.expectedDate).toString(),
+                                ),
+                                SizedBox(height: 4),
+                                Text(maintenanceItem.description),
+                              ],
+                            ),
                             trailing: Checkbox(
                               value: isChecked,
                               onChanged: (bool? isDone) {
@@ -155,7 +177,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
               ),
             ],
           ),
-          // ✅ History Tab: now empty
+          // Maintenance History Tab: now empty
           Center(child: Text('No history yet.')),
         ]),
       ),
