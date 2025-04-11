@@ -8,15 +8,18 @@ class FirestoreService {
   final CollectionReference maintCollection;
 
   FirestoreService(MaintID maintID)
-      : maintCollection = FirebaseFirestore.instance.collection(
-            'Maintenance_Schedule_${MaintID().maintID}'); //attempt 1
-  // final CollectionReference maintCollection = FirebaseFirestore.instance
-  //     .collection('Maintenance_Schedule_Nissan_Sunny');
+      : maintCollection = FirebaseFirestore.instance
+            .collection('Maintenance_Schedule_${MaintID().maintID}');
 
   //add special cases
-  Future<void> addMaintenanceList(String description) async {
-    await maintCollection
-        .add({"Description": description, "Periodic": false, "mileage": 0});
+  Future<void> addMaintenanceList(String description, bool periodic,
+      int mileage, DateTime expectedDate) async {
+    await maintCollection.add({
+      "Description": description,
+      "Periodic": false,
+      "mileage": mileage,
+      "expectedDate": expectedDate
+    });
   }
 
   //get lists
@@ -33,6 +36,8 @@ class FirestoreService {
           description: data['Description'] ?? '',
           mileage: (data['mileage'] ?? 0) as int,
           periodic: (data['Periodic'] ?? false) as bool,
+          expectedDate: (data['expectedDate'])?.toDate() ??
+              DateTime.now().add(Duration(days: 30)),
         );
       }).toList();
     });
