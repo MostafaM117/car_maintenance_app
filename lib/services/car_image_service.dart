@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CarImageService {
   static String getCarImagePath(String? make, String? model, int? year) {
     if (make == null || model == null || year == null) {
-      return 'assets/images/default_car.png';
+      return 'assets/images/cars/default_car.png.png';
     }
 
     String basePath = 'assets/images/cars/';
@@ -87,9 +87,9 @@ class CarImageService {
 
     // Fiat models 
     else if (make == 'Fiat' && model == 'Tipo') {
-      if(year >= 2017 && year <= 2021  )
-      imagePath = '${basePath}Fiat_Tipo_2017_2021.png';
-      else {
+      if(year >= 2017 && year <= 2021  ) {
+        imagePath = '${basePath}Fiat_Tipo_2017_2021.png';
+      } else {
       imagePath = '${basePath}Fiat_Tipo_2022_2025.png';
       }
     }
