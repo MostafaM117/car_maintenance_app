@@ -1,13 +1,13 @@
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_page.dart';
+// import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
 import 'package:car_maintenance/widgets/car_image_widget.dart'; // Updated import for car image widget
-import 'package:car_maintenance/services/car_image_service.dart'; // Import service for car images
+// import 'package:car_maintenance/services/car_image_service.dart'; // Import service for car images
 import 'package:car_maintenance/widgets/mileage_display.dart';
 import '../services/user_data_helper.dart';
-import '../widgets/SubtractWave_widget.dart';
+// import '../widgets/SubtractWave_widget.dart';
 import 'formscreens/formscreen1.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 
