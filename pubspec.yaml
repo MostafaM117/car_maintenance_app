@@ -47,6 +47,9 @@ dependencies:
   permission_handler: ^11.4.0
   flutter_timezone: ^4.1.0
   timezone: ^0.10.0
+  google_generative_ai: ^0.4.6
+  dash_chat_2: ^0.0.21
+  flutter_dotenv: ^5.2.1
 
 
 dev_dependencies:
@@ -77,6 +80,7 @@ flutter:
     - assets/images/cars/
     - assets/images/default_car.png
     - assets/svg/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
