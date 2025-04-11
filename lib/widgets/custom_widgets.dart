@@ -285,7 +285,6 @@ Widget buildUserNameField({
   required String? Function(String? value) validator,
 }) {
   if (isEditing) {
-    // شكل editable
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -326,7 +325,6 @@ Widget buildUserNameField({
       ],
     );
   } else {
-    // شكل view فقط بدون Container
     return TextField(
       controller: controller,
       enabled: false,
