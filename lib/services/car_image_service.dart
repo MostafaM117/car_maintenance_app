@@ -87,7 +87,11 @@ class CarImageService {
 
     // Fiat models 
     else if (make == 'Fiat' && model == 'Tipo') {
-      imagePath = '${basePath}Fiat_Tipo_2017_2025.png';
+      if(year >= 2017 && year <= 2021  )
+      imagePath = '${basePath}Fiat_Tipo_2017_2021.png';
+      else {
+      imagePath = '${basePath}Fiat_Tipo_2022_2025.png';
+      }
     }
     
     // Renault models 
