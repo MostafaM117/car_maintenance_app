@@ -1,10 +1,8 @@
-import 'package:car_maintenance/forms/complete_signin_data.dart';
 import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:car_maintenance/screens/welcome_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../formscreens/formscreen1.dart';
 
 class RedirectingPage extends StatelessWidget {
@@ -33,18 +31,18 @@ class RedirectingPage extends StatelessWidget {
                   return const Scaffold(body: Center(child: CircularProgressIndicator()));
                 }
                 else if (!userSnaphot.hasData || !userSnaphot.data!.exists){
+                  String? fullname = user.displayName;
+                  String? username = fullname?.replaceAll('_', ' ');
                   FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-                    'username': null,
+                    'username': username,
                     'email': user.email,
+                    "uid": user.uid,
                     'carAdded': false,
                   });
-                  return CompleteSigninData();
+                  return AddCarScreen();
                 }
                 final userData = userSnaphot.data!.data() as Map<String, dynamic>; 
-                if(userData["username"] == null){
-                  return CompleteSigninData();
-                }
-                else if(userData["carAdded"] == false){
+                if(userData["carAdded"] == false){
                   print('You haven\'t added your first car yet.');
                   return AddCarScreen();
                 }

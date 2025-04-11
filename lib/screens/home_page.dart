@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
 import 'package:car_maintenance/widgets/car_image_widget.dart'; // Updated import for car image widget
 import 'package:car_maintenance/services/car_image_service.dart'; // Import service for car images
+import '../services/user_data_helper.dart';
+import '../widgets/SubtractWave_widget.dart';
 import 'formscreens/formscreen1.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 
@@ -19,9 +21,22 @@ class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser!;
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
+  String? username;
 
   // Track currently selected car for image display
   Map<String, dynamic>? selectedCar;
+  void loadUsername() async {
+    String? fetchedUsername = await getUsername();
+    setState(() {
+      username = fetchedUsername;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsername();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +60,13 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text("Signed in as ${user.email}"),
             SizedBox(height: 20),
-
+            // WaveTag(
+            //   text: username != null
+            //       ? 'Welcome Back, $username'
+            //       : 'Welcome Back, User',
+            //   svgAssetPath: 'assets/svg/notification.svg',
+            //   onTap: (){},
+            // ),
             // Add Car Button (original UI)
             ElevatedButton.icon(
               onPressed: () {

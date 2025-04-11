@@ -66,12 +66,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 // User Greeting
                 Text(
                   username != null ? 'Hi $username' : 'Hi User',
-                  style: const TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Inter',
-                  ),
+                  style: textStyleWhite.copyWith(fontSize: 24)
                 ),
                 const SizedBox(height: 8),
                 Text(
