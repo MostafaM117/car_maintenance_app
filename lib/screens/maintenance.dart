@@ -1,3 +1,4 @@
+import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/notifications/notification.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
@@ -11,7 +12,14 @@ class MaintenanceScreen extends StatefulWidget {
 }
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
-  final FirestoreService firestoreService = FirestoreService();
+  late FirestoreService firestoreService;
+
+  @override
+  void initState() {
+    super.initState();
+    firestoreService = FirestoreService(MaintID());
+  }
+
   final TextEditingController maintenanceController = TextEditingController();
 
   @override
@@ -27,42 +35,41 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
           ]),
         ),
         body: TabBarView(children: <Widget>[
-          Expanded(
-            child: StreamBuilder<List<MaintenanceList>>(
-              stream: firestoreService.getMaintenanceList(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData || snapshot.data == null) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                final maintList = snapshot.data!;
-                //debug print
-                if (maintList.isEmpty) {
-                  print("Maintenance list is empty!");
-                  return Center(
-                      child: Text("No maintenance records available."));
-                }
-                return ListView.builder(
-                  itemCount: maintList.length,
-                  itemBuilder: (context, index) {
-                    final maintenanceItem = maintList[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text(maintenanceItem.mileage.toString()),
-                        subtitle: Text(maintenanceItem.description),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+          // ✅ هنا شيلنا Expanded
+          StreamBuilder<List<MaintenanceList>>(
+            stream: firestoreService.getMaintenanceList(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.data == null) {
+                return Center(child: CircularProgressIndicator());
+              }
+              final maintList = snapshot.data!;
+              if (maintList.isEmpty) {
+                return Center(child: Text("No maintenance records available."));
+              }
+              return ListView.builder(
+                itemCount: maintList.length,
+                itemBuilder: (context, index) {
+                  final maintenanceItem = maintList[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(maintenanceItem.mileage.toString()),
+                      subtitle: Text(maintenanceItem.description),
+                    ),
+                  );
+                },
+              );
+            },
           ),
-          // add special case maintenance? to be tweaked
           Column(
             children: [
-              TextField(
-                controller: maintenanceController,
-                decoration: InputDecoration(
-                  hintText: 'Enter Maintenance Description',
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: maintenanceController,
+                  decoration: InputDecoration(
+                    hintText: 'Enter Maintenance Description',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               ),
               ElevatedButton(
@@ -71,8 +78,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                     title: 'Maintenance Added!',
                     body: maintenanceController.text,
                   );
-                  firestoreService
-                      .addMaintenanceList(maintenanceController.text);
+                  firestoreService.addMaintenanceList(maintenanceController.text);
                 },
                 child: Text('Add Maintenance'),
               ),

@@ -1,8 +1,12 @@
+import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:car_maintenance/screens/home_page.dart';
 import 'package:car_maintenance/screens/maintenance.dart';
 import 'package:car_maintenance/screens/market.dart';
 import 'package:car_maintenance/screens/profile.dart';
-import 'package:flutter/material.dart';
+import '../../AI-Chatbot/chatbot.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,8 +21,25 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const HomePage(),
     const MaintenanceScreen(),
+    const Chatbot(),
     const Market(),
-    const Profile(),
+    Profile(),
+  ];
+
+  final List<String> _labels = [
+    'Home',
+    'MNT',
+    'Chatbot',
+    'Market',
+    'Profile',
+  ];
+
+  final List<String> _icons = [
+    'assets/svg/home.svg',
+    'assets/svg/mnt.svg',
+    'assets/svg/chat.svg',
+    'assets/svg/shop.svg',
+    'assets/svg/user.svg',
   ];
 
   void _onItemTapped(int index) {
@@ -30,20 +51,41 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.build), label: 'Maintenance'),
-          BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Market'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+        decoration: BoxDecoration(
+          color: AppColors.primaryText,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: GNav(
+          backgroundColor: AppColors.primaryText,
+          color: Colors.white,
+          activeColor: Colors.white,
+          gap: 5,
+          tabBorderRadius: 22,
+          onTabChange: _onItemTapped,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          tabs: List.generate(
+            _labels.length,
+            (index) => GButton(
+              icon: Icons.circle,
+              leading: _selectedIndex == index
+                  ? const SizedBox.shrink()
+                  : SvgPicture.asset(
+                      _icons[index],
+                      height: 25,
+                      width: 25,
+                      color: Colors.white,
+                    ),
+              text: _labels[index],
+              backgroundColor: AppColors.buttonColor,
+            ),
+          ),
+        ),
       ),
     );
   }

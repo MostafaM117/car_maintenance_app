@@ -21,7 +21,7 @@ class _SignupPageState extends State<SignupPage> {
   final _confirmpasswordcontroller = TextEditingController();
   bool _obscureText = true;
   bool _isCheckingUsername = false;
-  bool _isUsernameAvailable = true;
+  // bool _isUsernameAvailable = true;
   String _usernameErrorText = '';
 
   @override

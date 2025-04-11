@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
-import 'package:car_maintenance/widgets/car_image_widget.dart'; 
-import 'package:car_maintenance/services/car_image_service.dart'; 
+import 'package:car_maintenance/widgets/car_image_widget.dart'; // Updated import for car image widget
+import 'package:car_maintenance/services/car_image_service.dart'; // Import service for car images
 import 'package:car_maintenance/widgets/mileage_display.dart';
-
+import '../services/user_data_helper.dart';
+import '../widgets/SubtractWave_widget.dart';
 import 'formscreens/formscreen1.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,8 +21,22 @@ class _HomePageState extends State<HomePage> {
   final user = FirebaseAuth.instance.currentUser!;
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
-      
+  String? username;
+
+  // Track currently selected car for image display
   Map<String, dynamic>? selectedCar;
+  void loadUsername() async {
+    String? fetchedUsername = await getUsername();
+    setState(() {
+      username = fetchedUsername;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsername();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +44,15 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Home Page'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder:(context) => AuthPage(),));
-              FirebaseAuth.instance.signOut();
-            },
-          )
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.logout),
+        //     onPressed: () {
+        //       Navigator.push(context, MaterialPageRoute(builder:(context) => AuthPage(),));
+        //       FirebaseAuth.instance.signOut();
+        //     },
+        //   )
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -45,8 +60,14 @@ class _HomePageState extends State<HomePage> {
           children: [
             Text("Signed in as ${user.email}"),
             SizedBox(height: 20),
-            
-            // Add Car Button 
+            // WaveTag(
+            //   text: username != null
+            //       ? 'Welcome Back, $username'
+            //       : 'Welcome Back, User',
+            //   svgAssetPath: 'assets/svg/notification.svg',
+            //   onTap: (){},
+            // ),
+            // Add Car Button
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.push(
@@ -62,9 +83,9 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
             ),
-            
+
             SizedBox(height: 20),
-            
+
             // Car image display area
             if (selectedCar != null)
               Column(
@@ -109,9 +130,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-            
+
             SizedBox(height: 20),
-            
+
+            // Simple car selector dropdown
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('cars')
@@ -121,30 +143,33 @@ class _HomePageState extends State<HomePage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
                 }
-                
+
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
-                
+
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return Text('No cars found. Add a car to see its image.');
                 }
-                
+
+                // Convert documents to List of Maps
                 List<Map<String, dynamic>> cars = [];
                 for (var doc in snapshot.data!.docs) {
                   Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
                   car['id'] = doc.id; 
                   cars.add(car);
                 }
-                
+
+                // Reset selectedCar if it's not in the list anymore
                 if (selectedCar != null) {
-                  bool found = cars.any((car) => car['id'] == selectedCar!['id']);
+                  bool found =
+                      cars.any((car) => car['id'] == selectedCar!['id']);
                   if (!found) {
                     
                     Future.microtask(() => setState(() => selectedCar = null));
                   }
                 }
-                
+
                 return Container(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   decoration: BoxDecoration(
@@ -158,7 +183,8 @@ class _HomePageState extends State<HomePage> {
                       value: selectedCar?['id'] as String?,
                       onChanged: (String? value) {
                         if (value != null) {
-                          final selectedCarData = cars.firstWhere((car) => car['id'] == value);
+                          final selectedCarData =
+                              cars.firstWhere((car) => car['id'] == value);
                           setState(() {
                             selectedCar = selectedCarData;
                           });
@@ -171,7 +197,8 @@ class _HomePageState extends State<HomePage> {
                       items: cars.map<DropdownMenuItem<String>>((car) {
                         return DropdownMenuItem<String>(
                           value: car['id'] as String,
-                          child: Text('${car['year']} ${car['make']} ${car['model']}'),
+                          child: Text(
+                              '${car['year']} ${car['make']} ${car['model']}'),
                         );
                       }).toList(),
                     ),
