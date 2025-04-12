@@ -315,7 +315,6 @@ Widget buildUserNameField({
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
-              prefixText: 'username: ',
               isCollapsed: true,
             ),
             style: textStyleGray,
