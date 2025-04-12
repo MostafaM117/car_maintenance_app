@@ -54,8 +54,7 @@ Widget build(BuildContext context) {
       index: _selectedIndex,
       children: _pages,
     ),
-    bottomNavigationBar: _selectedIndex == 2 // 2 هو index الخاص بالـ Chatbot
-        ? null
+    bottomNavigationBar
         : Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
             decoration: BoxDecoration(
