@@ -1,5 +1,7 @@
-
+import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+
+import 'custom_widgets.dart';
 
 class MaintenanceCard extends StatelessWidget {
   final String title;
@@ -13,44 +15,45 @@ class MaintenanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+    return SizedBox(
+      height: 90,
+      child: Card(
+        
+        color: AppColors.secondaryText,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    title,
+                    style: textStyleWhite.copyWith(
+                        color: AppColors.buttonColor,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  const Spacer(),
+                  Text(
+                    date,
+                    style: textStyleGray,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Text(
-                  'Expected Date',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
+              Row(
+                children: [
+                  Text(
+                    'Expected Date',
+                    style: textStyleGray,
                   ),
-                ),
-                const Spacer(),
-                Text(
-                  date,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
