@@ -4,7 +4,7 @@ class CarImageService {
 
   static String getCarImagePath(String? make, String? model, int? year) {
     if (make == null || model == null || year == null) {
-      return 'assets/images/default_car.png';
+      return 'assets/images/cars/default_car.png.png';
     }
     
 
@@ -93,7 +93,11 @@ class CarImageService {
     
     // Fiat models
     else if (make == 'Fiat' && model == 'Tipo') {
-      imagePath = '${basePath}Fiat_Tipo_2017_2025.png';
+      if(year >= 2017 && year <= 2021  ) {
+        imagePath = '${basePath}Fiat_Tipo_2017_2021.png';
+      } else {
+      imagePath = '${basePath}Fiat_Tipo_2022_2025.png';
+      }
     }
     
     // Default pattern for other cars
