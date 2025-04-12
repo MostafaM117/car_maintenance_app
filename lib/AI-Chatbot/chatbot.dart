@@ -22,7 +22,9 @@ class _ChatbotState extends State<Chatbot> {
   List<TextSpan> _parseResponse (String response){
   final List<TextSpan> formattedText = [];
   final lines = response.split('\n');
-  for(var line in lines){
+  for(int i = 0 ; i <lines.length; i++){
+    var line = lines[i].trim();
+    if (line.isEmpty) continue;
     if(line.trim().startsWith('*')){
       final cleanedline = line.trim().substring(1).trim();
       final boldRegex = RegExp(r'\*\*(.*?)\*\*');
@@ -38,25 +40,36 @@ class _ChatbotState extends State<Chatbot> {
       );
       formattedText.add(
         TextSpan(
-        text: '$boldText\n',
+        text: '$boldText',
         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
       )
       );
+      if(restText.isNotEmpty){
       formattedText.add(
         TextSpan(
-        text: '$restText\n',
+        text: '$restText',
         style: TextStyle(fontSize: 16)
       )
       );
+      }
       }
     }
     else{
       formattedText.add(
         TextSpan(
-          text: '$line\n',
+          text: '$line',
           style: TextStyle(fontSize: 16)
         ));
     }
+  if(i < lines.length-1){
+      formattedText.add(
+        TextSpan(
+          text: '\n',
+        ));
+  }
+  }
+  if (formattedText.isNotEmpty && formattedText.last.text == '\n') {
+    formattedText.removeLast();
   }
     return formattedText;
 }
@@ -78,8 +91,14 @@ class _ChatbotState extends State<Chatbot> {
 
   // Logic for Sending messages 
   void _sendMessage(ChatMessage ChatMsg) async{
+    final loadingMessage = ChatMessage(
+    user: geminiBot,
+    text: 'loading..',
+    createdAt: DateTime.now(),
+  );
     setState(() {
       messages = [ChatMsg, ...messages];
+      messages.insert(0, loadingMessage);
     });
     try{
       String userQuestion = ChatMsg.text;
@@ -91,6 +110,7 @@ class _ChatbotState extends State<Chatbot> {
       ));
     setState(() {
       messages = [botMsg, ...messages];
+      messages.remove(loadingMessage);
     });
     }
     catch(e){
@@ -123,7 +143,6 @@ class _ChatbotState extends State<Chatbot> {
               TextSpan(
               children: _parseResponse(message.text),
               style: TextStyle(
-                // fontSize: 14,
                 color: Colors.black
               )
             )

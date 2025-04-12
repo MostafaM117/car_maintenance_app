@@ -18,7 +18,7 @@ class GeminiService{
     }
     catch(e){
       print("Error: $e");
-      return "Something is Wrong";
+      return "Something went Wrong, Please try sending your message again.";
     }
   }
 }
