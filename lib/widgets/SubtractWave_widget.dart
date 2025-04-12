@@ -35,7 +35,7 @@ class SubtractWave extends StatelessWidget {
             ),
           ),
           ClipPath(
-            clipper: SubtractClipper(),
+            clipper: _SubtractClipper(),
             child: Container(
               width: 90,
               height: 60,
@@ -73,7 +73,7 @@ class SubtractWave extends StatelessWidget {
   }
 }
 
-class SubtractClipper extends CustomClipper<Path> {
+class _SubtractClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
