@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:car_maintenance/models/MaintID.dart';
-// import 'package:car_maintenance/forms/carform.dart';
-// import 'package:car_maintenance/screens/formscreens/formscreen1.dart';
 
 class FirestoreService {
   final CollectionReference maintCollection;

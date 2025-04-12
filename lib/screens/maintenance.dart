@@ -37,12 +37,12 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   void addMaintenanceHistory(
       String description, bool periodic, int mileage, DateTime expectedDate) {
     ({
-      // logic to add special cases to the history tab
       "Description": description,
       "Periodic": false,
       "mileage": mileage,
       "expectedDate": expectedDate
     });
+    // logic to add special cases to the history tab
   }
 
   void _showAddMaintenanceDialog(BuildContext context) {
@@ -81,7 +81,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                     .now(); //will be changed after implementing the tracker
 
                 if (description.isNotEmpty) {
-                  addMaintenanceHistory(
+                  firestoreService.addMaintenanceList(
                     description,
                     false,
                     mileage!,
@@ -177,7 +177,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
               ),
             ],
           ),
-          // Maintenance History Tab: now empty
+          // Maintenance History Tab: maybe we add a list builder pulling from the history local db
           Center(child: Text('No history yet.')),
         ]),
       ),
