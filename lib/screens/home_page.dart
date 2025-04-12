@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
 import 'package:car_maintenance/widgets/car_image_widget.dart'; // Updated import for car image widget
-import 'package:car_maintenance/widgets/mileage_display.dart';
 import 'package:car_maintenance/services/car_image_service.dart'; // Import service for car images
 import '../services/user_data_helper.dart';
 // import '../widgets/SubtractWave_widget.dart';
