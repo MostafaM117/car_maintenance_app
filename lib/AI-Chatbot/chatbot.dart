@@ -14,6 +14,52 @@ class Chatbot extends StatefulWidget {
 class _ChatbotState extends State<Chatbot> {
   final GeminiService _geminiService = GeminiService();
 
+  // Check if the reponse is in Arabic
+  bool isArabic (String text){
+    return RegExp(r'[\u0600-\u06FF]').hasMatch(text);
+  }
+  // Parsing Response 
+  List<TextSpan> _parseResponse (String response){
+  final List<TextSpan> formattedText = [];
+  final lines = response.split('\n');
+  for(var line in lines){
+    if(line.trim().startsWith('*')){
+      final cleanedline = line.trim().substring(1).trim();
+      final boldRegex = RegExp(r'\*\*(.*?)\*\*');
+      final match = boldRegex.firstMatch(cleanedline);
+      if(match != null){
+        final boldText = match.group(1)!;
+        final restText = cleanedline.replaceAll(match.group(0)!, '').trim();
+
+      formattedText.add(
+        TextSpan(
+        text: '• ',
+      )
+      );
+      formattedText.add(
+        TextSpan(
+        text: '$boldText\n',
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+      )
+      );
+      formattedText.add(
+        TextSpan(
+        text: '$restText\n',
+        style: TextStyle(fontSize: 16)
+      )
+      );
+      }
+    }
+    else{
+      formattedText.add(
+        TextSpan(
+          text: '$line\n',
+          style: TextStyle(fontSize: 16)
+        ));
+    }
+  }
+    return formattedText;
+}
   final user = FirebaseAuth.instance.currentUser;
   String? username;
   List <ChatMessage> messages = [];
@@ -39,6 +85,10 @@ class _ChatbotState extends State<Chatbot> {
       String userQuestion = ChatMsg.text;
       final responseText = await _geminiService.getGeminiRespone(userQuestion);
       final botMsg = ChatMessage(user: geminiBot, text: responseText , createdAt: DateTime.now());
+      RichText(
+        text: TextSpan(
+        children: _parseResponse(botMsg.text)
+      ));
     setState(() {
       messages = [botMsg, ...messages];
     });
@@ -47,10 +97,6 @@ class _ChatbotState extends State<Chatbot> {
       print(e);
     }
   }
-  // Chat UI
-  Widget _BuildUI(){
-    return DashChat(currentUser: currentUser, onSend: _sendMessage, messages: messages);
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +104,46 @@ class _ChatbotState extends State<Chatbot> {
         centerTitle: true,
         title: const Text('Chatbot')
         ),
-      body: _BuildUI(),
+      body: DashChat(
+      currentUser: currentUser, 
+      onSend: _sendMessage, 
+      messages: messages,
+      messageOptions: MessageOptions(
+        showOtherUsersName: true,
+        messageTextBuilder:(message, previousMessage, nextMessage) {
+          bool rtl = isArabic(message.text);
+          final isBot = message.user.id == geminiBot.id;
+          return Container(
+          margin: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
+            child: isBot ? 
+            Directionality(
+              textDirection: rtl? TextDirection.rtl : TextDirection.ltr, 
+              child: 
+            SelectableText.rich(
+              TextSpan(
+              children: _parseResponse(message.text),
+              style: TextStyle(
+                // fontSize: 14,
+                color: Colors.black
+              )
+            )
+            )
+              )
+            : 
+            Directionality(
+              textDirection: rtl? TextDirection.rtl : TextDirection.ltr, 
+              child: 
+            SelectableText(
+              message.text,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16
+                ),)
+              )
+          );
+        },
+      ),
+      )
     );
   }
 }
