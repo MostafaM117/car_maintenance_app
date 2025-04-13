@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 40),
         child: Column(
           children: [
             SizedBox(
@@ -49,11 +49,12 @@ class _HomePageState extends State<HomePage> {
             ),
             SubtractWave(
               text: username != null
-                  ? 'Welcome Back, $username'
+                  ? 'Welcome Back, ${username!.split(' ').first}'
                   : 'Welcome Back, User',
               svgAssetPath: 'assets/svg/notification.svg',
               onTap: () {},
             ),
+
             SizedBox(height: 15),
 
             // Displaying cars in Swiper or Card
@@ -102,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 40),
 
             SubtractWave(
               text: 'Next Maintenance',
@@ -114,18 +115,32 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            SizedBox(height: 5),
-            MaintenanceCard(
-              title: '40,000' '  KM',
-              date: 'Upcoming',
-            ),
-            MaintenanceCard(
-              title: '40,000' '  KM',
-              date: 'Upcoming',
-            ),
-            MaintenanceCard(
-              title: '40,000' '  KM',
-              date: 'Upcoming',
+            SizedBox(height: 15),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    MaintenanceCard(
+                      title: '40,000' '  KM',
+                      date: 'Upcoming',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    MaintenanceCard(
+                      title: '40,000' '  KM',
+                      date: 'Upcoming',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    MaintenanceCard(
+                      title: '40,000' '  KM',
+                      date: 'Upcoming',
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
