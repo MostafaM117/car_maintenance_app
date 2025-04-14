@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 
+import 'addMaintenance.dart';
+
 class MaintenanceScreen extends StatefulWidget {
   const MaintenanceScreen({super.key});
 
@@ -78,10 +80,24 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                     title: 'Maintenance Added!',
                     body: maintenanceController.text,
                   );
-                  firestoreService.addMaintenanceList(maintenanceController.text);
+                  firestoreService
+                      .addMaintenanceList(maintenanceController.text);
                 },
                 child: Text('Add Maintenance'),
               ),
+
+SizedBox(height: 20,),
+              // AddMaintenancescreen
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => AddMaintenance(),
+                      ));
+                },
+                child: Text('Add Maintenance screen '),
+              )
             ],
           ),
         ]),

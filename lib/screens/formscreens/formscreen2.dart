@@ -1,7 +1,7 @@
 import 'package:car_maintenance/forms/carform.dart' as form;
 // import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
-import 'package:car_maintenance/services/car_service.dart';
-import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
+// import 'package:car_maintenance/services/car_service.dart';
+// import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/widgets/ProgressStepsBar.dart';
@@ -40,12 +40,7 @@ class _CarMileagePageState extends State<CarMileagePage> {
   bool isFormComplete = false;
   bool isLoading = false;
 
-  final List<String> options = [
-    '1 month ago',
-    '3 months ago',
-    '6 months ago',
-    '1 year ago',
-  ];
+
 
   @override
   void initState() {
@@ -113,7 +108,7 @@ class _CarMileagePageState extends State<CarMileagePage> {
             key: _formKey,
             child: SingleChildScrollView(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   ProgressStepsBar(
                     filledCount: _filledFieldsCount(),
@@ -158,35 +153,8 @@ class _CarMileagePageState extends State<CarMileagePage> {
                       });
                     },
                   ),
-                  const SizedBox(height: 15),
 
-                  // Tire change dropdown
-                  buildDropdownField(
-                    label: 'Last tires pair change was',
-                    value: lastTireChange,
-                    options: options,
-                    onChanged: (val) {
-                      setState(() {
-                        lastTireChange = val;
-                      });
-                      checkFormCompletion();
-                    },
-                  ),
-                  const SizedBox(height: 15),
-
-                  // Battery change dropdown
-                  buildDropdownField(
-                    label: 'Last change of battery was',
-                    value: lastBatteryChange,
-                    options: options,
-                    onChanged: (val) {
-                      setState(() {
-                        lastBatteryChange = val;
-                      });
-                      checkFormCompletion();
-                    },
-                  ),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 150),
 
                   // Submit button
                   isLoading
