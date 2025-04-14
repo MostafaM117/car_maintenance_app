@@ -22,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
     HomePage(),
     const MaintenanceScreen(),
     const Chatbot(),
-    const Market(),
+    Market(),
     Profile(),
   ];
 
@@ -47,45 +47,46 @@ class _MainScreenState extends State<MainScreen> {
       _selectedIndex = index;
     });
   }
-@override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: IndexedStack(
-      index: _selectedIndex,
-      children: _pages,
-    ),
-    bottomNavigationBar: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
-            decoration: BoxDecoration(
-              color: AppColors.primaryText,
-              borderRadius: BorderRadius.circular(25),
-            ),
-            child: GNav(
-              backgroundColor: AppColors.primaryText,
-              color: Colors.white,
-              activeColor: Colors.white,
-              gap: 5,
-              tabBorderRadius: 22,
-              onTabChange: _onItemTapped,
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              tabs: List.generate(
-                _labels.length,
-                (index) => GButton(
-                  icon: Icons.circle,
-                  leading: _selectedIndex == index
-                      ? const SizedBox.shrink()
-                      : SvgPicture.asset(
-                          _icons[index],
-                          height: 25,
-                          width: 25,
-                          color: Colors.white,
-                        ),
-                  text: _labels[index],
-                  backgroundColor: AppColors.buttonColor,
-                ),
-              ),
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+        decoration: BoxDecoration(
+          color: AppColors.primaryText,
+          borderRadius: BorderRadius.circular(25),
+        ),
+        child: GNav(
+          backgroundColor: AppColors.primaryText,
+          color: Colors.white,
+          activeColor: Colors.white,
+          gap: 5,
+          tabBorderRadius: 22,
+          onTabChange: _onItemTapped,
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          tabs: List.generate(
+            _labels.length,
+            (index) => GButton(
+              icon: Icons.circle,
+              leading: _selectedIndex == index
+                  ? const SizedBox.shrink()
+                  : SvgPicture.asset(
+                      _icons[index],
+                      height: 25,
+                      width: 25,
+                      color: Colors.white,
+                    ),
+              text: _labels[index],
+              backgroundColor: AppColors.buttonColor,
             ),
           ),
-  );
-}
+        ),
+      ),
+    );
+  }
 }

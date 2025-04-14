@@ -18,7 +18,6 @@ class MaintenanceCard extends StatelessWidget {
     return SizedBox(
       height: 90,
       child: Card(
-        
         color: AppColors.secondaryText,
         elevation: 4,
         shape: RoundedRectangleBorder(
@@ -58,4 +57,66 @@ class MaintenanceCard extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget buildMaintenanceCard({
+  required String title,
+  required String date,
+  required List<String> tasks,
+}) {
+  return Container(
+    padding: const EdgeInsets.all(16),
+    margin: const EdgeInsets.symmetric(vertical: 10),
+    width: 300,
+    height: 225,
+    decoration: BoxDecoration(
+      color: AppColors.secondaryText,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color:AppColors.borderSide),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: Offset(0, 3),
+        ),
+      ],
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Image.asset(
+            "assets/images/maintenance.png",
+            height: 60,
+            width: 60,
+          ),
+        ),
+        SizedBox(height: 12),
+        Center(
+          child: Text(
+            title,
+            style: textStyleWhite.copyWith(
+              color: AppColors.buttonColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+        SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Expected Date", style: textStyleGray),
+            Text(date, style: textStyleGray),
+          ],
+        ),
+        SizedBox(height: 12),
+        ...tasks.map(
+          (task) => Text("- $task",
+              textAlign: TextAlign.right, style: textStyleWhite),
+        ),
+      ],
+    ),
+  );
 }
