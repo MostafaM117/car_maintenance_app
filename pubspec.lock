@@ -359,7 +359,7 @@ packages:
     source: hosted
     version: "1.0.0"
   flutter_markdown:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_markdown
       sha256: "634622a3a826d67cb05c0e3e576d1812c430fa98404e95b60b131775c73d76ec"
@@ -990,7 +990,7 @@ packages:
     source: hosted
     version: "1.4.0"
   url_launcher:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: url_launcher
       sha256: "9d06212b1362abc2f0f0d78e6f09f726608c74e3b9462e8368bb03314aa8d603"
