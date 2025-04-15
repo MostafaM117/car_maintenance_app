@@ -1,4 +1,5 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,9 @@ import 'package:car_maintenance/widgets/mileage_display.dart';
 import '../widgets/CarCardWidget.dart';
 import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
-import 'maintenance.dart';
-import 'formscreens/formscreen1.dart';
-import 'package:car_maintenance/models/MaintID.dart';
+// import 'maintenance.dart';
+// import 'formscreens/formscreen1.dart';
+// import 'package:car_maintenance/models/MaintID.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -45,7 +46,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 40),
         child: Column(
           children: [
             SizedBox(
@@ -53,11 +54,12 @@ class _HomePageState extends State<HomePage> {
             ),
             SubtractWave(
               text: username != null
-                  ? 'Welcome Back, $username'
+                  ? 'Welcome Back, ${username!.split(' ').first}'
                   : 'Welcome Back, User',
               svgAssetPath: 'assets/svg/notification.svg',
               onTap: () {},
             ),
+
             SizedBox(height: 15),
 
             // Displaying cars in Swiper or Card
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 40),
 
             SubtractWave(
               text: 'Next Maintenance',
@@ -114,22 +116,36 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MaintenanceScreen()),
+                  MaterialPageRoute(builder: (context) => AddMaintenance()),
                 );
               },
             ),
-            SizedBox(height: 5),
-            MaintenanceCard(
-              title: '40,000' '  KM',
-              date: 'Upcoming',
-            ),
-            MaintenanceCard(
-              title: '40,000' '  KM',
-              date: 'Upcoming',
-            ),
-            MaintenanceCard(
-              title: '40,000' '  KM',
-              date: 'Upcoming',
+            SizedBox(height: 15),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    MaintenanceCard(
+                      title: '40,000' '  KM',
+                      date: 'Upcoming',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    MaintenanceCard(
+                      title: '40,000' '  KM',
+                      date: 'Upcoming',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    MaintenanceCard(
+                      title: '40,000' '  KM',
+                      date: 'Upcoming',
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
