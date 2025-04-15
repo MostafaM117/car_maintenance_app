@@ -200,7 +200,7 @@ Widget buildDropdownField({
       SizedBox(
         width: double.infinity,
         child: Container(
-          height: 45,
+          height: 40,
           decoration: ShapeDecoration(
             color: AppColors.secondaryText,
             shape: RoundedRectangleBorder(
@@ -248,9 +248,9 @@ Widget buildTextField({
           label,
           style: textStyleWhite.copyWith(fontSize: 16),
         ),
-      SizedBox(height: 8),
+      // SizedBox(height: 8),
       Container(
-        height: 45,
+        height: 40,
         decoration: ShapeDecoration(
           color: AppColors.secondaryText,
           shape: RoundedRectangleBorder(
