@@ -22,7 +22,8 @@ class _AddCarScreenState extends State<AddCarScreen> {
   String? username;
 
   DateTime? lastMaintenanceDate;
-  
+  String? lastTireChange;
+  String? lastBatteryChange;
 
   final TextEditingController mileageController = TextEditingController();
   final TextEditingController avgKmController = TextEditingController();
@@ -80,7 +81,6 @@ class _AddCarScreenState extends State<AddCarScreen> {
       selectedModel: _selectedModel!,
       selectedYear: _selectedYear!,
       lastMaintenanceDate: lastMaintenanceDate,
-
     );
 
     await carService.submitForm((value) {
@@ -105,7 +105,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 30, ),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -113,14 +113,15 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   filledCount: _filledFieldsCount(),
                   totalCount: 12,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 24),
                 Text(username != null ? 'Hi $username' : 'Hi User',
                     style: textStyleWhite.copyWith(fontSize: 24)),
+                const SizedBox(height: 8),
                 Text(
                   'Please fill in your car details to continue.',
                   style: textStyleGray,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
 
                 // Car Make
                 buildDropdownField(
@@ -136,7 +137,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
 
                 // Car Model
                 buildDropdownField(
@@ -153,7 +154,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
 
                 // Model Year
                 buildDropdownField(
@@ -171,7 +172,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
 
                 // Mileage
                 buildTextField(
@@ -185,7 +186,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
 
                 // Avg usage
                 buildTextField(
@@ -199,7 +200,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 15),
 
                 // Maintenance date
                 MaintenanceDatePicker(
@@ -211,7 +212,8 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   },
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 60),
+
                 // Submit button
                 isLoading
                     ? Center(child: CircularProgressIndicator())
