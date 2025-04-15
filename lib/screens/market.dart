@@ -5,8 +5,8 @@ import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
 
 class Market extends StatelessWidget {
-   Market({super.key});
-final List<String> categories = ['Periodic', 'Used', 'Unused'];
+  Market({super.key});
+  final List<String> categories = ['Periodic', 'Used', 'Unused'];
 
   @override
   Widget build(BuildContext context) {
@@ -29,17 +29,17 @@ final List<String> categories = ['Periodic', 'Used', 'Unused'];
                           TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                     ),
                   ),
-                  SizedBox(height: 20,),
                   SizedBox(
-                    // width: 250,
+                    height: 20,
+                  ),
+                  SizedBox(
                     height: 450,
                     child: Swiper(
                       itemCount: 3,
                       layout: SwiperLayout.DEFAULT,
-                      itemWidth: MediaQuery.of(context).size.width *
-                          0.75,
-                      viewportFraction: 0.8, 
-                      scale: 0.9, 
+                      itemWidth: MediaQuery.of(context).size.width * 0.75,
+                      viewportFraction: 0.8,
+                      scale: 0.9,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           shape: RoundedRectangleBorder(
@@ -49,33 +49,15 @@ final List<String> categories = ['Periodic', 'Used', 'Unused'];
                           elevation: 6,
                           child: Center(
                             child: Text(
-                              categories [index],
+                              categories[index],
                               style: textStyleWhite.copyWith(
-                                color: AppColors.background
-                              ),
+                                  color: AppColors.background),
                             ),
                           ),
                         );
                       },
                     ),
                   ),
-
-                  // return Card(
-                  //   shape: RoundedRectangleBorder(
-                  //       borderRadius: BorderRadius.circular(20)),
-                  //   color: Colors.deepPurple.shade300,
-                  //   elevation: 6,
-                  //   child: Center(
-                  //     child: Text(
-                  //       'Test ${index + 1}',
-                  //       style: TextStyle(
-                  //         color: Colors.white,
-                  //         fontSize: 28,
-                  //         fontWeight: FontWeight.bold,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // );
                 ],
               ),
             ),
