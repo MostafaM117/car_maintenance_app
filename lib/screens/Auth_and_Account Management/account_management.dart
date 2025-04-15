@@ -172,11 +172,9 @@ class _AccountManagementState extends State<AccountManagement> {
                                     : "Edit username",
                                 style: _isediting
                                     ? textStyleWhite.copyWith(
-                                      color: AppColors.secondaryText
-                                    )
+                                        color: AppColors.secondaryText)
                                     : textStyleWhite.copyWith(
-                                      color: AppColors.buttonColor
-                                    )),
+                                        color: AppColors.buttonColor)),
                           ],
                         ),
                         onPressed: () {

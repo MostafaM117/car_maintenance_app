@@ -34,17 +34,6 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
     super.dispose();
   }
 
-  void addMaintenanceHistory(
-      String description, bool periodic, int mileage, DateTime expectedDate) {
-    ({
-      "Description": description,
-      "Periodic": false,
-      "mileage": mileage,
-      "expectedDate": expectedDate
-    });
-    // logic to add special cases to the history tab
-  }
-
   void _showAddMaintenanceDialog(BuildContext context) {
     final TextEditingController descriptionController = TextEditingController();
     final TextEditingController mileageController = TextEditingController();
@@ -143,8 +132,9 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                 Text(
                                   (maintenanceItem.expectedDate).toString(),
                                 ),
-                                SizedBox(height: 4),
-                                Text(maintenanceItem.description),
+                                // SizedBox(height: 4),
+                                // Text(maintenanceItem.description),
+                                // Gesture detector, redirects to details page (date, description, image)
                               ],
                             ),
                             trailing: Checkbox(
