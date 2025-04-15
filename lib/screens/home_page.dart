@@ -5,9 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import '../services/user_data_helper.dart';
+import 'package:car_maintenance/widgets/mileage_display.dart';
 import '../widgets/CarCardWidget.dart';
 import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
+// import 'maintenance.dart';
+// import 'formscreens/formscreen1.dart';
+// import 'package:car_maintenance/models/MaintID.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   final CollectionReference carsCollection =
       FirebaseFirestore.instance.collection('cars');
   String? username;
+  Map<String, dynamic>? selectedCar;
 
   // Fetch username for greeting (optional)
   void loadUsername() async {
@@ -79,7 +84,7 @@ class _HomePageState extends State<HomePage> {
                 List<Map<String, dynamic>> cars = [];
                 for (var doc in snapshot.data!.docs) {
                   Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
-                  car['id'] = doc.id.substring(doc.id.length - 4);
+                  car['id'] = doc.id;
                   cars.add(car);
                 }
 
