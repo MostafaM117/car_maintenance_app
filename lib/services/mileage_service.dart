@@ -65,7 +65,7 @@ class MileageService {
       
       await _firestore.collection('cars').doc(carId).update({
         'mileage': newMileage,
-        'lastUpdated': FieldValue.serverTimestamp(),
+        'lastUpdated': FieldValue.serverTimestamp(), //thats why it resets to current time after updating
       });
       
       print('Auto-updated mileage from $currentMileage to $newMileage based on $monthsDifference months elapsed');
