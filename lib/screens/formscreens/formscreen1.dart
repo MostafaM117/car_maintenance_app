@@ -22,8 +22,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
   String? username;
 
   DateTime? lastMaintenanceDate;
-  String? lastTireChange;
-  String? lastBatteryChange;
+ 
 
   final TextEditingController mileageController = TextEditingController();
   final TextEditingController avgKmController = TextEditingController();
