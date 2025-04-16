@@ -13,10 +13,12 @@ class MaintenanceScreen extends StatefulWidget {
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
   late FirestoreService firestoreService;
-
+  Map<String, bool> itemCheckedStates = {}; // To store checked state per item
+  bool isChecked = false; // Track the checked state of the checkbox
   @override
   void initState() {
     super.initState();
+
     firestoreService = FirestoreService(MaintID());
     // Listen for changes in MaintID and update the FirestoreService accordingly
     MaintID().addListener(_updateService);
@@ -116,6 +118,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
           ]),
         ),
         body: TabBarView(children: <Widget>[
+          // Upcoming Maintenance Tab
           Column(
             children: [
               Expanded(
@@ -130,30 +133,43 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       return Center(
                           child: Text("No maintenance records available."));
                     }
+
                     return ListView.builder(
                       itemCount: maintList.length,
                       itemBuilder: (context, index) {
                         final maintenanceItem = maintList[index];
-                        bool isChecked = false;
+
+                        // Initialize the checkbox state for this item if it doesn't exist yet
+                        if (!itemCheckedStates
+                            .containsKey(maintenanceItem.id)) {
+                          itemCheckedStates[maintenanceItem.id] = false;
+                        }
+
                         return Card(
                           child: ListTile(
                             title: Text(maintenanceItem.mileage.toString()),
                             subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  (maintenanceItem.expectedDate).toString(),
-                                ),
+                                Text((maintenanceItem.expectedDate).toString()),
                                 SizedBox(height: 4),
                                 Text(maintenanceItem.description),
                               ],
                             ),
                             trailing: Checkbox(
-                              value: isChecked,
-                              onChanged: (bool? isDone) {
+                              value: itemCheckedStates[maintenanceItem.id],
+                              onChanged: (bool? isDone) async {
                                 setState(() {
-                                  isChecked = isDone!;
-                                  //logic to move it to history
+                                  itemCheckedStates[maintenanceItem.id] =
+                                      isDone!;
                                 });
+
+                                if (isDone != null && isDone) {
+                                  // Copy the item to the history
+                                  await firestoreService
+                                      .moveToHistory(maintenanceItem.id);
+                                  print("✅ Moved to history");
+                                }
                               },
                             ),
                           ),
@@ -178,7 +194,40 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             ],
           ),
           // Maintenance History Tab: maybe we add a list builder pulling from the history local db
-          Center(child: Text('No history yet.')),
+
+          // Maintenance History Tab
+          StreamBuilder<List<MaintenanceList>>(
+            stream: firestoreService.getMaintenanceHistory(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.data == null) {
+                return Center(child: CircularProgressIndicator());
+              }
+              final historyList = snapshot.data!;
+              if (historyList.isEmpty) {
+                return Center(child: Text("No maintenance history available."));
+              }
+
+              return ListView.builder(
+                itemCount: historyList.length,
+                itemBuilder: (context, index) {
+                  final maintenanceItem = historyList[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text(maintenanceItem.mileage.toString()),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(maintenanceItem.expectedDate.toString()),
+                          SizedBox(height: 4),
+                          Text(maintenanceItem.description),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ]),
       ),
     );
