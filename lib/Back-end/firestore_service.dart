@@ -25,6 +25,7 @@ class FirestoreService {
       "mileage": mileage,
       "expectedDate": expectedDate
     });
+
   }
 
   //get lists
@@ -42,8 +43,6 @@ class FirestoreService {
           description: data['Description'] ?? '',
           mileage: (data['mileage'] ?? 0) as int,
           periodic: (data['Periodic'] ?? false) as bool,
-          expectedDate: (data['expectedDate'])?.toDate() ??
-              DateTime.now().add(Duration(days: 30)),
         );
       }).toList();
     });

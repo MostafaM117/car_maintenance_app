@@ -13,8 +13,7 @@ class CarService {
   final String? selectedModel;
   final int? selectedYear;
   final DateTime? lastMaintenanceDate;
-  final String? lastTireChange;
-  final String? lastBatteryChange;
+
 
   CarService({
     required this.context,
@@ -25,8 +24,7 @@ class CarService {
     required this.selectedModel,
     required this.selectedYear,
     required this.lastMaintenanceDate,
-    required this.lastTireChange,
-    required this.lastBatteryChange,
+
   });
 
   Future<void> submitForm(Function(bool) setLoading) async {
@@ -89,8 +87,7 @@ class CarService {
       'mileage': double.parse(mileageController.text.trim()),
       'avgKmPerMonth': double.parse(avgKmPerMonthController.text.trim()),
       'lastMaintenance': Timestamp.fromDate(lastMaintenanceDateTime),
-      'lastTireChange': lastTireChange,
-      'lastBatteryChange': lastBatteryChange,
+      
       'userId': user.uid,
       'username': username,
     });
