@@ -1,15 +1,19 @@
+import 'dart:io';
+
 class MaintenanceList {
-  final String id; // Add the id field for the Firestore document ID
+  final String id;
   final String description;
   final bool periodic;
   final int mileage;
+  File? image; // Optional image field
   final DateTime expectedDate;
 
   MaintenanceList({
-    required this.id, // Include id in the constructor
+    required this.id,
     required this.description,
     required this.periodic,
     required this.mileage,
+    this.image,
     required this.expectedDate,
   });
 

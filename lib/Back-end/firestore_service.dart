@@ -17,9 +17,9 @@ class FirestoreService {
         .collection("maintHistory");
   }
   //add special cases
-  Future<void> addMaintenanceList(String description, bool periodic,
+  Future<void> addSpecialMaintenance(String description, bool periodic,
       int mileage, DateTime expectedDate) async {
-    await maintCollection.add({
+    await historyCollection.add({
       "Description": description,
       "Periodic": false,
       "mileage": mileage,

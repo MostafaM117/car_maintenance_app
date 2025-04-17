@@ -83,14 +83,14 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                     .now(); //will be changed after implementing the tracker
 
                 if (description.isNotEmpty) {
-                  firestoreService.addMaintenanceList(
+                  firestoreService.addSpecialMaintenance(
                     description,
                     false,
                     mileage!,
                     expectedDate,
                   );
                   NotiService().showNotification(
-                    title: 'Maintenance Added!',
+                    title: 'Maintenance Added to history!',
                     body: description,
                   );
                 }
