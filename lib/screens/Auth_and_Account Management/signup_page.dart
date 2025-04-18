@@ -21,7 +21,6 @@ class _SignupPageState extends State<SignupPage> {
   final _confirmpasswordcontroller = TextEditingController();
   bool _obscureText = true;
   bool _isCheckingUsername = false;
-  // bool _isUsernameAvailable = true;
   String _usernameErrorText = '';
 
   @override
@@ -42,37 +41,6 @@ class _SignupPageState extends State<SignupPage> {
     }
   }
 
-  // Future<bool> isUsernameUnique(String username) async {
-  //   setState(() {
-  //     _isCheckingUsername = true;
-  //     _isUsernameAvailable = true;
-  //     _usernameErrorText = '';
-  //   });
-
-  //   try {
-  //     final querySnapshot = await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .where('username', isEqualTo: username)
-  //         .get();
-
-  //     setState(() {
-  //       _isCheckingUsername = false;
-  //       _isUsernameAvailable = querySnapshot.docs.isEmpty;
-  //       if (!_isUsernameAvailable) {
-  //         _usernameErrorText = 'Username is already taken';
-  //       }
-  //     });
-
-  //     return querySnapshot.docs.isEmpty;
-  //   } catch (e) {
-  //     setState(() {
-  //       _isCheckingUsername = false;
-  //       _usernameErrorText = 'Error checking username';
-  //     });
-  //     return false;
-  //   }
-  // }
-
   Future <UserCredential?> signup() async {
     if (_usernameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -80,14 +48,6 @@ class _SignupPageState extends State<SignupPage> {
       );
       // return null;
     }
-
-    // final isUnique = await isUsernameUnique(_usernameController.text.trim());
-    // if (!isUnique) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     SnackBar(content: Text('Username is already taken, try another one')),
-    //   );
-    //   return;
-    // }
 
     else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -151,6 +111,7 @@ class _SignupPageState extends State<SignupPage> {
       'uid': uid,
       'password': _passwordcontroller.text.trim(),
       'carAdded': false,
+      'googleUser': false,
     });
   }
 
