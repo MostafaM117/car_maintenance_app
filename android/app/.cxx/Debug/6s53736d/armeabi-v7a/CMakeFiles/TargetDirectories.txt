@@ -1,2 +1,0 @@
-D:/GRADUATION/car_maintenance_app/android/app/.cxx/Debug/6s53736d/armeabi-v7a/CMakeFiles/edit_cache.dir
-D:/GRADUATION/car_maintenance_app/android/app/.cxx/Debug/6s53736d/armeabi-v7a/CMakeFiles/rebuild_cache.dir
