@@ -1,4 +1,5 @@
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
+import 'package:car_maintenance/screens/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -32,43 +33,55 @@ class AuthService {
   // _getUserPassword 
   Future <String> _getUserPassword(BuildContext context) async{
     final TextEditingController passwordcontroller = TextEditingController();
-    bool isSubmitted = true;
-
+    String? errorText;
     final result = await showDialog(
       context: context,
       barrierDismissible: false, 
       builder: (context){
-        return AlertDialog(
-          title: Text('Enter Your Password'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('It\'s your first time using google sign in, please enter your password'),
-              SizedBox(height: 12,),
-              TextField(
-                controller: passwordcontroller,
-                obscureText: true,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(onPressed: (){
-              final paswword = passwordcontroller.text.trim();
-              isSubmitted = true;
-              Navigator.of(context).pop(paswword);
-              Navigator.pop(context);
-            }, child: Text('Link my account')),
-            TextButton(
-              onPressed: (){
-              Navigator.of(context).pop();
-            }, 
-            child: Text('Cancel'))
-            ],
+        return StatefulBuilder(
+          builder: (context, setState){
+            
+          return AlertDialog(
+            title: Text('Enter Your Password'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('It\'s your first time using google sign in, please enter your password'),
+                SizedBox(height: 12,),
+                TextField(
+                  controller: passwordcontroller,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    errorText: errorText,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: (){
+                final password = passwordcontroller.text.trim();
+                if(password.isEmpty){
+                    setState((){
+                    errorText = "Password can't be empty.";
+                    });
+                    return;
+                  }
+                else {
+                  Navigator.of(context).pop(password);
+                  
+                  }
+              }, child: Text('Link my account')),
+              TextButton(
+                onPressed: (){
+                Navigator.of(context).pop();
+              }, 
+              child: Text('Cancel'))
+              ],
+          );
+          }
         );
       });
-      if(!isSubmitted || result == null){
-        throw Exception('Empty Password');
-      }
       return result;
   }
   // Linking Accounts
@@ -83,13 +96,23 @@ class AuthService {
         'googleUser': true,
       });
       ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Google account linked successfully.')),
-    );
-    } catch(e){
+      SnackBar(content: Text('Google account linked successfully.'), backgroundColor: Colors.green,),
+      );
+      Navigator.of(context).pop();
+      } catch(e){
       print('error: $e');
+      if(e.toString().contains('firebase_auth/invalid-credential')){
+
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Password is not correct'), backgroundColor: Colors.red,),
+    );
+      }
+      else{
+
       ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Failed to link accounts, try again or use email and password to sign in')),
     );
+      }
     }
   }
 
@@ -110,7 +133,7 @@ class AuthService {
     final email = gUser.email;
     final usersRef = FirebaseFirestore.instance.collection('users');
     final userDocQuery = await usersRef.where('email', isEqualTo: email).get();
-    
+    //Check for new users
     if(userDocQuery.docs.isNotEmpty){
       final docId = userDocQuery.docs.first.id;
       final googleuserexists = userDocQuery.docs.first.data()['googleUser']?? false;
@@ -120,7 +143,6 @@ class AuthService {
     UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
     User? user = userCredential.user;
 
-    // final uid = userCredential.user!.uid;
     if (user != null){
     final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
     final userExists = await userDoc.get();
@@ -132,12 +154,10 @@ class AuthService {
       }
     Navigator.pop(context);
     }
-    //Check for new users
     return userCredential;
     } 
     else {
       await _linkaccounts(context, email, credential, docId);
-      // Navigator.pop(context);
       print('trying to link');
     }
       } else {
