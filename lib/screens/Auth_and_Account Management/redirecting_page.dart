@@ -38,6 +38,7 @@ class RedirectingPage extends StatelessWidget {
                     'email': user.email,
                     "uid": user.uid,
                     'carAdded': false,
+                    'googleUser': true,
                   });
                   return AddCarScreen();
                 }
