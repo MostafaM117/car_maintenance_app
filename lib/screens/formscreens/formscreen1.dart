@@ -207,6 +207,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     setState(() {
                       lastMaintenanceDate = date;
                       checkFormCompletion();
+                      FocusScope.of(context).unfocus();
                     });
                   },
                 ),

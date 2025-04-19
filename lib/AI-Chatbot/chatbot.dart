@@ -1,5 +1,7 @@
 import 'package:car_maintenance/AI-Chatbot/gemini.dart';
+import 'package:car_maintenance/AI-Chatbot/send_message.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,6 +14,9 @@ class Chatbot extends StatefulWidget {
 }
 
 class _ChatbotState extends State<Chatbot> {
+// Using ChatbotLogic
+  late ChatLogic chatService;
+
   final GeminiService _geminiService = GeminiService();
 
   // Check if the reponse is in Arabic
@@ -29,36 +34,59 @@ class _ChatbotState extends State<Chatbot> {
   //     username = fetchedUsername;
   //   });
   // }
-  ChatUser currentUser = ChatUser(id: "0", firstName: "Mostafa");
+
+  //////
+  // ChatUser currentUser = ChatUser(id: "0", firstName: "Mostafa");
+  late ChatUser currentUser;
   ChatUser geminiBot = ChatUser(
-    id: "1", 
+    id: "bot", 
     firstName: "Chatbot",
     profileImage: 'assets/images/chatbot_icon.png'
     );
 
-  // Logic for Sending messages 
-  void _sendMessage(ChatMessage ChatMsg) async{
-    final loadingMessage = ChatMessage(
-    user: geminiBot,
-    text: 'loading..',
-    createdAt: DateTime.now(),
-  );
-    setState(() {
-      messages = [ChatMsg, ...messages];
-      messages.insert(0, loadingMessage);
+    // Logic for Sending messages 
+  // void _sendMessage(ChatMessage ChatMsg) async{
+  //   final loadingMessage = ChatMessage(
+  //   user: geminiBot,
+  //   text: 'loading..',
+  //   createdAt: DateTime.now(),
+  // );
+  //   setState(() {
+  //     messages = [ChatMsg, ...messages];
+  //     messages.insert(0, loadingMessage);
+  //   });
+  //   try{
+  //     String userQuestion = ChatMsg.text;
+  //     final responseText = await _geminiService.getGeminiRespone(userQuestion);
+  //     final botMsg = ChatMessage(user: geminiBot, text: responseText , createdAt: DateTime.now());
+  //   setState(() {
+  //     messages = [botMsg, ...messages];
+  //     messages.remove(loadingMessage);
+  //   });
+  //   }
+  //   catch(e){
+  //     print(e);
+  //   }
+  // }
+
+  void _sendMessage(ChatMessage ChatMsg) async {
+    await chatService.sendMessage(chatMsg: ChatMsg, messages: messages, updateMessages: (updated){
+      setState(() {
+        messages = updated;
+      });
     });
-    try{
-      String userQuestion = ChatMsg.text;
-      final responseText = await _geminiService.getGeminiRespone(userQuestion);
-      final botMsg = ChatMessage(user: geminiBot, text: responseText , createdAt: DateTime.now());
-    setState(() {
-      messages = [botMsg, ...messages];
-      messages.remove(loadingMessage);
-    });
-    }
-    catch(e){
-      print(e);
-    }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser!;
+    currentUser = ChatUser(
+      id: user.uid,
+      firstName: user.displayName,
+      profileImage: user.photoURL,
+    );
+    chatService = ChatLogic(userId: currentUser.id, currentUser: currentUser, geminiBot: geminiBot, getGeminiRespone: _geminiService.getGeminiRespone);
   }
   // UI
   @override
