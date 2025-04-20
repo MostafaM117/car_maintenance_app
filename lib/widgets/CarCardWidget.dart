@@ -13,7 +13,7 @@ class CarCardWidget extends StatelessWidget {
     String? model = car['model'];
     int? year = car['year'];
     String carId = car['id'];
-    
+
     return Card(
       color: AppColors.secondaryText,
       shape: RoundedRectangleBorder(
@@ -27,8 +27,8 @@ class CarCardWidget extends StatelessWidget {
             make: make,
             model: model,
             year: year,
-            width: 230,
-            height: 95, 
+            width: 180,
+            height: 95,
             fit: BoxFit.cover,
           ),
           Padding(
@@ -60,29 +60,22 @@ class CarCardWidget extends StatelessWidget {
                           style: textStyleWhite,
                         ),
                         Text(
-                          carId.toString().substring(carId.toString().length - 4),
+                          carId
+                              .toString()
+                              .substring(carId.toString().length - 4),
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
                   ],
                 ),
-                SizedBox(height: 8), 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 22,
-                      child: MileageDisplay(
-                        carId: carId,
-                        currentMileage: car['mileage'] ?? 0,
-                        avgKmPerMonth: car['avgKmPerMonth'] ?? 0,
-                        onMileageUpdated: (newMileage) {
-                          print('Updated mileage for car $carId: $newMileage');
-                        },
-                      ),
-                    ),
-                  ],
+                MileageDisplay(
+                  carId: carId,
+                  currentMileage: car['mileage'] ?? 0,
+                  avgKmPerMonth: car['avgKmPerMonth'] ?? 0,
+                  onMileageUpdated: (newMileage) {
+                    print('Updated mileage for car $carId: $newMileage');
+                  },
                 ),
               ],
             ),
