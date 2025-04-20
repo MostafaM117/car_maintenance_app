@@ -1,4 +1,5 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -21,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     HomePage(),
     const MaintenanceScreen(),
-    const Chatbot(),
+    Chatbot(userId: FirebaseAuth.instance.currentUser!.uid),
     Market(),
     Profile(),
   ];

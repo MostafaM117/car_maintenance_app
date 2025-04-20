@@ -1,5 +1,6 @@
 import 'package:car_maintenance/AI-Chatbot/gemini.dart';
 import 'package:car_maintenance/AI-Chatbot/send_message.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Chatbot extends StatefulWidget {
-  const Chatbot({super.key});
+  final String userId;
+  const Chatbot({super.key, required this.userId,});
 
   @override
   State<Chatbot> createState() => _ChatbotState();
@@ -16,7 +18,7 @@ class Chatbot extends StatefulWidget {
 class _ChatbotState extends State<Chatbot> {
 // Using ChatbotLogic
   late ChatLogic chatService;
-
+  String? activeChatId;
   final GeminiService _geminiService = GeminiService();
 
   // Check if the reponse is in Arabic
@@ -34,7 +36,6 @@ class _ChatbotState extends State<Chatbot> {
   //     username = fetchedUsername;
   //   });
   // }
-
   //////
   // ChatUser currentUser = ChatUser(id: "0", firstName: "Mostafa");
   late ChatUser currentUser;
@@ -77,6 +78,39 @@ class _ChatbotState extends State<Chatbot> {
     });
   }
 
+  //loadMessages
+Future<List<ChatMessage>> loadMessagesFromFirestore(String chatId) async {
+  final querySnapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .doc(widget.userId)
+      .collection('chats')
+      .doc(chatId)
+      .collection('messages')
+      .orderBy('createdAt', descending: true)
+      .get();
+
+  List<ChatMessage> messagesList = querySnapshot.docs.map((doc) {
+    final data = doc.data();
+    return ChatMessage(
+      user: data['userId'] == currentUser.id ? currentUser : geminiBot,
+      text: data['text'],
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+    );
+  }).toList();
+
+  print("Loaded ${messagesList.length} messages for chat $chatId"); // Debugging print
+  return messagesList;
+}
+
+// switchChat
+void switchChat(String newChatId) async {
+    final newMessages = await loadMessagesFromFirestore(newChatId);
+    setState(() {
+      activeChatId = newChatId;
+      messages = newMessages;
+    });
+    Navigator.of(context).pop();
+  }
   @override
   void initState(){
     super.initState();
@@ -93,12 +127,53 @@ class _ChatbotState extends State<Chatbot> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: (){
+                Scaffold.of(context).openDrawer();
+              },
+              );
+          }
+        ),
         centerTitle: true,
         title: const Text('Chatbot')
         ),
+        drawer: Drawer(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: 
+            FirebaseFirestore.instance.collection('users').doc(widget.userId).collection('chats').orderBy('createdAt', descending: true).snapshots(), 
+            builder: (context, snapshot){
+              if(!snapshot.hasData){
+              return const Center(child: CircularProgressIndicator(),);
+              }
+              final docs = snapshot.data!.docs;
+              if(docs.isEmpty){
+              return Text('No Chats');
+              }
+              return ListView(
+                children: [
+                  DrawerHeader(child: Text('past chats')),
+                  ...docs.map((doc){
+                    final data = doc.data() as Map<String, dynamic>;
+                    final title = data['title'] ?? 'Untitled';
+                    final chatId = doc.id;
+                    return ListTile(
+                      title: Text(title),
+                      onTap: () {
+                        print("Chat tapped: $chatId");
+                        switchChat(chatId);
+                      },
+                    );
+                  }).toList()
+                ],
+              );
+            }),
+        ),
       body: DashChat(
       currentUser: currentUser, 
-      onSend: _sendMessage, 
+      onSend: (chatMsg)=> _sendMessage(chatMsg), 
       messages: messages,
       messageOptions: MessageOptions(
         showOtherUsersName: true,
