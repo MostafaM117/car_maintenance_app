@@ -26,11 +26,14 @@ class CarCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: onCardPressed,
       child: SizedBox(
-        height: 160,
-        width: 300,
+        width: screenWidth * 0.85,
+        height: screenHeight * 0.20,
         child: Card(
           elevation: 4,
           shape: RoundedRectangleBorder(
@@ -45,26 +48,31 @@ class CarCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          carName,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.buttonColor,
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              carName,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.buttonColor,
+                              ),
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          year.toString(),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppColors.primaryText,
+                          const SizedBox(height: 4),
+                          Text(
+                            year.toString(),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: AppColors.primaryText,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Text(
                       carId.substring(carId.length - 4),
@@ -95,14 +103,15 @@ class CarCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(
-                      height: 35,
-                      width: 100,
+                      height: screenHeight * 0.05,
+                      width: screenWidth * 0.25,
                       child: ElevatedButton(
                         onPressed: onDeletePressed,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.buttonColor,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25)),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
                         ),
                         child: const FittedBox(
                           fit: BoxFit.scaleDown,
