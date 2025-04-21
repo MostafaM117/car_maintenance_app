@@ -21,7 +21,7 @@ class ProgressStepsBar extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 3),
             child: Container(
-              height: 40,
+              height: 50,
               decoration: ShapeDecoration(
                 color: isFilled
                     ? AppColors.buttonColor

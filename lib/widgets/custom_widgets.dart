@@ -194,13 +194,13 @@ Widget buildDropdownField({
           label,
           style: textStyleWhite.copyWith(fontSize: 16),
         ),
-      // SizedBox(
-      //   height: 8,
-      // ),
+      SizedBox(
+        height: 8,
+      ),
       SizedBox(
         width: double.infinity,
         child: Container(
-          height: 40,
+          height: 45,
           decoration: ShapeDecoration(
             color: AppColors.secondaryText,
             shape: RoundedRectangleBorder(
@@ -248,9 +248,9 @@ Widget buildTextField({
           label,
           style: textStyleWhite.copyWith(fontSize: 16),
         ),
-      // SizedBox(height: 8),
+      SizedBox(height: 8),
       Container(
-        height: 40,
+        height: 45,
         decoration: ShapeDecoration(
           color: AppColors.secondaryText,
           shape: RoundedRectangleBorder(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
+import 'Periodicpage.dart';
 
 class Market extends StatelessWidget {
   Market({super.key});
@@ -33,6 +34,7 @@ class Market extends StatelessWidget {
                     height: 20,
                   ),
                   SizedBox(
+                    // width: 250,
                     height: 450,
                     child: Swiper(
                       itemCount: 3,
@@ -41,17 +43,28 @@ class Market extends StatelessWidget {
                       viewportFraction: 0.8,
                       scale: 0.9,
                       itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          color: AppColors.primaryText,
-                          elevation: 6,
-                          child: Center(
-                            child: Text(
-                              categories[index],
-                              style: textStyleWhite.copyWith(
-                                  color: AppColors.background),
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Periodicpage(),
+                              ),
+                            );
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40),
+                            ),
+                            color: AppColors.primaryText,
+                            elevation: 6,
+                            child: Center(
+                              child: Text(
+                                categories[index],
+                                style: textStyleWhite.copyWith(
+                                  color: AppColors.background,
+                                ),
+                              ),
                             ),
                           ),
                         );

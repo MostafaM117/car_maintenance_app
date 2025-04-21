@@ -1,4 +1,5 @@
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
+import 'package:car_maintenance/screens/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -29,6 +30,91 @@ class AuthService {
       default: return "An error occurred while trying to sign in, try again later.";
     }
   }
+  // _getUserPassword 
+  Future <String> _getUserPassword(BuildContext context) async{
+    final TextEditingController passwordcontroller = TextEditingController();
+    String? errorText;
+    final result = await showDialog(
+      context: context,
+      barrierDismissible: false, 
+      builder: (context){
+        return StatefulBuilder(
+          builder: (context, setState){
+            
+          return AlertDialog(
+            title: Text('Enter Your Password'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('It\'s your first time using google sign in, please enter your password'),
+                SizedBox(height: 12,),
+                TextField(
+                  controller: passwordcontroller,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    errorText: errorText,
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: (){
+                final password = passwordcontroller.text.trim();
+                if(password.isEmpty){
+                    setState((){
+                    errorText = "Password can't be empty.";
+                    });
+                    return;
+                  }
+                else {
+                  Navigator.of(context).pop(password);
+                  
+                  }
+              }, child: Text('Link my account')),
+              TextButton(
+                onPressed: (){
+                Navigator.of(context).pop();
+              }, 
+              child: Text('Cancel'))
+              ],
+          );
+          }
+        );
+      });
+      return result;
+  }
+  // Linking Accounts
+  Future<void> _linkaccounts(BuildContext context, String email, AuthCredential googlecredential, String docId) async{
+    try{
+      final password = await _getUserPassword(context);
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      
+      await userCredential.user!.linkWithCredential(googlecredential);
+      final uid = userCredential.user!.uid;
+      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+        'googleUser': true,
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Google account linked successfully.'), backgroundColor: Colors.green,),
+      );
+      Navigator.of(context).pop();
+      } catch(e){
+      print('error: $e');
+      if(e.toString().contains('firebase_auth/invalid-credential')){
+
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Password is not correct'), backgroundColor: Colors.red,),
+    );
+      }
+      else{
+
+      ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Failed to link accounts, try again or use email and password to sign in')),
+    );
+      }
+    }
+  }
 
   // signInWithGoogle
   Future<UserCredential?> signInWithGoogle (BuildContext context) async{
@@ -44,24 +130,57 @@ class AuthService {
       accessToken: gAuth.accessToken,
       idToken: gAuth.idToken,
     );
+    final email = gUser.email;
+    final usersRef = FirebaseFirestore.instance.collection('users');
+    final userDocQuery = await usersRef.where('email', isEqualTo: email).get();
     
-    UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
-    User? user = userCredential.user;
+    //Check for Previously registered users
+    if(userDocQuery.docs.isNotEmpty){
+      final docId = userDocQuery.docs.first.id;
+      final googleuserexists = userDocQuery.docs.first.data()['googleUser'];
 
-    if (user != null){
-    final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
-    final userExists = await userDoc.get();
-    if (userExists.exists){
-      _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
+      if(googleuserexists == true){
+        UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+        User? user = userCredential.user;
+
+        if (user != null){
+          final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+          final userExists = await userDoc.get();
+            if (userExists.exists){
+            _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
+            }
+            else if (!userExists.exists) {
+            _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds:     4000));
+            }
+          Navigator.pop(context);
+        }
+        return userCredential;
+      } 
+      else {
+        await _linkaccounts(context, email, credential, docId);
+        print('trying to link');
+      }
+      } 
+    //New Users Signig in With Google
+    else {
+      UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+      User? user = userCredential.user;
+      if (user != null){
+      final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+      final userExists = await userDoc.get();
+        if (userExists.exists){
+        _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
+        }
+        else if (!userExists.exists) {
+        _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
+        }
+        Navigator.pop(context);
+      }
+      print('New User using Sign in with Google');
+      return userCredential;
     }
-    else if (!userExists.exists) {
-      _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
-    }
-    Navigator.pop(context);
-    }
-    //Check for new users
-    return userCredential;
-    } catch(e){
+    } 
+    catch(e){
       if(e.toString() == 'Exception: Google Sign In Canceled'){
         print("handled error in Google sign");
       }
