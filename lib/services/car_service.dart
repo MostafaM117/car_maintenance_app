@@ -13,7 +13,9 @@ class CarService {
   final String? selectedModel;
   final int? selectedYear;
   final DateTime? lastMaintenanceDate;
-
+  
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseAuth _auth = FirebaseAuth.instance;
 
   CarService({
     required this.context,
@@ -24,7 +26,6 @@ class CarService {
     required this.selectedModel,
     required this.selectedYear,
     required this.lastMaintenanceDate,
-
   });
 
   Future<void> submitForm(Function(bool) setLoading) async {
@@ -53,12 +54,12 @@ class CarService {
   }
 
   Future<void> saveCar() async {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _auth.currentUser;
     if (user == null) {
       throw Exception('User not logged in');
     }
 
-    final userDoc = await FirebaseFirestore.instance
+    final userDoc = await _firestore
         .collection('users')
         .doc(user.uid)
         .get();
@@ -71,7 +72,7 @@ class CarService {
       throw Exception('Username not found');
     }
 
-    final carId = FirebaseFirestore.instance.collection('cars').doc().id;
+    final carId = _firestore.collection('cars').doc().id;
 
     final lastMaintenanceDateTime = DateTime(
       (lastMaintenanceDate ?? DateTime.now()).year,
@@ -79,7 +80,7 @@ class CarService {
       (lastMaintenanceDate ?? DateTime.now()).day,
     );
 
-    await FirebaseFirestore.instance.collection('cars').doc(carId).set({
+    await _firestore.collection('cars').doc(carId).set({
       'carId': carId,
       'make': selectedMake,
       'model': selectedModel,
@@ -87,13 +88,52 @@ class CarService {
       'mileage': double.parse(mileageController.text.trim()),
       'avgKmPerMonth': double.parse(avgKmPerMonthController.text.trim()),
       'lastMaintenance': Timestamp.fromDate(lastMaintenanceDateTime),
-      
       'userId': user.uid,
       'username': username,
     });
 
-    await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+    await _firestore.collection('users').doc(user.uid).update({
       'carAdded': true,
     });
   }
-} 
+
+  /// Get a stream of the current user's cars
+  static Stream<QuerySnapshot> getUserCarsStream() {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User not authenticated');
+    }
+    
+    return _firestore
+        .collection('cars')
+        .where('userId', isEqualTo: user.uid)
+        .snapshots();
+  }
+
+  /// Get the current user's cars as a Future
+  static Future<List<Map<String, dynamic>>> getUserCars() async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User not authenticated');
+    }
+    
+    final snapshot = await _firestore
+        .collection('cars')
+        .where('userId', isEqualTo: user.uid)
+        .get();
+    
+    return snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data();
+      data['id'] = doc.id;
+      return data;
+    }).toList();
+  }
+  static Future<void> deleteCar(String carId) async {
+    try {
+      await _firestore.collection('cars').doc(carId).delete();
+    } catch (e) {
+      print('Error deleting car: $e');
+      throw e;
+    }
+  }
+}
