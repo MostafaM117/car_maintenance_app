@@ -17,7 +17,7 @@ final TextEditingController maintenanceController = TextEditingController();
 late FirestoreService firestoreService;
 
 class _AddMaintenanceState extends State<AddMaintenance> {
-  final TextEditingController typeController = TextEditingController();
+  final TextEditingController mileageController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
   DateTime? selectedDate;
@@ -57,11 +57,12 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                 SizedBox(height: 70),
                 Text(
                   "Add Maintenance",
-                  style: textStyleWhite.copyWith(fontSize: 22,fontWeight: FontWeight.w600),
+                  style: textStyleWhite.copyWith(
+                      fontSize: 22, fontWeight: FontWeight.w600),
                 ),
                 buildTextField(
-                  hintText: 'Maintenance Type',
-                  controller: typeController,
+                  hintText: 'Current mileage',
+                  controller: mileageController,
                 ),
                 const SizedBox(height: 20),
 
@@ -140,8 +141,8 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                       title: 'Maintenance Added!',
                       body: descriptionController.text,
                     );
-                    firestoreService
-                        .addMaintenanceList(descriptionController.text);
+                    firestoreService.addSpecialMaintenance(
+                        descriptionController.text, false, 0, selectedDate!);
                   },
                 )
               ]),

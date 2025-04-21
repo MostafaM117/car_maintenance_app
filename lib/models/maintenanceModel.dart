@@ -23,6 +23,7 @@ class MaintenanceList {
       description: data['Description'] ?? '',
       periodic: data['Periodic'] ?? false,
       mileage: data['mileage'] ?? 0,
+      expectedDate: (data['expectedDate'])?.toDate() ?? DateTime.now(),
     );
   }
 }
