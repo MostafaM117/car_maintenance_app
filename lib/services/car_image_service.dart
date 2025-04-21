@@ -99,6 +99,20 @@ class CarImageService {
       imagePath = '${basePath}Fiat_Tipo_2022_2025.png';
       }
     }
+
+      // Renault models 
+
+     else if (make == 'Renault' && model == 'Megane') {
+       imagePath = '${basePath}Renault_Megane_2017_2025.png';
+     } else if (make == 'Renault' && model == 'Logan') {
+       if (year >= 2018) {
+         imagePath = '${basePath}Renault_Logan_2018_2022.png';
+       } else {
+         imagePath = '${basePath}Renault_Logan_2015_2017.png';
+       }
+     } else if (make == 'Renault' && model == 'Fluence') {
+       imagePath = '${basePath}Renault_Fluence_2014_2017.png';
+     }
     
     // Default pattern for other cars
     else {
