@@ -1,5 +1,5 @@
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/signup_page.dart';
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/login_page.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/user_signup_page.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/user_login_page.dart';
 import 'package:flutter/material.dart';
 
 class AuthPage extends StatefulWidget {
@@ -21,7 +21,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     if (showLoginPage) {
-      return LoginPage(showSignupPage: togglescreens);
+      return UserLoginPage(showSignupPage: togglescreens);
     } else {
       return SignupPage(showLoginPage: togglescreens);
     }

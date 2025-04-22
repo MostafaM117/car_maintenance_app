@@ -6,15 +6,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../constants/app_colors.dart';
 import '../../widgets/custom_widgets.dart';
 
-class LoginPage extends StatefulWidget {
+class UserLoginPage extends StatefulWidget {
   final VoidCallback showSignupPage;
-  const LoginPage({super.key, required this.showSignupPage});
+  const UserLoginPage({super.key, required this.showSignupPage});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<UserLoginPage> createState() => _UserLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _UserLoginPageState extends State<UserLoginPage> {
   final _emailcontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
   bool _obscureText = true;
