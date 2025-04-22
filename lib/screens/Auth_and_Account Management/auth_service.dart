@@ -99,6 +99,7 @@ class AuthService {
       SnackBar(content: Text('Google account linked successfully.'), backgroundColor: Colors.green,),
       );
       Navigator.of(context).pop();
+      Navigator.of(context).pop();
       } catch(e){
       print('error: $e');
       if(e.toString().contains('firebase_auth/invalid-credential')){
@@ -150,8 +151,9 @@ class AuthService {
             _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
             }
             else if (!userExists.exists) {
-            _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds:     4000));
+            _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds:4000));
             }
+          Navigator.pop(context);
           Navigator.pop(context);
         }
         return userCredential;
@@ -161,7 +163,7 @@ class AuthService {
         print('trying to link');
       }
       } 
-    //New Users Signig in With Google
+    //New Users Signing in With Google
     else {
       UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
       User? user = userCredential.user;
@@ -174,6 +176,7 @@ class AuthService {
         else if (!userExists.exists) {
         _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
         }
+        Navigator.pop(context);
         Navigator.pop(context);
       }
       print('New User using Sign in with Google');
@@ -209,6 +212,7 @@ class AuthService {
     try{
       UserCredential userCredential = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       _showSnackBar(context, 'Signed in successfully', Colors.green.shade400, Duration(milliseconds: 1000));
+      Navigator.pop(context);
       Navigator.pop(context);
       return userCredential;
     } on FirebaseAuthException catch(e){

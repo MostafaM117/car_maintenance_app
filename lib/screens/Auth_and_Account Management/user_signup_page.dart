@@ -80,6 +80,7 @@ class _SignupPageState extends State<SignupPage> {
         userCredential.user!.uid,
       );
       Navigator.pop(context);
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content:

@@ -1,7 +1,8 @@
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_page.dart';
+import 'package:car_maintenance/screens/before_login/login_type.dart';
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
-import '../widgets/custom_widgets.dart';
+import '../../constants/app_colors.dart';
+import '../../widgets/custom_widgets.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -82,7 +83,8 @@ class _WelcomePageState extends State<WelcomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AuthPage()),
+                    MaterialPageRoute(builder: (context) => LoginType()
+                    ),
                   );
                 },
               ),
