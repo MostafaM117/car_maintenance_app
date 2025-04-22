@@ -38,7 +38,11 @@ class _CarMaintState extends State<CarMaint> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Edit ${car['make']} ${car['model']}'),
+              backgroundColor: AppColors.borderSide,
+              title: Text(
+                'Edit ${car['make']} ${car['model']} ',
+                style: textStyleWhite,
+              ),
               content: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -58,7 +62,7 @@ class _CarMaintState extends State<CarMaint> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 15),
 
                       // Avg usage
                       buildTextField(
@@ -77,49 +81,45 @@ class _CarMaintState extends State<CarMaint> {
                 ),
               ),
               actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Cancel'),
-                ),
                 isLoading
                     ? CircularProgressIndicator()
-                    : TextButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              isLoading = true;
+                    : buildButton(onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
+
+                          try {
+                            await FirebaseFirestore.instance
+                                .collection('cars')
+                                .doc(car['id'])
+                                .update({
+                              'mileage':
+                                  double.parse(mileageController.text.trim()),
+                              'avgKmPerMonth':
+                                  double.parse(avgKmController.text.trim()),
+                              'lastUpdated': FieldValue.serverTimestamp(),
                             });
 
-                            try {
-                              await FirebaseFirestore.instance
-                                  .collection('cars')
-                                  .doc(car['id'])
-                                  .update({
-                                'mileage':
-                                    double.parse(mileageController.text.trim()),
-                                'avgKmPerMonth':
-                                    double.parse(avgKmController.text.trim()),
-                                'lastUpdated': FieldValue.serverTimestamp(),
-                              });
-
-                              Navigator.of(context).pop();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Car updated successfully')),
-                              );
-                            } catch (e) {
-                              setState(() {
-                                isLoading = false;
-                              });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text('Error updating car: $e')),
-                              );
-                            }
+                            Navigator.of(context).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text('Car updated successfully')),
+                            );
+                          } catch (e) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Error updating car: $e')),
+                            );
                           }
-                        },
-                        child: Text('Update'),
-                      ),
+                        }
+                      }, 'Update', AppColors.buttonText, AppColors.buttonColor),
+                const SizedBox(height: 10),
+                buildButton(
+                    'Cancel', AppColors.buttonColor, AppColors.buttonText,
+                    onPressed: () => Navigator.of(context).pop()),
               ],
             );
           },
@@ -206,22 +206,33 @@ class _CarMaintState extends State<CarMaint> {
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          title: Text('Delete Car'),
+                                          backgroundColor: AppColors.borderSide,
+                                          title: Text(
+                                            'Delete Car',
+                                            style: textStyleWhite,
+                                          ),
                                           content: Text(
-                                              'Are you sure you want to delete this car?'),
+                                              'Are you sure you want to delete this car?',
+                                              style: textStyleGray),
                                           actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(false),
-                                              child: Text('Cancel'),
-                                            ),
-                                            TextButton(
+                                            buildButton(
                                               onPressed: () =>
                                                   Navigator.of(context)
                                                       .pop(true),
-                                              child: Text('Delete'),
+                                              'Delete',
+                                              AppColors.buttonText,
+                                              AppColors.buttonColor,
                                             ),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
+                                            buildButton(
+                                                onPressed: () =>
+                                                    Navigator.of(context)
+                                                        .pop(false),
+                                                'Cancel',
+                                                AppColors.buttonColor,
+                                                AppColors.buttonText),
                                           ],
                                         );
                                       },
