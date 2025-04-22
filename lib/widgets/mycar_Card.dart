@@ -120,7 +120,7 @@ class CarCard extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 14,
+                              fontSize: 16,
                               fontFamily: 'Inter',
                             ),
                           ),
