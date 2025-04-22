@@ -31,12 +31,12 @@ class _MileageDisplayState extends State<MileageDisplay> {
     super.initState();
     _loadMileage();
   }
-  
+
   @override
   void didUpdateWidget(MileageDisplay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
-    if (oldWidget.carId != widget.carId || 
+
+    if (oldWidget.carId != widget.carId ||
         oldWidget.currentMileage != widget.currentMileage) {
       _loadMileage();
     }
@@ -48,19 +48,19 @@ class _MileageDisplayState extends State<MileageDisplay> {
           .collection('cars')
           .doc(widget.carId)
           .get();
-      
+
       int mileage;
       if (carDoc.exists) {
         final carData = carDoc.data()!;
-        mileage = carData['mileage'] is double 
-            ? (carData['mileage'] as double).toInt() 
+        mileage = carData['mileage'] is double
+            ? (carData['mileage'] as double).toInt()
             : carData['mileage'] as int? ?? 0;
       } else {
-        mileage = widget.currentMileage is double 
-            ? (widget.currentMileage as double).toInt() 
+        mileage = widget.currentMileage is double
+            ? (widget.currentMileage as double).toInt()
             : widget.currentMileage as int? ?? 0;
       }
-      
+
       setState(() {
         _displayMileage = mileage;
         _controller = TextEditingController(text: mileage.toString());
@@ -68,19 +68,20 @@ class _MileageDisplayState extends State<MileageDisplay> {
     } catch (e) {
       print('MILEAGE DEBUG: Error loading mileage for car ${widget.carId}: $e');
 
-      final mileage = widget.currentMileage is double 
-          ? (widget.currentMileage as double).toInt() 
+      final mileage = widget.currentMileage is double
+          ? (widget.currentMileage as double).toInt()
           : widget.currentMileage as int? ?? 0;
-      
+
       setState(() {
         _displayMileage = mileage;
         _controller = TextEditingController(text: mileage.toString());
       });
     }
-    
+
     if (widget.avgKmPerMonth != null && widget.avgKmPerMonth > 0) {
       try {
-        final updatedMileage = await _mileageService.autoUpdateMileage(widget.carId);
+        final updatedMileage =
+            await _mileageService.autoUpdateMileage(widget.carId);
         if (updatedMileage != _displayMileage) {
           setState(() {
             _displayMileage = updatedMileage;
@@ -89,7 +90,8 @@ class _MileageDisplayState extends State<MileageDisplay> {
           widget.onMileageUpdated?.call(updatedMileage);
         }
       } catch (e) {
-        print('MILEAGE DEBUG: Error auto-updating mileage for car ${widget.carId}: $e');
+        print(
+            'MILEAGE DEBUG: Error auto-updating mileage for car ${widget.carId}: $e');
       }
     }
   }
@@ -100,41 +102,44 @@ class _MileageDisplayState extends State<MileageDisplay> {
     super.dispose();
   }
 
-Future<void> _updateMileage() async {
-  if (!mounted) return;
-  
-  try {
-    final newMileage = int.parse(_controller.text);
-    
-    await FirebaseFirestore.instance
-        .collection('cars')
-        .doc(widget.carId)
-        .update({
-          'mileage': newMileage,
-          'lastUpdated': FieldValue.serverTimestamp(),
-        });
-    
-    if (mounted) {
-      setState(() {
-        _isEditing = false;
-        _displayMileage = newMileage;
+  Future<void> _updateMileage() async {
+    if (!mounted) return;
+
+    try {
+      final newMileage = int.parse(_controller.text);
+
+      await FirebaseFirestore.instance
+          .collection('cars')
+          .doc(widget.carId)
+          .update({
+        'mileage': newMileage,
+        'lastUpdated': FieldValue.serverTimestamp(),
       });
-      
-      widget.onMileageUpdated?.call(newMileage);
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mileage updated successfully to $newMileage km')),
-      );
-    }
-  } catch (e) {
-    if (mounted) {
-      print('MILEAGE DEBUG: Error updating mileage for car ${widget.carId}: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update mileage: $e')),
-      );
+
+      if (mounted) {
+        setState(() {
+          _isEditing = false;
+          _displayMileage = newMileage;
+        });
+
+        widget.onMileageUpdated?.call(newMileage);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Mileage updated successfully to $newMileage km')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        print(
+            'MILEAGE DEBUG: Error updating mileage for car ${widget.carId}: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update mileage: $e')),
+        );
+      }
     }
   }
-}
+
   @override
   Widget build(BuildContext context) {
     if (_isEditing) {
@@ -142,12 +147,13 @@ Future<void> _updateMileage() async {
         mainAxisSize: MainAxisSize.min,
         children: [
           SizedBox(
-            width: 70, 
+            width: 70,
             child: TextField(
               controller: _controller,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 8, vertical: 0),
                 isDense: true,
                 suffixText: 'km',
                 border: OutlineInputBorder(),

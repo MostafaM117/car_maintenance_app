@@ -35,6 +35,7 @@ class CarCard extends StatelessWidget {
         width: screenWidth * 0.85,
         height: screenHeight * 0.20,
         child: Card(
+          color: AppColors.secondaryText,
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(22),
