@@ -22,7 +22,6 @@ class _AddCarScreenState extends State<AddCarScreen> {
   String? username;
 
   DateTime? lastMaintenanceDate;
- 
 
   final TextEditingController mileageController = TextEditingController();
   final TextEditingController avgKmController = TextEditingController();
@@ -120,7 +119,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   'Please fill in your car details to continue.',
                   style: textStyleGray,
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 25),
 
                 // Car Make
                 buildDropdownField(
@@ -136,7 +135,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
 
                 // Car Model
                 buildDropdownField(
@@ -153,7 +152,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
 
                 // Model Year
                 buildDropdownField(
@@ -171,7 +170,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     });
                   },
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
 
                 // Mileage
                 buildTextField(
@@ -185,7 +184,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
 
                 // Avg usage
                 buildTextField(
@@ -199,7 +198,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 20),
 
                 // Maintenance date
                 MaintenanceDatePicker(
@@ -212,7 +211,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   },
                 ),
 
-                const SizedBox(height: 60),
+                const SizedBox(height: 65),
 
                 // Submit button
                 isLoading
