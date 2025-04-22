@@ -75,6 +75,7 @@ class _AccountManagementState extends State<AccountManagement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -158,8 +159,8 @@ class _AccountManagementState extends State<AccountManagement> {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _isediting
-                              ? Colors.green.shade400
-                              : AppColors.buttonText,
+                              ? AppColors.buttonColor
+                              : AppColors.secondaryText,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25)),
                         ),
@@ -172,11 +173,9 @@ class _AccountManagementState extends State<AccountManagement> {
                                     : "Edit username",
                                 style: _isediting
                                     ? textStyleWhite.copyWith(
-                                      color: AppColors.secondaryText
-                                    )
+                                        color: AppColors.secondaryText)
                                     : textStyleWhite.copyWith(
-                                      color: AppColors.buttonColor
-                                    )),
+                                        color: Colors.black)),
                           ],
                         ),
                         onPressed: () {
@@ -184,7 +183,8 @@ class _AccountManagementState extends State<AccountManagement> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Username can\'t be empty'),
-                                backgroundColor: Colors.red,
+                                backgroundColor:
+                                    const Color.fromARGB(141, 244, 67, 54),
                               ),
                             );
                           } else {
@@ -203,7 +203,8 @@ class _AccountManagementState extends State<AccountManagement> {
                                       content:
                                           Text('Username updated successfully'),
                                       duration: Duration(milliseconds: 1000),
-                                      backgroundColor: Colors.green.shade400,
+                                      backgroundColor: const Color.fromARGB(
+                                          158, 102, 187, 106),
                                     ),
                                   );
                           }
@@ -214,8 +215,8 @@ class _AccountManagementState extends State<AccountManagement> {
                   ),
                   buildButton(
                     'Edit Password',
-                    AppColors.buttonText,
-                    AppColors.buttonColor,
+                    AppColors.secondaryText,
+                    Colors.black,
                     onPressed: () {
                       Navigator.push(
                         context,

@@ -38,7 +38,7 @@ class _CarMaintState extends State<CarMaint> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              backgroundColor: AppColors.borderSide,
+              backgroundColor: AppColors.secondaryText,
               title: Text(
                 'Edit ${car['make']} ${car['model']} ',
                 style: textStyleWhite,
@@ -131,6 +131,7 @@ class _CarMaintState extends State<CarMaint> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
           const CurvedBackgroundDecoration(),

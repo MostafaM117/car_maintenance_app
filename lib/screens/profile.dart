@@ -41,6 +41,7 @@ class _ProfileState extends State<Profile> {
       });
     }
   }
+
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
     setState(() {
@@ -76,6 +77,7 @@ class _ProfileState extends State<Profile> {
     ];
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Stack(
           alignment: Alignment.topCenter,
@@ -135,7 +137,7 @@ class _ProfileState extends State<Profile> {
 
             Positioned(
               top: 40,
-              left:30,
+              left: 30,
               right: 00,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
