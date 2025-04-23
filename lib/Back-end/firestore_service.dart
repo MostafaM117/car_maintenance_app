@@ -77,13 +77,9 @@ class FirestoreService {
       final data = docSnapshot.data() as Map<String, dynamic>?;
 
       if (data != null) {
-        final historyRef = FirebaseFirestore.instance
-            .collection('users')
-            .doc(user!.uid)
-            .collection('maintHistory');
         await personalMaintCollection.doc(docId).update({'isDone': true});
 
-        await historyRef.add(data); // Copy the item to history
+        await historyCollection.add(data); // Copy the item to history
         print("✅ Moved maintenance item to history");
       } else {
         print("❌ No data found for docId: $docId");
@@ -94,12 +90,7 @@ class FirestoreService {
   }
 
   Stream<List<MaintenanceList>> getMaintenanceHistory() {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .collection('maintHistory')
-        .snapshots()
-        .map((snapshot) {
+    return historyCollection.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>? ?? {};
         return MaintenanceList.fromJson(data, doc.id);
