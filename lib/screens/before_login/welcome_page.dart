@@ -1,4 +1,3 @@
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_page.dart';
 import 'package:car_maintenance/screens/before_login/login_type.dart';
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';

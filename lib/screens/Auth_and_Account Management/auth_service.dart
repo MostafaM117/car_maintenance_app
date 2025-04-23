@@ -152,81 +152,75 @@ class AuthService {
   }
 
   // signInWithGoogle
-  Future<UserCredential?> signInWithGoogle(BuildContext context) async {
-    try {
-      await GoogleSignIn().signOut();
-      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
-      if (gUser == null) {
-        _showSnackBar(context, 'Google Sign In Canceled', Colors.red,
-            Duration(milliseconds: 2200));
-        throw Exception('Google Sign In Canceled');
-      }
-      final GoogleSignInAuthentication gAuth = await gUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken,
-        idToken: gAuth.idToken,
-      );
-      final email = gUser.email;
-      final usersRef = FirebaseFirestore.instance.collection('users');
-      final userDocQuery =
-          await usersRef.where('email', isEqualTo: email).get();
-
-      //Check for Previously registered users
-      if (userDocQuery.docs.isNotEmpty) {
-        final docId = userDocQuery.docs.first.id;
-        final googleuserexists = userDocQuery.docs.first.data()['googleUser'];
+  Future<UserCredential?> signInWithGoogle (BuildContext context, {required String role}) async{
+    try{
+    await GoogleSignIn().signOut();
+    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+    if(gUser == null){
+      _showSnackBar(context, 'Google Sign In Canceled', Colors.red, Duration(milliseconds: 2200));
+      throw Exception('Google Sign In Canceled');
+    }
+    final GoogleSignInAuthentication gAuth = await gUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: gAuth.accessToken,
+      idToken: gAuth.idToken,
+    );
+    final email = gUser.email;
+    final collection = role == 'user'? 'users' : 'sellers';
+    final usersRef = FirebaseFirestore.instance.collection(collection);
+    final userDocQuery = await usersRef.where('email', isEqualTo: email).get();
+    
+    //Check for Previously registered users
+    if(userDocQuery.docs.isNotEmpty){
+      final docId = userDocQuery.docs.first.id;
+      final googleuserexists = userDocQuery.docs.first.data()['googleUser'];
 
         if (googleuserexists == true) {
           UserCredential userCredential =
               await _firebaseAuth.signInWithCredential(credential);
           User? user = userCredential.user;
 
-          if (user != null) {
-            final userDoc = FirebaseFirestore.instance
-                .collection('users')
-                .doc(userCredential.user!.uid);
-            final userExists = await userDoc.get();
-            if (userExists.exists) {
-              _showSnackBar(context, 'Signed in Successfully',
-                  Colors.green.shade400, Duration(milliseconds: 2500));
-            } else if (!userExists.exists) {
-              _showSnackBar(context, 'Welcome, Complete Your first time setup',
-                  Colors.green.shade400, Duration(milliseconds: 4000));
-            }
-            Navigator.pop(context);
-            Navigator.pop(context);
-          }
-          return userCredential;
-        } else {
-          await _linkaccounts(context, email, credential, docId);
-          print('trying to link');
-        }
-      }
-      //New Users Signing in With Google
-      else {
-        UserCredential userCredential =
-            await _firebaseAuth.signInWithCredential(credential);
-        User? user = userCredential.user;
-        if (user != null) {
-          final userDoc = FirebaseFirestore.instance
-              .collection('users')
-              .doc(userCredential.user!.uid);
+        if (user != null){
+          final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
           final userExists = await userDoc.get();
-          if (userExists.exists) {
-            _showSnackBar(context, 'Signed in Successfully',
-                Colors.green.shade400, Duration(milliseconds: 2500));
-          } else if (!userExists.exists) {
-            _showSnackBar(context, 'Welcome, Complete Your first time setup',
-                Colors.green.shade400, Duration(milliseconds: 4000));
-          }
+            if (userExists.exists){
+            _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
+            }
+            else if (!userExists.exists) {
+            _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds:4000));
+            }
           Navigator.pop(context);
           Navigator.pop(context);
         }
-        print('New User using Sign in with Google');
         return userCredential;
+      } 
+      else {
+        await _linkaccounts(context, email, credential, docId);
+        print('trying to link');
       }
-    } catch (e) {
-      if (e.toString() == 'Exception: Google Sign In Canceled') {
+      } 
+    //New Users Signing in With Google
+    else {
+      UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+      User? user = userCredential.user;
+      if (user != null){
+      final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+      final userExists = await userDoc.get();
+        if (userExists.exists){
+        _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
+        }
+        else if (!userExists.exists) {
+        _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
+        }
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }
+      print('New User using Sign in with Google');
+      return userCredential;
+    }
+    } 
+    catch(e){
+      if(e.toString() == 'Exception: Google Sign In Canceled'){
         print("handled error in Google sign");
       } else if (e.toString().contains('network_error')) {
         _showSnackBar(context, 'Network error. Please check your connection.',

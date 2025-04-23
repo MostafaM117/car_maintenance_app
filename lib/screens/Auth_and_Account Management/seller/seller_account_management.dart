@@ -7,18 +7,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_colors.dart';
-import '../../widgets/BackgroundDecoration.dart';
-import '../../widgets/profile_image.dart';
+import '../../../constants/app_colors.dart';
+import '../../../widgets/BackgroundDecoration.dart';
+import '../../../widgets/profile_image.dart';
 
-class AccountManagement extends StatefulWidget {
-  const AccountManagement({super.key});
+class SellerAccountManagement extends StatefulWidget {
+  const SellerAccountManagement({super.key});
 
   @override
-  State<AccountManagement> createState() => _AccountManagementState();
+  State<SellerAccountManagement> createState() => _SellerAccountManagementState();
 }
 
-class _AccountManagementState extends State<AccountManagement> {
+class _SellerAccountManagementState extends State<SellerAccountManagement> {
   final _usernameEditcontroller = TextEditingController();
   bool _isediting = false;
   User? _user = FirebaseAuth.instance.currentUser;
@@ -27,7 +27,7 @@ class _AccountManagementState extends State<AccountManagement> {
   Future<void> _getcurrentusername() async {
     if (_user != null) {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
+          .collection('sellers')
           .doc(_user!.uid)
           .get();
       if (userDoc.exists) {
@@ -54,7 +54,7 @@ class _AccountManagementState extends State<AccountManagement> {
       return;
     }
     await FirebaseFirestore.instance
-        .collection('users')
+        .collection('sellers')
         .doc(_user!.uid)
         .update({'username': newUsername});
   }
@@ -238,32 +238,28 @@ class _AccountManagementState extends State<AccountManagement> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             backgroundColor: AppColors.secondaryText,
-                            title: const Text(
-                              'Are you sure you want to delete your account?',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w600,fontSize: 24,),
-                            ),
+                            title: const Text('Delete Account'),
                             content: const Text(
-                                'This action is permanent and cannot be undone. All your data will be permanently removed..',
-                                textAlign: TextAlign.center),
+                              'Are you sure you want to delete your account? \nThis action will delete the account totally and will remove all related data.',
+                            ),
                             actions: [
-                              popUpBotton(
-                                'Cancel',
-                                AppColors.primaryText,
-                                AppColors.buttonText,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              popUpBotton(
+                              buildButton(
                                 'Delete',
                                 AppColors.buttonColor,
                                 AppColors.buttonText,
                                 onPressed: () {
                                   DeleteAccount().deleteAccount(context);
+                                },
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              buildButton(
+                                'Discard',
+                                AppColors.buttonText,
+                                AppColors.buttonColor,
+                                onPressed: () {
+                                  Navigator.pop(context);
                                 },
                               ),
                             ],
