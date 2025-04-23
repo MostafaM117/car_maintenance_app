@@ -1,3 +1,4 @@
+import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import 'mileage_display.dart';
@@ -89,44 +90,22 @@ class CarCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Flexible(
-                      child: SizedBox(
-                        height: 20,
-                        child: MileageDisplay(
-                          carId: carId,
-                          currentMileage: mileage,
-                          avgKmPerMonth: avgKmPerMonth,
-                          onMileageUpdated: (newMileage) {
-                            print(
-                                'Updated mileage for car $carId: $newMileage');
-                          },
-                        ),
+                    SizedBox(
+                      // height: 20,
+                      child: MileageDisplay(
+                        carId: carId,
+                        currentMileage: mileage,
+                        avgKmPerMonth: avgKmPerMonth,
+                        onMileageUpdated: (newMileage) {
+                          print('Updated mileage for car $carId: $newMileage');
+                        },
                       ),
                     ),
-                    SizedBox(
-                      height: screenHeight * 0.05,
-                      width: screenWidth * 0.25,
-                      child: ElevatedButton(
-                        onPressed: onDeletePressed,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.buttonColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                        ),
-                        child: const FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            'Delete Car',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              fontFamily: 'Inter',
-                            ),
-                          ),
-                        ),
-                      ),
+                    popUpBotton(
+                      'Delete Car',
+                      AppColors.buttonColor,
+                      AppColors.buttonText,
+                      onPressed: onDeletePressed,
                     ),
                   ],
                 ),

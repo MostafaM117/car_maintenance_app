@@ -40,7 +40,7 @@ class _CarMaintState extends State<CarMaint> {
             return AlertDialog(
               backgroundColor: AppColors.secondaryText,
               title: Text(
-                'Edit ${car['make']} ${car['model']} ',
+                'Edit ${car['make']} ${car['model']} Details.',
                 style: textStyleWhite,
               ),
               content: Form(
@@ -83,43 +83,49 @@ class _CarMaintState extends State<CarMaint> {
               actions: [
                 isLoading
                     ? CircularProgressIndicator()
-                    : buildButton(onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
+                    : popUpBotton(
+                        'Cancel',
+                        AppColors.primaryText,
+                        AppColors.buttonText,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                const SizedBox(width: 10),
+                popUpBotton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        isLoading = true;
+                      });
 
-                          try {
-                            await FirebaseFirestore.instance
-                                .collection('cars')
-                                .doc(car['id'])
-                                .update({
-                              'mileage':
-                                  double.parse(mileageController.text.trim()),
-                              'avgKmPerMonth':
-                                  double.parse(avgKmController.text.trim()),
-                              'lastUpdated': FieldValue.serverTimestamp(),
-                            });
-
-                            Navigator.of(context).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text('Car updated successfully')),
-                            );
-                          } catch (e) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Error updating car: $e')),
-                            );
-                          }
-                        }
-                      }, 'Update', AppColors.buttonText, AppColors.buttonColor),
-                const SizedBox(height: 10),
-                buildButton(
-                    'Cancel', AppColors.buttonColor, AppColors.buttonText,
-                    onPressed: () => Navigator.of(context).pop()),
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection('cars')
+                            .doc(car['id'])
+                            .update({
+                          'mileage':
+                              double.parse(mileageController.text.trim()),
+                          'avgKmPerMonth':
+                              double.parse(avgKmController.text.trim()),
+                          'lastUpdated': FieldValue.serverTimestamp(),
+                        });
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Car updated successfully')),
+                        );
+                      } catch (e) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error updating car: $e')),
+                        );
+                      }
+                    }
+                  },
+                  'Update',
+                  AppColors.buttonColor,
+                  AppColors.buttonText,
+                ),
               ],
             );
           },
@@ -209,31 +215,34 @@ class _CarMaintState extends State<CarMaint> {
                                         return AlertDialog(
                                           backgroundColor: AppColors.borderSide,
                                           title: Text(
-                                            'Delete Car',
+                                            'Are you sure you want to delete your car?',
                                             style: textStyleWhite,
+                                            textAlign: TextAlign.center,
                                           ),
                                           content: Text(
-                                              'Are you sure you want to delete this car?',
-                                              style: textStyleGray),
+                                            'This action is permanent and cannot be undone. All your data will be permanently removed.',
+                                            style: textStyleGray,
+                                            textAlign: TextAlign.center,
+                                          ),
                                           actions: [
-                                            buildButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(true),
-                                              'Delete',
-                                              AppColors.buttonText,
-                                              AppColors.buttonColor,
-                                            ),
-                                            SizedBox(
-                                              height: 10,
-                                            ),
-                                            buildButton(
+                                            popUpBotton(
                                                 onPressed: () =>
                                                     Navigator.of(context)
                                                         .pop(false),
                                                 'Cancel',
-                                                AppColors.buttonColor,
+                                                AppColors.primaryText,
                                                 AppColors.buttonText),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            popUpBotton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(true),
+                                              'Delete',
+                                              AppColors.buttonColor,
+                                              AppColors.buttonText,
+                                            ),
                                           ],
                                         );
                                       },

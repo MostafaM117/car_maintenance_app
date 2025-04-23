@@ -27,6 +27,7 @@ Widget buildInputField({
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
+        padding: EdgeInsets.only(right: 20),
         height: 45,
         decoration: ShapeDecoration(
           color: AppColors.secondaryText,
@@ -366,4 +367,30 @@ Widget buildUserNameField({
       ],
     );
   }
+}
+
+Widget popUpBotton(
+  String text,
+  Color backgroundColor,
+  Color textColor, {
+  required VoidCallback? onPressed,
+}) {
+  return SizedBox(
+    width: 100,
+    height: 45,
+    child: ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: FittedBox(
+        child: Text(text,
+            style: textStyleWhite.copyWith(
+              fontSize: 18,
+              color: textColor,
+            )),
+      ),
+    ),
+  );
 }
