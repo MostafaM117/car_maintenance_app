@@ -1,27 +1,27 @@
 import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/user/user_account_management.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/screens/MyCars.dart';
+import 'package:car_maintenance/services/seller_data_helper.dart';
+import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/user_data_helper.dart';
-import '../widgets/custom_widgets.dart';
-import 'Auth_and_Account Management/user/user_account_management.dart';
-import 'Auth_and_Account Management/auth_service.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class SellerProfile extends StatefulWidget {
+  const SellerProfile({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<SellerProfile> createState() => _SellerProfileState();
 }
 
-class _ProfileState extends State<Profile> {
+class _SellerProfileState extends State<SellerProfile> {
   String username = 'Loading...';
-  final user = FirebaseAuth.instance.currentUser!;
+  final seller = FirebaseAuth.instance.currentUser!;
   final CollectionReference users =
-      FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('sellers');
   File? _profileImage;
 
   @override
@@ -42,9 +42,9 @@ class _ProfileState extends State<Profile> {
   }
 
   void loadUsername() async {
-    String? fetchedUsername = await getUsername();
+    String? fetchedUsername = await getSellername();
     setState(() {
-      username = fetchedUsername ?? 'User';
+      username = fetchedUsername ?? 'seller';
     });
   }
 
@@ -59,13 +59,13 @@ class _ProfileState extends State<Profile> {
               MaterialPageRoute(builder: (context) => UserAccountManagement()),
             ),
       },
-      {
-        'text': 'My Cars',
-        'onPressed': () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CarMaint()),
-            ),
-      },
+      // {
+      //   'text': 'My Cars',
+      //   'onPressed': () => Navigator.push(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => CarMaint()),
+      //       ),
+      // },
       {'text': 'User Guide', 'onPressed': () => ()},
       {
         'text': 'Log Out',
@@ -105,7 +105,7 @@ class _ProfileState extends State<Profile> {
                     Align(
                       alignment: Alignment.topRight,
                       child: Text(
-                        '${user.email}',
+                        '${seller.email}',
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.7),
                           fontSize: 13,

@@ -1,44 +1,42 @@
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:car_maintenance/screens/seller_screens/seller_home_page.dart';
+import 'package:car_maintenance/screens/seller_screens/seller_profile.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:car_maintenance/screens/home_page.dart';
-import 'package:car_maintenance/screens/maintenance.dart';
+// import 'package:car_maintenance/screens/home_page.dart';
+// import 'package:car_maintenance/screens/maintenance.dart';
 import 'package:car_maintenance/screens/market.dart';
 import 'package:car_maintenance/screens/profile.dart';
-import '../../AI-Chatbot/chatbot.dart';
+// import '../../AI-Chatbot/chatbot.dart';
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class SellerMainScreen extends StatefulWidget {
+  const SellerMainScreen({super.key});
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _SellerMainScreenState createState() => _SellerMainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _SellerMainScreenState extends State<SellerMainScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    HomePage(),
-    const MaintenanceScreen(),
-    Chatbot(userId: FirebaseAuth.instance.currentUser!.uid),
+    SellerHomePage(),
+    // const MaintenanceScreen(),
+    // Chatbot(userId: FirebaseAuth.instance.currentUser!.uid),
     Market(),
-    Profile(),
+    SellerProfile(),
   ];
 
   final List<String> _labels = [
     'Home',
-    'MNT',
-    'Chatbot',
     'Market',
     'Profile',
   ];
 
   final List<String> _icons = [
     'assets/svg/home.svg',
-    'assets/svg/mnt.svg',
-    'assets/svg/chat.svg',
     'assets/svg/shop.svg',
     'assets/svg/user.svg',
   ];

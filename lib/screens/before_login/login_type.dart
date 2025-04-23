@@ -1,4 +1,5 @@
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_page.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_auth_page.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/user/user_auth_page.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -43,17 +44,22 @@ class LoginType extends StatelessWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AuthPage()
+                          MaterialPageRoute(builder: (context) => UserAuthPage()
                           ),
                         );
-                        // AuthPage();
                       }),
                   SizedBox(
                     height: 20,
                   ),
                   buildButton('Continue as Seller', AppColors.buttonColor,
                       AppColors.buttonText,
-                      onPressed: () {}),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SellerAuthPage()
+                          ),
+                        );
+                      }),
                   SizedBox(
                     height: 30,
                   ),

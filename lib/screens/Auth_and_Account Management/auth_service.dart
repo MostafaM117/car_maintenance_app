@@ -118,7 +118,7 @@ class AuthService {
   }
 
   // signInWithGoogle
-  Future<UserCredential?> signInWithGoogle (BuildContext context) async{
+  Future<UserCredential?> signInWithGoogle (BuildContext context, {required String role}) async{
     try{
     await GoogleSignIn().signOut();
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
@@ -132,7 +132,8 @@ class AuthService {
       idToken: gAuth.idToken,
     );
     final email = gUser.email;
-    final usersRef = FirebaseFirestore.instance.collection('users');
+    final collection = role == 'user'? 'users' : 'sellers';
+    final usersRef = FirebaseFirestore.instance.collection(collection);
     final userDocQuery = await usersRef.where('email', isEqualTo: email).get();
     
     //Check for Previously registered users
@@ -145,7 +146,8 @@ class AuthService {
         User? user = userCredential.user;
 
         if (user != null){
-          final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+          // final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+          final userDoc = usersRef.doc(user.uid);
           final userExists = await userDoc.get();
             if (userExists.exists){
             _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
@@ -168,13 +170,26 @@ class AuthService {
       UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
       User? user = userCredential.user;
       if (user != null){
-      final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+      final userDoc = usersRef.doc(user.uid);
       final userExists = await userDoc.get();
+
         if (userExists.exists){
         _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
         }
-        else if (!userExists.exists) {
-        _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
+        // else if (!userExists.exists) {
+        // _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
+        // }
+        else{
+          final username = user.displayName?.replaceAll('_', ' ') ?? "No Name";
+          await userDoc.set({
+            'username': username,
+            'shopname': '',
+            'email': user.email,
+            "uid": user.uid,
+            'googleUser': true,
+            if(role == 'user') 'carAdded': false else 'shopAdded': false,
+          });
+          _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
         }
         Navigator.pop(context);
         Navigator.pop(context);

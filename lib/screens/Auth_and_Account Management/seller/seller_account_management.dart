@@ -7,18 +7,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_colors.dart';
-import '../../widgets/BackgroundDecoration.dart';
-import '../../widgets/profile_image.dart';
+import '../../../constants/app_colors.dart';
+import '../../../widgets/BackgroundDecoration.dart';
+import '../../../widgets/profile_image.dart';
 
-class AccountManagement extends StatefulWidget {
-  const AccountManagement({super.key});
+class SellerAccountManagement extends StatefulWidget {
+  const SellerAccountManagement({super.key});
 
   @override
-  State<AccountManagement> createState() => _AccountManagementState();
+  State<SellerAccountManagement> createState() => _SellerAccountManagementState();
 }
 
-class _AccountManagementState extends State<AccountManagement> {
+class _SellerAccountManagementState extends State<SellerAccountManagement> {
   final _usernameEditcontroller = TextEditingController();
   bool _isediting = false;
   User? _user = FirebaseAuth.instance.currentUser;
@@ -27,7 +27,7 @@ class _AccountManagementState extends State<AccountManagement> {
   Future<void> _getcurrentusername() async {
     if (_user != null) {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
+          .collection('sellers')
           .doc(_user!.uid)
           .get();
       if (userDoc.exists) {
@@ -54,7 +54,7 @@ class _AccountManagementState extends State<AccountManagement> {
       return;
     }
     await FirebaseFirestore.instance
-        .collection('users')
+        .collection('sellers')
         .doc(_user!.uid)
         .update({'username': newUsername});
   }

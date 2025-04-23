@@ -6,7 +6,7 @@ import 'package:car_maintenance/services/user_data_helper.dart';
 import 'package:car_maintenance/widgets/ProgressStepsBar.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:car_maintenance/widgets/maintenance_date_picker.dart';
-import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
+import 'package:car_maintenance/screens/Current_Screen/user_main_screen.dart';
 
 class AddCarScreen extends StatefulWidget {
   @override
@@ -235,7 +235,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      MaterialPageRoute(builder: (_) => MainScreen()),
+                      MaterialPageRoute(builder: (_) => UserMainScreen()),
                       (route) => false,
                     );
                   },
