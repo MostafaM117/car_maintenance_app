@@ -2,34 +2,55 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FirestoreService {
   final CollectionReference maintCollection;
   final user = FirebaseAuth.instance.currentUser;
   late final CollectionReference historyCollection;
+  late final CollectionReference personalMaintCollection;
 
   FirestoreService(MaintID maintID)
       : maintCollection = FirebaseFirestore.instance
             .collection('Maintenance_Schedule_${MaintID().maintID}') {
+    personalMaintCollection = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user!.uid)
+        .collection('Maintenance_Schedule_${MaintID().maintID}_Personal');
     historyCollection = FirebaseFirestore.instance
         .collection('users')
         .doc(user!.uid)
-        .collection("maintHistory");
+        .collection("maintHistory ${MaintID().maintID}");
   }
   //add special cases
-  Future<void> addSpecialMaintenance(String description, bool periodic,
+  Future<void> addSpecialMaintenance(String description, bool isDone,
       int mileage, DateTime expectedDate) async {
     await historyCollection.add({
       "Description": description,
-      "Periodic": false,
+      "isDone": true,
       "mileage": mileage,
       "expectedDate": expectedDate
     });
   }
 
+  // Future<void> cloneMaintenanceToUser({
+  //   required CollectionReference source,
+  //   required CollectionReference target,
+  // }) async {
+  //   final sourceSnapshot = await source.get();
+  //   final batch = FirebaseFirestore.instance.batch();
+
+  //   for (var doc in sourceSnapshot.docs) {
+  //     final targetDoc = target.doc(doc.id);
+  //     batch.set(targetDoc, doc.data());
+  //   }
+
+  //   await batch.commit();
+  // }
+
   //get lists
   Stream<List<MaintenanceList>> getMaintenanceList() {
-    return maintCollection.snapshots().map((snapshot) {
+    return personalMaintCollection.snapshots().map((snapshot) {
       //debug print
       print("📡 Firestore returned ${snapshot.docs.length} documents");
 
@@ -41,10 +62,9 @@ class FirestoreService {
           id: doc.id,
           description: data['Description'] ?? '',
           mileage: (data['mileage'] ?? 0) as int,
-          periodic: (data['Periodic'] ?? false) as bool,
           expectedDate: (data['expectedDate'])?.toDate() ??
               DateTime.now().add(Duration(days: 30)),
-          isDone: (data['isDone']) as bool,
+          isDone: (data['isDone'] ?? false) as bool,
         );
       }).toList();
     });
@@ -53,7 +73,7 @@ class FirestoreService {
   // Method to copy a maintenance item to the history collection
   Future<void> moveToHistory(String docId) async {
     try {
-      final docSnapshot = await maintCollection.doc(docId).get();
+      final docSnapshot = await personalMaintCollection.doc(docId).get();
       final data = docSnapshot.data() as Map<String, dynamic>?;
 
       if (data != null) {
@@ -61,7 +81,7 @@ class FirestoreService {
             .collection('users')
             .doc(user!.uid)
             .collection('maintHistory');
-        await maintCollection.doc(docId).update({'isDone': true});
+        await personalMaintCollection.doc(docId).update({'isDone': true});
 
         await historyRef.add(data); // Copy the item to history
         print("✅ Moved maintenance item to history");

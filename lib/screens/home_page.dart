@@ -37,6 +37,30 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> cloneMaintenanceToUser({
+    required CollectionReference source,
+    required CollectionReference target,
+  }) async {
+    // 🔍 Check if target collection already has docs
+    final targetSnapshot = await target.limit(1).get();
+
+    if (targetSnapshot.docs.isNotEmpty) {
+      print("🛑 Skipping clone: target collection already exists.");
+      return; // Don't clone again
+    }
+
+    final sourceSnapshot = await source.get();
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (var doc in sourceSnapshot.docs) {
+      final targetDoc = target.doc(doc.id);
+      batch.set(targetDoc, doc.data());
+    }
+
+    await batch.commit();
+    print("✅ Clone complete: ${sourceSnapshot.docs.length} docs copied.");
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,6 +72,14 @@ class _HomePageState extends State<HomePage> {
   void _updateService() {
     setState(() {
       firestoreService = FirestoreService(MaintID());
+      cloneMaintenanceToUser(
+        source: FirebaseFirestore.instance
+            .collection('Maintenance_Schedule_${MaintID().maintID}'),
+        target: FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('Maintenance_Schedule_${MaintID().maintID}_Personal'),
+      );
     });
   }
 
@@ -155,6 +187,7 @@ class _HomePageState extends State<HomePage> {
 
                     return ListView.builder(
                       itemCount: maintList.length,
+                      physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         final maintenanceItem = maintList[index];
@@ -168,7 +201,6 @@ class _HomePageState extends State<HomePage> {
                           // Hides the widget visually
                         }
                         print(maintenanceItem.isDone);
-                        print(itemCheckedStates[maintenanceItem.id]);
 
                         return Dismissible(
                           key: Key(maintenanceItem.id),

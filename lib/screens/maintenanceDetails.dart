@@ -25,7 +25,7 @@ class MaintenanceDetailsPage extends StatelessWidget {
             SizedBox(height: 4),
             Text(maintenanceItem.description),
             SizedBox(height: 8),
-            Text("Periodic: ${maintenanceItem.periodic ? 'Yes' : 'No'}"),
+            Text("Completed: ${maintenanceItem.isDone ? 'Yes' : 'No'}"),
           ],
         ),
       ),
