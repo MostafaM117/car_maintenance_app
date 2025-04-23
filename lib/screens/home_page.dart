@@ -13,9 +13,6 @@ import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
 import '../Back-end/firestore_service.dart';
 import 'maintenanceDetails.dart';
-// import 'maintenance.dart';
-// import 'formscreens/formscreen1.dart';
-// import 'package:car_maintenance/models/MaintID.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,9 +28,8 @@ class _HomePageState extends State<HomePage> {
   String? username;
   Map<String, dynamic>? selectedCar;
   FirestoreService firestoreService = FirestoreService(MaintID());
-  Map<String, bool> itemCheckedStates = {}; // To store checked state per item
-  bool isChecked = false;
-  // Fetch username for greeting (optional)
+  Map<String, bool> itemCheckedStates = {};
+
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
     setState(() {
@@ -45,7 +41,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     loadUsername();
-    // Listen for changes in MaintID and update the FirestoreService accordingly
     firestoreService = FirestoreService(MaintID());
     MaintID().addListener(_updateService);
   }
@@ -70,9 +65,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 40),
         child: Column(
           children: [
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             SubtractWave(
               text: username != null
                   ? 'Welcome Back, ${username!.split(' ').first}'
@@ -80,10 +73,9 @@ class _HomePageState extends State<HomePage> {
               svgAssetPath: 'assets/svg/notification.svg',
               onTap: () {},
             ),
-
             SizedBox(height: 15),
 
-            // Displaying cars in Swiper or Card
+            // Display cars
             StreamBuilder<QuerySnapshot>(
               stream: carsCollection
                   .where('userId', isEqualTo: user.uid)
@@ -101,7 +93,6 @@ class _HomePageState extends State<HomePage> {
                   return Text('No cars found. Add a car to see its image.');
                 }
 
-                // Convert documents to List of Maps
                 List<Map<String, dynamic>> cars = [];
                 for (var doc in snapshot.data!.docs) {
                   Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
@@ -121,9 +112,7 @@ class _HomePageState extends State<HomePage> {
                       return CarCardWidget(car: cars[index]);
                     },
                     numberOfCardsDisplayed: cardsToDisplay,
-                    padding: EdgeInsets.only(
-                      bottom: 0,
-                    ),
+                    padding: EdgeInsets.only(bottom: 0),
                     backCardOffset: const Offset(25, 30),
                   ),
                 );
@@ -142,6 +131,8 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             SizedBox(height: 15),
+
+            // Maintenance List
             Expanded(
               child: SingleChildScrollView(
                 child: StreamBuilder<List<MaintenanceList>>(
@@ -150,7 +141,13 @@ class _HomePageState extends State<HomePage> {
                     if (!snapshot.hasData || snapshot.data == null) {
                       return Center(child: CircularProgressIndicator());
                     }
-                    final maintList = snapshot.data!;
+
+                    final maintList = snapshot.data!
+                        .where((item) =>
+                            item.isDone !=
+                            true) // Only show items that are not done
+                        .toList();
+
                     if (maintList.isEmpty) {
                       return Center(
                           child: Text("No maintenance records available."));
@@ -158,44 +155,65 @@ class _HomePageState extends State<HomePage> {
 
                     return ListView.builder(
                       itemCount: maintList.length,
+                      shrinkWrap: true,
                       itemBuilder: (context, index) {
                         final maintenanceItem = maintList[index];
 
-                        // Initialize the checkbox state for this item if it doesn't exist yet
                         if (!itemCheckedStates
                             .containsKey(maintenanceItem.id)) {
                           itemCheckedStates[maintenanceItem.id] = false;
                         }
+                        if (maintenanceItem.isDone == true) {
+                          return SizedBox.shrink();
+                          // Hides the widget visually
+                        }
+                        print(maintenanceItem.isDone);
+                        print(itemCheckedStates[maintenanceItem.id]);
 
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => MaintenanceDetailsPage(
-                                    maintenanceItem: maintenanceItem),
-                              ),
+                        return Dismissible(
+                          key: Key(maintenanceItem.id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            color: const Color.fromARGB(255, 94, 255, 82),
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Icon(Icons.check, color: Colors.white),
+                          ),
+                          onDismissed: (direction) async {
+                            await firestoreService.moveToHistory(maintenanceItem
+                                .id); // This updates `isDone` in Firestore
+
+                            setState(() {
+                              itemCheckedStates[maintenanceItem.id] =
+                                  true; // This updates the local UI state
+                            });
+
+                            print("✅ Moved to history");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text('Moved to history successfully')),
                             );
                           },
-                          onHorizontalDragEnd: (_) {
-                            setState(() async {
-                              itemCheckedStates[maintenanceItem.id] =
-                                  !itemCheckedStates[maintenanceItem.id]!;
-                              await firestoreService
-                                  .moveToHistory(maintenanceItem.id);
-                              print("✅ Moved to history");
-                              //Animate the drag then make the item invisible
-                            });
-                          },
-                          child: MaintenanceCard(
-                            title: '${maintenanceItem.mileage}  KM',
-                            date: maintenanceItem.expectedDate
-                                .toString()
-                                .split(' ')[0],
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => MaintenanceDetailsPage(
+                                      maintenanceItem: maintenanceItem),
+                                ),
+                              );
+                            },
+                            child: MaintenanceCard(
+                              title: '${maintenanceItem.mileage} KM',
+                              date: maintenanceItem.expectedDate
+                                  .toString()
+                                  .split(' ')[0],
+                            ),
                           ),
                         );
                       },
-                      shrinkWrap: true,
                     );
                   },
                 ),

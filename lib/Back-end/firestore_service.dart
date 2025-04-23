@@ -44,6 +44,7 @@ class FirestoreService {
           periodic: (data['Periodic'] ?? false) as bool,
           expectedDate: (data['expectedDate'])?.toDate() ??
               DateTime.now().add(Duration(days: 30)),
+          isDone: (data['isDone']) as bool,
         );
       }).toList();
     });
@@ -60,6 +61,7 @@ class FirestoreService {
             .collection('users')
             .doc(user!.uid)
             .collection('maintHistory');
+        await maintCollection.doc(docId).update({'isDone': true});
 
         await historyRef.add(data); // Copy the item to history
         print("✅ Moved maintenance item to history");
