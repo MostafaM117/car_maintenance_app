@@ -238,28 +238,32 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             backgroundColor: AppColors.secondaryText,
-                            title: const Text('Delete Account'),
-                            content: const Text(
-                              'Are you sure you want to delete your account? \nThis action will delete the account totally and will remove all related data.',
+                            title: const Text(
+                              'Are you sure you want to delete your account?',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(fontWeight: FontWeight.w600,fontSize: 24,),
                             ),
+                            content: const Text(
+                                'This action is permanent and cannot be undone. All your data will be permanently removed..',
+                                textAlign: TextAlign.center),
                             actions: [
-                              buildButton(
+                              popUpBotton(
+                                'Cancel',
+                                AppColors.primaryText,
+                                AppColors.buttonText,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              popUpBotton(
                                 'Delete',
                                 AppColors.buttonColor,
                                 AppColors.buttonText,
                                 onPressed: () {
                                   DeleteAccount().deleteAccount(context);
-                                },
-                              ),
-                              SizedBox(
-                                height: 15,
-                              ),
-                              buildButton(
-                                'Discard',
-                                AppColors.buttonText,
-                                AppColors.buttonColor,
-                                onPressed: () {
-                                  Navigator.pop(context);
                                 },
                               ),
                             ],
