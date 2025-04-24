@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:car_maintenance/services/delete_account.dart';
+import 'package:car_maintenance/services/user_delete_account.dart';
 import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -241,11 +241,18 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                             title: const Text(
                               'Are you sure you want to delete your account?',
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w600,fontSize: 24,),
+                              style: TextStyle(fontWeight: FontWeight.w600,fontSize: 20,),
                             ),
-                            content: const Text(
-                                'This action is permanent and cannot be undone. All your data will be permanently removed..',
-                                textAlign: TextAlign.center),
+                            content: SizedBox(
+                              height: 100,
+                              child: Center(
+                                child: const Text(
+                                    'This action cannot be undone.\nAll of your data will be permanently deleted.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 16),
+                                    ),
+                              ),
+                            ),
                             actions: [
                               popUpBotton(
                                 'Cancel',
@@ -263,7 +270,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                 AppColors.buttonColor,
                                 AppColors.buttonText,
                                 onPressed: () {
-                                  DeleteAccount().deleteAccount(context);
+                                  UserDeleteAccount().userdeleteAccount(context);
                                 },
                               ),
                             ],

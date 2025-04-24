@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/user/user_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/screens/MyCars.dart';
-import 'package:car_maintenance/services/seller_data_helper.dart';
+import 'package:car_maintenance/services/seller/seller_data_helper.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,7 +30,7 @@ class _SellerProfileState extends State<SellerProfile> {
   @override
   void initState() {
     super.initState();
-    loadUsername();
+    loadSellername();
     _loadImage();
   }
 
@@ -43,7 +44,7 @@ class _SellerProfileState extends State<SellerProfile> {
     }
   }
 
-  void loadUsername() async {
+  void loadSellername() async {
     String? fetchedUsername = await getSellername();
     setState(() {
       username = fetchedUsername ?? 'seller';
@@ -52,6 +53,32 @@ class _SellerProfileState extends State<SellerProfile> {
 
   @override
   Widget build(BuildContext context) {
+//Conflicts
+    // Create button data inside the build method
+//     final List<Map<String, dynamic>> buttonData = [
+//       {
+//         'text': 'Manage your account',
+//         'onPressed': () => Navigator.push(
+//               context,
+//               MaterialPageRoute(builder: (context) => SellerAccountManagement()),
+//             ),
+//       },
+//       // {
+//       //   'text': 'My Cars',
+//       //   'onPressed': () => Navigator.push(
+//       //         context,
+//       //         MaterialPageRoute(builder: (context) => CarMaint()),
+//       //       ),
+//       // },
+//       {'text': 'User Guide', 'onPressed': () => ()},
+//       {
+//         'text': 'Log Out',
+//         'onPressed': () {
+//           AuthService().signOut(context);
+//         },
+//       },
+//     ];
+// ======================
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(

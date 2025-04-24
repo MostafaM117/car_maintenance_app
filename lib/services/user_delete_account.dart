@@ -8,7 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../widgets/custom_widgets.dart';
 
-class DeleteAccount {
+class UserDeleteAccount {
   final passwordcontroller = TextEditingController();
   bool _obscureText = true;
 
@@ -28,15 +28,8 @@ class DeleteAccount {
     Navigator.of(context).pop();
   }
 
-  void _toggletoviewpassword() {
-    {
-      _obscureText = !_obscureText;
-    }
-    ;
-  }
-
 // Delete Account
-  Future<void> deleteAccount(BuildContext context) async {
+  Future<void> userdeleteAccount(BuildContext context) async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     User? user = auth.currentUser;
@@ -132,39 +125,53 @@ class DeleteAccount {
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
+              backgroundColor: Color(0xFFF4F4F4),
               title: Text(
-                "Please enter your password to confirm.",
+                "Please enter your password to confirm this action",
                 textAlign: TextAlign.center,
-                style: textStyleWhite,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18
+                ),
               ),
-              content: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                        'This action is permanent and cannot be undone. All your data will be permanently removed..',
-                        textAlign: TextAlign.center),
-                    buildInputField(
+              content: SizedBox(
+                height: 120,
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
                         controller: passwordcontroller,
-                        iconWidget: SvgPicture.asset(
-                          'assets/svg/lock.svg',
-                          width: 20,
-                          height: 24,
-                        ),
-                        hintText: 'Enter your password',
                         obscureText: _obscureText,
-                        togglePasswordView: _toggletoviewpassword),
-                    TextField(
-                      controller: passwordcontroller,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          labelText: 'Password',
-                          errorText: errorText,
-                          // errorStyle: TextStyle(fontSize: 11),
-                          border: OutlineInputBorder()),
-                    ),
-                  ],
+                        cursorColor: Colors.black,
+                        decoration: InputDecoration(
+                            labelText: 'Password',
+                            labelStyle: TextStyle(color: errorText != null? Theme.of(context).colorScheme.error : Colors.black),
+                            errorText: errorText,
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(22),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black),
+                              borderRadius: BorderRadius.circular(22),
+                            ),
+                            suffixIcon: IconButton(
+                              onPressed: (){
+                                setState((){
+                                  _obscureText = !_obscureText;
+                                });
+                              }, 
+                              icon: Icon(
+                                _obscureText ? Icons.visibility_off : Icons.visibility,
+                              )
+                                )
+                            ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               actions: [
