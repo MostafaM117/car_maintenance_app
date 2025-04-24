@@ -9,6 +9,7 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import '../services/user_data_helper.dart';
 import 'package:car_maintenance/widgets/mileage_display.dart';
 import '../widgets/CarCardWidget.dart';
+import '../widgets/car_image_widget.dart';
 import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
 import '../Back-end/firestore_service.dart';
@@ -29,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic>? selectedCar;
   FirestoreService firestoreService = FirestoreService(MaintID());
   Map<String, bool> itemCheckedStates = {};
+  int currentCar = 0;
 
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
@@ -141,7 +143,25 @@ class _HomePageState extends State<HomePage> {
                     cardsCount: cars.length,
                     cardBuilder: (BuildContext context, int index,
                         int realIndex, int percentThresholdX) {
-                      return CarCardWidget(car: cars[index]);
+                      return CarCardWidget(car: cars[currentCar]);
+                    },
+                    onSwipe: (previousIndex, currentIndex, direction) {
+                      setState(() {
+                        currentCar = currentCar + 1;
+                        if (currentCar >= cars.length) {
+                          currentCar = 0;
+                        }
+                        if (currentIndex != null) {
+                          final make = cars[currentCar]['make'];
+                          final model = cars[currentCar]['model'];
+                          final year = cars[currentCar]['year'];
+
+                          MaintID().selectedMake = make.toString();
+                          MaintID().selectedModel = model.toString();
+                          MaintID().selectedYear = year.toString();
+                        }
+                      });
+                      return true;
                     },
                     numberOfCardsDisplayed: cardsToDisplay,
                     padding: EdgeInsets.only(bottom: 0),
