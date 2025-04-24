@@ -80,6 +80,10 @@ class FirestoreService {
         await personalMaintCollection.doc(docId).update({'isDone': true});
 
         await historyCollection.add(data); // Copy the item to history
+
+        await personalMaintCollection
+            .doc(docId)
+            .delete(); // Delete from personal collection
         print("✅ Moved maintenance item to history");
       } else {
         print("❌ No data found for docId: $docId");
@@ -89,6 +93,15 @@ class FirestoreService {
     }
   }
 
+  // Future<void> deleteMaintenance(String docId) async {
+  // try {
+  //  await personalMaintCollection.doc(docId).delete();
+  // print("✅ Deleted maintenance item with ID: $docId");
+  // } catch (e) {
+  // print("❌ Error deleting maintenance item: $e");
+  // }
+  //}
+
   Stream<List<MaintenanceList>> getMaintenanceHistory() {
     return historyCollection.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
@@ -96,5 +109,26 @@ class FirestoreService {
         return MaintenanceList.fromJson(data, doc.id);
       }).toList();
     });
+  }
+
+  Future<void> recoverFromHistory(String docId) async {
+    try {
+      final docSnapshot = await historyCollection.doc(docId).get();
+      final data = docSnapshot.data() as Map<String, dynamic>?;
+
+      if (data != null) {
+        await historyCollection.doc(docId).update({'isDone': false});
+
+        await personalMaintCollection.add(data); // Copy the item to history
+
+        await historyCollection.doc(docId).delete();
+
+        print("✅ Recovered maintenance item from history");
+      } else {
+        print("❌ No data found for docId: $docId");
+      }
+    } catch (e) {
+      print("❌ Error recovering maintenance from history: $e");
+    }
   }
 }

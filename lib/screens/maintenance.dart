@@ -75,18 +75,34 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             itemCount: historyList.length,
             itemBuilder: (context, index) {
               final maintenanceItem = historyList[index];
-              return Card(
-                child: ListTile(
-                  title: Text(maintenanceItem.mileage.toString()),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(maintenanceItem.expectedDate.toString()),
-                      SizedBox(height: 4),
-                      Text(maintenanceItem.description),
-                    ],
+
+              return Dismissible(
+                key: Key(maintenanceItem.id),
+                direction: DismissDirection.endToStart,
+                child: Card(
+                  child: ListTile(
+                    title: Text(maintenanceItem.mileage.toString()),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(maintenanceItem.expectedDate.toString()),
+                        SizedBox(height: 4),
+                        Text(maintenanceItem.description),
+                      ],
+                    ),
                   ),
                 ),
+                onDismissed: (direction) async {
+                  await firestoreService.recoverFromHistory(
+                      maintenanceItem.id); // This updates `isDone` in Firestore
+
+                  setState(() {
+                    itemCheckedStates[maintenanceItem.id] =
+                        true; // This updates the local UI state
+                  });
+
+                  print("✅ Moved to history");
+                },
               );
             },
           );

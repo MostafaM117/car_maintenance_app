@@ -219,8 +219,8 @@ class _HomePageState extends State<HomePage> {
                               itemCheckedStates[maintenanceItem.id] =
                                   true; // This updates the local UI state
                             });
-
                             print("✅ Moved to history");
+
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                   content:
