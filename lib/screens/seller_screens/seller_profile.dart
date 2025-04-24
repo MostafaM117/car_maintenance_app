@@ -53,32 +53,6 @@ class _SellerProfileState extends State<SellerProfile> {
 
   @override
   Widget build(BuildContext context) {
-//Conflicts
-    // Create button data inside the build method
-//     final List<Map<String, dynamic>> buttonData = [
-//       {
-//         'text': 'Manage your account',
-//         'onPressed': () => Navigator.push(
-//               context,
-//               MaterialPageRoute(builder: (context) => SellerAccountManagement()),
-//             ),
-//       },
-//       // {
-//       //   'text': 'My Cars',
-//       //   'onPressed': () => Navigator.push(
-//       //         context,
-//       //         MaterialPageRoute(builder: (context) => CarMaint()),
-//       //       ),
-//       // },
-//       {'text': 'User Guide', 'onPressed': () => ()},
-//       {
-//         'text': 'Log Out',
-//         'onPressed': () {
-//           AuthService().signOut(context);
-//         },
-//       },
-//     ];
-// ======================
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -160,7 +134,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => UserAccountManagement()),
+                          builder: (context) => SellerAccountManagement()),
                     );
                   },
                 ),
