@@ -185,7 +185,7 @@ Widget buildDropdownField({
   String? label,
   required String? value,
   required List<String> options,
-  required ValueChanged<String?> onChanged,
+  ValueChanged<String?>? onChanged,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,7 +193,7 @@ Widget buildDropdownField({
       if (label != null)
         Text(
           label,
-          style: textStyleWhite.copyWith(fontSize: 16),
+          style: textStyleWhite.copyWith(fontSize: 16,fontWeight: FontWeight.w500),
         ),
       SizedBox(
         height: 8,
@@ -216,7 +216,8 @@ Widget buildDropdownField({
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
-              hint: Text('Select Answer', style: textStyleGray),
+              hint: Text('Select ',
+                  style: textStyleGray.copyWith(fontWeight: FontWeight.w400)),
               dropdownColor: AppColors.lightGray,
               iconEnabledColor: AppColors.primaryText,
               style: textStyleGray,
@@ -247,7 +248,7 @@ Widget buildTextField({
       if (label != null)
         Text(
           label,
-          style: textStyleWhite.copyWith(fontSize: 16),
+          style: textStyleWhite.copyWith(fontSize: 16,fontWeight: FontWeight.w500),
         ),
       SizedBox(height: 8),
       Container(
@@ -271,7 +272,7 @@ Widget buildTextField({
             border: InputBorder.none,
             isCollapsed: true,
             hintText: hintText,
-            hintStyle: textStyleGray,
+            hintStyle: textStyleGray.copyWith(fontWeight: FontWeight.w400),
           ),
           style: textStyleGray,
           textAlignVertical: TextAlignVertical.center,

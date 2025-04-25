@@ -1,15 +1,10 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/seller_screens/seller_home_page.dart';
 import 'package:car_maintenance/screens/seller_screens/seller_profile.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-// import 'package:car_maintenance/screens/home_page.dart';
-// import 'package:car_maintenance/screens/maintenance.dart';
-import 'package:car_maintenance/screens/market.dart';
-import 'package:car_maintenance/screens/profile.dart';
-// import '../../AI-Chatbot/chatbot.dart';
+import '../seller_screens/seller_market.dart';
 
 class SellerMainScreen extends StatefulWidget {
   const SellerMainScreen({super.key});
@@ -23,9 +18,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
 
   final List<Widget> _pages = [
     SellerHomePage(),
-    // const MaintenanceScreen(),
-    // Chatbot(userId: FirebaseAuth.instance.currentUser!.uid),
-    Market(),
+    SellerMarket(),
     SellerProfile(),
   ];
 
