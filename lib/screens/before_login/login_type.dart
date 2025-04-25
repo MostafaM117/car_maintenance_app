@@ -18,50 +18,61 @@ class LoginType extends StatelessWidget {
           CurvedBackgroundDecoration(),
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    "Let's get started",
-                    style: textStyleWhite.copyWith(
-                        fontSize: 28, fontWeight: FontWeight.w800),
-                    textAlign: TextAlign.left,
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center, // النص في المنتصف
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          "Let's get started",
+                          style: textStyleWhite.copyWith(
+                              fontSize: 28, fontWeight: FontWeight.w800),
+                          textAlign: TextAlign.left,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Sign up or login as user to enjoy our services\nor as seller to manage and showcase your offerings ",
+                          style: textStyleGray.copyWith(fontSize: 14),
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    "Sign up or login as user to enjoy our services\nor as seller to manage and showcase your  offerings ",
-                    style: textStyleGray.copyWith(fontSize: 14),
-                    textAlign: TextAlign.left,
-                  ),
-                  SizedBox(
-                    height: 200,
-                  ),
-                  buildButton('Continue as User', AppColors.buttonColor,
-                      AppColors.buttonText,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => UserAuthPage()
-                          ),
-                        );
-                      }),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  buildButton('Continue as Seller', AppColors.buttonColor,
-                      AppColors.buttonText,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SellerAuthPage()
-                          ),
-                        );
-                      }),
-                  SizedBox(
-                    height: 30,
+                  // الأزرار في الأسفل
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 30.0), // المسافة من الأسفل
+                    child: Column(
+                      children: [
+                        buildButton(
+                          'Continue as User',
+                          AppColors.buttonColor,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => UserAuthPage()),
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        buildButton(
+                          'Continue as Seller',
+                          AppColors.buttonColor,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => SellerAuthPage()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
