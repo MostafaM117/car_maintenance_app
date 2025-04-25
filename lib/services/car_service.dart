@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
+import 'package:car_maintenance/screens/Current_Screen/user_main_screen.dart';
 
 /// Service responsible for car data submission and form handling
 class CarService {
@@ -13,7 +13,7 @@ class CarService {
   final String? selectedModel;
   final int? selectedYear;
   final DateTime? lastMaintenanceDate;
-  
+
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -42,7 +42,7 @@ class CarService {
       try {
         await saveCar();
         Navigator.pushAndRemoveUntil(
-            context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
+            context, MaterialPageRoute(builder: (context) => UserMainScreen()), (route) => false);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error adding car: ${e.toString()}')),

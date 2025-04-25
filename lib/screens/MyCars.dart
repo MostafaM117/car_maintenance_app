@@ -20,11 +20,15 @@ class _CarMaintState extends State<CarMaint> {
   // Function to show the edit form dialog
   void _showEditForm(BuildContext context, Map<String, dynamic> car) {
     final TextEditingController mileageController = TextEditingController(
-      text: (car['mileage'] is double ? car['mileage'].toInt() : car['mileage'] as int? ?? 0).toString()
-    );
+        text: (car['mileage'] is double
+                ? car['mileage'].toInt()
+                : car['mileage'] as int? ?? 0)
+            .toString());
     final TextEditingController avgKmController = TextEditingController(
-      text: (car['avgKmPerMonth'] is double ? car['avgKmPerMonth'].toInt() : car['avgKmPerMonth'] as int? ?? 0).toString()
-    );
+        text: (car['avgKmPerMonth'] is double
+                ? car['avgKmPerMonth'].toInt()
+                : car['avgKmPerMonth'] as int? ?? 0)
+            .toString());
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     bool isLoading = false;
 
@@ -34,7 +38,11 @@ class _CarMaintState extends State<CarMaint> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: Text('Edit ${car['make']} ${car['model']}'),
+              backgroundColor: AppColors.secondaryText,
+              title: Text(
+                'Edit ${car['make']} ${car['model']} Details.',
+                style: textStyleWhite,
+              ),
               content: Form(
                 key: _formKey,
                 child: SingleChildScrollView(
@@ -54,7 +62,7 @@ class _CarMaintState extends State<CarMaint> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 15),
 
                       // Avg usage
                       buildTextField(
@@ -73,45 +81,51 @@ class _CarMaintState extends State<CarMaint> {
                 ),
               ),
               actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Cancel'),
-                ),
                 isLoading
-                  ? CircularProgressIndicator()
-                  : TextButton(
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          
-                          try {
-                            await FirebaseFirestore.instance
-                              .collection('cars')
-                              .doc(car['id'])
-                              .update({
-                                'mileage': double.parse(mileageController.text.trim()),
-                                'avgKmPerMonth': double.parse(avgKmController.text.trim()),
-                                'lastUpdated': FieldValue.serverTimestamp(),
-                              });
-                              
-                            Navigator.of(context).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Car updated successfully')),
-                            );
-                          } catch (e) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Error updating car: $e')),
-                            );
-                          }
-                        }
-                      },
-                      child: Text('Update'),
-                    ),
+                    ? CircularProgressIndicator()
+                    : popUpBotton(
+                        'Cancel',
+                        AppColors.primaryText,
+                        AppColors.buttonText,
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                const SizedBox(width: 10),
+                popUpBotton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        isLoading = true;
+                      });
+
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection('cars')
+                            .doc(car['id'])
+                            .update({
+                          'mileage':
+                              double.parse(mileageController.text.trim()),
+                          'avgKmPerMonth':
+                              double.parse(avgKmController.text.trim()),
+                          'lastUpdated': FieldValue.serverTimestamp(),
+                        });
+                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Car updated successfully')),
+                        );
+                      } catch (e) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Error updating car: $e')),
+                        );
+                      }
+                    }
+                  },
+                  'Update',
+                  AppColors.buttonColor,
+                  AppColors.buttonText,
+                ),
               ],
             );
           },
@@ -119,12 +133,14 @@ class _CarMaintState extends State<CarMaint> {
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          const CurvedBackgroundDecoration(), 
+          const CurvedBackgroundDecoration(),
           SafeArea(
             child: Padding(
               padding:
@@ -137,45 +153,51 @@ class _CarMaintState extends State<CarMaint> {
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                   ),
                   SizedBox(height: 20),
-                  
+
                   // Stream builder to display all user cars
                   Expanded(
                     child: StreamBuilder<QuerySnapshot>(
                       stream: CarService.getUserCarsStream(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Center(child: CircularProgressIndicator());
                         }
-                        
+
                         if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}'));
+                          return Center(
+                              child: Text('Error: ${snapshot.error}'));
                         }
-                        
+
                         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return Center(child: Text('No cars found. Add a car to see it here.'));
+                          return Center(
+                              child: Text(
+                                  'No cars found. Add a car to see it here.'));
                         }
-                        
+
                         // Convert documents to List of Maps
                         List<Map<String, dynamic>> cars = [];
                         for (var doc in snapshot.data!.docs) {
-                          Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
+                          Map<String, dynamic> car =
+                              doc.data() as Map<String, dynamic>;
                           car['id'] = doc.id;
                           cars.add(car);
                         }
-                        
+
                         return ListView.builder(
                           itemCount: cars.length,
                           itemBuilder: (context, index) {
                             final car = cars[index];
-                            final int mileage = car['mileage'] is double 
-                                ? car['mileage'].toInt() 
+                            final int mileage = car['mileage'] is double
+                                ? car['mileage'].toInt()
                                 : car['mileage'] as int? ?? 0;
-                            final int avgKmPerMonth = car['avgKmPerMonth'] is double 
-                                ? car['avgKmPerMonth'].toInt() 
-                                : car['avgKmPerMonth'] as int? ?? 0;
-                            
-                            return buildCarCard(
-                              context: context,
+                            final int avgKmPerMonth =
+                                car['avgKmPerMonth'] is double
+                                    ? car['avgKmPerMonth'].toInt()
+                                    : car['avgKmPerMonth'] as int? ?? 0;
+
+                            return CarCard(
+                              // context: context,
                               carName: '${car['make']} ${car['model']}',
                               carId: car['id'],
                               odometer: '$mileage KM',
@@ -188,34 +210,58 @@ class _CarMaintState extends State<CarMaint> {
                               onDeletePressed: () async {
                                 // Show confirmation dialog
                                 bool confirmDelete = await showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Delete Car'),
-                                      content: Text('Are you sure you want to delete this car?'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () => Navigator.of(context).pop(false),
-                                          child: Text('Cancel'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () => Navigator.of(context).pop(true),
-                                          child: Text('Delete'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ) ?? false;
-                                
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor: AppColors.borderSide,
+                                          title: Text(
+                                            'Are you sure you want to delete your car?',
+                                            style: textStyleWhite,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          content: Text(
+                                            'This action is permanent and cannot be undone. All your data will be permanently removed.',
+                                            style: textStyleGray,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          actions: [
+                                            popUpBotton(
+                                                onPressed: () =>
+                                                    Navigator.of(context)
+                                                        .pop(false),
+                                                'Cancel',
+                                                AppColors.primaryText,
+                                                AppColors.buttonText),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            popUpBotton(
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(true),
+                                              'Delete',
+                                              AppColors.buttonColor,
+                                              AppColors.buttonText,
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ) ??
+                                    false;
+
                                 if (confirmDelete) {
                                   try {
                                     await CarService.deleteCar(car['id']);
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Car deleted successfully')),
+                                      SnackBar(
+                                          content:
+                                              Text('Car deleted successfully')),
                                     );
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Error deleting car: $e')),
+                                      SnackBar(
+                                          content:
+                                              Text('Error deleting car: $e')),
                                     );
                                   }
                                 }
@@ -226,7 +272,7 @@ class _CarMaintState extends State<CarMaint> {
                       },
                     ),
                   ),
-                  
+
                   SizedBox(height: 20),
                   buildButton(
                     'Add Car',

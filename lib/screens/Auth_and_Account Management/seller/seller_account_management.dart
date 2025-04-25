@@ -1,46 +1,49 @@
 import 'dart:io';
 
-import 'package:car_maintenance/services/delete_account.dart';
+import 'package:car_maintenance/services/user_delete_account.dart';
 import 'package:car_maintenance/services/forgot_password.dart';
+import 'package:car_maintenance/services/seller/seller_delete_account.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/app_colors.dart';
-import '../../widgets/BackgroundDecoration.dart';
-import '../../widgets/profile_image.dart';
+import '../../../constants/app_colors.dart';
+import '../../../widgets/BackgroundDecoration.dart';
+import '../../../widgets/profile_image.dart';
 
-class AccountManagement extends StatefulWidget {
-  const AccountManagement({super.key});
+class SellerAccountManagement extends StatefulWidget {
+  const SellerAccountManagement({super.key});
 
   @override
-  State<AccountManagement> createState() => _AccountManagementState();
+  State<SellerAccountManagement> createState() => _SellerAccountManagementState();
 }
 
-class _AccountManagementState extends State<AccountManagement> {
+class _SellerAccountManagementState extends State<SellerAccountManagement> {
   final _usernameEditcontroller = TextEditingController();
   bool _isediting = false;
-  User? _user = FirebaseAuth.instance.currentUser;
-  final user = FirebaseAuth.instance.currentUser!;
+  final seller = FirebaseAuth.instance.currentUser;
   //Get current username
   Future<void> _getcurrentusername() async {
-    if (_user != null) {
+    if (seller != null) {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_user!.uid)
+          .collection('sellers')
+          .doc(seller!.uid)
           .get();
       if (userDoc.exists) {
         setState(() {
-          _usernameEditcontroller.text = userDoc['username'] ?? '';
+          _usernameEditcontroller.text = userDoc['shopname'] ?? '';
         });
+      }
+      else{
+        print('Seller is null');
       }
     }
   }
 
   //Update current username
   Future<void> _updateUsername() async {
-    if (_user == null) {
+    if (seller == null) {
       return;
     }
     String newUsername = _usernameEditcontroller.text.trim();
@@ -54,9 +57,9 @@ class _AccountManagementState extends State<AccountManagement> {
       return;
     }
     await FirebaseFirestore.instance
-        .collection('users')
-        .doc(_user!.uid)
-        .update({'username': newUsername});
+        .collection('sellers')
+        .doc(seller!.uid)
+        .update({'shopname': newUsername});
   }
 
   // Press edit username to edit
@@ -75,6 +78,7 @@ class _AccountManagementState extends State<AccountManagement> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -123,7 +127,7 @@ class _AccountManagementState extends State<AccountManagement> {
                               overflow: TextOverflow.ellipsis,
                             ),
                             Text(
-                              '${user.email}',
+                              '${seller!.email}',
                               style: TextStyle(
                                 color: Colors.black.withOpacity(0.7),
                                 fontSize: 10,
@@ -158,8 +162,8 @@ class _AccountManagementState extends State<AccountManagement> {
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _isediting
-                              ? Colors.green.shade400
-                              : AppColors.buttonText,
+                              ? AppColors.buttonColor
+                              : AppColors.secondaryText,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(25)),
                         ),
@@ -172,11 +176,9 @@ class _AccountManagementState extends State<AccountManagement> {
                                     : "Edit username",
                                 style: _isediting
                                     ? textStyleWhite.copyWith(
-                                      color: AppColors.secondaryText
-                                    )
+                                        color: AppColors.secondaryText)
                                     : textStyleWhite.copyWith(
-                                      color: AppColors.buttonColor
-                                    )),
+                                        color: Colors.black)),
                           ],
                         ),
                         onPressed: () {
@@ -184,7 +186,8 @@ class _AccountManagementState extends State<AccountManagement> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('Username can\'t be empty'),
-                                backgroundColor: Colors.red,
+                                backgroundColor:
+                                    const Color.fromARGB(141, 244, 67, 54),
                               ),
                             );
                           } else {
@@ -203,7 +206,8 @@ class _AccountManagementState extends State<AccountManagement> {
                                       content:
                                           Text('Username updated successfully'),
                                       duration: Duration(milliseconds: 1000),
-                                      backgroundColor: Colors.green.shade400,
+                                      backgroundColor: const Color.fromARGB(
+                                          158, 102, 187, 106),
                                     ),
                                   );
                           }
@@ -214,8 +218,8 @@ class _AccountManagementState extends State<AccountManagement> {
                   ),
                   buildButton(
                     'Edit Password',
-                    AppColors.buttonText,
-                    AppColors.buttonColor,
+                    AppColors.secondaryText,
+                    Colors.black,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -247,7 +251,7 @@ class _AccountManagementState extends State<AccountManagement> {
                                 AppColors.buttonColor,
                                 AppColors.buttonText,
                                 onPressed: () {
-                                  DeleteAccount().deleteAccount(context);
+                                  SellerDeleteAccount().sellerdeleteAccount(context);
                                 },
                               ),
                               SizedBox(

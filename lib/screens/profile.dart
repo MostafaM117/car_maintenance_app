@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/MyCars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/user_data_helper.dart';
 import '../widgets/custom_widgets.dart';
-import 'Auth_and_Account Management/account_management.dart';
+import 'Auth_and_Account Management/user/user_account_management.dart';
 import 'Auth_and_Account Management/auth_service.dart';
 
 class Profile extends StatefulWidget {
@@ -41,6 +40,7 @@ class _ProfileState extends State<Profile> {
       });
     }
   }
+
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
     setState(() {
@@ -56,7 +56,7 @@ class _ProfileState extends State<Profile> {
         'text': 'Manage your account',
         'onPressed': () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => AccountManagement()),
+              MaterialPageRoute(builder: (context) => UserAccountManagement()),
             ),
       },
       {
@@ -76,6 +76,7 @@ class _ProfileState extends State<Profile> {
     ];
 
     return Scaffold(
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Stack(
           alignment: Alignment.topCenter,
@@ -135,7 +136,7 @@ class _ProfileState extends State<Profile> {
 
             Positioned(
               top: 40,
-              left:30,
+              left: 30,
               right: 00,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

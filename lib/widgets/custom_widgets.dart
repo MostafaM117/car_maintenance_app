@@ -27,6 +27,7 @@ Widget buildInputField({
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
+        padding: EdgeInsets.only(right: 20),
         height: 45,
         decoration: ShapeDecoration(
           color: AppColors.secondaryText,
@@ -235,10 +236,10 @@ Widget buildDropdownField({
 }
 
 Widget buildTextField({
-   TextEditingController ?controller,
-   String? hintText,
+  TextEditingController? controller,
+  String? hintText,
   String? label,
-   String? Function(dynamic value)? validator,
+  String? Function(dynamic value)? validator,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,7 +270,6 @@ Widget buildTextField({
           decoration: InputDecoration(
             border: InputBorder.none,
             isCollapsed: true,
-
             hintText: hintText,
             hintStyle: textStyleGray,
           ),
@@ -317,7 +317,7 @@ Widget buildUserNameField({
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
-              prefixText: 'username: ',
+              // prefixText: 'username: ',
               isCollapsed: true,
             ),
             style: textStyleGray,
@@ -327,21 +327,70 @@ Widget buildUserNameField({
       ],
     );
   } else {
-    return TextField(
-      controller: controller,
-      enabled: false,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        prefixStyle: TextStyle(
-          fontSize: 18,
-          color: Colors.grey,
-          fontWeight: FontWeight.bold,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 10,
         ),
-        prefixText: 'username: ',
-        isCollapsed: true,
-      ),
-      style: textStyleGray,
-      textAlignVertical: TextAlignVertical.center,
+        Container(
+          height: 45,
+          // decoration: ShapeDecoration(
+          //   color: AppColors.secondaryText,
+          //   shape: RoundedRectangleBorder(
+          //     side: BorderSide(
+          //       width: 1,
+          //       color: AppColors.borderSide,
+          //     ),
+          //     borderRadius: BorderRadius.circular(22),
+          //   ),
+          // ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          alignment: Alignment.center,
+          child: TextField(
+            controller: controller,
+            enabled: false,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              prefixStyle: TextStyle(
+                fontSize: 18,
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+              prefixText: 'username: ',
+              isCollapsed: true,
+            ),
+            style: textStyleGray,
+            // textAlignVertical: TextAlignVertical.center,
+          ),
+        ),
+      ],
     );
   }
+}
+
+Widget popUpBotton(
+  String text,
+  Color backgroundColor,
+  Color textColor, {
+  required VoidCallback? onPressed,
+}) {
+  return SizedBox(
+    width: 100,
+    height: 45,
+    child: ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: FittedBox(
+        child: Text(text,
+            style: textStyleWhite.copyWith(
+              fontSize: 18,
+              color: textColor,
+            )),
+      ),
+    ),
+  );
 }

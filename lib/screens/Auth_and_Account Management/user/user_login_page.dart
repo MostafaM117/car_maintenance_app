@@ -3,18 +3,18 @@ import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../constants/app_colors.dart';
-import '../../widgets/custom_widgets.dart';
+import '../../../constants/app_colors.dart';
+import '../../../widgets/custom_widgets.dart';
 
-class LoginPage extends StatefulWidget {
-  final VoidCallback showSignupPage;
-  const LoginPage({super.key, required this.showSignupPage});
+class UserLoginPage extends StatefulWidget {
+  final VoidCallback showUserSignupPage;
+  const UserLoginPage({super.key, required this.showUserSignupPage});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<UserLoginPage> createState() => _UserLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _UserLoginPageState extends State<UserLoginPage> {
   final _emailcontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
   bool _obscureText = true;
@@ -35,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         });
     try {
-      await AuthService().signInWithGoogle(context);
+      await AuthService().signInWithGoogle(context, role: 'user');
     } catch (e) {
       print("Error during Google Sign-In: $e");
     }
@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    widget.showSignupPage();
+                    widget.showUserSignupPage();
                   },
                   child: Text.rich(
                     TextSpan(

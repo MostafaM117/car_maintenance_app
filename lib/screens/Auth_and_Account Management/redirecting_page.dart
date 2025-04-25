@@ -1,5 +1,7 @@
-import 'package:car_maintenance/screens/Current_Screen/main_screen.dart';
-import 'package:car_maintenance/screens/welcome_page.dart';
+import 'package:car_maintenance/screens/Current_Screen/seller_main_screen.dart';
+import 'package:car_maintenance/screens/Current_Screen/user_main_screen.dart';
+import 'package:car_maintenance/screens/before_login/login_type.dart';
+import 'package:car_maintenance/screens/before_login/welcome_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,6 @@ class RedirectingPage extends StatelessWidget {
               return const WelcomePage();
             }
             else{
-              
             final user = snapshot.data!;
             return FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance.collection('users').doc(snapshot.data!.uid).get(), 
@@ -30,24 +31,47 @@ class RedirectingPage extends StatelessWidget {
                 if(userSnaphot.connectionState == ConnectionState.waiting) {
                   return const Scaffold(body: Center(child: CircularProgressIndicator()));
                 }
-                else if (!userSnaphot.hasData || !userSnaphot.data!.exists){
-                  String? fullname = user.displayName;
-                  String? username = fullname?.replaceAll('_', ' ');
-                  FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-                    'username': username,
-                    'email': user.email,
-                    "uid": user.uid,
-                    'carAdded': false,
-                    'googleUser': true,
-                  });
-                  return AddCarScreen();
+                // for google sign in
+                // else if (!userSnaphot.hasData || !userSnaphot.data!.exists){
+                //   String? fullname = user.displayName;
+                //   String? username = fullname?.replaceAll('_', ' ');
+                //   FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+                //     'username': username,
+                //     'email': user.email,
+                //     "uid": user.uid,
+                //     'carAdded': false,
+                //     'googleUser': true,
+                //   });
+                //   return AddCarScreen();
+                // }
+                else if(userSnaphot.hasData && userSnaphot.data!.exists){
+                  final userData = userSnaphot.data!.data() as Map<String, dynamic>; 
+                  if(userData["carAdded"] == false){
+                    print('You haven\'t added your first car yet.');
+                    return AddCarScreen();
+                  }
+                  else{
+                    return UserMainScreen();
+                  }
                 }
-                final userData = userSnaphot.data!.data() as Map<String, dynamic>; 
-                if(userData["carAdded"] == false){
-                  print('You haven\'t added your first car yet.');
-                  return AddCarScreen();
+                else{
+                  return FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance.collection('sellers').doc(user.uid).get(), 
+                    builder: (context,sellersnapshot){
+                      if(sellersnapshot.connectionState == ConnectionState.waiting) {
+                        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+                      }
+                      if(sellersnapshot.hasData && sellersnapshot.data!.exists){
+                        final sellerData = sellersnapshot.data!.data() as Map<String, dynamic>; 
+                         // will add if condition if seller has verified his store  
+                        return SellerMainScreen();
+                      }
+                      else{
+                        print('returned here');
+                        return LoginType();
+                      }
+                    });
                 }
-                return MainScreen();
               });
             }
           }),

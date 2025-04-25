@@ -4,28 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../constants/app_colors.dart';
-import '../../widgets/custom_widgets.dart';
+import '../../../constants/app_colors.dart';
+import '../../../widgets/custom_widgets.dart';
 
-class SignupPage extends StatefulWidget {
-  final VoidCallback showLoginPage;
-  const SignupPage({super.key, required this.showLoginPage});
+class SellerSignupPage extends StatefulWidget {
+  final VoidCallback showSellerLoginPage;
+  const SellerSignupPage({super.key, required this.showSellerLoginPage});
   @override
-  State<SignupPage> createState() => _SignupPageState();
+  State<SellerSignupPage> createState() => _SellerSignupPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
-  final _usernameController = TextEditingController();
+class _SellerSignupPageState extends State<SellerSignupPage> {
+  final _ShopnameController = TextEditingController();
   final _emailcontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
   final _confirmpasswordcontroller = TextEditingController();
   bool _obscureText = true;
-  bool _isCheckingUsername = false;
-  String _usernameErrorText = '';
+  final bool _isCheckingUsername = false;
+  final String _ShopnameErrorText = '';
 
   @override
   void dispose() {
-    _usernameController.dispose();
+    _ShopnameController.dispose();
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
     _confirmpasswordcontroller.dispose();
@@ -42,7 +42,7 @@ class _SignupPageState extends State<SignupPage> {
   }
 
   Future <UserCredential?> signup() async {
-    if (_usernameController.text.trim().isEmpty) {
+    if (_ShopnameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a username')),
       );
@@ -75,10 +75,11 @@ class _SignupPageState extends State<SignupPage> {
               password: _passwordcontroller.text.trim());
 
       await createuser(
-        _usernameController.text.trim(),
+        _ShopnameController.text.trim(),
         _emailcontroller.text.trim(),
         userCredential.user!.uid,
       );
+      Navigator.pop(context);
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -104,13 +105,14 @@ class _SignupPageState extends State<SignupPage> {
   }
     }
 
-  Future createuser(String username, String email, String uid) async {
-    await FirebaseFirestore.instance.collection('users').doc(uid).set({
-      'username': username,
+  Future createuser(String shopname, String email, String uid) async {
+    await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
+      'shopname': shopname,
       'email': email,
       'uid': uid,
       'password': _passwordcontroller.text.trim(),
-      'carAdded': false,
+      // 'carAdded': false,
+      'role': 'seller',
       'googleUser': false,
     });
   }
@@ -134,7 +136,7 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 50),
 
               Text(
-                'Sign up to appName',
+                'Create your business account now',
                 style: textStyleWhite.copyWith(fontSize: 24),
               ),
               const SizedBox(height: 12),
@@ -148,14 +150,14 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(height: 30),
               // // Username
               buildInputField(
-                controller: _usernameController,
+                controller: _ShopnameController,
                 iconWidget: SvgPicture.asset(
                   'assets/svg/user.svg',
                   width: 24,
                   height: 24,
                 ),
-                hintText: 'Username',
-                errorText: _usernameErrorText,
+                hintText: 'Enter your Shopname',
+                errorText: _ShopnameErrorText,
                 suffixWidget: _isCheckingUsername
                     ? const SizedBox(
                         width: 16,
@@ -168,7 +170,7 @@ class _SignupPageState extends State<SignupPage> {
               // Email address
               const SizedBox(height: 20),
               buildInputField(
-                hintText: 'Enter your email ',
+                hintText: 'Enter your business email ',
                 controller: _emailcontroller,
                 iconWidget: SvgPicture.asset(
                   'assets/svg/inpox.svg',
@@ -220,7 +222,7 @@ class _SignupPageState extends State<SignupPage> {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    widget.showLoginPage();
+                    widget.showSellerLoginPage();
                   },
                   child: Text.rich(
                     TextSpan(

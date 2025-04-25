@@ -1,11 +1,13 @@
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_auth_page.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/user/user_auth_page.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
-import '../constants/app_colors.dart';
-import '../widgets/BackgroundDecoration.dart';
+import '../../constants/app_colors.dart';
+import '../../widgets/BackgroundDecoration.dart';
 
-class Loginscreen extends StatelessWidget {
-  const Loginscreen({super.key});
+class LoginType extends StatelessWidget {
+  const LoginType({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +41,25 @@ class Loginscreen extends StatelessWidget {
                   ),
                   buildButton('Continue as User', AppColors.buttonColor,
                       AppColors.buttonText,
-                      onPressed: () {}),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => UserAuthPage()
+                          ),
+                        );
+                      }),
                   SizedBox(
                     height: 20,
                   ),
                   buildButton('Continue as Seller', AppColors.buttonColor,
                       AppColors.buttonText,
-                      onPressed: () {}),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SellerAuthPage()
+                          ),
+                        );
+                      }),
                   SizedBox(
                     height: 30,
                   ),
