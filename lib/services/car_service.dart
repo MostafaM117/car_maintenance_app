@@ -13,7 +13,7 @@ class CarService {
   final String? selectedModel;
   final int? selectedYear;
   final DateTime? lastMaintenanceDate;
-  
+
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
