@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import 'custom_widgets.dart';
-import 'mileage_display.dart';
+import 'mycar_mileage_display.dart';
 
 Widget buildCarCard({
   required BuildContext context,
@@ -70,16 +70,9 @@ Widget buildCarCard({
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  SizedBox(
-                    height: 22,
-                    child: MileageDisplay(
-                      carId: carId,
-                      currentMileage: mileage,
-                      avgKmPerMonth: avgKmPerMonth,
-                      onMileageUpdated: (newMileage) {
-                        print('Updated mileage for car $carId: $newMileage');
-                      },
-                    ),
+                  MyCarMileageDisplay(
+                    mileage: mileage,
+                    avgKmPerMonth: avgKmPerMonth,
                   ),
                   Container(
                     height: 40,
