@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../models/car_data.dart';
+import '../../widgets/custom_Popup.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/seller_image-picker.dart';
 
@@ -56,7 +57,8 @@ class _SellerMarketState extends State<SellerMarket> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Item Name',
-                      style: textStyleWhite.copyWith(fontSize: 16,fontWeight: FontWeight.w500)),
+                      style: textStyleWhite.copyWith(
+                          fontSize: 16, fontWeight: FontWeight.w500)),
                   Container(
                     height: 45,
                     decoration: ShapeDecoration(
@@ -230,7 +232,16 @@ class _SellerMarketState extends State<SellerMarket> {
                 'Discard',
                 AppColors.primaryText,
                 AppColors.buttonText,
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (_) => const CustomPopup(
+                      title: 'Congrats!',
+                      message: 'Your account is ready to use!  Now you can add you car details to get started.',
+                    ),
+                  );
+                },
               ),
             ],
           ),
