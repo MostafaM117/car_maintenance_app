@@ -195,7 +195,6 @@ class _CarMaintState extends State<CarMaint> {
                                 car['avgKmPerMonth'] is double
                                     ? car['avgKmPerMonth'].toInt()
                                     : car['avgKmPerMonth'] as int? ?? 0;
-
                             return CarCard(
                               // context: context,
                               carName: '${car['make']} ${car['model']}',
