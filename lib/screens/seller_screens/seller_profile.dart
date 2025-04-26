@@ -46,11 +46,9 @@ class _SellerProfileState extends State<SellerProfile> {
 
   void loadSellername() async {
     String? fetchedUsername = await getSellername();
-    if(mounted){
     setState(() {
       username = fetchedUsername ?? 'seller';
     });
-    }
   }
 
   @override
