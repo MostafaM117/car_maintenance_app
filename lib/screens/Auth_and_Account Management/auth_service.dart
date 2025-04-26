@@ -57,28 +57,56 @@ class AuthService {
         builder: (context) {
           return StatefulBuilder(builder: (context, setState) {
             return AlertDialog(
-              title: Text('Please enter your password.'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                      'It’s your first time using Google sign in. Please confirm your password.'),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  buildInputField(
-                      controller: passwordcontroller,
-                      iconWidget: SvgPicture.asset(
-                        'assets/svg/lock.svg',
-                        width: 20,
-                        height: 24,
-                      ),
-                      hintText: 'Enter your password',
-                      obscureText: true,
-                      errorText: errorText,
-                      togglePasswordView: _toggletoviewpassword),
-                ],
+              backgroundColor: AppColors.secondaryText,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: const Text(
+                'Please enter your password.',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'It’s your first time using Google sign in. Please confirm your password.',
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: passwordcontroller,
+                      obscureText: _obscureText,
+                      cursorColor: Colors.black,
+                      decoration: InputDecoration(
+                        hintText: 'Enter password',
+                        hintStyle: const TextStyle(color: Colors.black54),
+                        errorText: errorText,
+                        border: OutlineInputBorder(
+                          borderSide: const BorderSide(color:AppColors.secondaryText),
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: AppColors.secondaryText),
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actionsAlignment: MainAxisAlignment.center,
               actions: [
                 buildButton(
                   onPressed: () {
@@ -87,15 +115,15 @@ class AuthService {
                       setState(() {
                         errorText = "Password can't be empty.";
                       });
-                      return;
                     } else {
                       Navigator.of(context).pop(password);
                     }
                   },
-                  'Link my account',
+                  'Link account',
                   AppColors.secondaryText,
                   AppColors.buttonColor,
                 ),
+                const SizedBox(height: 15),
                 buildButton(
                   onPressed: () {
                     Navigator.of(context).pop();
@@ -198,10 +226,38 @@ class AuthService {
             }
             else if (!userExists.exists) {
             _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds:4000));
+
             }
+            Navigator.pop(context);
+            Navigator.pop(context);
+          }
+          return userCredential;
+        } else {
+          await _linkaccounts(context, email, credential, docId);
+          print('trying to link');
+        }
+      }
+      //New Users Signing in With Google
+      else {
+        UserCredential userCredential =
+            await _firebaseAuth.signInWithCredential(credential);
+        User? user = userCredential.user;
+        if (user != null) {
+          final userDoc = FirebaseFirestore.instance
+              .collection('users')
+              .doc(userCredential.user!.uid);
+          final userExists = await userDoc.get();
+          if (userExists.exists) {
+            _showSnackBar(context, 'Signed in Successfully',
+                Colors.green.shade400, Duration(milliseconds: 2500));
+          } else if (!userExists.exists) {
+            _showSnackBar(context, 'Welcome, Complete Your first time setup',
+                Colors.green.shade400, Duration(milliseconds: 4000));
+          }
           Navigator.pop(context);
           Navigator.pop(context);
         }
+        print('New User using Sign in with Google');
         return userCredential;
       } 
       else {
@@ -241,12 +297,8 @@ class AuthService {
         Navigator.pop(context);
         Navigator.pop(context);
       }
-      print('New User using Sign in with Google');
-      return userCredential;
-    }
-    } 
-    catch(e){
-      if(e.toString() == 'Exception: Google Sign In Canceled'){
+    } catch (e) {
+      if (e.toString() == 'Exception: Google Sign In Canceled') {
         print("handled error in Google sign");
       } else if (e.toString().contains('network_error')) {
         _showSnackBar(context, 'Network error. Please check your connection.',
