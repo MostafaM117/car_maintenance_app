@@ -41,7 +41,6 @@ class LoginType extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   // الأزرار في الأسفل
                   Padding(
                     padding: const EdgeInsets.only(bottom: 30.0), // المسافة من الأسفل
