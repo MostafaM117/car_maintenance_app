@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/user/user_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
-import 'package:car_maintenance/screens/MyCars.dart';
+import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
+import 'package:car_maintenance/screens/seller_screens/my_stores.dart';
 import 'package:car_maintenance/services/seller/seller_data_helper.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -143,6 +143,19 @@ class _SellerProfileState extends State<SellerProfile> {
                 ),
                 ProfileOptionTile(
                   rightIcon: Icons.settings,
+                  text: 'MyStores',
+                  onBackTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyStores()),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ProfileOptionTile(
+                  rightIcon: Icons.settings,
                   text: 'Settings',
                   onBackTap: () {},
                 ),
@@ -159,17 +172,24 @@ class _SellerProfileState extends State<SellerProfile> {
                 ),
                 ProfileOptionTile(
                   rightIcon: Icons.security,
-                  text: 'Security & Privacy',
-                  onBackTap: () {},
+                  text: 'Terms & Conditions',
+                  onBackTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TermsAndConditionsPage(),
+                      ),
+                    );
+                  },
                 ),
-                SizedBox(
-                  height: 15,
-                ),
-                ProfileOptionTile(
-                  rightIcon: Icons.help_outline,
-                  text: 'Help & Support',
-                  onBackTap: () {},
-                ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                // ProfileOptionTile(
+                //   rightIcon: Icons.help_outline,
+                //   text: 'Help & Support',
+                //   onBackTap: () {},
+                // ),
                 SizedBox(
                   height: 15,
                 ),
@@ -184,110 +204,11 @@ class _SellerProfileState extends State<SellerProfile> {
                     },
                   ),
                 ),
-  
               ],
             ),
           ),
         ],
       ),
-      // child: Stack(
-      //   alignment: Alignment.topCenter,
-      //   children: [
-      //     // Main container
-      //     Container(
-      //       margin: const EdgeInsets.only(top: 100),
-      //       width: double.infinity,
-      //       height: MediaQuery.of(context).size.height - 75,
-      //       decoration: ShapeDecoration(
-      //         color: AppColors.secondaryText,
-      //         shape: RoundedRectangleBorder(
-      //           side: const BorderSide(width: 1, color: Color(0xFFE7E7E7)),
-      //           borderRadius: const BorderRadius.only(
-      //             topLeft: Radius.circular(50),
-      //             topRight: Radius.circular(50),
-      //           ),
-      //         ),
-      //       ),
-      //       child: Padding(
-      //         padding:
-      //             const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-      //         child: Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [
-      //             Align(
-      //               alignment: Alignment.topRight,
-      //               child:
-      //             ),
-      //             SizedBox(height: 130),
-
-      //             ProfileOptionTile(
-      //               rightIcon: Icons.settings,
-      //               text: 'Settings',
-      //               onBackTap: () {},
-      //             ),
-
-      //             // for (var button in buttonData)
-      //             //   Padding(
-      //             //     padding: const EdgeInsets.only(bottom: 20),
-      //             //     child: buildButton(
-      //             //       button['text'],
-      //             //       button['text'] == 'Log Out'
-      //             //           ? AppColors.buttonColor
-      //             //           : AppColors.secondaryText.withOpacity(0.9),
-      //             //       button['text'] == 'Log Out'
-      //             //           ? AppColors.secondaryText
-      //             //           : Colors.black,
-      //             //       onPressed: button['onPressed'],
-      //             //     ),
-      //             //   ),
-      //           ],
-      //         ),
-      //       ),
-      //     ),
-
-      //     Positioned(
-      //       top: 40,
-      //       left: 30,
-      //       right: 00,
-      //       child: Row(
-      //         crossAxisAlignment: CrossAxisAlignment.center,
-      //         children: [
-      //           Container(
-      //             width: 100,
-      //             height: 100,
-      //             child: _profileImage != null
-      //                 ? CircleAvatar(
-      //                     radius: 40,
-      //                     backgroundImage: FileImage(_profileImage!),
-      //                   )
-      //                 : CircleAvatar(
-      //                     radius: 40,
-      //                     backgroundColor: AppColors.secondaryText,
-      //                     child: Icon(
-      //                       Icons.person,
-      //                       color: Colors.white,
-      //                       size: 50,
-      //                     ),
-      //                   ),
-      //           ),
-      //           const SizedBox(width: 15),
-      //           Expanded(
-      //             child: Text(
-      //               username,
-      //               style: const TextStyle(
-      //                 fontSize: 20,
-      //                 fontWeight: FontWeight.bold,
-      //                 color: AppColors.primaryText,
-      //                 fontFamily: 'Inter',
-      //               ),
-      //               overflow: TextOverflow.ellipsis,
-      //             ),
-      //           ),
-      //         ],
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }
