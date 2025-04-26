@@ -117,6 +117,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   context,
                   _emailcontroller.text.trim(),
                   _passwordcontroller.text.trim(),
+                  'user'
                 );
               }),
               const SizedBox(height: 15),

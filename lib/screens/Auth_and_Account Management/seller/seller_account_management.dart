@@ -32,7 +32,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
           .get();
       if (userDoc.exists) {
         setState(() {
-          _usernameEditcontroller.text = userDoc['shopname'] ?? '';
+          _usernameEditcontroller.text = userDoc['shopname'] ?? 'Seller';
         });
       }
       else{

@@ -31,19 +31,6 @@ class RedirectingPage extends StatelessWidget {
                 if(userSnaphot.connectionState == ConnectionState.waiting) {
                   return const Scaffold(body: Center(child: CircularProgressIndicator()));
                 }
-                // for google sign in
-                // else if (!userSnaphot.hasData || !userSnaphot.data!.exists){
-                //   String? fullname = user.displayName;
-                //   String? username = fullname?.replaceAll('_', ' ');
-                //   FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-                //     'username': username,
-                //     'email': user.email,
-                //     "uid": user.uid,
-                //     'carAdded': false,
-                //     'googleUser': true,
-                //   });
-                //   return AddCarScreen();
-                // }
                 else if(userSnaphot.hasData && userSnaphot.data!.exists){
                   final userData = userSnaphot.data!.data() as Map<String, dynamic>; 
                   if(userData["carAdded"] == false){
@@ -68,7 +55,7 @@ class RedirectingPage extends StatelessWidget {
                       }
                       else{
                         print('returned here');
-                        return LoginType();
+                        return WelcomePage();
                       }
                     });
                 }

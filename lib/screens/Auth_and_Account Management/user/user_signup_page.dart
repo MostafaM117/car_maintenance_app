@@ -113,6 +113,7 @@ class _UserSignupState extends State<UserSignupPage> {
       'password': _passwordcontroller.text.trim(),
       'carAdded': false,
       'googleUser': false,
+      'role': 'user',
     });
   }
 
