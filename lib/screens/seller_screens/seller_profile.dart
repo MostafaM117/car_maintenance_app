@@ -57,154 +57,169 @@ class _SellerProfileState extends State<SellerProfile> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          Container(
-            width: 393,
-            height: 250,
-            decoration: ShapeDecoration(
-              color: AppColors.secondaryText,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  width: 1,
-                  color: const Color(0xFFE3E3E3),
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50),
-                ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-                SizedBox(
-                  width: 120,
-                  height: 120,
-                  child: _profileImage != null
-                      ? CircleAvatar(
-                          radius: 40,
-                          backgroundImage: FileImage(_profileImage!),
-                        )
-                      : CircleAvatar(
-                          radius: 40,
-                          backgroundColor: AppColors.secondaryText,
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 50,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // SizedBox(height: 10),
+                    Text(
+                      "Account",
+                      style: textStyleWhite.copyWith(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 9.20,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Container(
+                          width: 393,
+                          height: 150,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.red, width: 1),
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          padding: EdgeInsets.only(
+                              left: 100, top: 20, bottom: 20, right: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(username, style: textStyleWhite),
+                              SizedBox(height: 5),
+                              Text('${seller.email}', style: textStyleGray),
+                            ],
                           ),
                         ),
-                ),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primaryText,
-                    fontFamily: 'Inter',
-                  ),
-                ),
-                Text(
-                  '${seller.email}',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: 13,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  height: 60,
-                ),
-                ProfileOptionTile(
-                  rightIcon: Icons.person,
-                  text: 'Profile',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SellerAccountManagement()),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ProfileOptionTile(
-                  rightIcon: Icons.settings,
-                  text: 'MyStores',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyStores()),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ProfileOptionTile(
-                  rightIcon: Icons.settings,
-                  text: 'Settings',
-                  onBackTap: () {},
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ProfileOptionTile(
-                  rightIcon: Icons.history,
-                  text: 'Activity',
-                  onBackTap: () {},
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ProfileOptionTile(
-                  rightIcon: Icons.security,
-                  text: 'Terms & Conditions',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TermsAndConditionsPage(),
+                        Positioned(
+                          top: 15,
+                          child: Container(
+                            margin: EdgeInsets.only(left: 5),
+                            width: 100,
+                            height: 150,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.red, width: 1),
+                              borderRadius: BorderRadius.circular(30),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.25),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                  offset: Offset(0, 4),
+                                ),
+                              ],
+                              image: _profileImage != null
+                                  ? DecorationImage(
+                                      image: FileImage(_profileImage!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
+                            ),
+                            child: _profileImage == null
+                                ? Center(
+                                    child: Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Column(
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            height: 30,
+                          ),
+                          ProfileOptionTile(
+                            rightIcon: Icons.person,
+                            text: 'Profile',
+                            onBackTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        SellerAccountManagement()),
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ProfileOptionTile(
+                            rightIcon: Icons.settings,
+                            text: 'MyStores',
+                            onBackTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyStores()),
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ProfileOptionTile(
+                            rightIcon: Icons.settings,
+                            text: 'Settings',
+                            onBackTap: () {},
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ProfileOptionTile(
+                            rightIcon: Icons.history,
+                            text: 'Activity',
+                            onBackTap: () {},
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ProfileOptionTile(
+                            rightIcon: Icons.security,
+                            text: 'Terms & Conditions',
+                            onBackTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TermsAndConditionsPage(),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          ProfileOptionTile(
+                            rightIcon: Icons.logout,
+                            text: 'Log Out',
+                            onBackTap: () {
+                              AuthService().signOut(context);
+                            },
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                        ],
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
-                // SizedBox(
-                //   height: 15,
-                // ),
-                // ProfileOptionTile(
-                //   rightIcon: Icons.help_outline,
-                //   text: 'Help & Support',
-                //   onBackTap: () {},
-                // ),
-                SizedBox(
-                  height: 15,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: buildButton(
-                    'Log Out',
-                    AppColors.buttonColor,
-                    AppColors.buttonText,
-                    onPressed: () {
-                      AuthService().signOut(context);
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ],

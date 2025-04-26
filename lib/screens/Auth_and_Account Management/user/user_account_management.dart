@@ -77,214 +77,232 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          const CurvedBackgroundDecoration(),
-          SafeArea(
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 60,
-                  ),
-                  Text(
-                    "Account",
-                    style: textStyleWhite.copyWith(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 9.20,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        height: 30,
-                      ),
-                      ProfileImagePicker(
-                        onImagePicked: (File image) {
-                          setState(() {});
-                        },
-                      ),
-                      Expanded(
-                        child: Column(
+      body: Scaffold(
+          backgroundColor: AppColors.background,
+          resizeToAvoidBottomInset: false,
+          body: Stack(
+            children: [
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 30),
+                        Text(
+                          "Profile",
+                          style: textStyleWhite.copyWith(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 9.20,
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Stack(
+                          clipBehavior: Clip.none,
                           children: [
-                            Text(
-                              _usernameEditcontroller.text,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryText,
-                                fontFamily: 'Inter',
+                            Container(
+                              width: 393,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.red, width: 1),
+                                borderRadius: BorderRadius.circular(30),
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              '${user.email}',
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.7),
-                                fontSize: 10,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  // buildTextUserNameField(
-                  buildUserNameField(
-                    controller: _usernameEditcontroller,
-                    isEditing: _isediting,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Username cannot be empty';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _isediting
-                              ? AppColors.buttonColor
-                              : AppColors.secondaryText,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                                _isediting
-                                    ? "Update username"
-                                    : "Edit username",
-                                style: _isediting
-                                    ? textStyleWhite.copyWith(
-                                        color: AppColors.secondaryText)
-                                    : textStyleWhite.copyWith(
-                                        color: Colors.black)),
-                          ],
-                        ),
-                        onPressed: () {
-                          if (_usernameEditcontroller.text.trim().isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Username can\'t be empty'),
-                                backgroundColor:
-                                    const Color.fromARGB(141, 244, 67, 54),
-                              ),
-                            );
-                          } else {
-                            _toggleEdit();
-                            _updateUsername();
-                            _isediting
-                                ? ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                          'Now you can edit your username'),
-                                      duration: Duration(milliseconds: 1000),
+                              padding: EdgeInsets.only(
+                                  left: 100, top: 20, bottom: 20, right: 20),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _usernameEditcontroller.text,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primaryText,
+                                      fontFamily: 'Inter',
                                     ),
-                                  )
-                                : ScaffoldMessenger.of(context).showSnackBar(
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    '${user.email}',
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.7),
+                                      fontSize: 10,
+                                      fontFamily: 'Inter',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Positioned(
+                              top: 15,
+                              child: ProfileImagePicker(
+                                onImagePicked: (File image) {
+                                  setState(() {});
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        buildUserNameField(
+                          controller: _usernameEditcontroller,
+                          isEditing: _isediting,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Username cannot be empty';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        SizedBox(
+                          height: 50,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: _isediting
+                                    ? AppColors.buttonColor
+                                    : AppColors.secondaryText,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25)),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                      _isediting
+                                          ? "Update username"
+                                          : "Edit username",
+                                      style: _isediting
+                                          ? textStyleWhite.copyWith(
+                                              color: AppColors.secondaryText)
+                                          : textStyleWhite.copyWith(
+                                              color: Colors.black)),
+                                ],
+                              ),
+                              onPressed: () {
+                                if (_usernameEditcontroller.text
+                                    .trim()
+                                    .isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content:
-                                          Text('Username updated successfully'),
-                                      duration: Duration(milliseconds: 1000),
+                                      content: Text('Username can\'t be empty'),
                                       backgroundColor: const Color.fromARGB(
-                                          158, 102, 187, 106),
+                                          141, 244, 67, 54),
                                     ),
                                   );
-                          }
-                        }),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  buildButton(
-                    'Edit Password',
-                    AppColors.secondaryText,
-                    Colors.black,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ForgotPassword()),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  buildButton(
-                    'Delete Account',
-                    AppColors.buttonColor,
-                    AppColors.buttonText,
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            backgroundColor: AppColors.secondaryText,
-                            title: const Text(
-                              'Are you sure you want to delete your account?',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w600,fontSize: 20,),
-                            ),
-                            content: SizedBox(
-                              height: 100,
-                              child: Center(
-                                child: const Text(
-                                    'This action cannot be undone.\nAll of your data will be permanently deleted.',
+                                } else {
+                                  _toggleEdit();
+                                  _updateUsername();
+                                  _isediting
+                                      ? ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Now you can edit your username'),
+                                            duration:
+                                                Duration(milliseconds: 1000),
+                                          ),
+                                        )
+                                      : ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                                'Username updated successfully'),
+                                            duration:
+                                                Duration(milliseconds: 1000),
+                                            backgroundColor:
+                                                const Color.fromARGB(
+                                                    158, 102, 187, 106),
+                                          ),
+                                        );
+                                }
+                              }),
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        buildButton(
+                          'Edit Password',
+                          AppColors.secondaryText,
+                          Colors.black,
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ForgotPassword()),
+                            );
+                          },
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        buildButton(
+                          'Delete Account',
+                          AppColors.buttonColor,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: AppColors.secondaryText,
+                                  title: const Text(
+                                    'Are you sure you want to delete your account?',
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 20,
                                     ),
-                              ),
-                            ),
-                            actions: [
-                              popUpBotton(
-                                'Cancel',
-                                AppColors.primaryText,
-                                AppColors.buttonText,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              popUpBotton(
-                                'Delete',
-                                AppColors.buttonColor,
-                                AppColors.buttonText,
-                                onPressed: () {
-                                  UserDeleteAccount().userdeleteAccount(context);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
+                                  ),
+                                  content: SizedBox(
+                                    height: 100,
+                                    child: Center(
+                                      child: const Text(
+                                        'This action cannot be undone.\nAll of your data will be permanently deleted.',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                  actions: [
+                                    popUpBotton(
+                                      'Cancel',
+                                      AppColors.primaryText,
+                                      AppColors.buttonText,
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    popUpBotton(
+                                      'Delete',
+                                      AppColors.buttonColor,
+                                      AppColors.buttonText,
+                                      onPressed: () {
+                                        UserDeleteAccount()
+                                            .userdeleteAccount(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+                ),
+              )
+            ],
+          )),
     );
   }
 }
