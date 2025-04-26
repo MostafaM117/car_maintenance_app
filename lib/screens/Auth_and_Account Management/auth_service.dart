@@ -113,21 +113,24 @@ class AuthService {
 
   // Linking Accounts
   Future<void> _linkaccounts(BuildContext context, String email,
-      AuthCredential googlecredential, String docId) async {
+      AuthCredential googlecredential, String docId, {required String role}) async {
     try {
+      final collection = FirebaseFirestore.instance.collection(role == 'user'? 'users': 'sellers');
+      // final existingDoc = await collection.doc(docId).get();
+      // if(existingDoc.exists){}
       final password = await _getUserPassword(context);
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 
       await userCredential.user!.linkWithCredential(googlecredential);
       final uid = userCredential.user!.uid;
-      await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      await collection.doc(uid).update({
         'googleUser': true,
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Google account linked successfully.'),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.green.shade400,
         ),
       );
       Navigator.of(context).pop();
@@ -167,21 +170,28 @@ class AuthService {
     );
     final email = gUser.email;
     final collection = role == 'user'? 'users' : 'sellers';
+    final oppositeCollection  = role == 'user'? 'sellers' : 'users';
     final usersRef = FirebaseFirestore.instance.collection(collection);
     final userDocQuery = await usersRef.where('email', isEqualTo: email).get();
-    
+    final wrongRoleQuery = await FirebaseFirestore.instance.collection(oppositeCollection)
+        .where('email', isEqualTo: email)
+        .get();
+    if(wrongRoleQuery.docs.isNotEmpty){
+      _showSnackBar(context, 'This account is registered as a ${role == 'user' ? 'seller': 'user'}. Please use the correct login screen.', Colors.red,
+          Duration(milliseconds: 3000));
+          return null;
+    }
     //Check for Previously registered users
     if(userDocQuery.docs.isNotEmpty){
       final docId = userDocQuery.docs.first.id;
       final googleuserexists = userDocQuery.docs.first.data()['googleUser'];
 
-        if (googleuserexists == true) {
-          UserCredential userCredential =
-              await _firebaseAuth.signInWithCredential(credential);
-          User? user = userCredential.user;
+      if (googleuserexists == true) {
+        UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
+        User? user = userCredential.user;
 
         if (user != null){
-          final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
+          final userDoc = FirebaseFirestore.instance.collection(collection).doc(userCredential.user!.uid);
           final userExists = await userDoc.get();
             if (userExists.exists){
             _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
@@ -195,7 +205,7 @@ class AuthService {
         return userCredential;
       } 
       else {
-        await _linkaccounts(context, email, credential, docId);
+        await _linkaccounts(context, email, credential, docId, role: role);
         print('trying to link');
       }
       } 
@@ -204,14 +214,30 @@ class AuthService {
       UserCredential userCredential = await _firebaseAuth.signInWithCredential(credential);
       User? user = userCredential.user;
       if (user != null){
-      final userDoc = FirebaseFirestore.instance.collection('users').doc(userCredential.user!.uid);
-      final userExists = await userDoc.get();
-        if (userExists.exists){
-        _showSnackBar(context, 'Signed in Successfully', Colors.green.shade400, Duration(milliseconds: 2500));
-        }
-        else if (!userExists.exists) {
-        _showSnackBar(context, 'Welcome, Complete Your first time setup', Colors.green.shade400, Duration(milliseconds: 4000));
-        }
+        final newUserDoc  = FirebaseFirestore.instance.collection(collection).doc(userCredential.user!.uid);
+        String? fullname = user.displayName;
+        String? username = fullname?.replaceAll('_', ' ');
+        if(role == 'user'){
+        await newUserDoc.set({
+        'email': user.email,
+        'googleUser': true,
+        'uid': user.uid,
+        'role': 'user',
+        'username': username,
+        'carAdded': false,
+      });
+      }
+      else{
+      await newUserDoc.set({
+        'email': user.email,
+        'googleUser': true,
+        'uid': user.uid,
+        'role': 'seller',
+        'username': username,
+        'shopname': 'seller',
+      });
+      }
+        _showSnackBar(context, 'Welcome, its your first time to sign in with google', Colors.green.shade400, Duration(milliseconds: 2500));
         Navigator.pop(context);
         Navigator.pop(context);
       }
@@ -236,8 +262,8 @@ class AuthService {
   }
 
   // signInWithEmailAndPassword
-  Future<UserCredential> signInWithEmailAndPassword(
-      BuildContext context, String email, password) async {
+  Future<UserCredential?> signInWithEmailAndPassword(
+      BuildContext context, String email, String password, String expectedRole) async {
     if (email.isEmpty) {
       _showSnackBar(context, 'An email address is required',
           Colors.grey.shade700, Duration(milliseconds: 3000));
@@ -250,11 +276,39 @@ class AuthService {
     try {
       UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
-      _showSnackBar(context, 'Signed in successfully', Colors.green.shade400,
-          Duration(milliseconds: 1000));
-      Navigator.pop(context);
-      Navigator.pop(context);
-      return userCredential;
+        //check for role Before Redirecting
+        final uid = userCredential.user!.uid;
+        final userDoc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+        final sellerDoc = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+        DocumentSnapshot? correctDoc;
+        // final docSnapshot = await docRef.get();
+        if(userDoc.exists){
+          correctDoc = userDoc;
+        }
+        else if(sellerDoc.exists){
+          correctDoc = sellerDoc;
+        }
+        if (correctDoc == null || !correctDoc.exists){
+        // No document found in either collection
+        await FirebaseAuth.instance.signOut();
+          _showSnackBar(context, 'Account record not found.', Colors.red,
+          Duration(milliseconds: 3000));
+          return null;
+        }
+        final actualrole = correctDoc['role'];
+        if(actualrole != expectedRole){
+        await FirebaseAuth.instance.signOut();
+        _showSnackBar(context, 'This account is registered as a $actualrole. Please use the correct login screen.', Colors.red,
+          Duration(milliseconds: 3000));
+          return null;
+        }
+        _showSnackBar(
+          context, 'Signed in Successfully', Colors.green.shade400,
+          Duration(milliseconds: 1500)
+          );
+        Navigator.pop(context);
+        Navigator.pop(context);
+        return userCredential;
     } on FirebaseAuthException catch (e) {
       String errorMessage = _suitableErrorMessage(e.code);
       _showSnackBar(

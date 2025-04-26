@@ -117,6 +117,7 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                   context,
                   _emailcontroller.text.trim(),
                   _passwordcontroller.text.trim(),
+                  'seller'
                 );
               }),
               const SizedBox(height: 15),

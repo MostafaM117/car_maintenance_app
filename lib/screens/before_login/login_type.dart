@@ -37,7 +37,7 @@ class LoginType extends StatelessWidget {
                     textAlign: TextAlign.left,
                   ),
                   SizedBox(
-                    height: 200,
+                    height: 170,
                   ),
                   buildButton('Continue as User', AppColors.buttonColor,
                       AppColors.buttonText,
