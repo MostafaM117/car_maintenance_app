@@ -21,7 +21,7 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
   @override
   void initState() {
     super.initState();
-    _loadImage();  
+    _loadImage();
   }
 
   Future<void> _loadImage() async {
@@ -29,13 +29,14 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
     String? imagePath = prefs.getString('profileImagePath');
     if (imagePath != null) {
       setState(() {
-        _image = File(imagePath);  
+        _image = File(imagePath);
       });
     }
   }
+
   Future<void> _saveImage(File imageFile) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString('profileImagePath', imageFile.path);  
+    prefs.setString('profileImagePath', imageFile.path);
   }
 
   Future<void> _pickImage() async {
@@ -43,10 +44,10 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
     if (picked != null) {
       final imageFile = File(picked.path);
       setState(() {
-        _image = imageFile;  
+        _image = imageFile;
       });
-      widget.onImagePicked(imageFile);  
-      await _saveImage(imageFile);  
+      widget.onImagePicked(imageFile);
+      await _saveImage(imageFile);
     }
   }
 
@@ -55,15 +56,20 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
     return Stack(
       children: [
         Container(
+          margin: EdgeInsets.only(left: 7),
           width: 100,
-          height: 100,
+          height: 150,
           decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.secondaryText,
-            border: Border.all(
-              color: AppColors.borderSide,
-              width: 1,
-            ),
+            border: Border.all(color: Colors.red, width: 1),
+            borderRadius: BorderRadius.circular(30),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.25), 
+                spreadRadius: 2,
+                blurRadius: 8, 
+                offset: Offset(0, 4), 
+              ),
+            ],
             image: _image != null
                 ? DecorationImage(
                     image: FileImage(_image!),
@@ -82,9 +88,7 @@ class _ProfileImagePickerState extends State<ProfileImagePicker> {
             onTap: _pickImage,
             child: Container(
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color:AppColors.borderSide
-              ),
+                  shape: BoxShape.circle, color: AppColors.borderSide),
               padding: const EdgeInsets.all(6),
               child: SvgPicture.asset(
                 'assets/svg/edit.svg',
