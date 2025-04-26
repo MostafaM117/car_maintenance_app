@@ -111,7 +111,6 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
       'email': email,
       'uid': uid,
       'password': _passwordcontroller.text.trim(),
-      // 'carAdded': false,
       'role': 'seller',
       'googleUser': false,
     });
