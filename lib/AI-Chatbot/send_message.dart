@@ -16,6 +16,10 @@ class ChatLogic {
     required this.getGeminiRespone,
   });
 
+  void setActiveChatId(String? chatId) {
+    activeChatId = chatId;
+  }
+  
   Future <void> sendMessage({
     required ChatMessage chatMsg,
     required List<ChatMessage> messages,

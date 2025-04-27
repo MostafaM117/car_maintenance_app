@@ -5,6 +5,8 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Chatbot extends StatefulWidget {
@@ -109,8 +111,34 @@ void switchChat(String newChatId) async {
       activeChatId = newChatId;
       messages = newMessages;
     });
+    chatService.setActiveChatId(newChatId);
     Navigator.of(context).pop();
   }
+
+// NewChat
+void createNewChat() {
+  setState(() {
+    activeChatId = null;
+    messages = [];
+  });
+  chatService.setActiveChatId(null);
+  Navigator.of(context).pop(); // close the drawer
+}
+
+//voiceChat 
+// bool _isListening = false;
+// void _listen() async{
+//   if(!_isListening){
+//     bool available = await SpeechToText.initialize();
+//     if(available){
+//       setState(() {
+//         _isListening = true;
+//         SpeechToText.listenMethod(onResult)
+//       });
+//     }
+
+//   }
+// }
   @override
   void initState(){
     super.initState();
@@ -121,6 +149,8 @@ void switchChat(String newChatId) async {
       profileImage: user.photoURL,
     );
     chatService = ChatLogic(userId: currentUser.id, currentUser: currentUser, geminiBot: geminiBot, getGeminiRespone: _geminiService.getGeminiRespone);
+    // speechService = SpeechToTextService();
+    // speechService.initialize();
   }
   // UI
   @override
@@ -155,6 +185,14 @@ void switchChat(String newChatId) async {
               return ListView(
                 children: [
                   DrawerHeader(child: Text('past chats')),
+                  ListTile(
+                    leading: Icon(Icons.add),
+                    title: Text('New Chat'),
+                    onTap: () {
+                      createNewChat();
+                    },
+                  ),
+                  Divider(),
                   ...docs.map((doc){
                     final data = doc.data() as Map<String, dynamic>;
                     final title = data['title'] ?? 'Untitled';
@@ -166,7 +204,7 @@ void switchChat(String newChatId) async {
                         switchChat(chatId);
                       },
                     );
-                  }).toList()
+                  })
                 ],
               );
             }),
@@ -216,7 +254,7 @@ void switchChat(String newChatId) async {
                 color: Colors.white,
                 fontSize: 16
                 ),)
-              )
+              ),
           );
         },
       ),
