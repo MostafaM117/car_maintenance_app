@@ -33,20 +33,20 @@ class FirestoreService {
     });
   }
 
-  // Future<void> cloneMaintenanceToUser({
-  //   required CollectionReference source,
-  //   required CollectionReference target,
-  // }) async {
-  //   final sourceSnapshot = await source.get();
-  //   final batch = FirebaseFirestore.instance.batch();
+  Future<void> cloneMaintenanceToUser({
+    required CollectionReference source,
+    required CollectionReference target,
+  }) async {
+    final sourceSnapshot = await source.get();
+    final batch = FirebaseFirestore.instance.batch();
 
-  //   for (var doc in sourceSnapshot.docs) {
-  //     final targetDoc = target.doc(doc.id);
-  //     batch.set(targetDoc, doc.data());
-  //   }
+    for (var doc in sourceSnapshot.docs) {
+      final targetDoc = target.doc(doc.id);
+      batch.set(targetDoc, doc.data());
+    }
 
-  //   await batch.commit();
-  // }
+    await batch.commit();
+  }
 
   //get lists
   Stream<List<MaintenanceList>> getMaintenanceList() {
@@ -57,7 +57,7 @@ class FirestoreService {
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>? ?? {};
         //debug print
-        print("📜 Mapping Firestore document: $data");
+        // print("📜 Mapping Firestore document: $data");
         return MaintenanceList(
           id: doc.id,
           description: data['Description'] ?? '',

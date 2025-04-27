@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic>? selectedCar;
   FirestoreService firestoreService = FirestoreService(MaintID());
   Map<String, bool> itemCheckedStates = {};
-  int currentCar = 0;
+  int currentCar = 1;
 
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
@@ -75,8 +75,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       firestoreService = FirestoreService(MaintID());
       cloneMaintenanceToUser(
-        source: FirebaseFirestore.instance
-            .collection('Maintenance_Schedule_${MaintID().maintID}'),
+        source: firestoreService.maintCollection,
         target: FirebaseFirestore.instance
             .collection('users')
             .doc(user.uid)
@@ -198,7 +197,9 @@ class _HomePageState extends State<HomePage> {
                         .where((item) =>
                             item.isDone !=
                             true) // Only show items that are not done
-                        .toList();
+                        .toList()
+                      ..sort((a, b) =>
+                          a.mileage.compareTo(b.mileage)); // Sort by date
 
                     if (maintList.isEmpty) {
                       return Center(
@@ -220,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                           return SizedBox.shrink();
                           // Hides the widget visually
                         }
-                        print(maintenanceItem.isDone);
+                        // print(maintenanceItem.isDone);
 
                         return Dismissible(
                           key: Key(maintenanceItem.id),
@@ -241,11 +242,11 @@ class _HomePageState extends State<HomePage> {
                             });
                             print("✅ Moved to history");
 
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content:
-                                      Text('Moved to history successfully')),
-                            );
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   SnackBar(
+                            //       content:
+                            //           Text('Moved to history successfully')),
+                            // );
                           },
                           child: GestureDetector(
                             onTap: () {

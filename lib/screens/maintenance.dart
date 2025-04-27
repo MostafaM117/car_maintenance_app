@@ -1,5 +1,6 @@
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/notifications/notification.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
@@ -96,17 +97,27 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                   await firestoreService.recoverFromHistory(
                       maintenanceItem.id); // This updates `isDone` in Firestore
 
-                  setState(() {
-                    itemCheckedStates[maintenanceItem.id] =
-                        true; // This updates the local UI state
-                  });
-
+                  // setState(() {
+                  //   itemCheckedStates[maintenanceItem.id] =
+                  //       true; // This updates the local UI state
+                  // });
                   print("✅ Moved to history");
                 },
               );
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          firestoreService.cloneMaintenanceToUser(
+            source: FirebaseFirestore.instance
+                .collection('Maintenance_Schedule_MG ZS 2019'),
+            target: FirebaseFirestore.instance
+                .collection('Maintenance_Schedule_MG ZS 2020'),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
