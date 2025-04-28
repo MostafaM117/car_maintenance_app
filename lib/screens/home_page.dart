@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic>? selectedCar;
   FirestoreService firestoreService = FirestoreService(MaintID());
   Map<String, bool> itemCheckedStates = {};
-  int currentCar = 1;
+  int currentCar = 0;
 
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
