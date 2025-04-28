@@ -25,7 +25,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
             )
           ],
         ),
-        ),
+      ),
     );
   }
 }

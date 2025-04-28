@@ -1,3 +1,4 @@
+import 'package:car_maintenance/models/MaintID.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/widgets/car_image_widget.dart';
 import '../constants/app_colors.dart';
@@ -69,22 +70,13 @@ class CarCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 22,
-                      child: MileageDisplay(
-                        carId: carId,
-                        currentMileage: car['mileage'] ?? 0,
-                        avgKmPerMonth: car['avgKmPerMonth'] ?? 0,
-                        onMileageUpdated: (newMileage) {
-                          print('Updated mileage for car $carId: $newMileage');
-                        },
-                      ),
-                    )
-                  ],
+                MileageDisplay(
+                  carId: carId,
+                  currentMileage: car['mileage'] ?? 0,
+                  avgKmPerMonth: car['avgKmPerMonth'] ?? 0,
+                  onMileageUpdated: (newMileage) {
+                    print('Updated mileage for car $carId: $newMileage');
+                  },
                 ),
               ],
             ),
@@ -92,5 +84,6 @@ class CarCardWidget extends StatelessWidget {
         ],
       ),
     );
+    //);
   }
 }

@@ -50,7 +50,10 @@ class ProductDetailsPage extends StatelessWidget {
                 ),
                 Text('$price LE', style: const TextStyle(fontSize: 18)),
               ],
-            ),SizedBox(height: 15,),
+            ),
+            SizedBox(
+              height: 15,
+            ),
             // وصف المنتج
             InfoCard(
               title: 'Description',

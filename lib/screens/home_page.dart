@@ -1,4 +1,6 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/models/MaintID.dart';
+import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,11 +9,11 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import '../services/user_data_helper.dart';
 import 'package:car_maintenance/widgets/mileage_display.dart';
 import '../widgets/CarCardWidget.dart';
+import '../widgets/car_image_widget.dart';
 import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
-// import 'maintenance.dart';
-// import 'formscreens/formscreen1.dart';
-// import 'package:car_maintenance/models/MaintID.dart';
+import '../Back-end/firestore_service.dart';
+import 'maintenanceDetails.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,8 +28,10 @@ class _HomePageState extends State<HomePage> {
       FirebaseFirestore.instance.collection('cars');
   String? username;
   Map<String, dynamic>? selectedCar;
+  FirestoreService firestoreService = FirestoreService(MaintID());
+  Map<String, bool> itemCheckedStates = {};
+  int currentCar = 1;
 
-  // Fetch username for greeting (optional)
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
     setState(() {
@@ -35,10 +39,55 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> cloneMaintenanceToUser({
+    required CollectionReference source,
+    required CollectionReference target,
+  }) async {
+    // 🔍 Check if target collection already has docs
+    final targetSnapshot = await target.limit(1).get();
+
+    if (targetSnapshot.docs.isNotEmpty) {
+      print("🛑 Skipping clone: target collection already exists.");
+      return; // Don't clone again
+    }
+
+    final sourceSnapshot = await source.get();
+    final batch = FirebaseFirestore.instance.batch();
+
+    for (var doc in sourceSnapshot.docs) {
+      final targetDoc = target.doc(doc.id);
+      batch.set(targetDoc, doc.data());
+    }
+
+    await batch.commit();
+    print("✅ Clone complete: ${sourceSnapshot.docs.length} docs copied.");
+  }
+
   @override
   void initState() {
     super.initState();
     loadUsername();
+    firestoreService = FirestoreService(MaintID());
+    MaintID().addListener(_updateService);
+  }
+
+  void _updateService() {
+    setState(() {
+      firestoreService = FirestoreService(MaintID());
+      cloneMaintenanceToUser(
+        source: firestoreService.maintCollection,
+        target: FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('Maintenance_Schedule_${MaintID().maintID}_Personal'),
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    MaintID().removeListener(_updateService);
+    super.dispose();
   }
 
   @override
@@ -49,9 +98,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 40),
         child: Column(
           children: [
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             SubtractWave(
               text: username != null
                   ? 'Welcome Back, ${username!.split(' ').first}'
@@ -59,10 +106,9 @@ class _HomePageState extends State<HomePage> {
               svgAssetPath: 'assets/svg/notification.svg',
               onTap: () {},
             ),
-
             SizedBox(height: 15),
 
-            // Displaying cars in Swiper or Card
+            // Display cars
             StreamBuilder<QuerySnapshot>(
               stream: carsCollection
                   .where('userId', isEqualTo: user.uid)
@@ -80,7 +126,6 @@ class _HomePageState extends State<HomePage> {
                   return Text('No cars found. Add a car to see its image.');
                 }
 
-                // Convert documents to List of Maps
                 List<Map<String, dynamic>> cars = [];
                 for (var doc in snapshot.data!.docs) {
                   Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
@@ -97,12 +142,28 @@ class _HomePageState extends State<HomePage> {
                     cardsCount: cars.length,
                     cardBuilder: (BuildContext context, int index,
                         int realIndex, int percentThresholdX) {
-                      return CarCardWidget(car: cars[index]);
+                      return CarCardWidget(car: cars[currentCar]);
+                    },
+                    onSwipe: (previousIndex, currentIndex, direction) {
+                      setState(() {
+                        currentCar = currentCar + 1;
+                        if (currentCar >= cars.length) {
+                          currentCar = 0;
+                        }
+                        if (currentIndex != null) {
+                          final make = cars[currentCar]['make'];
+                          final model = cars[currentCar]['model'];
+                          final year = cars[currentCar]['year'];
+
+                          MaintID().selectedMake = make.toString();
+                          MaintID().selectedModel = model.toString();
+                          MaintID().selectedYear = year.toString();
+                        }
+                      });
+                      return true;
                     },
                     numberOfCardsDisplayed: cardsToDisplay,
-                    padding: EdgeInsets.only(
-                      bottom: 0,
-                    ),
+                    padding: EdgeInsets.only(bottom: 0),
                     backCardOffset: const Offset(25, 30),
                   ),
                 );
@@ -121,29 +182,93 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             SizedBox(height: 15),
+
+            // Maintenance List
             Expanded(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    MaintenanceCard(
-                      title: '40,000' '  KM',
-                      date: 'Upcoming',
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    MaintenanceCard(
-                      title: '40,000' '  KM',
-                      date: 'Upcoming',
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    MaintenanceCard(
-                      title: '40,000' '  KM',
-                      date: 'Upcoming',
-                    ),
-                  ],
+                child: StreamBuilder<List<MaintenanceList>>(
+                  stream: firestoreService.getMaintenanceList(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData || snapshot.data == null) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+
+                    final maintList = snapshot.data!
+                        .where((item) =>
+                            item.isDone !=
+                            true) // Only show items that are not done
+                        .toList()
+                      ..sort((a, b) =>
+                          a.mileage.compareTo(b.mileage)); // Sort by date
+
+                    if (maintList.isEmpty) {
+                      return Center(
+                          child: Text("No maintenance records available."));
+                    }
+
+                    return ListView.builder(
+                      itemCount: maintList.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final maintenanceItem = maintList[index];
+
+                        if (!itemCheckedStates
+                            .containsKey(maintenanceItem.id)) {
+                          itemCheckedStates[maintenanceItem.id] = false;
+                        }
+                        if (maintenanceItem.isDone == true) {
+                          return SizedBox.shrink();
+                          // Hides the widget visually
+                        }
+                        // print(maintenanceItem.isDone);
+
+                        return Dismissible(
+                          key: Key(maintenanceItem.id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            color: const Color.fromARGB(255, 94, 255, 82),
+                            alignment: Alignment.centerRight,
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Icon(Icons.check, color: Colors.white),
+                          ),
+                          onDismissed: (direction) async {
+                            await firestoreService.moveToHistory(maintenanceItem
+                                .id); // This updates `isDone` in Firestore
+
+                            setState(() {
+                              itemCheckedStates[maintenanceItem.id] =
+                                  true; // This updates the local UI state
+                            });
+                            print("✅ Moved to history");
+
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   SnackBar(
+                            //       content:
+                            //           Text('Moved to history successfully')),
+                            // );
+                          },
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => MaintenanceDetailsPage(
+                                      maintenanceItem: maintenanceItem),
+                                ),
+                              );
+                            },
+                            child: MaintenanceCard(
+                              title: '${maintenanceItem.mileage} KM',
+                              date: maintenanceItem.expectedDate
+                                  .toString()
+                                  .split(' ')[0],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ),

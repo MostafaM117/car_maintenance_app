@@ -94,7 +94,7 @@ class StoreCard extends StatelessWidget {
                     'Delete Store ',
                     AppColors.buttonColor,
                     AppColors.buttonText,
-                    onPressed: (){},
+                    onPressed: () {},
                   ),
                 ],
               ),

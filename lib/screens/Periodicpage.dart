@@ -34,12 +34,10 @@ class Periodicpage extends StatelessWidget {
                     height: 20,
                   ),
                   SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-
+                    scrollDirection: Axis.horizontal,
                     child: Row(
-                      
                       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children:  [
+                      children: [
                         FilterChipWidget(label: 'Price'),
                         FilterChipWidget(label: 'Location'),
                         FilterChipWidget(label: 'Filter'),

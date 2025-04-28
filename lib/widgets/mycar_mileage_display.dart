@@ -20,7 +20,6 @@ class MyCarMileageDisplay extends StatelessWidget {
           'Avg: $avgKmPerMonth km/month',
           style: const TextStyle(fontSize: 12, color: Colors.grey),
         ),
-
         Text(
           'Mileage: $mileage km',
           style: const TextStyle(

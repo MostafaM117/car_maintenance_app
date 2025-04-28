@@ -3,6 +3,7 @@ import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/ProductDetailsPage.dart';
+
 class ProductCard extends StatelessWidget {
   final String image;
   final String title;
@@ -53,7 +54,8 @@ class ProductCard extends StatelessWidget {
             Expanded(
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
                 decoration: const BoxDecoration(
                   color: Color(0xFF1C1C1C),
                   borderRadius: BorderRadius.only(
@@ -68,7 +70,8 @@ class ProductCard extends StatelessWidget {
                     Text(
                       title,
                       maxLines: 2,
-                      style: textStyleWhite.copyWith(color: AppColors.buttonText),
+                      style:
+                          textStyleWhite.copyWith(color: AppColors.buttonText),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -88,7 +91,6 @@ class ProductCard extends StatelessWidget {
   }
 }
 
-
 class FilterChipWidget extends StatelessWidget {
   final String label;
 
@@ -97,17 +99,17 @@ class FilterChipWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-        shape:  RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(22),
-        ),
-        label: Text(label),
-        backgroundColor: AppColors.primaryText,
-        labelStyle:textStyleGray.copyWith(color: AppColors.background) ,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-      
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(22),
+      ),
+      label: Text(label),
+      backgroundColor: AppColors.primaryText,
+      labelStyle: textStyleGray.copyWith(color: AppColors.background),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
     );
   }
 }
+
 class InfoCard extends StatelessWidget {
   final String title;
   final String content;
@@ -123,7 +125,7 @@ class InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(top: 3,bottom: 10,left: 15,right: 15),
+      padding: const EdgeInsets.only(top: 3, bottom: 10, left: 15, right: 15),
       decoration: BoxDecoration(
         color: AppColors.secondaryText,
         borderRadius: BorderRadius.circular(16),
@@ -131,23 +133,19 @@ class InfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: textStyleGray.copyWith(fontSize: 18,color: AppColors.primaryText)
-          ),
+          Text(title,
+              style: textStyleGray.copyWith(
+                  fontSize: 18, color: AppColors.primaryText)),
           const SizedBox(height: 8),
           Text.rich(
             TextSpan(
               children: [
-                TextSpan(
-                  text: content,
-                  style: textStyleWhite
-                ),
+                TextSpan(text: content, style: textStyleWhite),
                 if (highlight != null)
                   TextSpan(
-                    text: '\n$highlight',
-                    style:textStyleGray.copyWith(color: AppColors.buttonColor,fontSize: 18)
-                  ),
+                      text: '\n$highlight',
+                      style: textStyleGray.copyWith(
+                          color: AppColors.buttonColor, fontSize: 18)),
               ],
             ),
           ),

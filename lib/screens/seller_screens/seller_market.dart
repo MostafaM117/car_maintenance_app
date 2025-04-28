@@ -238,7 +238,8 @@ class _SellerMarketState extends State<SellerMarket> {
                     barrierDismissible: false,
                     builder: (_) => const CustomPopup(
                       title: 'Congrats!',
-                      message: 'Your account is ready to use!  Now you can add you car details to get started.',
+                      message:
+                          'Your account is ready to use!  Now you can add you car details to get started.',
                     ),
                   );
                 },

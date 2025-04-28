@@ -29,10 +29,9 @@ class _ImagePickerContainerState extends State<ImagePickerContainer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Image',
-          style: textStyleWhite.copyWith(fontSize: 16,fontWeight: FontWeight.w500)
-        ),
+        Text('Image',
+            style: textStyleWhite.copyWith(
+                fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         GestureDetector(
           onTap: _pickImage,
@@ -50,7 +49,11 @@ class _ImagePickerContainerState extends State<ImagePickerContainer> {
               ),
             ),
             child: _image == null
-                ?  Center(child: Text('Click to  add  image ',style:textStyleGray.copyWith(fontWeight: FontWeight.w400),))
+                ? Center(
+                    child: Text(
+                    'Click to  add  image ',
+                    style: textStyleGray.copyWith(fontWeight: FontWeight.w400),
+                  ))
                 : ClipRRect(
                     borderRadius: BorderRadius.circular(22),
                     child: Image.file(

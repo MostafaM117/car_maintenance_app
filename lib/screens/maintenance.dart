@@ -1,10 +1,9 @@
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/notifications/notification.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
-
-import 'addMaintenance.dart';
 
 class MaintenanceScreen extends StatefulWidget {
   const MaintenanceScreen({super.key});
@@ -20,87 +19,103 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   void initState() {
     super.initState();
     firestoreService = FirestoreService(MaintID());
+    // Listen for changes in MaintID and update the FirestoreService accordingly
+    MaintID().addListener(_updateService);
   }
 
-  final TextEditingController maintenanceController = TextEditingController();
+  void _updateService() {
+    setState(() {
+      firestoreService = FirestoreService(MaintID());
+    });
+  }
+
+  @override
+  void dispose() {
+    MaintID().removeListener(_updateService);
+    super.dispose();
+  }
+
+// make it into a gesture detector to remove the widget from view and copy the item to history (on swipe?)
+  //  Checkbox(
+  //   value: itemCheckedStates[maintenanceItem.id],
+  //   onChanged: (bool? isDone) async {
+  //     setState(() {
+  //       itemCheckedStates[maintenanceItem.id] =
+  //           isDone!;
+  //     });
+
+  //     if (isDone != null && isDone) {
+  //       // Copy the item to the history
+  //       await firestoreService
+  //           .moveToHistory(maintenanceItem.id);
+  //       print("✅ Moved to history");
+  //     }
+  //   },
+  // ),
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Your Maintenance Schedule'),
-          bottom: TabBar(tabs: [
-            Tab(text: 'Upcoming'),
-            Tab(text: 'Add New'),
-          ]),
-        ),
-        body: TabBarView(children: <Widget>[
-          // ✅ هنا شيلنا Expanded
-          StreamBuilder<List<MaintenanceList>>(
-            stream: firestoreService.getMaintenanceList(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data == null) {
-                return Center(child: CircularProgressIndicator());
-              }
-              final maintList = snapshot.data!;
-              if (maintList.isEmpty) {
-                return Center(child: Text("No maintenance records available."));
-              }
-              return ListView.builder(
-                itemCount: maintList.length,
-                itemBuilder: (context, index) {
-                  final maintenanceItem = maintList[index];
-                  return Card(
-                    child: ListTile(
-                      title: Text(maintenanceItem.mileage.toString()),
-                      subtitle: Text(maintenanceItem.description),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Your Maintenance History'),
+      ),
+      body: StreamBuilder<List<MaintenanceList>>(
+        stream: firestoreService.getMaintenanceHistory(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data == null) {
+            return Center(child: CircularProgressIndicator());
+          }
+          final historyList = snapshot.data!;
+          if (historyList.isEmpty) {
+            return Center(child: Text("No maintenance history available."));
+          }
+
+          return ListView.builder(
+            itemCount: historyList.length,
+            itemBuilder: (context, index) {
+              final maintenanceItem = historyList[index];
+
+              return Dismissible(
+                key: Key(maintenanceItem.id),
+                direction: DismissDirection.endToStart,
+                child: Card(
+                  child: ListTile(
+                    title: Text(maintenanceItem.mileage.toString()),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(maintenanceItem.expectedDate.toString()),
+                        SizedBox(height: 4),
+                        Text(maintenanceItem.description),
+                      ],
                     ),
-                  );
+                  ),
+                ),
+                onDismissed: (direction) async {
+                  await firestoreService.recoverFromHistory(
+                      maintenanceItem.id); // This updates `isDone` in Firestore
+
+                  // setState(() {
+                  //   itemCheckedStates[maintenanceItem.id] =
+                  //       true; // This updates the local UI state
+                  // });
+                  print("✅ Moved to history");
                 },
               );
             },
-          ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: maintenanceController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter Maintenance Description',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  NotiService().showNotification(
-                    title: 'Maintenance Added!',
-                    body: maintenanceController.text,
-                  );
-                  firestoreService
-                      .addMaintenanceList(maintenanceController.text);
-                },
-                child: Text('Add Maintenance'),
-              ),
-
-SizedBox(height: 20,),
-              // AddMaintenancescreen
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => AddMaintenance(),
-                      ));
-                },
-                child: Text('Add Maintenance screen '),
-              )
-            ],
-          ),
-        ]),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          firestoreService.cloneMaintenanceToUser(
+            source: FirebaseFirestore.instance
+                .collection('Maintenance_Schedule_MG ZS 2019'),
+            target: FirebaseFirestore.instance
+                .collection('Maintenance_Schedule_MG ZS 2020'),
+          );
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
