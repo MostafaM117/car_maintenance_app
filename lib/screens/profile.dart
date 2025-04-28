@@ -7,10 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/user_data_helper.dart';
 import '../widgets/custom_widgets.dart';
-import '../widgets/profile_option_tile.dart.dart';
 import 'Auth_and_Account Management/user/user_account_management.dart';
 import 'Auth_and_Account Management/auth_service.dart';
-import 'Terms_and_conditionspage .dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -53,179 +51,133 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    // Create button data inside the build method
+    final List<Map<String, dynamic>> buttonData = [
+      {
+        'text': 'Manage your account',
+        'onPressed': () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserAccountManagement()),
+            ),
+      },
+      {
+        'text': 'My Cars',
+        'onPressed': () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => CarMaint()),
+            ),
+      },
+      {'text': 'User Guide', 'onPressed': () => ()},
+      {
+        'text': 'Log Out',
+        'onPressed': () {
+          AuthService().signOut(context);
+        },
+      },
+    ];
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            // Main container
+            Container(
+              margin: const EdgeInsets.only(top: 100),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height - 75,
+              decoration: ShapeDecoration(
+                color: AppColors.secondaryText,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(width: 1, color: Color(0xFFE7E7E7)),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50),
+                  ),
+                ),
               ),
-              child: SingleChildScrollView(
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // SizedBox(height: 10),
-                    Text(
-                      "Account",
-                      style: textStyleWhite.copyWith(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 9.20,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          width: 393,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.red, width: 1),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          padding: EdgeInsets.only(
-                              left: 100, top: 20, bottom: 20, right: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(username, style: textStyleWhite),
-                              SizedBox(height: 5),
-                              Text(
-                                '${user.email}',
-                                style: textStyleGray,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Positioned(
-                          top: 15,
-                          child: Container(
-                            margin: EdgeInsets.only(left: 5),
-                            width: 100,
-                            height: 150,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.circular(30),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.25),
-                                  spreadRadius: 2,
-                                  blurRadius: 8,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
-                              image: _profileImage != null
-                                  ? DecorationImage(
-                                      image: FileImage(_profileImage!),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : null,
-                            ),
-                            child: _profileImage == null
-                                ? Center(
-                                    child: Icon(
-                                      Icons.person,
-                                      color: Colors.white,
-                                      size: 50,
-                                    ),
-                                  )
-                                : null,
-                          ),
-                        ),
-                      ],
-                    ),
                     Align(
-                      alignment: Alignment.center,
-                      child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        // mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SizedBox(
-                            height: 30,
-                          ),
-                          ProfileOptionTile(
-                            rightIcon: Icons.person,
-                            text: 'Profile',
-                            onBackTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        UserAccountManagement()),
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          ProfileOptionTile(
-                            rightIcon: Icons.settings,
-                            text: 'My Cars',
-                            onBackTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CarMaint()),
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          ProfileOptionTile(
-                            rightIcon: Icons.settings,
-                            text: 'Settings',
-                            onBackTap: () {},
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          ProfileOptionTile(
-                            rightIcon: Icons.history,
-                            text: 'Activity',
-                            onBackTap: () {},
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          ProfileOptionTile(
-                            rightIcon: Icons.security,
-                            text: 'Terms & Conditions',
-                            onBackTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TermsAndConditionsPage(),
-                                ),
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          ProfileOptionTile(
-                            rightIcon: Icons.logout,
-                            text: 'Log Out',
-                            onBackTap: () {
-                              AuthService().signOut(context);
-                            },
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                        ],
+                      alignment: Alignment.topRight,
+                      child: Text(
+                        '${user.email}',
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.7),
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
+                    SizedBox(height: 130),
+                    for (var button in buttonData)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: buildButton(
+                          button['text'],
+                          button['text'] == 'Log Out'
+                              ? AppColors.buttonColor
+                              : AppColors.secondaryText.withOpacity(0.9),
+                          button['text'] == 'Log Out'
+                              ? AppColors.secondaryText
+                              : Colors.black,
+                          onPressed: button['onPressed'],
+                        ),
+                      ),
                   ],
                 ),
               ),
             ),
-          ),
-        ],
+
+            Positioned(
+              top: 40,
+              left: 30,
+              right: 00,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 100,
+                    height: 100,
+                    child: _profileImage != null
+                        ? CircleAvatar(
+                            radius: 40,
+                            backgroundImage: FileImage(_profileImage!),
+                          )
+                        : CircleAvatar(
+                            radius: 40,
+                            backgroundColor: AppColors.secondaryText,
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 50,
+                            ),
+                          ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: Text(
+                      username,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryText,
+                        fontFamily: 'Inter',
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
