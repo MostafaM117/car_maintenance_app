@@ -1,253 +1,267 @@
+import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/seller_screens/add_item.dart';
+import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
-import '../../constants/app_colors.dart';
-import '../../models/car_data.dart';
-import '../../widgets/custom_Popup.dart';
-import '../../widgets/custom_widgets.dart';
-import '../../widgets/seller_image-picker.dart';
 
-class SellerMarket extends StatefulWidget {
-  const SellerMarket({Key? key}) : super(key: key);
+class MarketPage extends StatefulWidget {
+  const MarketPage({Key? key}) : super(key: key);
 
   @override
-  State<SellerMarket> createState() => _SellerMarketState();
+  State<MarketPage> createState() => _MarketPageState();
 }
 
-class _SellerMarketState extends State<SellerMarket> {
-  String? _selectedMake;
-  String? _selectedModel;
-  int? _selectedYear;
-  final TextEditingController descriptionController = TextEditingController();
-  final List<String> categories = ['Periodic', 'Used', 'Unused'];
-  String? _selectedCategory;
-  final List<String> availability = ['Available', 'Not Available'];
-  String? _selectedAvailability;
+class _MarketPageState extends State<MarketPage> {
+  List<String> items = [];
+  final TextEditingController _searchController = TextEditingController();
 
-  final List<String> _carMakes = CarData.getAllMakes();
-
-  void checkFormCompletion() {
-    setState(() {});
+  void _editItem(int index) async {
+    // هنا هتنتقلي لصفحة التعديل لو تحبي
+    // دلوقتي هنخليه بسيط:
+    TextEditingController editController =
+        TextEditingController(text: items[index]);
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Item'),
+        content: TextField(
+          controller: editController,
+          decoration: InputDecoration(hintText: 'Enter new name'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                items[index] = editController.text.trim();
+              });
+              Navigator.pop(context);
+            },
+            child: Text('Save'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   // primary: false,
-      //   elevation: 0,
-      //   centerTitle: true,
-      //   title: Text(
-      //     'add new item',
-      //   ),
-      //   backgroundColor: AppColors.background,
-      // ),
       backgroundColor: AppColors.background,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-        child: SingleChildScrollView(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Text(
-              //   'add new item',
-              //   style: textStyleWhite,
-              // ),
-              ImagePickerContainer(),
-              const SizedBox(height: 15),
-              //item name
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Center(
+                child: Text(
+                  'Market',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
                 children: [
-                  Text('Item Name',
-                      style: textStyleWhite.copyWith(
-                          fontSize: 16, fontWeight: FontWeight.w500)),
-                  Container(
-                    height: 45,
-                    decoration: ShapeDecoration(
-                      color: AppColors.secondaryText,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          color: AppColors.borderSide,
+                  Expanded(
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: AppColors.secondaryText,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: InputDecoration(
+                          hintText: 'Search',
+                          border: InputBorder.none,
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 16),
                         ),
-                        borderRadius: BorderRadius.circular(22),
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    alignment: Alignment.center,
-                    child: TextField(
-                      // controller: ,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        isCollapsed: true,
-                        hintText: 'Add Item Name',
-                        hintStyle:
-                            textStyleGray.copyWith(fontWeight: FontWeight.w400),
+                  ),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryText,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      style: textStyleGray,
-                      textAlignVertical: TextAlignVertical.center,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                    ),
+                    child: const Text(
+                      'Sort',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 15,
-              ), // Description Field
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 10),
+              Row(
                 children: [
-                  Text('Description',
-                      style: textStyleWhite.copyWith(fontSize: 16)),
-                  Container(
-                    width: 350,
-                    height: 133.79,
-                    padding: EdgeInsets.all(9),
-                    decoration: ShapeDecoration(
-                      color: AppColors.secondaryText,
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          width: 1,
-                          color: AppColors.borderSide,
-                        ),
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                    ),
-                    child: TextField(
-                        controller: descriptionController,
-                        maxLines: null,
-                        expands: true,
-                        decoration: InputDecoration.collapsed(
-                          hintText: '',
-                        ),
-                        style: textStyleWhite),
-                  ),
+                  _buildFilterButton('Price'),
+                  const SizedBox(width: 8),
+                  _buildFilterButton('Location'),
+                  const SizedBox(width: 8),
+                  _buildFilterButton('Filter'),
+                  const SizedBox(width: 8),
+                  _buildFilterButton('Filter'),
                 ],
               ),
-              SizedBox(
-                height: 15,
-              ),
-              // Car Make
-              buildDropdownField(
-                label: 'Car Make',
-                value: _selectedMake,
-                options: _carMakes,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedMake = newValue;
-                    _selectedModel = null;
-                    _selectedYear = null;
-                    checkFormCompletion();
-                  });
-                },
-              ),
-              const SizedBox(height: 15),
-
-              // Car Model
-              buildDropdownField(
-                label: 'Car Model',
-                value: _selectedModel,
-                options: _selectedMake == null
-                    ? []
-                    : CarData.getModelsForMake(_selectedMake),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedModel = newValue;
-                    _selectedYear = null;
-                    checkFormCompletion();
-                  });
-                },
-              ),
-              const SizedBox(height: 15),
-
-              // Model Year
-              buildDropdownField(
-                label: 'Model Year',
-                value: _selectedYear?.toString(),
-                options: (_selectedMake == null || _selectedModel == null)
-                    ? []
-                    : CarData.getYearsForModel(_selectedMake, _selectedModel)
-                        .map((year) => year.toString())
-                        .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedYear = int.tryParse(value!);
-                    checkFormCompletion();
-                  });
-                },
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              buildDropdownField(
-                label: 'Item Category',
-                value: _selectedCategory,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedCategory = newValue;
-                  });
-                },
-                options: categories,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              buildDropdownField(
-                label: 'Availability',
-                value: _selectedAvailability,
-                options: availability,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _selectedAvailability = newValue;
-                  });
-                },
-              ),
-
-              SizedBox(
-                height: 15,
-              ),
-              //item Stock Count
-              buildTextField(
-                label: 'Stock Count',
-                hintText: 'Add Count',
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              //item price
-              buildTextField(
-                label: 'Price',
-                hintText: 'Add Price',
-              ),
-              SizedBox(
-                height: 25,
-              ),
-              buildButton(
-                'Add',
-                AppColors.buttonColor,
-                AppColors.buttonText,
-                onPressed: () {},
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              buildButton(
-                'Discard',
-                AppColors.primaryText,
-                AppColors.buttonText,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) => const CustomPopup(
-                      title: 'Congrats!',
-                      message:
-                          'Your account is ready to use!  Now you can add you car details to get started.',
+              const SizedBox(height: 20),
+              // Input for new item
+              GestureDetector(
+                onTap: () async {
+                  final newItemName = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddItem(),
                     ),
                   );
+
+                  if (newItemName != null) {
+                    setState(() {
+                      items.add(newItemName);
+                    });
+                  }
                 },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: AppColors.secondaryText,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text(
+                        'Add New Item',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Icon(Icons.add, size: 30, color: Colors.black),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+              // Items List
+              Expanded(
+                child: ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) => Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.secondaryText,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            items[index],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit, color: Colors.black),
+                          onPressed: () => _editItem(index),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete_outlined,
+                          ),
+                          onPressed: () async {
+                            // Show confirmation dialog
+                            bool confirmDelete = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: AppColors.borderSide,
+                                  title: Text(
+                                    'Are you sure you want to delete this Item?',
+                                    style: textStyleWhite,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  content: Text(
+                                    'This action is permanent and cannot be undone. All Item’s data will be permanently removed.',
+                                    style: textStyleGray,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  actions: [
+                                    popUpBotton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        'Cancel',
+                                        AppColors.primaryText,
+                                        AppColors.buttonText),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    popUpBotton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                      'Delete',
+                                      AppColors.buttonColor,
+                                      AppColors.buttonText,
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
+                            if (confirmDelete == true) {
+                              setState(() {
+                                items.removeAt(index);
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFilterButton(String title) {
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+        foregroundColor: Colors.black,
+        backgroundColor: AppColors.secondaryText,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      ),
+      child: Text(title),
     );
   }
 }

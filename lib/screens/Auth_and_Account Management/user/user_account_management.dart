@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_colors.dart';
-import '../../../widgets/BackgroundDecoration.dart';
+import '../../../widgets/info_field.dart';
 import '../../../widgets/profile_image.dart';
 
 class UserAccountManagement extends StatefulWidget {
@@ -79,16 +79,15 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          const CurvedBackgroundDecoration(),
           SafeArea(
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 60,
-                  ),
+                  // SizedBox(
+                  //   height: 60,
+                  // ),
                   Text(
                     "Account",
                     style: textStyleWhite.copyWith(
@@ -97,137 +96,155 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                       letterSpacing: 9.20,
                     ),
                   ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  Row(
+
+                  Column(
                     children: [
                       SizedBox(
-                        height: 30,
+                        height: 15,
                       ),
                       ProfileImagePicker(
                         onImagePicked: (File image) {
                           setState(() {});
                         },
                       ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            Text(
-                              _usernameEditcontroller.text,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.primaryText,
-                                fontFamily: 'Inter',
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text(
-                              '${user.email}',
-                              style: TextStyle(
-                                color: Colors.black.withOpacity(0.7),
-                                fontSize: 10,
-                                fontFamily: 'Inter',
-                              ),
-                            ),
-                          ],
+                      Text(
+                        _usernameEditcontroller.text,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primaryText,
+                          fontFamily: 'Inter',
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        '${user.email}',
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.7),
+                          fontSize: 10,
+                          fontFamily: 'Inter',
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 10,
+                  InfoField(
+                    label: 'Name',
+                    value: _usernameEditcontroller.text,
+                    onTap: () {
+                      //  اكتب هنا كود البوب ب
+                      print('Name pressed');
+                    },
                   ),
-                  // buildTextUserNameField(
-                  buildUserNameField(
-                    controller: _usernameEditcontroller,
-                    isEditing: _isediting,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Username cannot be empty';
-                      }
-                      return null;
+                  InfoField(
+                    label: 'Email',
+                    value: '${user.email}',
+                    onTap: () {
+                      //  اكتب هنا كود البوب ب
+
+                      print('Name pressed');
+                    },
+                  ),
+                  InfoField(
+                    label: 'Password',
+                    value: '********',
+                    onTap: () {
+                      //  اكتب هنا كود البوب ب
+                      print('Name pressed');
                     },
                   ),
 
                   SizedBox(
-                    height: 30,
+                    height: 10,
                   ),
-                  SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _isediting
-                              ? AppColors.buttonColor
-                              : AppColors.secondaryText,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(25)),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                                _isediting
-                                    ? "Update username"
-                                    : "Edit username",
-                                style: _isediting
-                                    ? textStyleWhite.copyWith(
-                                        color: AppColors.secondaryText)
-                                    : textStyleWhite.copyWith(
-                                        color: Colors.black)),
-                          ],
-                        ),
-                        onPressed: () {
-                          if (_usernameEditcontroller.text.trim().isEmpty) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Username can\'t be empty'),
-                                backgroundColor:
-                                    const Color.fromARGB(141, 244, 67, 54),
-                              ),
-                            );
-                          } else {
-                            _toggleEdit();
-                            _updateUsername();
-                            _isediting
-                                ? ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                          'Now you can edit your username'),
-                                      duration: Duration(milliseconds: 1000),
-                                    ),
-                                  )
-                                : ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content:
-                                          Text('Username updated successfully'),
-                                      duration: Duration(milliseconds: 1000),
-                                      backgroundColor: const Color.fromARGB(
-                                          158, 102, 187, 106),
-                                    ),
-                                  );
-                          }
-                        }),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  buildButton(
-                    'Edit Password',
-                    AppColors.secondaryText,
-                    Colors.black,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ForgotPassword()),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
+                  // buildTextUserNameField(
+                  // buildUserNameField(
+                  //   controller: _usernameEditcontroller,
+                  //   isEditing: _isediting,
+                  //   validator: (value) {
+                  //     if (value == null || value.isEmpty) {
+                  //       return 'Username cannot be empty';
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
+
+                  // SizedBox(
+                  //   height: 30,
+                  // ),
+                  // SizedBox(
+                  //   height: 50,
+                  //   child: ElevatedButton(
+                  //       style: ElevatedButton.styleFrom(
+                  //         backgroundColor: _isediting
+                  //             ? AppColors.buttonColor
+                  //             : AppColors.secondaryText,
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(25)),
+                  //       ),
+                  //       child: Row(
+                  //         mainAxisAlignment: MainAxisAlignment.center,
+                  //         children: [
+                  //           Text(
+                  //               _isediting
+                  //                   ? "Update username"
+                  //                   : "Edit username",
+                  //               style: _isediting
+                  //                   ? textStyleWhite.copyWith(
+                  //                       color: AppColors.secondaryText)
+                  //                   : textStyleWhite.copyWith(
+                  //                       color: Colors.black)),
+                  //         ],
+                  //       ),
+                  //       onPressed: () {
+                  //         if (_usernameEditcontroller.text.trim().isEmpty) {
+                  //           ScaffoldMessenger.of(context).showSnackBar(
+                  //             SnackBar(
+                  //               content: Text('Username can\'t be empty'),
+                  //               backgroundColor:
+                  //                   const Color.fromARGB(141, 244, 67, 54),
+                  //             ),
+                  //           );
+                  //         } else {
+                  //           _toggleEdit();
+                  //           _updateUsername();
+                  //           _isediting
+                  //               ? ScaffoldMessenger.of(context).showSnackBar(
+                  //                   SnackBar(
+                  //                     content: Text(
+                  //                         'Now you can edit your username'),
+                  //                     duration: Duration(milliseconds: 1000),
+                  //                   ),
+                  //                 )
+                  //               : ScaffoldMessenger.of(context).showSnackBar(
+                  //                   SnackBar(
+                  //                     content:
+                  //                         Text('Username updated successfully'),
+                  //                     duration: Duration(milliseconds: 1000),
+                  //                     backgroundColor: const Color.fromARGB(
+                  //                         158, 102, 187, 106),
+                  //                   ),
+                  //                 );
+                  //         }
+                  //       }),
+                  // ),
+                  // SizedBox(
+                  //   height: 30,
+                  // ),
+                  // buildButton(
+                  //   'Edit Password',
+                  //   AppColors.secondaryText,
+                  //   Colors.black,
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => ForgotPassword()),
+                  //     );
+                  //   },
+                  // ),
+                  // SizedBox(
+                  //   height: 30,
+                  // ),
                   buildButton(
                     'Delete Account',
                     AppColors.buttonColor,

@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/user_data_helper.dart';
 import '../widgets/custom_widgets.dart';
+import '../widgets/profile_option_tile.dart.dart';
 import 'Auth_and_Account Management/user/user_account_management.dart';
 import 'Auth_and_Account Management/auth_service.dart';
+import 'Terms_and_conditionspage .dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -51,133 +53,158 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    // Create button data inside the build method
-    final List<Map<String, dynamic>> buttonData = [
-      {
-        'text': 'Manage your account',
-        'onPressed': () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UserAccountManagement()),
-            ),
-      },
-      {
-        'text': 'My Cars',
-        'onPressed': () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CarMaint()),
-            ),
-      },
-      {'text': 'User Guide', 'onPressed': () => ()},
-      {
-        'text': 'Log Out',
-        'onPressed': () {
-          AuthService().signOut(context);
-        },
-      },
-    ];
+
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            // Main container
-            Container(
-              margin: const EdgeInsets.only(top: 100),
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height - 75,
-              decoration: ShapeDecoration(
-                color: AppColors.secondaryText,
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(width: 1, color: Color(0xFFE7E7E7)),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(50),
-                    topRight: Radius.circular(50),
+      body: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 25),
+                const Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    color: Colors.black,
+                    fontFamily: 'Inter',
                   ),
                 ),
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        '${user.email}',
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.7),
-                          fontSize: 13,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 130),
-                    for (var button in buttonData)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: buildButton(
-                          button['text'],
-                          button['text'] == 'Log Out'
-                              ? AppColors.buttonColor
-                              : AppColors.secondaryText.withOpacity(0.9),
-                          button['text'] == 'Log Out'
-                              ? AppColors.secondaryText
-                              : Colors.black,
-                          onPressed: button['onPressed'],
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-
-            Positioned(
-              top: 40,
-              left: 30,
-              right: 00,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    child: _profileImage != null
-                        ? CircleAvatar(
-                            radius: 40,
-                            backgroundImage: FileImage(_profileImage!),
-                          )
-                        : CircleAvatar(
-                            radius: 40,
-                            backgroundColor: AppColors.secondaryText,
-                            child: Icon(
-                              Icons.person,
-                              color: Colors.white,
-                              size: 50,
-                            ),
+                const SizedBox(height: 15),
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
+                  ),
+                  child: _profileImage != null
+                      ? ClipOval(
+                          child: Image.file(
+                            _profileImage!,
+                            fit: BoxFit.cover,
                           ),
+                        )
+                      : const Icon(
+                          Icons.person,
+                          size: 50,
+                          color: Colors.grey,
+                        ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  username,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: 'Inter',
                   ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: Text(
-                      username,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primaryText,
-                        fontFamily: 'Inter',
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                ),
+                Text(
+                  '${user.email}',
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                    fontFamily: 'Inter',
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Column(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // SizedBox(
+                //   height: 60,
+                // ),
+                ProfileOptionTile(
+                  text: 'Profile',
+                  onBackTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => 
+                          UserAccountManagement()),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ProfileOptionTile(
+                  text: 'MyCars',
+                  onBackTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CarMaint()),
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ProfileOptionTile(
+                  text: 'Settings',
+                  onBackTap: () {},
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                ProfileOptionTile(
+                  text: 'Activity',
+                  onBackTap: () {},
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ProfileOptionTile(
+                  text: 'Terms & Conditions',
+                  onBackTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TermsAndConditionsPage(),
+                      ),
+                    );
+                  },
+                ),
+                // SizedBox(
+                //   height: 15,
+                // ),
+                // ProfileOptionTile(
+                //   rightIcon: Icons.help_outline,
+                //   text: 'Help & Support',
+                //   onBackTap: () {},
+                // ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: buildButton(
+                    'Log Out',
+                    AppColors.buttonColor,
+                    AppColors.buttonText,
+                    onPressed: () {
+                      AuthService().signOut(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

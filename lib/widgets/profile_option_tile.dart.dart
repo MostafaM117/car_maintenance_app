@@ -3,13 +3,11 @@ import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
 class ProfileOptionTile extends StatelessWidget {
-  final IconData rightIcon;
   final String text;
   final VoidCallback onBackTap;
 
   const ProfileOptionTile({
     super.key,
-    required this.rightIcon,
     required this.text,
     required this.onBackTap,
   });
@@ -40,10 +38,7 @@ class ProfileOptionTile extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Icon(
-                      rightIcon,
-                      color: AppColors.primaryText,
-                    ),
+                  
                     SizedBox(width: 8),
                     Text(
                       text,
@@ -54,10 +49,7 @@ class ProfileOptionTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                Icon(
-                  Icons.arrow_forward,
-                  color: AppColors.primaryText,
-                ),
+                
               ],
             ),
           ),

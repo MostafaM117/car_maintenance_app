@@ -68,7 +68,7 @@ Widget buildMaintenanceCard({
     padding: const EdgeInsets.all(16),
     margin: const EdgeInsets.symmetric(vertical: 10),
     width: 300,
-    height: 225,
+    height: 450,
     decoration: BoxDecoration(
       color: AppColors.secondaryText,
       borderRadius: BorderRadius.circular(12),
