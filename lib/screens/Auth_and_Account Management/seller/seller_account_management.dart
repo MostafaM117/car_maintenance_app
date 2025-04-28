@@ -1,29 +1,29 @@
 import 'dart:io';
 
+import 'package:car_maintenance/services/user_delete_account.dart';
 import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:car_maintenance/services/seller/seller_delete_account.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
-import 'package:car_maintenance/widgets/profile_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../widgets/BackgroundDecoration.dart';
+import '../../../widgets/profile_image.dart';
 
 class SellerAccountManagement extends StatefulWidget {
   const SellerAccountManagement({super.key});
 
   @override
-  State<SellerAccountManagement> createState() =>
-      _SellerAccountManagementState();
+  State<SellerAccountManagement> createState() => _SellerAccountManagementState();
 }
 
 class _SellerAccountManagementState extends State<SellerAccountManagement> {
   final _usernameEditcontroller = TextEditingController();
   bool _isediting = false;
   final seller = FirebaseAuth.instance.currentUser;
-
-  // Get current username
+  //Get current username
   Future<void> _getcurrentusername() async {
     if (seller != null) {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -34,13 +34,14 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
         setState(() {
           _usernameEditcontroller.text = userDoc['shopname'] ?? '';
         });
-      } else {
-        print('Seller document not found');
+      }
+      else{
+        print('Seller is null');
       }
     }
   }
 
-  // Update username
+  //Update current username
   Future<void> _updateUsername() async {
     if (seller == null) {
       return;
@@ -61,7 +62,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
         .update({'shopname': newUsername});
   }
 
-  // Toggle edit
+  // Press edit username to edit
   void _toggleEdit() {
     setState(() {
       _isediting = !_isediting;
@@ -81,94 +82,104 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
+          const CurvedBackgroundDecoration(),
           SafeArea(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(height: 30),
-                    Text(
-                      "Profile",
-                      style: textStyleWhite.copyWith(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 9.20,
+                  const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 60,
+                  ),
+                  Text(
+                    "Account",
+                    style: textStyleWhite.copyWith(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 9.20,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    children: [
+                      SizedBox(
+                        height: 30,
                       ),
-                    ),
-                    SizedBox(height: 30),
-
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Container(
-                          width: 393,
-                          height: 150,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.red, width: 1),
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          padding: EdgeInsets.only(
-                              left: 100, top: 20, bottom: 20, right: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                _usernameEditcontroller.text.isEmpty
-                                    ? "User Full Name"
-                                    : _usernameEditcontroller.text,
-                                style: textStyleWhite,
-                                overflow: TextOverflow.ellipsis,
+                      ProfileImagePicker(
+                        onImagePicked: (File image) {
+                          setState(() {});
+                        },
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              _usernameEditcontroller.text,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryText,
+                                fontFamily: 'Inter',
                               ),
-                              SizedBox(height: 5),
-                              Text(
-                                seller?.email ?? "SellerName@gmail.com",
-                                style: textStyleGray,
-                                overflow: TextOverflow.ellipsis,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${seller!.email}',
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.7),
+                                fontSize: 10,
+                                fontFamily: 'Inter',
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                        Positioned(
-                          top: 15,
-                          child: ProfileImagePicker(
-                            onImagePicked: (File image) {
-                              setState(() {});
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  // buildTextUserNameField(
+                  buildUserNameField(
+                    controller: _usernameEditcontroller,
+                    isEditing: _isediting,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Username cannot be empty';
+                      }
+                      return null;
+                    },
+                  ),
 
-                    SizedBox(height: 20),
-
-                    // Username field
-                    buildUserNameField(
-                      controller: _usernameEditcontroller,
-                      isEditing: _isediting,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Username cannot be empty';
-                        }
-                        return null;
-                      },
-                    ),
-
-                    SizedBox(height: 30),
-
-                    // Edit/Update button
-                    SizedBox(
-                      height: 50,
-                      child: ElevatedButton(
+                  SizedBox(
+                    height: 30,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: _isediting
                               ? AppColors.buttonColor
                               : AppColors.secondaryText,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
+                              borderRadius: BorderRadius.circular(25)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                                _isediting
+                                    ? "Update username"
+                                    : "Edit username",
+                                style: _isediting
+                                    ? textStyleWhite.copyWith(
+                                        color: AppColors.secondaryText)
+                                    : textStyleWhite.copyWith(
+                                        color: Colors.black)),
+                          ],
                         ),
                         onPressed: () {
                           if (_usernameEditcontroller.text.trim().isEmpty) {
@@ -200,99 +211,67 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                     ),
                                   );
                           }
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              _isediting ? "Update username" : "Edit username",
-                              style: textStyleWhite.copyWith(
-                                color: _isediting
-                                    ? AppColors.secondaryText
-                                    : Colors.black,
-                              ),
+                        }),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  buildButton(
+                    'Edit Password',
+                    AppColors.secondaryText,
+                    Colors.black,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ForgotPassword()),
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  buildButton(
+                    'Delete Account',
+                    AppColors.buttonColor,
+                    AppColors.buttonText,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: AppColors.secondaryText,
+                            title: const Text('Delete Account'),
+                            content: const Text(
+                              'Are you sure you want to delete your account? \nThis action will delete the account totally and will remove all related data.',
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-
-                    SizedBox(height: 30),
-
-                    // Edit Password Button
-                    buildButton(
-                      'Edit Password',
-                      AppColors.secondaryText,
-                      Colors.black,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ForgotPassword()),
-                        );
-                      },
-                    ),
-
-                    SizedBox(height: 30),
-
-                    // Delete Account Button
-                    buildButton(
-                      'Delete Account',
-                      AppColors.buttonColor,
-                      AppColors.buttonText,
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              backgroundColor: AppColors.secondaryText,
-                              title: const Text(
-                                'Are you sure you want to delete your account?',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
+                            actions: [
+                              buildButton(
+                                'Delete',
+                                AppColors.buttonColor,
+                                AppColors.buttonText,
+                                onPressed: () {
+                                  SellerDeleteAccount().sellerdeleteAccount(context);
+                                },
                               ),
-                              content: SizedBox(
-                                height: 100,
-                                child: Center(
-                                  child: const Text(
-                                    'This action cannot be undone.\nAll of your data will be permanently deleted.',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
+                              SizedBox(
+                                height: 15,
                               ),
-                              actions: [
-                                popUpBotton(
-                                  'Cancel',
-                                  AppColors.primaryText,
-                                  AppColors.buttonText,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                popUpBotton(
-                                  'Delete',
-                                  AppColors.buttonColor,
-                                  AppColors.buttonText,
-                                  onPressed: () {
-                                    SellerDeleteAccount()
-                                        .sellerdeleteAccount(context);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                              buildButton(
+                                'Discard',
+                                AppColors.buttonText,
+                                AppColors.buttonColor,
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
           ),
