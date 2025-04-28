@@ -45,6 +45,7 @@ class _ProfileState extends State<Profile> {
 
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
+    if (!mounted) return;
     setState(() {
       username = fetchedUsername ?? 'User';
     });
