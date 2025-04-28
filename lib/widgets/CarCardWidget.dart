@@ -15,12 +15,6 @@ class CarCardWidget extends StatelessWidget {
     int? year = car['year'];
     String carId = car['id'];
 
-    // return GestureDetector(
-    //   onTap: () {
-    //     MaintID().selectedMake = car['make'].toString();
-    //     MaintID().selectedModel = car['model'].toString();
-    //     MaintID().selectedYear = car['year'].toString();
-    //   },
     return Card(
       color: AppColors.secondaryText,
       shape: RoundedRectangleBorder(

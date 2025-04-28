@@ -27,6 +27,7 @@ Widget buildInputField({
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
+        padding: EdgeInsets.only(right: 20),
         height: 45,
         decoration: ShapeDecoration(
           color: AppColors.secondaryText,
@@ -184,7 +185,7 @@ Widget buildDropdownField({
   String? label,
   required String? value,
   required List<String> options,
-  required ValueChanged<String?> onChanged,
+  ValueChanged<String?>? onChanged,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +193,7 @@ Widget buildDropdownField({
       if (label != null)
         Text(
           label,
-          style: textStyleWhite.copyWith(fontSize: 16),
+          style: textStyleWhite.copyWith(fontSize: 16,fontWeight: FontWeight.w500),
         ),
       SizedBox(
         height: 8,
@@ -215,7 +216,8 @@ Widget buildDropdownField({
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
               value: value,
-              hint: Text('Select Answer', style: textStyleGray),
+              hint: Text('Select ',
+                  style: textStyleGray.copyWith(fontWeight: FontWeight.w400)),
               dropdownColor: AppColors.lightGray,
               iconEnabledColor: AppColors.primaryText,
               style: textStyleGray,
@@ -235,10 +237,10 @@ Widget buildDropdownField({
 }
 
 Widget buildTextField({
-   TextEditingController ?controller,
-   String? hintText,
+  TextEditingController? controller,
+  String? hintText,
   String? label,
-   String? Function(dynamic value)? validator,
+  String? Function(dynamic value)? validator,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,7 +248,7 @@ Widget buildTextField({
       if (label != null)
         Text(
           label,
-          style: textStyleWhite.copyWith(fontSize: 16),
+          style: textStyleWhite.copyWith(fontSize: 16,fontWeight: FontWeight.w500),
         ),
       SizedBox(height: 8),
       Container(
@@ -269,9 +271,8 @@ Widget buildTextField({
           decoration: InputDecoration(
             border: InputBorder.none,
             isCollapsed: true,
-
             hintText: hintText,
-            hintStyle: textStyleGray,
+            hintStyle: textStyleGray.copyWith(fontWeight: FontWeight.w400),
           ),
           style: textStyleGray,
           textAlignVertical: TextAlignVertical.center,
@@ -317,7 +318,7 @@ Widget buildUserNameField({
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
-              prefixText: 'username: ',
+              // prefixText: 'username: ',
               isCollapsed: true,
             ),
             style: textStyleGray,
@@ -327,21 +328,70 @@ Widget buildUserNameField({
       ],
     );
   } else {
-    return TextField(
-      controller: controller,
-      enabled: false,
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        prefixStyle: TextStyle(
-          fontSize: 18,
-          color: Colors.grey,
-          fontWeight: FontWeight.bold,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: 10,
         ),
-        prefixText: 'username: ',
-        isCollapsed: true,
-      ),
-      style: textStyleGray,
-      textAlignVertical: TextAlignVertical.center,
+        Container(
+          height: 45,
+          // decoration: ShapeDecoration(
+          //   color: AppColors.secondaryText,
+          //   shape: RoundedRectangleBorder(
+          //     side: BorderSide(
+          //       width: 1,
+          //       color: AppColors.borderSide,
+          //     ),
+          //     borderRadius: BorderRadius.circular(22),
+          //   ),
+          // ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          alignment: Alignment.center,
+          child: TextField(
+            controller: controller,
+            enabled: false,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              prefixStyle: TextStyle(
+                fontSize: 18,
+                color: Colors.grey,
+                fontWeight: FontWeight.bold,
+              ),
+              prefixText: 'username: ',
+              isCollapsed: true,
+            ),
+            style: textStyleGray,
+            // textAlignVertical: TextAlignVertical.center,
+          ),
+        ),
+      ],
     );
   }
+}
+
+Widget popUpBotton(
+  String text,
+  Color backgroundColor,
+  Color textColor, {
+  required VoidCallback? onPressed,
+}) {
+  return SizedBox(
+    width: 100,
+    height: 45,
+    child: ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: FittedBox(
+        child: Text(text,
+            style: textStyleWhite.copyWith(
+              fontSize: 18,
+              color: textColor,
+            )),
+      ),
+    ),
+  );
 }

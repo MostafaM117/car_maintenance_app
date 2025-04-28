@@ -14,12 +14,10 @@ class MaintenanceScreen extends StatefulWidget {
 
 class _MaintenanceScreenState extends State<MaintenanceScreen> {
   late FirestoreService firestoreService;
-  Map<String, bool> itemCheckedStates = {}; // To store checked state per item
-  bool isChecked = false; // Track the checked state of the checkbox
+
   @override
   void initState() {
     super.initState();
-
     firestoreService = FirestoreService(MaintID());
     // Listen for changes in MaintID and update the FirestoreService accordingly
     MaintID().addListener(_updateService);
