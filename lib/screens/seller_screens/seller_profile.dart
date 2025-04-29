@@ -59,61 +59,60 @@ class _SellerProfileState extends State<SellerProfile> {
       body: Stack(
         children: [
           Container(
-            width: 393,
-            height: 250,
-            decoration: ShapeDecoration(
-              color: AppColors.secondaryText,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  width: 1,
-                  color: const Color(0xFFE3E3E3),
-                ),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(50),
-                  bottomRight: Radius.circular(50),
-                ),
-              ),
-            ),
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  height: 50,
+                const SizedBox(height: 25),
+                const Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    color: Colors.black,
+                    fontFamily: 'Inter',
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(height: 15),
+                Container(
                   width: 120,
                   height: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.grey.shade300, width: 1),
+                  ),
                   child: _profileImage != null
-                      ? CircleAvatar(
-                          radius: 40,
-                          backgroundImage: FileImage(_profileImage!),
-                        )
-                      : CircleAvatar(
-                          radius: 40,
-                          backgroundColor: AppColors.secondaryText,
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 50,
+                      ? ClipOval(
+                          child: Image.file(
+                            _profileImage!,
+                            fit: BoxFit.cover,
                           ),
+                        )
+                      : const Icon(
+                          Icons.person,
+                          size: 50,
+                          color: Colors.grey,
                         ),
                 ),
+                const SizedBox(height: 8),
                 Text(
                   username,
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryText,
+                    color: Colors.black,
                     fontFamily: 'Inter',
                   ),
                 ),
                 Text(
                   '${seller.email}',
-                  style: TextStyle(
-                    color: AppColors.primaryText,
+                  style: const TextStyle(
                     fontSize: 13,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
                     fontFamily: 'Inter',
-                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
@@ -125,11 +124,10 @@ class _SellerProfileState extends State<SellerProfile> {
               // crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                SizedBox(
-                  height: 60,
-                ),
+                // SizedBox(
+                //   height: 60,
+                // ),
                 ProfileOptionTile(
-                  rightIcon: Icons.person,
                   text: 'Profile',
                   onBackTap: () {
                     Navigator.push(
@@ -140,10 +138,9 @@ class _SellerProfileState extends State<SellerProfile> {
                   },
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 ProfileOptionTile(
-                  rightIcon: Icons.settings,
                   text: 'MyStores',
                   onBackTap: () {
                     Navigator.push(
@@ -153,10 +150,9 @@ class _SellerProfileState extends State<SellerProfile> {
                   },
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 ProfileOptionTile(
-                  rightIcon: Icons.settings,
                   text: 'Settings',
                   onBackTap: () {},
                 ),
@@ -164,15 +160,13 @@ class _SellerProfileState extends State<SellerProfile> {
                   height: 15,
                 ),
                 ProfileOptionTile(
-                  rightIcon: Icons.history,
                   text: 'Activity',
                   onBackTap: () {},
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 ProfileOptionTile(
-                  rightIcon: Icons.security,
                   text: 'Terms & Conditions',
                   onBackTap: () {
                     Navigator.push(
@@ -192,7 +186,7 @@ class _SellerProfileState extends State<SellerProfile> {
                 //   onBackTap: () {},
                 // ),
                 SizedBox(
-                  height: 15,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),

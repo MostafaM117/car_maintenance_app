@@ -18,7 +18,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
 
   final List<Widget> _pages = [
     SellerHomePage(),
-    SellerMarket(),
+    MarketPage(),
     SellerProfile(),
   ];
 
