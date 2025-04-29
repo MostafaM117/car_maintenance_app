@@ -56,15 +56,12 @@ class _SellerProfileState extends State<SellerProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
-            child: Column(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 25),
                 const Text(
                   'Profile',
                   style: TextStyle(
@@ -117,92 +114,74 @@ class _SellerProfileState extends State<SellerProfile> {
                 ),
               ],
             ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // SizedBox(
-                //   height: 60,
-                // ),
-                ProfileOptionTile(
-                  text: 'Profile',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SellerAccountManagement()),
-                    );
-                  },
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 8),
+                    ProfileOptionTile(
+                      text: 'Profile',
+                      onBackTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SellerAccountManagement(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    ProfileOptionTile(
+                      text: 'MyStores',
+                      onBackTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MyStores(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    ProfileOptionTile(
+                      text: 'Settings',
+                      onBackTap: () {},
+                    ),
+                    const SizedBox(height: 20),
+                    ProfileOptionTile(
+                      text: 'Activity',
+                      onBackTap: () {},
+                    ),
+                    const SizedBox(height: 20),
+                    ProfileOptionTile(
+                      text: 'Terms & Conditions',
+                      onBackTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TermsAndConditionsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    buildButton(
+                      'Log Out',
+                      AppColors.buttonColor,
+                      AppColors.buttonText,
+                      onPressed: () async {
+                        await AuthService().signOut(context);
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/login', (route) => false);
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                ProfileOptionTile(
-                  text: 'MyStores',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyStores()),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ProfileOptionTile(
-                  text: 'Settings',
-                  onBackTap: () {},
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ProfileOptionTile(
-                  text: 'Activity',
-                  onBackTap: () {},
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ProfileOptionTile(
-                  text: 'Terms & Conditions',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TermsAndConditionsPage(),
-                      ),
-                    );
-                  },
-                ),
-                // SizedBox(
-                //   height: 15,
-                // ),
-                // ProfileOptionTile(
-                //   rightIcon: Icons.help_outline,
-                //   text: 'Help & Support',
-                //   onBackTap: () {},
-                // ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: buildButton(
-                    'Log Out',
-                    AppColors.buttonColor,
-                    AppColors.buttonText,
-                    onPressed: () {
-                      AuthService().signOut(context);
-                    },
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

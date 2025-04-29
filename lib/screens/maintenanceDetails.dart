@@ -1,5 +1,9 @@
+import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
+
+import '../widgets/BackgroundDecoration.dart';
+import '../widgets/maintenance_card.dart';
 
 class MaintenanceDetailsPage extends StatelessWidget {
   final MaintenanceList maintenanceItem;
@@ -9,25 +13,44 @@ class MaintenanceDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Maintenance Details")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Mileage: ${maintenanceItem.mileage}",
-                style: TextStyle(fontSize: 20)),
-            SizedBox(height: 8),
-            Text(
-                "Expected Date: ${maintenanceItem.expectedDate.toLocal().toString().split(' ')[0]}"),
-            SizedBox(height: 8),
-            Text("Description:", style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 4),
-            Text(maintenanceItem.description),
-            SizedBox(height: 8),
-            Text("Completed: ${maintenanceItem.isDone ? 'Yes' : 'No'}"),
-          ],
-        ),
+      backgroundColor: AppColors.background,
+      body: Stack(
+        children: [
+          const CurvedBackgroundDecoration(),
+          SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+              child: Column(
+                children: [
+                  SizedBox(height: 70),
+                  Center(
+                    child: Text(
+                      "Maintenance",
+                      style:
+                          TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  buildMaintenanceCard(
+                    title: "Mileage: ${maintenanceItem.mileage}",
+                    date: maintenanceItem.expectedDate
+                        .toLocal()
+                        .toString()
+                        .split(' ')[0],
+                    tasks: [
+                      "Description: ",
+                      maintenanceItem.description,
+                      "Completed: ${maintenanceItem.isDone ? 'Yes' : 'No'}",
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
