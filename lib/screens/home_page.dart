@@ -114,9 +114,9 @@ class _HomePageState extends State<HomePage> {
                   .where('userId', isEqualTo: user.uid)
                   .snapshots(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                }
+                // if (snapshot.connectionState == ConnectionState.waiting) {
+                //   return CircularProgressIndicator();
+                // }
 
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
@@ -132,7 +132,22 @@ class _HomePageState extends State<HomePage> {
                   car['id'] = doc.id;
                   cars.add(car);
                 }
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (cars.isNotEmpty) {
+                    final newMake = cars[currentCar]['make'].toString();
+                    final newModel = cars[currentCar]['model'].toString();
+                    final newYear = cars[currentCar]['year'].toString();
 
+                    final maintID = MaintID();
+                    if (maintID.selectedMake != newMake ||
+                        maintID.selectedModel != newModel ||
+                        maintID.selectedYear != newYear) {
+                      maintID.selectedMake = newMake;
+                      maintID.selectedModel = newModel;
+                      maintID.selectedYear = newYear;
+                    }
+                  }
+                });
                 int cardsToDisplay = cars.length > 3 ? 3 : cars.length;
 
                 return SizedBox(
@@ -142,23 +157,22 @@ class _HomePageState extends State<HomePage> {
                     cardsCount: cars.length,
                     cardBuilder: (BuildContext context, int index,
                         int realIndex, int percentThresholdX) {
-                      return CarCardWidget(car: cars[currentCar]);
+                      return CarCardWidget(car: cars[index]);
                     },
                     onSwipe: (previousIndex, currentIndex, direction) {
                       setState(() {
-                        currentCar = currentCar + 1;
+                        currentCar = currentIndex!;
                         if (currentCar >= cars.length) {
                           currentCar = 0;
                         }
-                        if (currentIndex != null) {
-                          final make = cars[currentCar]['make'];
-                          final model = cars[currentCar]['model'];
-                          final year = cars[currentCar]['year'];
 
-                          MaintID().selectedMake = make.toString();
-                          MaintID().selectedModel = model.toString();
-                          MaintID().selectedYear = year.toString();
-                        }
+                        final make = cars[currentCar]['make'];
+                        final model = cars[currentCar]['model'];
+                        final year = cars[currentCar]['year'];
+
+                        MaintID().selectedMake = make.toString();
+                        MaintID().selectedModel = model.toString();
+                        MaintID().selectedYear = year.toString();
                       });
                       return true;
                     },
