@@ -68,7 +68,7 @@ class RedirectingPage extends StatelessWidget {
                       }
                       else{
                         print('returned here');
-                        return LoginType();
+                        return WelcomePage();
                       }
                     });
                 }

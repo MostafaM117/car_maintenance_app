@@ -21,6 +21,7 @@ class UserAccountManagement extends StatefulWidget {
 class _UserAccountManagementState extends State<UserAccountManagement> {
   final _usernameEditcontroller = TextEditingController();
   bool _isediting = false;
+  String? errorText;
   User? _user = FirebaseAuth.instance.currentUser;
   final user = FirebaseAuth.instance.currentUser!;
   //Get current username
@@ -45,11 +46,10 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
     }
     String newUsername = _usernameEditcontroller.text.trim();
     if (newUsername.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Username cannot be empty'),
-          backgroundColor: Colors.red,
-        ),
+      setState(() {
+        errorText = "username can't be empty.";
+        return;
+        }
       );
       return;
     }
@@ -100,136 +100,199 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                   Column(
                     children: [
                       SizedBox(
-                        height: 15,
+                        height: 20,
                       ),
                       ProfileImagePicker(
                         onImagePicked: (File image) {
                           setState(() {});
                         },
                       ),
-                      Text(
-                        _usernameEditcontroller.text,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryText,
-                          fontFamily: 'Inter',
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        '${user.email}',
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.7),
-                          fontSize: 10,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
+                      StreamBuilder<DocumentSnapshot>(
+                        stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(), 
+                        builder: (context, snapshot){
+                          if(snapshot.hasData && snapshot.data!.exists){
+                            final data = snapshot.data!.data() as Map<String, dynamic>;
+                            final username = data['username']?? '';
+                            return Text(
+                              username,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primaryText,
+                                fontFamily: 'Inter',
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            );
+                          }
+                          else{
+                            return Text('loading...');
+                          }
+                        }),
+                        SizedBox(
+                          height: 20,
+                        )
+                      // Text(
+                      //   '${user.email}',
+                      //   style: TextStyle(
+                      //     color: Colors.black.withOpacity(0.7),
+                      //     fontSize: 10,
+                      //     fontFamily: 'Inter',
+                      //   ),
+                      // ),
                     ],
                   ),
-                  InfoField(
-                    label: 'Name',
-                    value: _usernameEditcontroller.text,
-                    onTap: () {
-                      //  اكتب هنا كود البوب ب
-                      print('Name pressed');
+                  // Username from Database
+                  GestureDetector(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            'Username',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          height: 45,                    
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          alignment: Alignment.centerLeft,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFF4F4F4),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                              width: 1,
+                              color: AppColors.borderSide,
+                              ),
+                          borderRadius: BorderRadius.circular(22),
+                            ),
+                          ),
+                          child: StreamBuilder<DocumentSnapshot>(
+                            stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(), 
+                              builder: (context, snapshot){
+                                if(snapshot.hasData && snapshot.data!.exists){
+                                  final data = snapshot.data!.data() as Map<String, dynamic>;
+                                  final username = data['username']?? '';
+                                  return Text(
+                                    username,
+                                    style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    fontFamily: 'Inter',
+                                    ),
+                                  );
+                                  }
+                                  else{
+                                    return Text('loading...');
+                                  }
+                                }),
+                        ),
+                      ],
+                    ),
+                    onTap: () async{
+                      final userDoc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+                      final latestUsername = userDoc.data()?['username']?? '';
+                      _usernameEditcontroller.text = latestUsername;
+                      final result = await showDialog(context: context, builder: (context) => 
+                      StatefulBuilder(builder: (context, setState){
+                        return AlertDialog(
+                          backgroundColor: Color(0xFFF4F4F4),
+                            title: 
+                              Text('Edit your username and click update',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18
+                                ),
+                              ),
+                            content: SingleChildScrollView(
+                              child: SizedBox(
+                                height: 120,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      controller: _usernameEditcontroller,
+                                      cursorColor: Colors.black,
+                                      decoration: InputDecoration(
+                                        label: Text('Username'),
+                                        labelStyle: TextStyle(color: errorText != null? Theme.of(context).colorScheme.error : Colors.black),
+                                        errorText: errorText,
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.black),
+                                          borderRadius: BorderRadius.circular(22),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.black),
+                                          borderRadius: BorderRadius.circular(22),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            actionsAlignment: MainAxisAlignment.center,
+                            actions: [
+                              popUpBotton(
+                                'Update',
+                              AppColors.buttonColor,
+                              AppColors.buttonText,
+                                onPressed: () {
+                                  final username = _usernameEditcontroller.text.trim();
+                                  if (username.isEmpty) {
+                                    setState(() {
+                                      errorText = "username can't be empty.";
+                                      return;
+                                    });
+                                  } else {
+                                    Navigator.of(context).pop(username);
+                                    _updateUsername();
+                                  }
+                                },
+                              ),
+                              popUpBotton(
+                                'Cancel',
+                              AppColors.primaryText,
+                              AppColors.buttonText,
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  errorText = null;
+                                },
+                              ),
+                            ],
+                          );
+                      }
+                      ));
+                        return result;
                     },
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   InfoField(
                     label: 'Email',
                     value: '${user.email}',
                     onTap: () {
-                      //  اكتب هنا كود البوب ب
-
-                      print('Name pressed');
+                      print('email pressed');
                     },
                   ),
                   InfoField(
                     label: 'Password',
                     value: '********',
                     onTap: () {
-                      //  اكتب هنا كود البوب ب
+                      // Password Popup will be here
                       print('Name pressed');
                     },
                   ),
-
                   SizedBox(
                     height: 10,
                   ),
-                  // buildTextUserNameField(
-                  // buildUserNameField(
-                  //   controller: _usernameEditcontroller,
-                  //   isEditing: _isediting,
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Username cannot be empty';
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
-
-                  // SizedBox(
-                  //   height: 30,
-                  // ),
-                  // SizedBox(
-                  //   height: 50,
-                  //   child: ElevatedButton(
-                  //       style: ElevatedButton.styleFrom(
-                  //         backgroundColor: _isediting
-                  //             ? AppColors.buttonColor
-                  //             : AppColors.secondaryText,
-                  //         shape: RoundedRectangleBorder(
-                  //             borderRadius: BorderRadius.circular(25)),
-                  //       ),
-                  //       child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Text(
-                  //               _isediting
-                  //                   ? "Update username"
-                  //                   : "Edit username",
-                  //               style: _isediting
-                  //                   ? textStyleWhite.copyWith(
-                  //                       color: AppColors.secondaryText)
-                  //                   : textStyleWhite.copyWith(
-                  //                       color: Colors.black)),
-                  //         ],
-                  //       ),
-                  //       onPressed: () {
-                  //         if (_usernameEditcontroller.text.trim().isEmpty) {
-                  //           ScaffoldMessenger.of(context).showSnackBar(
-                  //             SnackBar(
-                  //               content: Text('Username can\'t be empty'),
-                  //               backgroundColor:
-                  //                   const Color.fromARGB(141, 244, 67, 54),
-                  //             ),
-                  //           );
-                  //         } else {
-                  //           _toggleEdit();
-                  //           _updateUsername();
-                  //           _isediting
-                  //               ? ScaffoldMessenger.of(context).showSnackBar(
-                  //                   SnackBar(
-                  //                     content: Text(
-                  //                         'Now you can edit your username'),
-                  //                     duration: Duration(milliseconds: 1000),
-                  //                   ),
-                  //                 )
-                  //               : ScaffoldMessenger.of(context).showSnackBar(
-                  //                   SnackBar(
-                  //                     content:
-                  //                         Text('Username updated successfully'),
-                  //                     duration: Duration(milliseconds: 1000),
-                  //                     backgroundColor: const Color.fromARGB(
-                  //                         158, 102, 187, 106),
-                  //                   ),
-                  //                 );
-                  //         }
-                  //       }),
-                  // ),
-                  // SizedBox(
-                  //   height: 30,
-                  // ),
                   // buildButton(
                   //   'Edit Password',
                   //   AppColors.secondaryText,

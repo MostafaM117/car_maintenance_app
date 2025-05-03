@@ -195,6 +195,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter average usage';
                     }
+                    FocusScope.of(context).unfocus();
                     return null;
                   },
                 ),
@@ -205,8 +206,8 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   onDateSelected: (DateTime date) {
                     setState(() {
                       lastMaintenanceDate = date;
-                      checkFormCompletion();
                       FocusScope.of(context).unfocus();
+                      checkFormCompletion();
                     });
                   },
                 ),
