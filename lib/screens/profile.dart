@@ -93,15 +93,27 @@ class _ProfileState extends State<Profile> {
                         ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontFamily: 'Inter',
-                  ),
-                ),
+                StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(), 
+                  builder: (context, snapshot){
+                    if(snapshot.hasData && snapshot.data!.exists){
+                      final data = snapshot.data!.data() as Map<String, dynamic>;
+                      final username = data['username']?? '';
+                      return Text(
+                        username,
+                        style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'Inter',
+                          ),
+                        overflow: TextOverflow.ellipsis,
+                        );
+                    }
+                    else{
+                      return Text('loading...');
+                    }
+                  }),
                 Text(
                   '${user.email}',
                   style: const TextStyle(

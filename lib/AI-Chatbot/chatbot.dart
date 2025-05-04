@@ -1,12 +1,12 @@
 import 'package:car_maintenance/AI-Chatbot/gemini.dart';
 import 'package:car_maintenance/AI-Chatbot/send_message.dart';
+import 'package:car_maintenance/AI-Chatbot/speech_to_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Chatbot extends StatefulWidget {
@@ -20,8 +20,10 @@ class Chatbot extends StatefulWidget {
 class _ChatbotState extends State<Chatbot> {
 // Using ChatbotLogic
   late ChatLogic chatService;
+  late SpeechToTextService speechService;
   String? activeChatId;
   final GeminiService _geminiService = GeminiService();
+  TextEditingController messageController = TextEditingController();
 
   // Check if the reponse is in Arabic
   bool isArabic (String text){
@@ -46,31 +48,6 @@ class _ChatbotState extends State<Chatbot> {
     firstName: "Chatbot",
     profileImage: 'assets/images/chatbot_icon.png'
     );
-
-    // Logic for Sending messages 
-  // void _sendMessage(ChatMessage ChatMsg) async{
-  //   final loadingMessage = ChatMessage(
-  //   user: geminiBot,
-  //   text: 'loading..',
-  //   createdAt: DateTime.now(),
-  // );
-  //   setState(() {
-  //     messages = [ChatMsg, ...messages];
-  //     messages.insert(0, loadingMessage);
-  //   });
-  //   try{
-  //     String userQuestion = ChatMsg.text;
-  //     final responseText = await _geminiService.getGeminiRespone(userQuestion);
-  //     final botMsg = ChatMessage(user: geminiBot, text: responseText , createdAt: DateTime.now());
-  //   setState(() {
-  //     messages = [botMsg, ...messages];
-  //     messages.remove(loadingMessage);
-  //   });
-  //   }
-  //   catch(e){
-  //     print(e);
-  //   }
-  // }
 
   void _sendMessage(ChatMessage ChatMsg) async {
     await chatService.sendMessage(chatMsg: ChatMsg, messages: messages, updateMessages: (updated){
@@ -125,20 +102,7 @@ void createNewChat() {
   Navigator.of(context).pop(); // close the drawer
 }
 
-//voiceChat 
-// bool _isListening = false;
-// void _listen() async{
-//   if(!_isListening){
-//     bool available = await SpeechToText.initialize();
-//     if(available){
-//       setState(() {
-//         _isListening = true;
-//         SpeechToText.listenMethod(onResult)
-//       });
-//     }
 
-//   }
-// }
   @override
   void initState(){
     super.initState();
@@ -149,9 +113,37 @@ void createNewChat() {
       profileImage: user.photoURL,
     );
     chatService = ChatLogic(userId: currentUser.id, currentUser: currentUser, geminiBot: geminiBot, getGeminiRespone: _geminiService.getGeminiRespone);
-    // speechService = SpeechToTextService();
-    // speechService.initialize();
+    speechService = SpeechToTextService();
+    speechService.initialize();
   }
+
+  //voiceChat 
+Future <void> _startSpeechToText() async{
+  var status = await Permission.microphone.request();
+  if(status.isGranted){
+    speechService.startListening(
+    onResult: (result) {
+      setState(() {
+        messageController.text = result.recognizedWords;
+        messageController.selection = TextSelection.fromPosition(
+          TextPosition(offset: messageController.text.length),
+        );
+      });
+    },
+  );
+  }
+    else{print('Microphone permission not granted');
+    return;
+    }  
+}
+void _stopspeechToText(){
+  speechService.stopListening();
+}
+@override
+void dispose() {
+  messageController.dispose();
+  super.dispose();
+}
   // UI
   @override
   Widget build(BuildContext context) {
@@ -213,6 +205,22 @@ void createNewChat() {
       currentUser: currentUser, 
       onSend: (chatMsg)=> _sendMessage(chatMsg), 
       messages: messages,
+      inputOptions: InputOptions(
+        textController: messageController,
+        // inputDecoration: InputDecoration(
+        //   hintText: 'Type a message...',
+        //   border: OutlineInputBorder(
+        //     borderRadius: BorderRadius.circular(10)
+        //   )
+        // ),
+        trailing: [
+          IconButton(
+            onPressed: (){
+              _startSpeechToText();
+            }, 
+            icon: Icon(Icons.mic))
+            ]
+      ),
       messageOptions: MessageOptions(
         showOtherUsersName: true,
         messageTextBuilder:(message, previousMessage, nextMessage) {
