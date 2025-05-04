@@ -118,7 +118,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.primaryText,
+                                color: Colors.black,
                                 fontFamily: 'Inter',
                               ),
                               overflow: TextOverflow.ellipsis,
@@ -240,6 +240,15 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                             actionsAlignment: MainAxisAlignment.center,
                             actions: [
                               popUpBotton(
+                                'Cancel',
+                              AppColors.primaryText,
+                              AppColors.buttonText,
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  errorText = null;
+                                },
+                              ),
+                              popUpBotton(
                                 'Update',
                               AppColors.buttonColor,
                               AppColors.buttonText,
@@ -254,15 +263,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                     Navigator.of(context).pop(username);
                                     _updateUsername();
                                   }
-                                },
-                              ),
-                              popUpBotton(
-                                'Cancel',
-                              AppColors.primaryText,
-                              AppColors.buttonText,
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  errorText = null;
                                 },
                               ),
                             ],
