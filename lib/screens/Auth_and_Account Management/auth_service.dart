@@ -17,11 +17,11 @@ class AuthService {
 
   bool _obscureText = true;
 
-  void _toggletoviewpassword() {
-    {
-      _obscureText = !_obscureText;
-    }
-  }
+  // void _toggletoviewpassword() {
+  //   {
+  //     _obscureText = !_obscureText;
+  //   }
+  // }
 
   void _showSnackBar(
       BuildContext context, String message, Color color, Duration duration) {
