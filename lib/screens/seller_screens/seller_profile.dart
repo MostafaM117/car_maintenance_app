@@ -11,6 +11,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../widgets/darkmode_toggle_widget.dart';
+import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
 
 class SellerProfile extends StatefulWidget {
@@ -26,7 +28,8 @@ class _SellerProfileState extends State<SellerProfile> {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('sellers');
   File? _profileImage;
-
+  bool isEnglish = true;
+  bool isDarkMode = false;
   @override
   void initState() {
     super.initState();
@@ -144,14 +147,20 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    ProfileOptionTile(
-                      text: 'Settings',
-                      onBackTap: () {},
+                    LanguageToggle(
+                      isEnglish: isEnglish,
+                      onToggle: (value) {
+                        setState(() => isEnglish = value);
+                      },
                     ),
-                    const SizedBox(height: 20),
-                    ProfileOptionTile(
-                      text: 'Activity',
-                      onBackTap: () {},
+                    SizedBox(
+                      height: 20,
+                    ),
+                    DarkModeToggle(
+                      isDarkMode: isDarkMode,
+                      onChanged: (value) {
+                        setState(() => isDarkMode = value);
+                      },
                     ),
                     const SizedBox(height: 20),
                     ProfileOptionTile(
