@@ -41,7 +41,7 @@ class DarkModeToggle extends StatelessWidget {
               ),
             ),
             Container(
-              width: 70,
+              width: 65,
               height: 30,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
@@ -52,12 +52,14 @@ class DarkModeToggle extends StatelessWidget {
                 children: [
                   AnimatedPositioned(
                     duration: const Duration(milliseconds: 200),
-                    left: isDarkMode ? 35 : 5,
+                    left: isDarkMode ? 32 : 2,
                     child: Container(
                       width: 30,
                       height: 25,
                       decoration: BoxDecoration(
-                        color: isDarkMode ? Colors.grey[700] : Colors.grey[500],
+                        color: isDarkMode
+                            ? AppColors.buttonColor
+                            : Colors.grey[500],
                         shape: BoxShape.circle,
                       ),
                     ),
