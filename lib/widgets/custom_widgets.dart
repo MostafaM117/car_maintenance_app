@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import '../constants/app_colors.dart';
 
 final textStyleWhite = const TextStyle(
@@ -195,8 +193,7 @@ Widget buildDropdownField({
       if (label != null)
         Text(
           label,
-          style: textStyleWhite.copyWith(
-              fontSize: 16, fontWeight: FontWeight.w500),
+          style: textStyleWhite.copyWith(fontSize: 16,fontWeight: FontWeight.w500),
         ),
       SizedBox(
         height: 8,
@@ -244,7 +241,6 @@ Widget buildTextField({
   String? hintText,
   String? label,
   String? Function(dynamic value)? validator,
-  bool enabled = true,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,8 +248,7 @@ Widget buildTextField({
       if (label != null)
         Text(
           label,
-          style: textStyleWhite.copyWith(
-              fontSize: 16, fontWeight: FontWeight.w500),
+          style: textStyleWhite.copyWith(fontSize: 16,fontWeight: FontWeight.w500),
         ),
       SizedBox(height: 8),
       Container(
@@ -273,7 +268,6 @@ Widget buildTextField({
         child: TextField(
           keyboardType: TextInputType.number,
           controller: controller,
-          enabled: enabled,
           decoration: InputDecoration(
             border: InputBorder.none,
             isCollapsed: true,
@@ -400,83 +394,4 @@ Widget popUpBotton(
       ),
     ),
   );
-}
-
-Widget buildAttachmentPicker({
-  required Function(File) onAttachmentPicked,
-  String label = 'Attachments',
-  File? selectedFile,
-  Function()? onClear,
-}) {
-  return StatefulBuilder(builder: (context, setState) {
-    final ImagePicker picker = ImagePicker();
-
-    Future<void> pickAttachment() async {
-      final picked = await picker.pickImage(source: ImageSource.gallery);
-      if (picked != null) {
-        final file = File(picked.path);
-        setState(() {
-          selectedFile = file;
-        });
-        onAttachmentPicked(file);
-      }
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: textStyleWhite.copyWith(
-              fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: pickAttachment,
-          child: Container(
-            height: 45,
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            decoration: ShapeDecoration(
-              color: AppColors.secondaryText,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  width: 1,
-                  color: AppColors.borderSide,
-                ),
-                borderRadius: BorderRadius.circular(22),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      selectedFile != null
-                          ? selectedFile!.path.split('/').last
-                          : 'Add attachments',
-                      style: textStyleGray,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-                // if (selectedFile != null)
-                //   IconButton(
-                //     icon: Icon(Icons.clear, color: Colors.grey),
-                //     onPressed: () {
-                //       setState(() {
-                //         selectedFile = null;
-                //       });
-                //       if (onClear != null) onClear();
-                //     },
-                //     padding: EdgeInsets.zero,
-                //     constraints: BoxConstraints(),
-                //   ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  });
 }
