@@ -131,4 +131,25 @@ class FirestoreService {
       print("❌ Error recovering maintenance from history: $e");
     }
   }
+
+  Future<void> updateMaintenance(
+    String docId,
+    String description,
+    int mileage,
+    DateTime expectedDate,
+    bool isDone,
+  ) async {
+    try {
+      await personalMaintCollection.doc(docId).update({
+        'Description': description,
+        'mileage': mileage,
+        'expectedDate': expectedDate,
+        'isDone': isDone,
+      });
+      print("✅ Updated maintenance item with ID: $docId");
+    } catch (e) {
+      print("❌ Error updating maintenance item: $e");
+    }
+  }
 }
+
