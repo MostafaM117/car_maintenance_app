@@ -1,12 +1,9 @@
 import 'dart:io';
-
 import 'package:car_maintenance/services/user_delete_account.dart';
-import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../../constants/app_colors.dart';
 import '../../../widgets/info_field.dart';
 import '../../../widgets/profile_image.dart';
@@ -20,7 +17,7 @@ class UserAccountManagement extends StatefulWidget {
 
 class _UserAccountManagementState extends State<UserAccountManagement> {
   final _usernameEditcontroller = TextEditingController();
-  bool _isediting = false;
+  final _emailcontroller = TextEditingController();
   String? errorText;
   User? _user = FirebaseAuth.instance.currentUser;
   final user = FirebaseAuth.instance.currentUser!;
@@ -59,13 +56,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
         .update({'username': newUsername});
   }
 
-  // Press edit username to edit
-  void _toggleEdit() {
-    setState(() {
-      _isediting = !_isediting;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -96,7 +86,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                       letterSpacing: 9.20,
                     ),
                   ),
-
                   Column(
                     children: [
                       SizedBox(
@@ -128,17 +117,17 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                             return Text('loading...');
                           }
                         }),
+                        Text(
+                          '${user.email}',
+                          style: TextStyle(
+                          color: Colors.black.withOpacity(0.7),
+                          fontSize: 13,
+                          fontFamily: 'Inter',
+                          ),
+                        ),
                         SizedBox(
                           height: 20,
-                        )
-                      // Text(
-                      //   '${user.email}',
-                      //   style: TextStyle(
-                      //     color: Colors.black.withOpacity(0.7),
-                      //     fontSize: 10,
-                      //     fontFamily: 'Inter',
-                      //   ),
-                      // ),
+                        ),
                     ],
                   ),
                   // Username from Database
@@ -202,7 +191,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                         return AlertDialog(
                           backgroundColor: Color(0xFFF4F4F4),
                             title: 
-                              Text('Edit your username and click update',
+                              Text('Update your username below.',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -279,35 +268,166 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                     label: 'Email',
                     value: '${user.email}',
                     onTap: () {
-                      print('email pressed');
+                      // print('email pressed');
                     },
                   ),
-                  InfoField(
-                    label: 'Password',
-                    value: '********',
-                    onTap: () {
-                      // Password Popup will be here
-                      print('Name pressed');
+                  GestureDetector(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            'Password',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          height: 45,                    
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          alignment: Alignment.centerLeft,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFF4F4F4),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                              width: 1,
+                              color: AppColors.borderSide,
+                              ),
+                          borderRadius: BorderRadius.circular(22),
+                            ),
+                          ),
+                          child: Text('************',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontFamily: 'Inter',
+                          ))
+                        ),
+                      ],
+                    ),
+                    onTap: () async{
+                      final result = await showDialog(context: context, builder: (context) =>
+                      StatefulBuilder(builder: (context, setState){
+                          return AlertDialog(
+                            backgroundColor: Color(0xFFF4F4F4),
+                              title: 
+                                Text('Change your Password',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18
+                                  ),
+                                ),
+                              content: SingleChildScrollView(
+                                child: SizedBox(
+                                  height: 120,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextField(
+                                        controller: _emailcontroller,
+                                        cursorColor: Colors.black,
+                                        decoration: InputDecoration(
+                                          label: Text('email'),
+                                          labelStyle: TextStyle(color: errorText != null? Theme.of(context).colorScheme.error : Colors.black),
+                                          errorText: errorText,
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.black),
+                                            borderRadius: BorderRadius.circular(22),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.black),
+                                            borderRadius: BorderRadius.circular(22),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              actionsAlignment: MainAxisAlignment.center,
+                              actions: [
+                                Column(
+                                  children: [
+                                  popUpBotton(
+                                    'Send E-mail',
+                                  AppColors.buttonColor,
+                                  AppColors.buttonText,
+                                    onPressed: () async {
+                                      final email = _emailcontroller.text.trim();
+                                      if (email.isEmpty) {
+                                        setState(() {
+                                          errorText = "email can't be empty.";
+                                          return;
+                                        });
+                                      } else {
+                                        try {
+                                          await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                                          _emailcontroller.clear();
+                                          Navigator.of(context).pop();
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('A password reset email has been sent successfully.'),
+                                              backgroundColor: Colors.green.shade400,
+                                              duration: Duration(seconds: 3),
+                                            ),
+                                          );
+                                          errorText = null;
+                                        } catch (e) {
+                                          if(e.toString().contains('badly formatted')){
+                                            setState(() {
+                                              errorText = 'Please enter a valid email address';
+                                              return;
+                                          });
+                                        }
+                                          else{
+                                            _emailcontroller.clear();
+                                            Navigator.of(context).pop();
+                                            errorText = null;
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text(e.toString()),
+                                                backgroundColor: Colors.red,
+                                                duration: Duration(seconds: 3),
+                                              ),
+                                            );
+                                          }
+                                        print(e.toString());
+                                      }
+                                    }
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                  popUpBotton(
+                                  'Cancel',
+                                AppColors.primaryText,
+                                AppColors.buttonText,
+                                  onPressed: () {
+                                    _emailcontroller.clear();
+                                    Navigator.of(context).pop();
+                                    errorText = null;
+                                  },
+                                ),
+                                  ],
+                                )
+                              ],
+                            );
+                        }
+                        ));
+                        return result;
                     },
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 40,
                   ),
-                  // buildButton(
-                  //   'Edit Password',
-                  //   AppColors.secondaryText,
-                  //   Colors.black,
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => ForgotPassword()),
-                  //     );
-                  //   },
-                  // ),
-                  // SizedBox(
-                  //   height: 30,
-                  // ),
                   buildButton(
                     'Delete Account',
                     AppColors.buttonColor,
