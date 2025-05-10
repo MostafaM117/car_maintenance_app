@@ -227,19 +227,19 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, index) {
                         final maintenanceItem = maintList[index];
 
-                        if (!itemCheckedStates
-                            .containsKey(maintenanceItem.id)) {
-                          itemCheckedStates[maintenanceItem.id] = false;
-                        }
-                        if (maintenanceItem.isDone == true) {
-                          return SizedBox.shrink();
-                          // Hides the widget visually
-                        }
+                        // if (!itemCheckedStates
+                        //     .containsKey(maintenanceItem.id)) {
+                        //   itemCheckedStates[maintenanceItem.id] = false;
+                        // }
+                        // if (maintenanceItem.isDone == true) {
+                        //   return SizedBox.shrink();
+                        //   // Hides the widget visually
+                        // }
                         // print(maintenanceItem.isDone);
 
                         return Dismissible(
                           key: Key(maintenanceItem.id),
-                          direction: DismissDirection.endToStart,
+                          direction: DismissDirection.startToEnd,
                           background: Container(
                             color: const Color.fromARGB(255, 94, 255, 82),
                             alignment: Alignment.centerRight,
@@ -247,20 +247,13 @@ class _HomePageState extends State<HomePage> {
                             child: Icon(Icons.check, color: Colors.white),
                           ),
                           onDismissed: (direction) async {
-                            await firestoreService.moveToHistory(maintenanceItem
-                                .id); // This updates `isDone` in Firestore
+                            await firestoreService
+                                .moveToHistory(maintenanceItem.id);
 
-                            setState(() {
-                              itemCheckedStates[maintenanceItem.id] =
-                                  true; // This updates the local UI state
-                            });
-                            print("✅ Moved to history");
-
-                            // ScaffoldMessenger.of(context).showSnackBar(
-                            //   SnackBar(
-                            //       content:
-                            //           Text('Moved to history successfully')),
-                            // );
+                            // setState(() {
+                            //   itemCheckedStates[maintenanceItem.id] =
+                            //       true; // This updates the local UI state
+                            // });
                           },
                           child: GestureDetector(
                             onTap: () {

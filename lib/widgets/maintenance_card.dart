@@ -36,17 +36,17 @@ class MaintenanceCard extends StatelessWidget {
                         color: AppColors.buttonColor,
                         fontWeight: FontWeight.w600),
                   ),
-                  const Spacer(),
-                  Text(
-                    date,
-                    style: textStyleGray,
-                  ),
                 ],
               ),
               Row(
                 children: [
                   Text(
                     'Expected Date',
+                    style: textStyleGray,
+                  ),
+                  const Spacer(),
+                  Text(
+                    date,
                     style: textStyleGray,
                   ),
                 ],
@@ -71,8 +71,8 @@ Widget buildMaintenanceCard({
     height: 450,
     decoration: BoxDecoration(
       color: AppColors.secondaryText,
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(color:AppColors.borderSide),
+      borderRadius: BorderRadius.circular(22),
+      border: Border.all(color: AppColors.borderSide),
       boxShadow: [
         BoxShadow(
           color: Colors.grey.withOpacity(0.2),
@@ -92,7 +92,7 @@ Widget buildMaintenanceCard({
             width: 60,
           ),
         ),
-        SizedBox(height: 12),
+        SizedBox(height: 15),
         Center(
           child: Text(
             title,
@@ -103,7 +103,7 @@ Widget buildMaintenanceCard({
             ),
           ),
         ),
-        SizedBox(height: 8),
+        SizedBox(height: 15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -111,10 +111,9 @@ Widget buildMaintenanceCard({
             Text(date, style: textStyleGray),
           ],
         ),
-        SizedBox(height: 12),
+        SizedBox(height: 20),
         ...tasks.map(
-          (task) => Text("- $task",
-              textAlign: TextAlign.right, style: textStyleWhite),
+          (task) => Text(task, style: textStyleWhite),
         ),
       ],
     ),

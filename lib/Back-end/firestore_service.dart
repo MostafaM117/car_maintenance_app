@@ -131,4 +131,75 @@ class FirestoreService {
       print("❌ Error recovering maintenance from history: $e");
     }
   }
+
+  Future<void> updateMaintenance(
+    String docId,
+    String description,
+    int mileage,
+    DateTime expectedDate,
+    bool isDone,
+  ) async {
+    try {
+      await personalMaintCollection.doc(docId).update({
+        'Description': description,
+        'mileage': mileage,
+        'expectedDate': expectedDate,
+        'isDone': isDone,
+      });
+      print("✅ Updated maintenance item with ID: $docId");
+    } catch (e) {
+      print("❌ Error updating maintenance item: $e");
+    }
+  }
+
+  Future<void> updateHistory(
+    String docId,
+    String description,
+    int mileage,
+    DateTime expectedDate,
+    bool isDone,
+  ) async {
+    try {
+      await historyCollection.doc(docId).update({
+        'Description': description,
+        'mileage': mileage,
+        'expectedDate': expectedDate,
+        'isDone': isDone,
+      });
+      print("✅ Updated maintenance item with ID: $docId");
+    } catch (e) {
+      print("❌ Error updating maintenance item: $e");
+    }
+  }
+
+  Future<void> clearHistory() async {
+    try {
+      final snapshot = await historyCollection.get();
+      for (var doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
+      print("✅ Cleared all history items");
+    } catch (e) {
+      print("❌ Error clearing history: $e");
+    }
+  }
+
+  Future<void> addMaintenance(
+    String description,
+    bool isDone,
+    int mileage,
+    DateTime expectedDate,
+  ) async {
+    try {
+      await personalMaintCollection.add({
+        'Description': description,
+        'mileage': mileage,
+        'expectedDate': expectedDate,
+        'isDone': false,
+      });
+      print("✅ Added maintenance item");
+    } catch (e) {
+      print("❌ Error adding maintenance item: $e");
+    }
+  }
 }

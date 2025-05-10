@@ -1,27 +1,27 @@
+import 'package:flutter/foundation.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
 class SpeechToTextService {
-  late SpeechToText _speechToText;
+  final SpeechToText _speech  =  SpeechToText();
+  bool _isAvailable = false;
+  bool get isAvailable  => _isAvailable ;
 
-  SpeechToTextService(){
-    _speechToText = SpeechToText();
-  }
+
   Future <void> initialize() async{
-    bool available = await _speechToText.initialize();
-    if(available){
-      print("Speech-to-text service is ready!");
-    }
-    else{
-      print("Speech-to-text service is not available.");
-    }
+    _isAvailable = await _speech.initialize();
   }
-  void startListening(){
-    _speechToText.listen(onResult: (result) {
-      print("Speech Recognized: ${result.recognizedWords}");
-    },);
+  void startListening({ required void Function(SpeechRecognitionResult result) onResult}){
+
+      _speech .listen(onResult: onResult, listenMode: ListenMode.confirmation, cancelOnError: true);
+
+    // speechToText.listen(onResult: (result) {
+    //   print("Speech Recognized: ${result.recognizedWords}");
+    // },);
   }
 
   void stopListening(){
-    _speechToText.stop();
+    _speech.stop();
   }
+  bool get isListening => _speech.isListening;
 }

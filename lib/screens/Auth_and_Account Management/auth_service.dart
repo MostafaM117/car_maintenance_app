@@ -1,9 +1,9 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
-import 'package:car_maintenance/screens/home_page.dart';
+// import 'package:car_maintenance/screens/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_svg/svg.dart';
+// import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 
@@ -17,11 +17,11 @@ class AuthService {
 
   bool _obscureText = true;
 
-  void _toggletoviewpassword() {
-    {
-      _obscureText = !_obscureText;
-    }
-  }
+  // void _toggletoviewpassword() {
+  //   {
+  //     _obscureText = !_obscureText;
+  //   }
+  // }
 
   void _showSnackBar(
       BuildContext context, String message, Color color, Duration duration) {

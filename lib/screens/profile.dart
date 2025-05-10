@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/user_data_helper.dart';
 import '../widgets/custom_widgets.dart';
+import '../widgets/darkmode_toggle_widget.dart';
+import '../widgets/language_toggle_widget.dart';
 import '../widgets/profile_option_tile.dart.dart';
 import 'Auth_and_Account Management/user/user_account_management.dart';
 import 'Auth_and_Account Management/auth_service.dart';
@@ -25,7 +27,8 @@ class _ProfileState extends State<Profile> {
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
   File? _profileImage;
-
+  bool isEnglish = true;
+  bool isDarkMode = false;
   @override
   void initState() {
     super.initState();
@@ -53,19 +56,14 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 20),
-            child: Column(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 25),
                 const Text(
                   'Profile',
                   style: TextStyle(
@@ -98,15 +96,30 @@ class _ProfileState extends State<Profile> {
                         ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontFamily: 'Inter',
-                  ),
-                ),
+                StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(user.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData && snapshot.data!.exists) {
+                        final data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        final username = data['username'] ?? '';
+                        return Text(
+                          username,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontFamily: 'Inter',
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        );
+                      } else {
+                        return Text('loading...');
+                      }
+                    }),
                 Text(
                   '${user.email}',
                   style: const TextStyle(
@@ -118,93 +131,83 @@ class _ProfileState extends State<Profile> {
                 ),
               ],
             ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                // SizedBox(
-                //   height: 60,
-                // ),
-                ProfileOptionTile(
-                  text: 'Profile',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => 
-                          UserAccountManagement()),
-                    );
-                  },
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 8),
+                    ProfileOptionTile(
+                      text: 'Profile',
+                      onBackTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UserAccountManagement()),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ProfileOptionTile(
+                      text: 'MyCars',
+                      onBackTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CarMaint()),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    LanguageToggle(
+                      isEnglish: isEnglish,
+                      onToggle: (value) {
+                        setState(() => isEnglish = value);
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    DarkModeToggle(
+                      isDarkMode: isDarkMode,
+                      onChanged: (value) {
+                        setState(() => isDarkMode = value);
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    ProfileOptionTile(
+                      text: 'Terms & Conditions',
+                      onBackTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TermsAndConditionsPage(),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    buildButton(
+                      'Log Out',
+                      AppColors.buttonColor,
+                      AppColors.buttonText,
+                      onPressed: () {
+                        AuthService().signOut(context);
+                      },
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                ProfileOptionTile(
-                  text: 'MyCars',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CarMaint()),
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ProfileOptionTile(
-                  text: 'Settings',
-                  onBackTap: () {},
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                ProfileOptionTile(
-                  text: 'Activity',
-                  onBackTap: () {},
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ProfileOptionTile(
-                  text: 'Terms & Conditions',
-                  onBackTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TermsAndConditionsPage(),
-                      ),
-                    );
-                  },
-                ),
-                // SizedBox(
-                //   height: 15,
-                // ),
-                // ProfileOptionTile(
-                //   rightIcon: Icons.help_outline,
-                //   text: 'Help & Support',
-                //   onBackTap: () {},
-                // ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: buildButton(
-                    'Log Out',
-                    AppColors.buttonColor,
-                    AppColors.buttonText,
-                    onPressed: () {
-                      AuthService().signOut(context);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
