@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Chatbot extends StatefulWidget {
@@ -21,7 +22,9 @@ class _ChatbotState extends State<Chatbot> {
 // Using ChatbotLogic
   late ChatLogic chatService;
   late SpeechToTextService speechService;
+  SpeechToText _speech = SpeechToText();
   String? activeChatId;
+  bool _isListening = false;
   final GeminiService _geminiService = GeminiService();
   TextEditingController messageController = TextEditingController();
 
@@ -120,24 +123,51 @@ void createNewChat() {
   //voiceChat 
 Future <void> _startSpeechToText() async{
   var status = await Permission.microphone.request();
-  if(status.isGranted){
-    speechService.startListening(
-    onResult: (result) {
-      setState(() {
-        messageController.text = result.recognizedWords;
-        messageController.selection = TextSelection.fromPosition(
-          TextPosition(offset: messageController.text.length),
-        );
-      });
+  bool available = await _speech.initialize(
+    onStatus: (status) {
+      if (status == 'done' || status == 'notListening') {
+        setState(() => _isListening = false);
+      }
     },
+    onError: (error) {
+      setState(() => _isListening = false);
+    }
   );
+
+  if (available) {
+    setState(() => _isListening = true);
+    _speech.listen(
+      onResult: (result) {
+        setState(() {
+          messageController.text = result.recognizedWords;
+          messageController.selection = TextSelection.fromPosition(
+            TextPosition(offset: messageController.text.length)
+          );
+        });
+      },
+    );
   }
-    else{print('Microphone permission not granted');
-    return;
-    }  
+  // if(status.isGranted){
+  //   speechService.startListening(
+  //   onResult: (result) {
+  //     setState(() {
+  //       messageController.text = result.recognizedWords;
+  //       messageController.selection = TextSelection.fromPosition(
+  //         TextPosition(offset: messageController.text.length),
+  //       );
+  //     });
+  //   },
+  // );
+  // }
+    // else{print('Microphone permission not granted');
+    // return;
+    // }  
 }
-void _stopspeechToText(){
-  speechService.stopListening();
+void _stopListening()async {
+  // speechService.stopListening();
+  await _speech.stop();
+  setState(() => _isListening = false);
+
 }
 @override
 void dispose() {
@@ -216,9 +246,9 @@ void dispose() {
         trailing: [
           IconButton(
             onPressed: (){
-              _startSpeechToText();
+              _isListening ? _stopListening() : _startSpeechToText();
             }, 
-            icon: Icon(Icons.mic))
+            icon: Icon(_isListening ? Icons.stop: Icons.mic))
             ]
       ),
       messageOptions: MessageOptions(
