@@ -49,26 +49,26 @@ class _UserSignupState extends State<UserSignupPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a username')),
       );
-      // return null;
+      return null;
     }
 
     else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Passwords do not match')),
       );
-      // return;
+      return null;
     }
     else if (_emailcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An email address is required')),
       );
-      // return;
+      return null;
     }
     else if (_passwordcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a password to sign up')),
       );
-      // return;
+      return null;
     }
     else {
     try {
@@ -98,11 +98,13 @@ class _UserSignupState extends State<UserSignupPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('This email is already registered')),
         );
+        return null;
       }
       else{
         ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
       );
+      return null;
       }
     }
   }
@@ -237,6 +239,7 @@ class _UserSignupState extends State<UserSignupPage> {
                   });
                 }),
               const SizedBox(height: 60),
+              // Signup Button requires terms to be checked 
               SizedBox(
                 width: double.infinity,
                 height: 45,
