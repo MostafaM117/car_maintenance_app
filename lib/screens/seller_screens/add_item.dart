@@ -220,7 +220,7 @@ class _AddItemState extends State<AddItem> {
               SizedBox(
                 height: 25,
               ),
-              buildButton(
+              AnimatedButton(
                 'Add',
                 AppColors.buttonColor,
                 AppColors.buttonText,
@@ -232,7 +232,7 @@ class _AddItemState extends State<AddItem> {
               SizedBox(
                 height: 15,
               ),
-              buildButton(
+              AnimatedButton(
                 'Discard',
                 AppColors.primaryText,
                 AppColors.buttonText,
