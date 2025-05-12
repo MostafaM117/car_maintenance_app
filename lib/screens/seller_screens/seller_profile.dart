@@ -175,7 +175,7 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    buildButton(
+                    AnimatedButton(
                       'Log Out',
                       AppColors.buttonColor,
                       AppColors.buttonText,

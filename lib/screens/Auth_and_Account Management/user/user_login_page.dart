@@ -62,7 +62,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
               const SizedBox(height: 50),
               Text(
                 'Sign in to Motorgy',
-                style: textStyleWhite.copyWith(fontSize: 24,fontWeight: FontWeight.bold),
+                style: textStyleWhite.copyWith(
+                    fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(
@@ -110,15 +111,14 @@ class _UserLoginPageState extends State<UserLoginPage> {
                 ),
               ),
               const SizedBox(height: 80),
-              buildButton(
+              AnimatedButton(
                   'Sign In', AppColors.buttonColor, AppColors.buttonText,
                   onPressed: () {
                 AuthService().signInWithEmailAndPassword(
-                  context,
-                  _emailcontroller.text.trim(),
-                  _passwordcontroller.text.trim(),
-                  'user'
-                );
+                    context,
+                    _emailcontroller.text.trim(),
+                    _passwordcontroller.text.trim(),
+                    'user');
               }),
               const SizedBox(height: 15),
               buildOrSeparator(),

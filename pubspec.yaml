@@ -85,6 +85,7 @@ flutter:
     - assets/images/cars/
     - assets/images/default_car.png
     - assets/svg/
+    - assets/icons/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

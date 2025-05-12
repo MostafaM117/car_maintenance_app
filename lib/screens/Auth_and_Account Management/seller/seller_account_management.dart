@@ -247,7 +247,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                   SizedBox(
                     height: 30,
                   ),
-                  buildButton(
+                  AnimatedButton(
                     'Delete Account',
                     AppColors.buttonColor,
                     AppColors.buttonText,

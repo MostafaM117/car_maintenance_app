@@ -194,7 +194,7 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: 20,
                     ),
-                    buildButton(
+                    AnimatedButton(
                       'Log Out',
                       AppColors.buttonColor,
                       AppColors.buttonText,

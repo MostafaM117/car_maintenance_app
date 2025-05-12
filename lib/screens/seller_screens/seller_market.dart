@@ -74,35 +74,25 @@ class _MarketPageState extends State<MarketPage> {
                   Expanded(
                     child: Container(
                       height: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.secondaryText,
-                        borderRadius: BorderRadius.circular(20),
+                      decoration: ShapeDecoration(
+                        color: const Color(0xFFF4F4F4),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            width: 1,
+                            color: AppColors.borderSide,
+                          ),
+                          borderRadius: BorderRadius.circular(22),
+                        ),
                       ),
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
                           hintText: 'Search',
                           border: InputBorder.none,
-                          contentPadding:
-                              const EdgeInsets.symmetric(horizontal: 16),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryText,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
-                    ),
-                    child: const Text(
-                      'Sort',
-                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ],

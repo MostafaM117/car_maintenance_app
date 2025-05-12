@@ -66,6 +66,7 @@ class ProductCard extends StatelessWidget {
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       title,
@@ -87,25 +88,6 @@ class ProductCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class FilterChipWidget extends StatelessWidget {
-  final String label;
-
-  const FilterChipWidget({Key? key, required this.label}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(22),
-      ),
-      label: Text(label),
-      backgroundColor: AppColors.primaryText,
-      labelStyle: textStyleGray.copyWith(color: AppColors.background),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
     );
   }
 }
