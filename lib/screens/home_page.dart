@@ -13,6 +13,7 @@ import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
 import '../Back-end/firestore_service.dart';
 // import 'maintenance.dart';
+import 'formscreens/formscreen1.dart';
 import 'maintenanceDetails.dart';
 // import 'market.dart';
 
@@ -113,7 +114,6 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 15),
 
-            // Display cars
             StreamBuilder<QuerySnapshot>(
               stream: carsCollection
                   .where('userId', isEqualTo: user.uid)
@@ -123,8 +123,8 @@ class _HomePageState extends State<HomePage> {
                   return Text('Error: ${snapshot.error}');
                 }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Text('No cars found. Add a car to see its image.');
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator(); // أو أي لودينغ مناسب
                 }
 
                 List<Map<String, dynamic>> cars = [];
@@ -133,6 +133,40 @@ class _HomePageState extends State<HomePage> {
                   car['id'] = doc.id;
                   cars.add(car);
                 }
+
+                // إذا لا يوجد سيارات: عرض كارد واحد يحتوي على زر إضافة
+                if (cars.isEmpty) {
+                  return SizedBox(
+                    height: 210,
+                    width: 300,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddCarScreen()),
+                        );
+                      },
+                      child: Card(
+                        color: AppColors.secondaryText,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            width: 1,
+                            color: AppColors.borderSide,
+                          ),
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        elevation: 4,
+                        child: Center(
+                          child: Icon(Icons.add,
+                              size: 48, color: AppColors.primaryText),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                // تحديث بيانات MaintID بعد تحميل السيارات
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (cars.isNotEmpty) {
                     final newMake = cars[currentCar]['make'].toString();
@@ -149,10 +183,11 @@ class _HomePageState extends State<HomePage> {
                     }
                   }
                 });
+
                 int cardsToDisplay = cars.length > 3 ? 3 : cars.length;
 
                 return SizedBox(
-                  height: 200,
+                  height: 210,
                   width: 300,
                   child: CardSwiper(
                     cardsCount: cars.length,
@@ -184,6 +219,7 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
+
             SizedBox(height: 30),
 
             Padding(
