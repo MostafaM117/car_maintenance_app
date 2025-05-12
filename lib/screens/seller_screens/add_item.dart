@@ -15,7 +15,6 @@ class AddItem extends StatefulWidget {
 class _AddItemState extends State<AddItem> {
   String? _selectedMake;
   String? _selectedModel;
-  int? _selectedYear;
   final TextEditingController descriptionController = TextEditingController();
   final List<String> categories = ['Periodic', 'Used', 'Unused'];
   String? _selectedCategory;
@@ -57,7 +56,7 @@ class _AddItemState extends State<AddItem> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Item Name',
+                  Text('Product Name',
                       style: textStyleWhite.copyWith(
                           fontSize: 16, fontWeight: FontWeight.w500)),
                   Container(
@@ -79,7 +78,7 @@ class _AddItemState extends State<AddItem> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         isCollapsed: true,
-                        hintText: 'Add Item Name',
+                        hintText: 'Add Product Name',
                         hintStyle:
                             textStyleGray.copyWith(fontWeight: FontWeight.w400),
                       ),
@@ -134,7 +133,6 @@ class _AddItemState extends State<AddItem> {
                   setState(() {
                     _selectedMake = newValue;
                     _selectedModel = null;
-                    _selectedYear = null;
                     checkFormCompletion();
                   });
                 },
@@ -151,34 +149,17 @@ class _AddItemState extends State<AddItem> {
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedModel = newValue;
-                    _selectedYear = null;
                     checkFormCompletion();
                   });
                 },
               ),
               const SizedBox(height: 15),
 
-              // Model Year
+              // SizedBox(
+              //   height: 15,
+              // ),
               buildDropdownField(
-                label: 'Model Year',
-                value: _selectedYear?.toString(),
-                options: (_selectedMake == null || _selectedModel == null)
-                    ? []
-                    : CarData.getYearsForModel(_selectedMake, _selectedModel)
-                        .map((year) => year.toString())
-                        .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedYear = int.tryParse(value!);
-                    checkFormCompletion();
-                  });
-                },
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              buildDropdownField(
-                label: 'Item Category',
+                label: 'Product Category',
                 value: _selectedCategory,
                 onChanged: (String? newValue) {
                   setState(() {
@@ -186,6 +167,15 @@ class _AddItemState extends State<AddItem> {
                   });
                 },
                 options: categories,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+
+              //item Stock Count
+              buildTextField(
+                label: 'Stock Count',
+                hintText: 'Add Count',
               ),
               SizedBox(
                 height: 15,
@@ -204,18 +194,17 @@ class _AddItemState extends State<AddItem> {
               SizedBox(
                 height: 15,
               ),
-              //item Stock Count
-              buildTextField(
-                label: 'Stock Count',
-                hintText: 'Add Count',
-              ),
-              SizedBox(
-                height: 15,
-              ),
               //item price
               buildTextField(
                 label: 'Price',
                 hintText: 'Add Price',
+              ),
+              SizedBox(
+                height: 25,
+              ),
+              buildTextField(
+                label: 'Store ID',
+                hintText: 'Add ID',
               ),
               SizedBox(
                 height: 25,
