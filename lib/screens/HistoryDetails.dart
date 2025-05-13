@@ -7,16 +7,16 @@ import '../models/MaintID.dart';
 // import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
 
-class MaintenanceDetailsPage extends StatefulWidget {
+class HistoryDetailsPage extends StatefulWidget {
   final MaintenanceList maintenanceItem;
 
-  const MaintenanceDetailsPage({super.key, required this.maintenanceItem});
+  const HistoryDetailsPage({super.key, required this.maintenanceItem});
 
   @override
-  State<MaintenanceDetailsPage> createState() => _MaintenanceDetailsPageState();
+  State<HistoryDetailsPage> createState() => _HistoryDetailsPageState();
 }
 
-class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
+class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
   late FirestoreService firestoreService;
   late TextEditingController descriptionController;
   late TextEditingController mileageController;

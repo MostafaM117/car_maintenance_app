@@ -1,19 +1,21 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
-import 'package:car_maintenance/screens/addMaintenance.dart';
+// import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+// import '../AI-Chatbot/chatbot.dart';
 import '../services/user_data_helper.dart';
-// import 'package:car_maintenance/widgets/mileage_display.dart';
 import '../widgets/CarCardWidget.dart';
-// import '../widgets/car_image_widget.dart';
 import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
 import '../Back-end/firestore_service.dart';
+// import 'maintenance.dart';
+import 'formscreens/formscreen1.dart';
 import 'maintenanceDetails.dart';
+// import 'market.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -95,7 +97,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 40),
+        padding: const EdgeInsets.only(
+          right: 11,
+          left: 11,
+          top: 20,
+        ),
         child: Column(
           children: [
             SizedBox(height: 10),
@@ -108,7 +114,6 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 15),
 
-            // Display cars
             StreamBuilder<QuerySnapshot>(
               stream: carsCollection
                   .where('userId', isEqualTo: user.uid)
@@ -122,8 +127,8 @@ class _HomePageState extends State<HomePage> {
                   return Text('Error: ${snapshot.error}');
                 }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return Text('No cars found. Add a car to see its image.');
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator(); // أو أي لودينغ مناسب
                 }
 
                 List<Map<String, dynamic>> cars = [];
@@ -132,6 +137,38 @@ class _HomePageState extends State<HomePage> {
                   car['id'] = doc.id;
                   cars.add(car);
                 }
+
+                if (cars.isEmpty) {
+                  return SizedBox(
+                    height: 210,
+                    width: 300,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AddCarScreen()),
+                        );
+                      },
+                      child: Card(
+                        color: AppColors.secondaryText,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            width: 1,
+                            color: AppColors.borderSide,
+                          ),
+                          borderRadius: BorderRadius.circular(22),
+                        ),
+                        elevation: 4,
+                        child: Center(
+                          child: Icon(Icons.add,
+                              size: 48, color: AppColors.primaryText),
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (cars.isNotEmpty) {
                     final newMake = cars[currentCar]['make'].toString();
@@ -148,6 +185,7 @@ class _HomePageState extends State<HomePage> {
                     }
                   }
                 });
+
                 int cardsToDisplay = cars.length > 3 ? 3 : cars.length;
 
                 return SizedBox(
@@ -178,28 +216,62 @@ class _HomePageState extends State<HomePage> {
                     },
                     numberOfCardsDisplayed: cardsToDisplay,
                     padding: EdgeInsets.only(bottom: 0),
-                    backCardOffset: const Offset(25, 30),
+                    backCardOffset: const Offset(22, 22),
                   ),
                 );
               },
             ),
-            SizedBox(height: 40),
 
-            SubtractWave(
-              text: 'Next Maintenance',
-              svgAssetPath: 'assets/svg/add.svg',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddMaintenance()),
-                );
-              },
+            SizedBox(height: 30),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Explore',
+                  style: TextStyle(
+                    color: const Color(0xFF0F0F0F),
+                    fontSize: 24,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ),
             SizedBox(height: 15),
+            // Add Explore cards
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildExploreCard(),
+                _buildExploreCard(),
+                _buildExploreCard(),
+              ],
+            ),
 
+            SizedBox(height: 15),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Your Next Maintenance',
+                  style: TextStyle(
+                    color: const Color(0xFF0F0F0F),
+                    fontSize: 24,
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
             // Maintenance List
             Expanded(
               child: SingleChildScrollView(
+                padding: EdgeInsets.zero, // Remove default padding
                 child: StreamBuilder<List<MaintenanceList>>(
                   stream: firestoreService.getMaintenanceList(),
                   builder: (context, snapshot) {
@@ -207,13 +279,10 @@ class _HomePageState extends State<HomePage> {
                       return Center(child: CircularProgressIndicator());
                     }
 
-                    final maintList = snapshot.data!
-                        .where((item) =>
-                            item.isDone !=
-                            true) // Only show items that are not done
-                        .toList()
+                    final maintList = snapshot.data!.toList()
                       ..sort((a, b) =>
                           a.mileage.compareTo(b.mileage)); // Sort by date
+                    // final limitedItems = maintList.take(9).toList();
 
                     if (maintList.isEmpty) {
                       return Center(
@@ -224,22 +293,13 @@ class _HomePageState extends State<HomePage> {
                       itemCount: maintList.length,
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
+                      padding: EdgeInsets.zero, // Remove default padding
                       itemBuilder: (context, index) {
                         final maintenanceItem = maintList[index];
 
-                        if (!itemCheckedStates
-                            .containsKey(maintenanceItem.id)) {
-                          itemCheckedStates[maintenanceItem.id] = false;
-                        }
-                        if (maintenanceItem.isDone == true) {
-                          return SizedBox.shrink();
-                          // Hides the widget visually
-                        }
-                        // print(maintenanceItem.isDone);
-
                         return Dismissible(
                           key: Key(maintenanceItem.id),
-                          direction: DismissDirection.endToStart,
+                          direction: DismissDirection.startToEnd,
                           background: Container(
                             color: const Color.fromARGB(255, 94, 255, 82),
                             alignment: Alignment.centerRight,
@@ -247,20 +307,8 @@ class _HomePageState extends State<HomePage> {
                             child: Icon(Icons.check, color: Colors.white),
                           ),
                           onDismissed: (direction) async {
-                            await firestoreService.moveToHistory(maintenanceItem
-                                .id); // This updates `isDone` in Firestore
-
-                            setState(() {
-                              itemCheckedStates[maintenanceItem.id] =
-                                  true; // This updates the local UI state
-                            });
-                            print("✅ Moved to history");
-
-                            // ScaffoldMessenger.of(context).showSnackBar(
-                            //   SnackBar(
-                            //       content:
-                            //           Text('Moved to history successfully')),
-                            // );
+                            await firestoreService
+                                .moveToHistory(maintenanceItem.id);
                           },
                           child: GestureDetector(
                             onTap: () {
@@ -292,3 +340,47 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+Widget _buildExploreCard(
+    // BuildContext context, String title, IconData icon, Color color, VoidCallback onTap
+    ) {
+  return GestureDetector(
+    // onTap: ,
+    child: Container(
+      width: 100,
+      height: 45,
+      decoration: ShapeDecoration(
+        color: AppColors.secondaryText,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            width: 1,
+            color: AppColors.borderSide,
+          ),
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              // color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+          ),
+          SizedBox(height: 8),
+          // Text(
+          //   title,
+          //   style: TextStyle(
+          //     fontSize: 14,
+          //     fontWeight: FontWeight.w500,
+          //     color: Colors.black87,
+          //   ),
+          // ),
+        ],
+      ),
+    ),
+  );
+}
+

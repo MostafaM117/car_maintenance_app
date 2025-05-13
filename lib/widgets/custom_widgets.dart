@@ -158,7 +158,7 @@ Widget appleButton(VoidCallback onPressed) {
   );
 }
 
-Widget buildButton(
+Widget AnimatedButton(
   String text,
   Color backgroundColor,
   Color textColor, {
@@ -286,94 +286,6 @@ Widget buildTextField({
       ),
     ],
   );
-}
-
-Widget buildUserNameField({
-  required TextEditingController controller,
-  required bool isEditing,
-  required String? Function(String? value) validator,
-}) {
-  if (isEditing) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 8),
-        Container(
-          height: 45,
-          decoration: ShapeDecoration(
-            color: AppColors.secondaryText,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(
-                width: 1,
-                color: AppColors.borderSide,
-              ),
-              borderRadius: BorderRadius.circular(22),
-            ),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          alignment: Alignment.center,
-          child: TextField(
-            controller: controller,
-            enabled: true,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-              ),
-              prefixStyle: TextStyle(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-              // prefixText: 'username: ',
-              isCollapsed: true,
-            ),
-            style: textStyleGray,
-            textAlignVertical: TextAlignVertical.center,
-          ),
-        ),
-      ],
-    );
-  } else {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-          height: 10,
-        ),
-        Container(
-          height: 45,
-          // decoration: ShapeDecoration(
-          //   color: AppColors.secondaryText,
-          //   shape: RoundedRectangleBorder(
-          //     side: BorderSide(
-          //       width: 1,
-          //       color: AppColors.borderSide,
-          //     ),
-          //     borderRadius: BorderRadius.circular(22),
-          //   ),
-          // ),
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          alignment: Alignment.center,
-          child: TextField(
-            controller: controller,
-            enabled: false,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              prefixStyle: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-                fontWeight: FontWeight.bold,
-              ),
-              prefixText: 'username: ',
-              isCollapsed: true,
-            ),
-            style: textStyleGray,
-            // textAlignVertical: TextAlignVertical.center,
-          ),
-        ),
-      ],
-    );
-  }
 }
 
 Widget popUpBotton(

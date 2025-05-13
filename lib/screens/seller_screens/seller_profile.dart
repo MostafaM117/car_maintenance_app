@@ -11,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../widgets/darkmode_toggle_widget.dart';
 import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
@@ -168,7 +167,7 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    buildButton(
+                    AnimatedButton(
                       'Log Out',
                       AppColors.buttonColor,
                       AppColors.buttonText,
