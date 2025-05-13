@@ -138,7 +138,6 @@ class _HomePageState extends State<HomePage> {
                   cars.add(car);
                 }
 
-                // إذا لا يوجد سيارات: عرض كارد واحد يحتوي على زر إضافة
                 if (cars.isEmpty) {
                   return SizedBox(
                     height: 210,
@@ -170,7 +169,6 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
 
-                // تحديث بيانات MaintID بعد تحميل السيارات
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (cars.isNotEmpty) {
                     final newMake = cars[currentCar]['make'].toString();
@@ -385,3 +383,4 @@ Widget _buildExploreCard(
     ),
   );
 }
+
