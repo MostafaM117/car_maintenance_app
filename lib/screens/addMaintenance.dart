@@ -73,9 +73,9 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                                   text: _pageTitle ?? "Maintenance Name"),
                               style: TextStyle(
                                 color: const Color(0xFFDA1F11),
-                                fontSize: 32,
+                                fontSize: 24,
                                 fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                               ),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -95,7 +95,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                             _pageTitle ?? "Maintenance Name",
                             style: TextStyle(
                               color: const Color(0xFFDA1F11),
-                              fontSize: 32,
+                              fontSize: 24,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w600,
                             ),
@@ -169,8 +169,8 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                     children: [
                       Text(
                         'Description',
-         style: textStyleWhite.copyWith(
-              fontSize: 16, fontWeight: FontWeight.w500),
+                        style: textStyleWhite.copyWith(
+                            fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                       Container(
                         width: 345,
@@ -219,17 +219,24 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                               title: 'Maintenance Added!',
                               body: descriptionController.text,
                             );
-                            firestoreService.addSpecialMaintenance(
-                                descriptionController.text,
-                                false,
-                                0,
-                                selectedDate!);
+                            if (selectedDate != null) {
+                              firestoreService.addSpecialMaintenance(
+                                  descriptionController.text,
+                                  false,
+                                  0,
+                                  selectedDate!);
+                            } else {
+                              // Handle case when date is not selected
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Please select a date')),
+                              );
+                            }
                           },
                         ),
                       ],
                     ),
                   ),
-
                 ]),
               ),
             ),
@@ -239,4 +246,3 @@ class _AddMaintenanceState extends State<AddMaintenance> {
     );
   }
 }
-
