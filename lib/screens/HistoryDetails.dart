@@ -237,6 +237,7 @@ class _HistoryDetailsPage extends State<HistoryDetailsPage> {
                                     _isEditing = true;
                                   });
                                 }
+                                // Navigator.of(context).pop();
                               },
                             ),
                           ],

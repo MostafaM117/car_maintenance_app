@@ -65,7 +65,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Maintenance updated successfully')),
     );
-    
+
     // If marked as completed, navigate back
     if (_status == 'Completed') {
       Navigator.of(context).pop();
@@ -237,6 +237,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                                     _isEditing = true;
                                   });
                                 }
+                                // Navigator.of(context).pop();
                               },
                             ),
                           ],

@@ -1,3 +1,6 @@
+import 'package:car_maintenance/Back-end/firestore_service.dart';
+import 'package:car_maintenance/models/MaintID.dart';
+import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../models/car_data.dart';
@@ -22,8 +25,16 @@ class _AddItemState extends State<AddItem> {
   final List<String> availability = ['Available', 'Not Available'];
   String? _selectedAvailability;
   final TextEditingController itemNameController = TextEditingController();
+  final TextEditingController stockCountController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
   final List<String> _carMakes = CarData.getAllMakes();
+  @override
+  void initState() {
+    super.initState();
+    firestoreService =
+        FirestoreService(MaintID()); // Initialize the firestoreService variable
+  }
 
   void checkFormCompletion() {
     setState(() {});
@@ -206,9 +217,9 @@ class _AddItemState extends State<AddItem> {
               ),
               //item Stock Count
               buildTextField(
-                label: 'Stock Count',
-                hintText: 'Add Count',
-              ),
+                  label: 'Stock Count',
+                  hintText: 'Add Count',
+                  controller: stockCountController),
               SizedBox(
                 height: 15,
               ),
@@ -216,6 +227,7 @@ class _AddItemState extends State<AddItem> {
               buildTextField(
                 label: 'Price',
                 hintText: 'Add Price',
+                controller: priceController,
               ),
               SizedBox(
                 height: 25,
@@ -225,6 +237,20 @@ class _AddItemState extends State<AddItem> {
                 AppColors.buttonColor,
                 AppColors.buttonText,
                 onPressed: () {
+                  firestoreService.addProduct(
+                      itemNameController.text,
+                      descriptionController.text,
+                      _selectedMake!,
+                      _selectedModel!,
+                      _selectedYear!,
+                      _selectedCategory!,
+                      _selectedAvailability!,
+                      stockCountController.text.isEmpty
+                          ? 0
+                          : int.parse(stockCountController.text),
+                      priceController.text.isEmpty
+                          ? 0.0
+                          : double.parse(priceController.text));
                   Navigator.pop(context, itemNameController.text);
                 },
               ),
