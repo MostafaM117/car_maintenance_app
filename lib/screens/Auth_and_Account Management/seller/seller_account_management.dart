@@ -1,7 +1,5 @@
 import 'dart:io';
-
-// import 'package:car_maintenance/services/user_delete_account.dart';
-import 'package:car_maintenance/services/forgot_password.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/services/seller/seller_delete_account.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,58 +18,30 @@ class SellerAccountManagement extends StatefulWidget {
 }
 
 class _SellerAccountManagementState extends State<SellerAccountManagement> {
-  final _usernameEditcontroller = TextEditingController();
-  bool _isediting = false;
-  final seller = FirebaseAuth.instance.currentUser;
-  //Get current username
-  Future<void> _getcurrentusername() async {
-    if (seller != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('sellers')
-          .doc(seller!.uid)
-          .get();
-      if (userDoc.exists) {
-        setState(() {
-          _usernameEditcontroller.text = userDoc['shopname'] ?? '';
-        });
-      } else {
-        print('Seller is null');
-      }
-    }
-  }
+  final _businessnameEditcontroller = TextEditingController();
+  final _businessemailcontroller = TextEditingController();
+  String? errorText;
+  final seller = FirebaseAuth.instance.currentUser!;
 
   //Update current username
-  Future<void> _updateUsername() async {
-    if (seller == null) {
-      return;
-    }
-    String newUsername = _usernameEditcontroller.text.trim();
-    if (newUsername.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Username cannot be empty'),
-          backgroundColor: Colors.red,
-        ),
+  Future<void> _updateBusinessname() async {
+    String newBusinessname = _businessnameEditcontroller.text.trim();
+    if (newBusinessname.isEmpty) {
+      setState(() {
+        errorText = "Username can't be empty.";
+        }
       );
       return;
     }
     await FirebaseFirestore.instance
         .collection('sellers')
-        .doc(seller!.uid)
-        .update({'shopname': newUsername});
-  }
-
-  // Press edit username to edit
-  void _toggleEdit() {
-    setState(() {
-      _isediting = !_isediting;
-    });
+        .doc(seller.uid)
+        .update({'businessname': newBusinessname});
   }
 
   @override
   void initState() {
     super.initState();
-    _getcurrentusername();
   }
 
   @override
@@ -98,154 +68,315 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                       letterSpacing: 9.20,
                     ),
                   ),
-
                   Column(
                     children: [
                       SizedBox(
-                        height: 15,
+                        height: 20
                       ),
                       ProfileImagePicker(
                         onImagePicked: (File image) {
                           setState(() {});
                         },
                       ),
+                      BusinessnameDisplay(uid: seller.uid,),
                       Text(
-                        _usernameEditcontroller.text,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.primaryText,
-                          fontFamily: 'Inter',
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        '${seller!.email}',
+                        '${seller.email}',
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.7),
-                          fontSize: 10,
+                          fontSize: 13,
                           fontFamily: 'Inter',
                         ),
                       ),
+                      SizedBox(
+                          height: 20,
+                        ),
                     ],
                   ),
-                  InfoField(
-                    label: 'Name',
-                    value: _usernameEditcontroller.text,
-                    onTap: () {
-                      //  اكتب هنا كود البوب ب
-                      print('Name pressed');
+                  // Username from Database
+                  GestureDetector(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            'Business name',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          height: 45,                    
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          alignment: Alignment.centerLeft,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFF4F4F4),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                              width: 1,
+                              color: AppColors.borderSide,
+                              ),
+                          borderRadius: BorderRadius.circular(22),
+                            ),
+                          ),
+                          child: BusinessnameDisplay(
+                            uid: seller.uid, 
+                            style: TextStyle( 
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontFamily: 'Inter',
+                              ),
+                            )
+                        ),
+                      ],
+                    ),
+                    onTap: () async{
+                      final userDoc = await FirebaseFirestore.instance.collection('sellers').doc(seller.uid).get();
+                      final latestUsername = userDoc.data()?['businessname']?? '';
+                      _businessnameEditcontroller.text = latestUsername;
+                      final result = await showDialog(context: context, builder: (context) => 
+                      StatefulBuilder(builder: (context, setState){
+                        return AlertDialog(
+                          backgroundColor: Color(0xFFF4F4F4),
+                            title: 
+                              Text('Update your businessname below.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18
+                                ),
+                              ),
+                            content: SingleChildScrollView(
+                              child: SizedBox(
+                                height: 120,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      controller: _businessnameEditcontroller,
+                                      cursorColor: Colors.black,
+                                      decoration: InputDecoration(
+                                        label: Text('Username'),
+                                        labelStyle: TextStyle(color: errorText != null? Theme.of(context).colorScheme.error : Colors.black),
+                                        errorText: errorText,
+                                        border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.black),
+                                          borderRadius: BorderRadius.circular(22),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.black),
+                                          borderRadius: BorderRadius.circular(22),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            actionsAlignment: MainAxisAlignment.center,
+                            actions: [
+                              popUpBotton(
+                                'Cancel',
+                              AppColors.primaryText,
+                              AppColors.buttonText,
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  errorText = null;
+                                },
+                              ),
+                              popUpBotton(
+                                'Update',
+                              AppColors.buttonColor,
+                              AppColors.buttonText,
+                                onPressed: () {
+                                  final businessname = _businessnameEditcontroller.text.trim();
+                                  if (businessname.isEmpty) {
+                                    setState(() {
+                                      errorText = "Businessname can't be empty.";
+                                      return;
+                                    });
+                                  } else {
+                                    Navigator.of(context).pop(businessname);
+                                    _updateBusinessname();
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                      }
+                      ));
+                        return result;
                     },
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   InfoField(
                     label: 'Email',
-                    value: '${seller!.email}',
+                    value: '${seller.email}',
                     onTap: () {
-                      //  اكتب هنا كود البوب ب
-
-                      print('Name pressed');
+                      // print('email pressed');
                     },
                   ),
-                  InfoField(
-                    label: 'Password',
-                    value: '********',
-                    onTap: () {
-                      //  اكتب هنا كود البوب ب
-                      print('Name pressed');
+                  GestureDetector(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                            'Password',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          height: 45,                    
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          alignment: Alignment.centerLeft,
+                          decoration: ShapeDecoration(
+                            color: Color(0xFFF4F4F4),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                              width: 1,
+                              color: AppColors.borderSide,
+                              ),
+                          borderRadius: BorderRadius.circular(22),
+                            ),
+                          ),
+                          child: Text('************',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontFamily: 'Inter',
+                          ))
+                        ),
+                      ],
+                    ),
+                    onTap: () async{
+                      final result = await showDialog(context: context, builder: (context) =>
+                      StatefulBuilder(builder: (context, setState){
+                          return AlertDialog(
+                            backgroundColor: Color(0xFFF4F4F4),
+                              title: 
+                                Text('Change your Password',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18
+                                  ),
+                                ),
+                              content: SingleChildScrollView(
+                                child: SizedBox(
+                                  height: 120,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextField(
+                                        controller: _businessemailcontroller,
+                                        cursorColor: Colors.black,
+                                        decoration: InputDecoration(
+                                          label: Text('email'),
+                                          labelStyle: TextStyle(color: errorText != null? Theme.of(context).colorScheme.error : Colors.black),
+                                          errorText: errorText,
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.black),
+                                            borderRadius: BorderRadius.circular(22),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.black),
+                                            borderRadius: BorderRadius.circular(22),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              actionsAlignment: MainAxisAlignment.center,
+                              actions: [
+                                Column(
+                                  children: [
+                                  popUpBotton(
+                                    'Send E-mail',
+                                  AppColors.buttonColor,
+                                  AppColors.buttonText,
+                                    onPressed: () async {
+                                      final email = _businessemailcontroller.text.trim();
+                                      if (email.isEmpty) {
+                                        setState(() {
+                                          errorText = "email can't be empty.";
+                                          return;
+                                        });
+                                      } else {
+                                        try {
+                                          await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                                          _businessemailcontroller.clear();
+                                          Navigator.of(context).pop();
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            SnackBar(
+                                              content: Text('A password reset email has been sent successfully.'),
+                                              backgroundColor: Colors.green.shade400,
+                                              duration: Duration(seconds: 3),
+                                            ),
+                                          );
+                                          errorText = null;
+                                        } catch (e) {
+                                          if(e.toString().contains('badly formatted')){
+                                            setState(() {
+                                              errorText = 'Please enter a valid email address';
+                                              return;
+                                          });
+                                        }
+                                          else{
+                                            _businessemailcontroller.clear();
+                                            Navigator.of(context).pop();
+                                            errorText = null;
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text(e.toString()),
+                                                backgroundColor: Colors.red,
+                                                duration: Duration(seconds: 3),
+                                              ),
+                                            );
+                                          }
+                                        print(e.toString());
+                                      }
+                                    }
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                  popUpBotton(
+                                  'Cancel',
+                                AppColors.primaryText,
+                                AppColors.buttonText,
+                                  onPressed: () {
+                                    _businessemailcontroller.clear();
+                                    Navigator.of(context).pop();
+                                    errorText = null;
+                                  },
+                                ),
+                                  ],
+                                )
+                              ],
+                            );
+                        }
+                        ));
+                        return result;
                     },
                   ),
-
                   SizedBox(
-                    height: 10,
-                  ),
-                  // buildTextUserNameField(
-                  // buildUserNameField(
-                  //   controller: _usernameEditcontroller,
-                  //   isEditing: _isediting,
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Username cannot be empty';
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
-
-                  // SizedBox(
-                  //   height: 30,
-                  // ),
-                  // SizedBox(
-                  //   height: 50,
-                  //   child: ElevatedButton(
-                  //       style: ElevatedButton.styleFrom(
-                  //         backgroundColor: _isediting
-                  //             ? AppColors.buttonColor
-                  //             : AppColors.secondaryText,
-                  //         shape: RoundedRectangleBorder(
-                  //             borderRadius: BorderRadius.circular(25)),
-                  //       ),
-                  //       child: Row(
-                  //         mainAxisAlignment: MainAxisAlignment.center,
-                  //         children: [
-                  //           Text(
-                  //               _isediting
-                  //                   ? "Update username"
-                  //                   : "Edit username",
-                  //               style: _isediting
-                  //                   ? textStyleWhite.copyWith(
-                  //                       color: AppColors.secondaryText)
-                  //                   : textStyleWhite.copyWith(
-                  //                       color: Colors.black)),
-                  //         ],
-                  //       ),
-                  //       onPressed: () {
-                  //         if (_usernameEditcontroller.text.trim().isEmpty) {
-                  //           ScaffoldMessenger.of(context).showSnackBar(
-                  //             SnackBar(
-                  //               content: Text('Username can\'t be empty'),
-                  //               backgroundColor:
-                  //                   const Color.fromARGB(141, 244, 67, 54),
-                  //             ),
-                  //           );
-                  //         } else {
-                  //           _toggleEdit();
-                  //           _updateUsername();
-                  //           _isediting
-                  //               ? ScaffoldMessenger.of(context).showSnackBar(
-                  //                   SnackBar(
-                  //                     content: Text(
-                  //                         'Now you can edit your username'),
-                  //                     duration: Duration(milliseconds: 1000),
-                  //                   ),
-                  //                 )
-                  //               : ScaffoldMessenger.of(context).showSnackBar(
-                  //                   SnackBar(
-                  //                     content:
-                  //                         Text('Username updated successfully'),
-                  //                     duration: Duration(milliseconds: 1000),
-                  //                     backgroundColor: const Color.fromARGB(
-                  //                         158, 102, 187, 106),
-                  //                   ),
-                  //                 );
-                  //         }
-                  //       }),
-                  // ),
-                  // SizedBox(
-                  //   height: 30,
-                  // ),
-                  // buildButton(
-                  //   'Edit Password',
-                  //   AppColors.secondaryText,
-                  //   Colors.black,
-                  //   onPressed: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => ForgotPassword()),
-                  //     );
-                  //   },
-                  // ),
-                  SizedBox(
-                    height: 30,
+                    height: 40,
                   ),
                   AnimatedButton(
                     'Delete Account',
@@ -292,8 +423,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                 AppColors.buttonColor,
                                 AppColors.buttonText,
                                 onPressed: () {
-                                  SellerDeleteAccount()
-                                      .sellerdeleteAccount(context);
+                                  SellerDeleteAccount().sellerdeleteAccount(context);
                                 },
                               ),
                             ],
