@@ -48,10 +48,10 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
         children: _pages,
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.primaryText,
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(22),
         ),
         child: GNav(
           backgroundColor: AppColors.primaryText,
