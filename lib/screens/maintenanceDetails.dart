@@ -173,7 +173,6 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                                                 TextAlignVertical.center,
                                           ),
                                         ),
-                                        // أيقونة التعديل داخل الـ Container
                                         if (_isEditing)
                                           GestureDetector(
                                             onTap: () {
@@ -216,8 +215,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                             ),
                             const SizedBox(height: 8),
                             GestureDetector(
-                              onTap:
-                                  null, // مش محتاجين onTap هنا لأنه هيشتغل من الأيقونة
+                              onTap: null,
                               child: Container(
                                 width: double.infinity,
                                 height: 50,
@@ -313,6 +311,8 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                                     expands: true,
                                     enabled: isEditingDescription,
                                     focusNode: descriptionFocusNode,
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
                                     decoration: const InputDecoration.collapsed(
                                         hintText: ''),
                                     style: textStyleWhite,
@@ -321,7 +321,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                                 if (_isEditing)
                                   Positioned(
                                     top: 15,
-                                    right: 15,
+                                    left: 15,
                                     child: GestureDetector(
                                       onTap: () {
                                         setState(() {

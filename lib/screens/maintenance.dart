@@ -6,8 +6,6 @@ import 'package:car_maintenance/screens/HistoryDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
-import '../notifications/notification.dart';
-
 import '../widgets/custom_widgets.dart';
 import '../widgets/maintenance_card.dart';
 
