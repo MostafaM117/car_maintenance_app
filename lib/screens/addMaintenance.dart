@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import '../Back-end/firestore_service.dart';
 import '../constants/app_colors.dart';
@@ -103,7 +102,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                   ),
                   const SizedBox(height: 12),
                   buildTextField(
-                    label: 'Maintenance Type',
+                    label: 'Mileage',
                     hintText: 'Current mileage',
                     controller: mileageController,
                   ),
@@ -215,16 +214,29 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                           AppColors.buttonColor,
                           AppColors.buttonText,
                           onPressed: () {
-                            NotiService().showNotification(
-                              title: 'Maintenance Added!',
-                              body: descriptionController.text,
-                            );
                             if (selectedDate != null) {
-                              firestoreService.addSpecialMaintenance(
-                                  descriptionController.text,
-                                  false,
-                                  0,
-                                  selectedDate!);
+                              if (_status == 'Upcoming') {
+                                firestoreService.addMaintenance(
+                                    descriptionController.text,
+                                    false,
+                                    mileageController.text.isNotEmpty
+                                        ? int.parse(mileageController.text)
+                                        : 0,
+                                    selectedDate!);
+                              }
+                              if (_status == 'Completed') {
+                                firestoreService.addSpecialMaintenance(
+                                    descriptionController.text,
+                                    false,
+                                    mileageController.text.isNotEmpty
+                                        ? int.parse(mileageController.text)
+                                        : 0,
+                                    selectedDate!);
+                              }
+                              NotiService().showNotification(
+                                title: 'Maintenance Added!',
+                                body: descriptionController.text,
+                              );
                             } else {
                               // Handle case when date is not selected
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -232,6 +244,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                                     content: Text('Please select a date')),
                               );
                             }
+                            Navigator.of(context).pop(true);
                           },
                         ),
                       ],

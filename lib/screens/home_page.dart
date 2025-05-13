@@ -119,6 +119,10 @@ class _HomePageState extends State<HomePage> {
                   .where('userId', isEqualTo: user.uid)
                   .snapshots(),
               builder: (context, snapshot) {
+                // if (snapshot.connectionState == ConnectionState.waiting) {
+                //   return CircularProgressIndicator();
+                // }
+
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
@@ -277,13 +281,10 @@ class _HomePageState extends State<HomePage> {
                       return Center(child: CircularProgressIndicator());
                     }
 
-                    final maintList = snapshot.data!
-                        .where((item) =>
-                            item.isDone !=
-                            true) // Only show items that are not done
-                        .toList()
+                    final maintList = snapshot.data!.toList()
                       ..sort((a, b) =>
                           a.mileage.compareTo(b.mileage)); // Sort by date
+                    // final limitedItems = maintList.take(9).toList();
 
                     if (maintList.isEmpty) {
                       return Center(
@@ -298,19 +299,9 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (context, index) {
                         final maintenanceItem = maintList[index];
 
-                        if (!itemCheckedStates
-                            .containsKey(maintenanceItem.id)) {
-                          itemCheckedStates[maintenanceItem.id] = false;
-                        }
-                        if (maintenanceItem.isDone == true) {
-                          return SizedBox.shrink();
-                          // Hides the widget visually
-                        }
-                        // print(maintenanceItem.isDone);
-
                         return Dismissible(
                           key: Key(maintenanceItem.id),
-                          direction: DismissDirection.endToStart,
+                          direction: DismissDirection.startToEnd,
                           background: Container(
                             color: const Color.fromARGB(255, 94, 255, 82),
                             alignment: Alignment.centerRight,
@@ -318,14 +309,8 @@ class _HomePageState extends State<HomePage> {
                             child: Icon(Icons.check, color: Colors.white),
                           ),
                           onDismissed: (direction) async {
-                            await firestoreService.moveToHistory(maintenanceItem
-                                .id); // This updates `isDone` in Firestore
-
-                            setState(() {
-                              itemCheckedStates[maintenanceItem.id] =
-                                  true; // This updates the local UI state
-                            });
-                            print("✅ Moved to history");
+                            await firestoreService
+                                .moveToHistory(maintenanceItem.id);
                           },
                           child: GestureDetector(
                             onTap: () {

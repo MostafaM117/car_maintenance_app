@@ -1,3 +1,4 @@
+import 'package:car_maintenance/models/ProductItemModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:car_maintenance/models/MaintID.dart';
@@ -9,7 +10,7 @@ class FirestoreService {
   final user = FirebaseAuth.instance.currentUser;
   late final CollectionReference historyCollection;
   late final CollectionReference personalMaintCollection;
-
+  late final CollectionReference productsCollection;
   FirestoreService(MaintID maintID)
       : maintCollection = FirebaseFirestore.instance
             .collection('Maintenance_Schedule_${MaintID().maintID}') {
@@ -21,6 +22,8 @@ class FirestoreService {
         .collection('users')
         .doc(user!.uid)
         .collection("maintHistory ${MaintID().maintID}");
+    productsCollection = FirebaseFirestore.instance
+        .collection('products'); // Collection for products
   }
   //add special cases
   Future<void> addSpecialMaintenance(String description, bool isDone,
@@ -48,22 +51,78 @@ class FirestoreService {
     await batch.commit();
   }
 
-  //get lists
+  //add product
+  Future<void> addProduct(
+    String name,
+    String description,
+    String selectedMake,
+    String selectedModel,
+    String selectedCategory,
+    String selectedAvailability,
+    int stockCount,
+    double price,
+  ) async {
+    try {
+      await productsCollection.add({
+        'name': name,
+        'Description': description,
+        'selectedMake': selectedMake,
+        'selectedModel': selectedModel,
+        'selectedCategory': selectedCategory,
+        'selectedAvailability': selectedAvailability,
+        'stockCount': stockCount,
+        'price': price
+      });
+      print("✅ Added product item");
+    } catch (e) {
+      print("❌ Error adding product item: $e");
+    }
+  }
+
+  //get products
+  Stream<List<ProductItem>> getProducts() {
+    return productsCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>? ?? {};
+        return ProductItem(
+          id: doc.id,
+          name: data['name'] ?? '',
+          price: data['price'] ?? 0,
+          description: data['Description'] ?? '',
+          selectedMake: data['selectedMake'] ?? '',
+          selectedModel: data['selectedModel'] ?? '',
+          selectedCategory: data['selectedCategory'] ?? '',
+          selectedAvailability: data['selectedAvailability'] ?? '',
+          stockCount: data['stockCount'] ?? 0,
+        );
+      }).toList();
+    });
+  }
+
+  //get maint lists
   Stream<List<MaintenanceList>> getMaintenanceList() {
-    return personalMaintCollection.snapshots().map((snapshot) {
-      //debug print
+    return personalMaintCollection
+        // .limit(9) // Add this line to limit to 9 documents
+        .snapshots()
+        .map((snapshot) {
       print("📡 Firestore returned ${snapshot.docs.length} documents");
 
       return snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>? ?? {};
-        //debug print
-        // print("📜 Mapping Firestore document: $data");
+
+        DateTime expected;
+        try {
+          expected = (data['expectedDate'] as Timestamp?)?.toDate() ??
+              DateTime.now().add(Duration(days: 30));
+        } catch (_) {
+          expected = DateTime.now().add(Duration(days: 30));
+        }
+
         return MaintenanceList(
           id: doc.id,
           description: data['Description'] ?? '',
           mileage: (data['mileage'] ?? 0) as int,
-          expectedDate: (data['expectedDate'])?.toDate() ??
-              DateTime.now().add(Duration(days: 30)),
+          expectedDate: expected,
           isDone: (data['isDone'] ?? false) as bool,
         );
       }).toList();
@@ -151,5 +210,55 @@ class FirestoreService {
       print("❌ Error updating maintenance item: $e");
     }
   }
-}
 
+  Future<void> updateHistory(
+    String docId,
+    String description,
+    int mileage,
+    DateTime expectedDate,
+    bool isDone,
+  ) async {
+    try {
+      await historyCollection.doc(docId).update({
+        'Description': description,
+        'mileage': mileage,
+        'expectedDate': expectedDate,
+        'isDone': isDone,
+      });
+      print("✅ Updated maintenance item with ID: $docId");
+    } catch (e) {
+      print("❌ Error updating maintenance item: $e");
+    }
+  }
+
+  Future<void> clearHistory() async {
+    try {
+      final snapshot = await historyCollection.get();
+      for (var doc in snapshot.docs) {
+        await doc.reference.delete();
+      }
+      print("✅ Cleared all history items");
+    } catch (e) {
+      print("❌ Error clearing history: $e");
+    }
+  }
+
+  Future<void> addMaintenance(
+    String description,
+    bool isDone,
+    int mileage,
+    DateTime expectedDate,
+  ) async {
+    try {
+      await personalMaintCollection.add({
+        'Description': description,
+        'mileage': mileage,
+        'expectedDate': expectedDate,
+        'isDone': false,
+      });
+      print("✅ Added maintenance item");
+    } catch (e) {
+      print("❌ Error adding maintenance item: $e");
+    }
+  }
+}

@@ -34,7 +34,7 @@ class DarkModeToggle extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Dark Mood",
+              "Dark Mode",
               style: textStyleGray.copyWith(
                 fontSize: 14,
                 color: AppColors.primaryText,
