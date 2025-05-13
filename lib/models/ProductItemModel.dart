@@ -7,7 +7,6 @@ class ProductItem {
   final String description;
   final String selectedMake;
   final String selectedModel;
-  final int selectedYear;
   File? image; // Optional image field
   final String selectedCategory;
   final String selectedAvailability;
@@ -19,7 +18,6 @@ class ProductItem {
     required this.description,
     required this.selectedMake,
     required this.selectedModel,
-    required this.selectedYear,
     this.image,
     required this.selectedCategory,
     required this.selectedAvailability,
@@ -33,7 +31,6 @@ class ProductItem {
       description: data['Description'] ?? '',
       selectedMake: data['selectedMake'] ?? '',
       selectedModel: data['selectedModel'] ?? '',
-      selectedYear: data['selectedYear'] ?? 0,
       name: data['name'] ?? '',
       selectedCategory: data['selectedCategory'] ?? '',
       selectedAvailability: data['selectedAvailability'] ?? '',

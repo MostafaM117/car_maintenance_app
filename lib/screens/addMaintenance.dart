@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import '../Back-end/firestore_service.dart';
 import '../constants/app_colors.dart';
@@ -73,9 +72,9 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                                   text: _pageTitle ?? "Maintenance Name"),
                               style: TextStyle(
                                 color: const Color(0xFFDA1F11),
-                                fontSize: 32,
+                                fontSize: 24,
                                 fontFamily: 'Inter',
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                               ),
                               decoration: InputDecoration(
                                 border: InputBorder.none,
@@ -95,7 +94,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                             _pageTitle ?? "Maintenance Name",
                             style: TextStyle(
                               color: const Color(0xFFDA1F11),
-                              fontSize: 32,
+                              fontSize: 24,
                               fontFamily: 'Inter',
                               fontWeight: FontWeight.w600,
                             ),
@@ -215,27 +214,36 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                           AppColors.buttonColor,
                           AppColors.buttonText,
                           onPressed: () {
-                            if (_status == 'Upcoming') {
-                              firestoreService.addMaintenance(
-                                  descriptionController.text,
-                                  false,
-                                  mileageController.text.isNotEmpty
-                                      ? int.parse(mileageController.text)
-                                      : 0,
-                                  selectedDate!);
-                            } else if (_status == 'Completed') {
-                              firestoreService.addSpecialMaintenance(
-                                  descriptionController.text,
-                                  false,
-                                  mileageController.text.isNotEmpty
-                                      ? int.parse(mileageController.text)
-                                      : 0,
-                                  selectedDate!);
+                            if (selectedDate != null) {
+                              if (_status == 'Upcoming') {
+                                firestoreService.addMaintenance(
+                                    descriptionController.text,
+                                    false,
+                                    mileageController.text.isNotEmpty
+                                        ? int.parse(mileageController.text)
+                                        : 0,
+                                    selectedDate!);
+                              }
+                              if (_status == 'Completed') {
+                                firestoreService.addSpecialMaintenance(
+                                    descriptionController.text,
+                                    false,
+                                    mileageController.text.isNotEmpty
+                                        ? int.parse(mileageController.text)
+                                        : 0,
+                                    selectedDate!);
+                              }
+                              NotiService().showNotification(
+                                title: 'Maintenance Added!',
+                                body: descriptionController.text,
+                              );
+                            } else {
+                              // Handle case when date is not selected
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Please select a date')),
+                              );
                             }
-                            NotiService().showNotification(
-                              title: 'Maintenance Added!',
-                              body: descriptionController.text,
-                            );
                             Navigator.of(context).pop(true);
                           },
                         ),

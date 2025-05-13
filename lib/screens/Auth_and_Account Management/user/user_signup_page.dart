@@ -1,5 +1,7 @@
+import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,6 +24,7 @@ class _UserSignupState extends State<UserSignupPage> {
   bool _obscureText = true;
   final bool _isCheckingUsername = false;
   final String _usernameErrorText = '';
+  bool _termschecked = false;
 
   @override
   void dispose() {
@@ -46,26 +49,26 @@ class _UserSignupState extends State<UserSignupPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a username')),
       );
-      // return null;
+      return null;
     }
 
     else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Passwords do not match')),
       );
-      // return;
+      return null;
     }
     else if (_emailcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An email address is required')),
       );
-      // return;
+      return null;
     }
     else if (_passwordcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a password to sign up')),
       );
-      // return;
+      return null;
     }
     else {
     try {
@@ -95,11 +98,13 @@ class _UserSignupState extends State<UserSignupPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('This email is already registered')),
         );
+        return null;
       }
       else{
         ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
       );
+      return null;
       }
     }
   }
@@ -204,17 +209,56 @@ class _UserSignupState extends State<UserSignupPage> {
                 obscureText: _obscureText,
               ),
               const SizedBox(height: 15),
-              Text(
-                'By signing up, You agree to our Terms of Service and privacy Policy',
-                style: textStyleGray
-              ),
+              CheckboxListTile(
+                value: _termschecked, 
+                title: RichText(text: TextSpan(
+                  style: textStyleGray.copyWith(
+                    fontSize: 12
+                  ),
+                  children: [
+                    const TextSpan(text: 'By signing up, you agree to our '),
+                    TextSpan(
+                      text: 'Terms of Service and privacy Policy.',
+                      style: textStyleGray.copyWith(
+                        color: Colors.blue.shade200,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        // decoration: TextDecoration.underline,
+                      ),
+                      recognizer: TapGestureRecognizer()..onTap = (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => TermsAndConditionsPage()));
+                      }
+                    )
+                  ]
+                )),
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+                onChanged: (bool? value){
+                  setState(() {
+                    _termschecked = value!;
+                  });
+                }),
               const SizedBox(height: 60),
-
-              buildButton(
-                  'Sign up', AppColors.buttonColor, AppColors.buttonText,
-                  onPressed: () {
-                signup();
-              }),
+              // Signup Button requires terms to be checked 
+              SizedBox(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton(
+                  onPressed: (){
+                    _termschecked ? signup() : SnackBar(content: ScaffoldMessenger(child: Text('Check terms to continue')));
+                  }, 
+                  style: TextButton.styleFrom(
+                    backgroundColor: _termschecked ? AppColors.buttonColor : Colors.grey,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Signup', style: textStyleWhite.copyWith(color: AppColors.buttonText))
+                    ],
+                  ),
+                ),
+              ),
               const SizedBox(height: 10),
 
               buildOrSeparator(),

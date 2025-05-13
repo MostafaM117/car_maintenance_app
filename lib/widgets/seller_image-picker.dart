@@ -29,7 +29,7 @@ class _ImagePickerContainerState extends State<ImagePickerContainer> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Image',
+        Text('Product Image',
             style: textStyleWhite.copyWith(
                 fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),

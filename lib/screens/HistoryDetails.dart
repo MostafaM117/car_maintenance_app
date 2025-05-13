@@ -105,7 +105,7 @@ class _HistoryDetailsPage extends State<HistoryDetailsPage> {
                     ),
                     child: Column(children: [
                       buildTextField(
-                        label: 'Maintenance Type',
+                        label: 'Mileage',
                         hintText: 'Current mileage',
                         controller: mileageController,
                         enabled: _isEditing,

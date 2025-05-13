@@ -1,11 +1,13 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
+import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:car_maintenance/screens/HistoryDetails.dart';
 // import 'package:car_maintenance/screens/maintenanceDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import '../notifications/notification.dart';
+
 import '../widgets/custom_widgets.dart';
 import '../widgets/maintenance_card.dart';
 
@@ -122,44 +124,26 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             right: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: buildButton(
-                      'Add Maintenance',
-                      AppColors.buttonColor,
-                      AppColors.buttonText,
-                      onPressed: () {
-                        NotiService().showNotification(
-                          title: 'Maintenance Added!',
-                          body: descriptionController.text,
-                        );
-                        if (selectedDate != null) {
-                          firestoreService.addSpecialMaintenance(
-                              descriptionController.text,
-                              false,
-                              0,
-                              selectedDate!);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Please select a date')),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    color: Colors.grey, // Adjust color to match your theme
-                    onPressed: () {
-                      firestoreService.clearHistory();
-                    },
-                  ),
-                ],
+              child: AnimatedButton(
+                'Add Maintenance',
+                AppColors.buttonColor,
+                AppColors.buttonText,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddMaintenance()),
+                  );
+                },
               ),
             ),
+          ),
+          // We need to move this button somewhere else
+          IconButton(
+            icon: const Icon(Icons.delete),
+            color: Colors.grey,
+            onPressed: () {
+              firestoreService.clearHistory();
+            },
           ),
         ],
       ),
