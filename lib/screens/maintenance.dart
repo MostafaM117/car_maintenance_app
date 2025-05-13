@@ -1,10 +1,13 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/screens/addMaintenance.dart';
+import 'package:car_maintenance/screens/HistoryDetails.dart';
+// import 'package:car_maintenance/screens/maintenanceDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
-// import '../notifications/notification.dart';
+import '../notifications/notification.dart';
+
 import '../widgets/custom_widgets.dart';
 import '../widgets/maintenance_card.dart';
 
@@ -85,16 +88,26 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                           return Dismissible(
                             key: Key(maintenanceItem.id),
                             direction: DismissDirection.endToStart,
-                            child: MaintenanceCard(
-                              title: '${maintenanceItem.mileage} KM',
-                              date: maintenanceItem.expectedDate
-                                  .toString()
-                                  .split(' ')[0],
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => HistoryDetailsPage(
+                                        maintenanceItem: maintenanceItem),
+                                  ),
+                                );
+                              },
+                              child: MaintenanceCard(
+                                title: '${maintenanceItem.mileage} KM',
+                                date: maintenanceItem.expectedDate
+                                    .toString()
+                                    .split(' ')[0],
+                              ),
                             ),
                             onDismissed: (direction) async {
                               await firestoreService
                                   .recoverFromHistory(maintenanceItem.id);
-                              print("✅ Moved to history");
                             },
                           );
                         },
@@ -123,9 +136,28 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                 },
               ),
             ),
-          )
+          ),
+          // We need to move this button somewhere else
+          IconButton(
+            icon: const Icon(Icons.delete),
+            color: Colors.grey,
+            onPressed: () {
+              firestoreService.clearHistory();
+            },
+          ),
         ],
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     firestoreService.cloneMaintenanceToUser(
+      //       source: FirebaseFirestore.instance
+      //           .collection('Maintenance_Schedule_MG ZS 2019'),
+      //       target: FirebaseFirestore.instance
+      //           .collection('Maintenance_Schedule_MG ZS 2020'),
+      //     );
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }

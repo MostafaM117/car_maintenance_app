@@ -23,6 +23,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
   String _status = 'Upcoming';
   bool _isEditing = false;
   DateTime _selectedDate = DateTime.now();
+
   bool isEditingMileage = false;
   bool isEditingDescription = false;
 
@@ -48,6 +49,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
   void dispose() {
     descriptionController.dispose();
     mileageController.dispose();
+
     mileageFocusNode.dispose();
     descriptionFocusNode.dispose();
     super.dispose();
@@ -71,6 +73,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
 
     setState(() {
       _isEditing = false;
+
       isEditingMileage = false;
       isEditingDescription = false;
     });
