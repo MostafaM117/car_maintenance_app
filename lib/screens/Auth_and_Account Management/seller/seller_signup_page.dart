@@ -22,7 +22,6 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
   final _passwordcontroller = TextEditingController();
   final _confirmpasswordcontroller = TextEditingController();
   bool _obscureText = true;
-  final bool _isCheckingUsername = false;
   final String _businessnameErrorText = '';
   bool _termschecked = false;
 
@@ -47,7 +46,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
   Future <UserCredential?> signup() async {
     if (_businessnameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a username')),
+        SnackBar(content: Text('Please enter a businessname')),
       );
       return null;
     }
@@ -152,7 +151,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                 ),
               ),
               const SizedBox(height: 30),
-              // // Username
+              // Businessname
               buildInputField(
                 controller: _businessnameController,
                 iconWidget: SvgPicture.asset(
@@ -162,13 +161,6 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                 ),
                 hintText: 'Enter your businessname',
                 errorText: _businessnameErrorText,
-                suffixWidget: _isCheckingUsername
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : null,
               ),
 
               // Email address

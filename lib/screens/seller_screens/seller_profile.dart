@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
@@ -97,15 +98,7 @@ class _SellerProfileState extends State<SellerProfile> {
                         ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontFamily: 'Inter',
-                  ),
-                ),
+                BusinessnameDisplay(uid: seller.uid,),
                 Text(
                   '${seller.email}',
                   style: const TextStyle(

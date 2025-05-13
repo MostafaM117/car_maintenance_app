@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/username_display.dart';
 import 'package:car_maintenance/services/user_delete_account.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,47 +20,27 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
   final _usernameEditcontroller = TextEditingController();
   final _emailcontroller = TextEditingController();
   String? errorText;
-  User? _user = FirebaseAuth.instance.currentUser;
   final user = FirebaseAuth.instance.currentUser!;
-  //Get current username
-  Future<void> _getcurrentusername() async {
-    if (_user != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_user!.uid)
-          .get();
-      if (userDoc.exists) {
-        setState(() {
-          _usernameEditcontroller.text = userDoc['username'] ?? '';
-        });
-      }
-    }
-  }
 
   //Update current username
   Future<void> _updateUsername() async {
-    if (_user == null) {
-      return;
-    }
     String newUsername = _usernameEditcontroller.text.trim();
     if (newUsername.isEmpty) {
       setState(() {
-        errorText = "username can't be empty.";
-        return;
+        errorText = "Username can't be empty.";
         }
       );
       return;
     }
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(_user!.uid)
+        .doc(user.uid)
         .update({'username': newUsername});
   }
 
   @override
   void initState() {
     super.initState();
-    _getcurrentusername();
   }
 
   @override
@@ -96,27 +77,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                           setState(() {});
                         },
                       ),
-                      StreamBuilder<DocumentSnapshot>(
-                        stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(), 
-                        builder: (context, snapshot){
-                          if(snapshot.hasData && snapshot.data!.exists){
-                            final data = snapshot.data!.data() as Map<String, dynamic>;
-                            final username = data['username']?? '';
-                            return Text(
-                              username,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontFamily: 'Inter',
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            );
-                          }
-                          else{
-                            return Text('loading...');
-                          }
-                        }),
+                      // Username Below Profile Picture
+                        UsernameDisplay(uid: user.uid),
                         Text(
                           '${user.email}',
                           style: TextStyle(
@@ -160,25 +122,14 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                           borderRadius: BorderRadius.circular(22),
                             ),
                           ),
-                          child: StreamBuilder<DocumentSnapshot>(
-                            stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(), 
-                              builder: (context, snapshot){
-                                if(snapshot.hasData && snapshot.data!.exists){
-                                  final data = snapshot.data!.data() as Map<String, dynamic>;
-                                  final username = data['username']?? '';
-                                  return Text(
-                                    username,
-                                    style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                    fontFamily: 'Inter',
-                                    ),
-                                  );
-                                  }
-                                  else{
-                                    return Text('loading...');
-                                  }
-                                }),
+                          child: UsernameDisplay(
+                            uid: user.uid, 
+                            style: TextStyle( 
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontFamily: 'Inter',
+                              ),
+                            )
                         ),
                       ],
                     ),
@@ -282,7 +233,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-
                             ),
                           ),
                         ),
