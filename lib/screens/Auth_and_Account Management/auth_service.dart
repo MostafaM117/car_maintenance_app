@@ -278,7 +278,7 @@ class AuthService {
               'uid': user.uid,
               'role': 'seller',
               'username': username,
-              'shopname': 'seller',
+              'businessname': 'seller',
             });
           }
           _showSnackBar(
