@@ -144,9 +144,10 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   backgroundColor: Color(0xFFF4F4F4),
                                   title: Text(
                                     'Update your username below.',
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                        fontSize: 20),
                                   ),
                                   content: SingleChildScrollView(
                                     child: SizedBox(
@@ -156,19 +157,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
-                                            'This name will be used across your account and may be visible to others.',
-                                            style: TextStyle(
-                                              color: Colors.black
-                                                  .withValues(alpha: 178),
-                                              fontSize: 16,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
                                           TextField(
                                             controller: _usernameEditcontroller,
                                             cursorColor: Colors.black,
@@ -201,20 +189,19 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   ),
                                   // actionsAlignment: MainAxisAlignment.center,
                                   actions: [
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        elevation: 0,
-                                        side: BorderSide(
-                                          color: Color(0xFFD9D9D9),
-                                          width: 1,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        fixedSize: Size(250, 45),
-                                      ),
+                                    popUpBotton(
+                                      'Cancel',
+                                      AppColors.primaryText,
+                                      AppColors.buttonText,
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        errorText = null;
+                                      },
+                                    ),
+                                    popUpBotton(
+                                      'Update',
+                                      AppColors.buttonColor,
+                                      AppColors.buttonText,
                                       onPressed: () {
                                         final username =
                                             _usernameEditcontroller.text.trim();
@@ -229,62 +216,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           _updateUsername();
                                         }
                                       },
-                                      child: Text(
-                                        'Save Changes',
-                                        style: textStyleWhite.copyWith(
-                                          fontSize: 18,
-                                          color: AppColors.buttonColor,
-                                        ),
-                                      ),
                                     ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: AppColors.primaryText,
-                                        elevation: 0,
-                                        side: BorderSide(
-                                          color: Color(0xFFD9D9D9),
-                                          width: 1,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        fixedSize: Size(250, 45),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        errorText = null;
-                                      },
-                                      child: Text(
-                                        'Cansel',
-                                        style: textStyleWhite.copyWith(
-                                          fontSize: 18,
-                                          color: AppColors.buttonText,
-                                        ),
-                                      ),
-                                    ),
-                                    // popUpBotton(
-                                    //   'Update',
-                                    //   Color(0xFFD9D9D9),
-                                    //   AppColors.buttonColor,
-                                    //   onPressed: () {
-                                    //     final username =
-                                    //         _usernameEditcontroller.text.trim();
-                                    //     if (username.isEmpty) {
-                                    //       setState(() {
-                                    //         errorText =
-                                    //             "username can't be empty.";
-                                    //         return;
-                                    //       });
-                                    //     } else {
-                                    //       Navigator.of(context).pop(username);
-                                    //       _updateUsername();
-                                    //     }
-                                    //   },
-                                    // ),
                                   ],
                                 );
                               }));
@@ -347,47 +279,46 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   backgroundColor: Color(0xFFF4F4F4),
                                   title: Text(
                                     'Change your Password',
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                        fontSize: 20),
                                   ),
                                   content: SingleChildScrollView(
-                                    child: SizedBox(
-                                      height: 120,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextField(
-                                            controller: _emailcontroller,
-                                            cursorColor: Colors.black,
-                                            decoration: InputDecoration(
-                                              label: Text('email'),
-                                              labelStyle: TextStyle(
-                                                  color: errorText != null
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .error
-                                                      : Colors.black),
-                                              errorText: errorText,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text('Please enter your email and you will receive an email with a link to change your password.'),
+                                        SizedBox(height: 20,),
+                                        TextField(
+                                          controller: _emailcontroller,
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            label: Text('Enter your email'),
+                                            labelStyle: TextStyle(
+                                                color: errorText != null
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .error
+                                                    : Colors.black),
+                                            errorText: errorText,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   actionsAlignment: MainAxisAlignment.center,
