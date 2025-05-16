@@ -77,14 +77,16 @@ class FirestoreService {
       final data = docSnapshot.data() as Map<String, dynamic>?;
 
       if (data != null) {
-        await personalMaintCollection.doc(docId).update({'isDone': true});
-
-        await historyCollection.add(data); // Copy the item to history
-
-        await personalMaintCollection
-            .doc(docId)
-            .delete(); // Delete from personal collection
-        print("✅ Moved maintenance item to history");
+        // Make sure isDone is set to true in the data
+        data['isDone'] = true;
+        
+        // Add to history collection with isDone=true
+        await historyCollection.doc(docId).set(data);
+        
+        // Delete from personal collection after successful copy
+        await personalMaintCollection.doc(docId).delete();
+        
+        print("✅ Moved maintenance item to history: $docId");
       } else {
         print("❌ No data found for docId: $docId");
       }
@@ -117,13 +119,16 @@ class FirestoreService {
       final data = docSnapshot.data() as Map<String, dynamic>?;
 
       if (data != null) {
-        await historyCollection.doc(docId).update({'isDone': false});
-
-        await personalMaintCollection.add(data); // Copy the item to history
-
+        // Make sure isDone is set to false for the active item
+        data['isDone'] = false;
+        
+        // Add to personal collection with the same document ID
+        await personalMaintCollection.doc(docId).set(data);
+        
+        // Delete from history collection after successful copy
         await historyCollection.doc(docId).delete();
-
-        print("✅ Recovered maintenance item from history");
+        
+        print("✅ Recovered maintenance item from history: $docId");
       } else {
         print("❌ No data found for docId: $docId");
       }

@@ -12,6 +12,7 @@ import '../widgets/CarCardWidget.dart';
 import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
 import '../Back-end/firestore_service.dart';
+import '../services/mileage_service.dart';
 // import 'maintenance.dart';
 import 'maintenanceDetails.dart';
 // import 'market.dart';
@@ -133,6 +134,10 @@ class _HomePageState extends State<HomePage> {
                   car['id'] = doc.id;
                   cars.add(car);
                 }
+                // Set selectedCar to the current car
+                if (cars.isNotEmpty && currentCar < cars.length) {
+                  selectedCar = cars[currentCar];
+                }
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (cars.isNotEmpty) {
                     final newMake = cars[currentCar]['make'].toString();
@@ -161,20 +166,42 @@ class _HomePageState extends State<HomePage> {
                       return CarCardWidget(car: cars[index]);
                     },
                     onSwipe: (previousIndex, currentIndex, direction) {
-                      setState(() {
-                        currentCar = currentIndex!;
-                        if (currentCar >= cars.length) {
-                          currentCar = 0;
-                        }
+                      if (previousIndex != currentIndex) {
+                        setState(() {
+                          itemCheckedStates.clear();
+                          
+                          // Update current car index
+                          currentCar = currentIndex!;
+                          if (currentCar >= cars.length) {
+                            currentCar = 0;
+                          }
+                          
+                          // Update selected car
+                          selectedCar = cars[currentCar];
+                          print("🔄 Switched to car: ${selectedCar?['make']} ${selectedCar?['model']} (ID: ${selectedCar?['id']})");
 
-                        final make = cars[currentCar]['make'];
-                        final model = cars[currentCar]['model'];
-                        final year = cars[currentCar]['year'];
+                          // Update MaintID for correct maintenance collection
+                          final make = cars[currentCar]['make'];
+                          final model = cars[currentCar]['model'];
+                          final year = cars[currentCar]['year'];
 
-                        MaintID().selectedMake = make.toString();
-                        MaintID().selectedModel = model.toString();
-                        MaintID().selectedYear = year.toString();
-                      });
+                          // Get the MaintID singleton and update it
+                          final maintID = MaintID();
+                          maintID.selectedMake = make.toString();
+                          maintID.selectedModel = model.toString();
+                          maintID.selectedYear = year.toString();
+                          
+                          // Force service update to refresh maintenance items
+                          firestoreService = FirestoreService(maintID);
+                          print("💾 Refreshing maintenance data for ${make} ${model} ${year}");
+                          
+                          // Force a complete rebuild of the widget tree
+                          // This ensures maintenance items are completely refreshed
+                          Future.delayed(Duration.zero, () {
+                            if (mounted) setState(() {});
+                          });
+                        });
+                      }
                       return true;
                     },
                     numberOfCardsDisplayed: cardsToDisplay,
@@ -234,80 +261,136 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.zero, // Remove default padding
+                // Use a key based on the car ID to force rebuild when car changes
                 child: StreamBuilder<List<MaintenanceList>>(
+                  key: ValueKey('maintenance-${selectedCar?['id'] ?? 'none'}'),
                   stream: firestoreService.getMaintenanceList(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data == null) {
                       return Center(child: CircularProgressIndicator());
                     }
 
-                    final maintList = snapshot.data!
-                        .where((item) =>
-                            item.isDone !=
-                            true) // Only show items that are not done
-                        .toList()
-                      ..sort((a, b) =>
-                          a.mileage.compareTo(b.mileage)); // Sort by date
-
-                    if (maintList.isEmpty) {
-                      return Center(
-                          child: Text("No maintenance records available."));
-                    }
-
-                    return ListView.builder(
-                      itemCount: maintList.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      padding: EdgeInsets.zero, // Remove default padding
-                      itemBuilder: (context, index) {
-                        final maintenanceItem = maintList[index];
-
-                        if (!itemCheckedStates
-                            .containsKey(maintenanceItem.id)) {
-                          itemCheckedStates[maintenanceItem.id] = false;
+                    return FutureBuilder<int>(
+                      future: MileageService().getCarMileage(
+                        selectedCar?['id'] ?? "",
+                      ),
+                      builder: (context, mileageSnapshot) {
+                        if (!mileageSnapshot.hasData) {
+                          return const Center(child: CircularProgressIndicator());
                         }
-                        if (maintenanceItem.isDone == true) {
-                          return SizedBox.shrink();
-                          // Hides the widget visually
+                        
+                        final carId = selectedCar?["id"] ?? "";
+                        final carMileage = mileageSnapshot.data ?? 0;
+                        
+                        int avgKmPerMonth = 500; 
+                        final avgKmValue = selectedCar?["avgKmPerMonth"];
+                        if (avgKmValue != null) {
+                          if (avgKmValue is int) {
+                            avgKmPerMonth = avgKmValue;
+                          } else if (avgKmValue is double) {
+                            avgKmPerMonth = avgKmValue.toInt();
+                          } else if (avgKmValue is String) {
+                            avgKmPerMonth = int.tryParse(avgKmValue) ?? 500;
+                          }
                         }
-                        // print(maintenanceItem.isDone);
+                        
+                        print("🚗 Car ID: $carId, Current Mileage: $carMileage, Avg KM/Month: $avgKmPerMonth");
+                        final maintList = snapshot.data!
+                            .where((item) => item.isDone != true)
+                            .toList();
+                        print("📋 Total maintenance items: ${maintList.length}");
+                        
+                        // Only proceed with mileage check if we have a valid car mileage
+                        if (carMileage > 0) {
+                          for (final item in List<MaintenanceList>.from(maintList)) {
+                            print("🔧 Maintenance item: ${item.id}, Mileage: ${item.mileage}, Current car mileage: $carMileage");
+                            
+                            // Check if this maintenance item is due based on mileage
+                            if (carMileage >= item.mileage && !item.isDone) {
+                              print("🔄 Moving item ${item.id} to history (${item.mileage} <= $carMileage)");
+                              try {
+                                firestoreService.moveToHistory(item.id);
+                                maintList.remove(item);
+                                print("✅ Successfully moved item ${item.id} to maintenance history");
+                              } catch (e) {
+                                print("❌ Error moving item to history: $e");
+                              }
+                            } else {
+                              print("⏳ Item ${item.id} not yet due (${item.mileage} > $carMileage)");
+                            }
+                          }
+                        } else {
+                          print("! Invalid car mileage: $carMileage. Skipping maintenance checks.");
+                        }
+                        
+                        // Sort maintenance items by mileage
+                        maintList.sort((a, b) => a.mileage.compareTo(b.mileage));
+                        
+                        if (maintList.isEmpty) {
+                          return const Center(child: Text("No maintenance records available."));
+                        }
+                        
+                        final upcomingMaintList = maintList
+                            .where((item) => item.mileage > carMileage)
+                            .take(2)
+                            .toList();
+                        
+                        if (upcomingMaintList.isEmpty) {
+                          return const Center(child: Text("No upcoming maintenance needed."));
+                        }
+                        
+                        print("🔮 Showing ${upcomingMaintList.length} upcoming maintenance items");
+                        
+                        return ListView.builder(
+                          itemCount: upcomingMaintList.length,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero, // Remove default padding
+                          itemBuilder: (context, index) {
+                            final maintenanceItem = upcomingMaintList[index];
 
-                        return Dismissible(
-                          key: Key(maintenanceItem.id),
-                          direction: DismissDirection.endToStart,
-                          background: Container(
-                            color: const Color.fromARGB(255, 94, 255, 82),
-                            alignment: Alignment.centerRight,
-                            padding: EdgeInsets.symmetric(horizontal: 20),
-                            child: Icon(Icons.check, color: Colors.white),
-                          ),
-                          onDismissed: (direction) async {
-                            await firestoreService.moveToHistory(maintenanceItem
-                                .id); // This updates `isDone` in Firestore
+                            if (!itemCheckedStates.containsKey(maintenanceItem.id)) {
+                              itemCheckedStates[maintenanceItem.id] = false;
+                            }
+                            
+                            if (maintenanceItem.isDone == true) {
+                              return SizedBox.shrink(); // Hides the widget visually
+                            }
 
-                            setState(() {
-                              itemCheckedStates[maintenanceItem.id] =
-                                  true; // This updates the local UI state
-                            });
-                            print("✅ Moved to history");
-                          },
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => MaintenanceDetailsPage(
-                                      maintenanceItem: maintenanceItem),
+                            return Dismissible(
+                              key: Key(maintenanceItem.id),
+                              direction: DismissDirection.startToEnd,
+                              background: Container(
+                                color: const Color.fromARGB(255, 94, 255, 82),
+                                alignment: Alignment.centerRight,
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Icon(Icons.check, color: Colors.white),
+                              ),
+                              onDismissed: (direction) async {
+                                await firestoreService.moveToHistory(maintenanceItem.id);
+                                setState(() {
+                                  itemCheckedStates[maintenanceItem.id] = true;
+                                });
+                                print("✅ Moved to history");
+                              },
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => MaintenanceDetailsPage(
+                                        maintenanceItem: maintenanceItem,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: MaintenanceCard(
+                                  title: '${maintenanceItem.mileage} KM',
+                                  date: maintenanceItem.formatExpectedDate(carMileage, avgKmPerMonth),
                                 ),
-                              );
-                            },
-                            child: MaintenanceCard(
-                              title: '${maintenanceItem.mileage} KM',
-                              date: maintenanceItem.expectedDate
-                                  .toString()
-                                  .split(' ')[0],
-                            ),
-                          ),
+                              ),
+                            );
+                          },
                         );
                       },
                     );

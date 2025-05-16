@@ -7,6 +7,8 @@ import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/mycar_Card.dart';
 import 'formscreens/formscreen1.dart';
+import '../models/MaintID.dart';
+import '../Back-end/firestore_service.dart';
 // import '../forms/carform.dart' as car_form;
 
 class CarMaint extends StatefulWidget {
@@ -98,16 +100,43 @@ class _CarMaintState extends State<CarMaint> {
                       });
 
                       try {
+                        final int newMileage = double.parse(mileageController.text.trim()).toInt();
+                        final int newAvgKm = double.parse(avgKmController.text.trim()).toInt();
+                        
                         await FirebaseFirestore.instance
                             .collection('cars')
                             .doc(car['id'])
                             .update({
-                          'mileage':
-                              double.parse(mileageController.text.trim()),
-                          'avgKmPerMonth':
-                              double.parse(avgKmController.text.trim()),
+                          'mileage': newMileage,  
+                          'avgKmPerMonth': newAvgKm, 
                           'lastUpdated': FieldValue.serverTimestamp(),
                         });
+                        
+                        final updatedMileage = double.parse(mileageController.text.trim()).toInt();
+                        print('✅ Car mileage updated to $updatedMileage - maintenance items will be checked');
+
+                        final make = car['make'].toString();
+                        final model = car['model'].toString();
+                        final year = car['year'].toString();                       
+                        // Set the maintenance ID for this car
+                        final maintID = MaintID();
+                        maintID.selectedMake = make;
+                        maintID.selectedModel = model;
+                        maintID.selectedYear = year;
+                        
+                        final firestoreService = FirestoreService(maintID);
+                        
+                        firestoreService.getMaintenanceList().first.then((maintList) {
+                          print('🔧 Checking ${maintList.length} maintenance items against new mileage: $updatedMileage');
+                          
+                          for (final item in List.from(maintList)) {
+                            if (updatedMileage >= item.mileage && !item.isDone) {
+                              print('🔄 Moving item ${item.id} to history (${item.mileage} <= $updatedMileage)');
+                              firestoreService.moveToHistory(item.id);
+                            }
+                          }
+                        });
+                        
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Car updated successfully')),

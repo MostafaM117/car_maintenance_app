@@ -86,9 +86,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                             direction: DismissDirection.endToStart,
                             child: MaintenanceCard(
                               title: '${maintenanceItem.mileage} KM',
-                              date: maintenanceItem.expectedDate
-                                  .toString()
-                                  .split(' ')[0],
+                              date: 'Completed',
                             ),
                             onDismissed: (direction) async {
                               await firestoreService
