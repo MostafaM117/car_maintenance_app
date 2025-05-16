@@ -51,7 +51,7 @@ class LoginType extends StatelessWidget {
                         bottom: 30.0), // المسافة من الأسفل
                     child: Column(
                       children: [
-                        AnimatedButton(
+                        buildButton(
                           'Continue as User',
                           AppColors.buttonColor,
                           AppColors.buttonText,
@@ -66,7 +66,7 @@ class LoginType extends StatelessWidget {
                         SizedBox(
                           height: 20,
                         ),
-                        AnimatedButton(
+                        buildButton(
                           'Continue as Seller',
                           AppColors.buttonColor,
                           AppColors.buttonText,

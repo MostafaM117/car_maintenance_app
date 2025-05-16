@@ -39,7 +39,7 @@ class _MyStoresState extends State<MyStores> {
                     taxNumber: 'taxNumber',
                   ),
                   SizedBox(height: 20),
-                  AnimatedButton(
+                  buildButton(
                     'Add New Store',
                     AppColors.buttonColor,
                     AppColors.secondaryText,

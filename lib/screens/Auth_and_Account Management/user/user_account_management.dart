@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/username_display.dart';
 import 'package:car_maintenance/services/user_delete_account.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,46 +20,26 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
   final _usernameEditcontroller = TextEditingController();
   final _emailcontroller = TextEditingController();
   String? errorText;
-  User? _user = FirebaseAuth.instance.currentUser;
   final user = FirebaseAuth.instance.currentUser!;
-  //Get current username
-  Future<void> _getcurrentusername() async {
-    if (_user != null) {
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(_user!.uid)
-          .get();
-      if (userDoc.exists) {
-        setState(() {
-          _usernameEditcontroller.text = userDoc['username'] ?? '';
-        });
-      }
-    }
-  }
 
   //Update current username
   Future<void> _updateUsername() async {
-    if (_user == null) {
-      return;
-    }
     String newUsername = _usernameEditcontroller.text.trim();
     if (newUsername.isEmpty) {
       setState(() {
-        errorText = "username can't be empty.";
-        return;
+        errorText = "Username can't be empty.";
       });
       return;
     }
     await FirebaseFirestore.instance
         .collection('users')
-        .doc(_user!.uid)
+        .doc(user.uid)
         .update({'username': newUsername});
   }
 
   @override
   void initState() {
     super.initState();
-    _getcurrentusername();
   }
 
   @override
@@ -95,30 +76,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                           setState(() {});
                         },
                       ),
-                      StreamBuilder<DocumentSnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('users')
-                              .doc(user.uid)
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData && snapshot.data!.exists) {
-                              final data =
-                                  snapshot.data!.data() as Map<String, dynamic>;
-                              final username = data['username'] ?? '';
-                              return Text(
-                                username,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontFamily: 'Inter',
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              );
-                            } else {
-                              return Text('loading...');
-                            }
-                          }),
+                      // Username Below Profile Picture
+                      UsernameDisplay(uid: user.uid),
                       Text(
                         '${user.email}',
                         style: TextStyle(
@@ -147,42 +106,27 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                         ),
                         const SizedBox(height: 6),
                         Container(
-                          height: 45,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          alignment: Alignment.centerLeft,
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFF4F4F4),
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                width: 1,
-                                color: AppColors.borderSide,
+                            height: 45,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            alignment: Alignment.centerLeft,
+                            decoration: ShapeDecoration(
+                              color: Color(0xFFF4F4F4),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  width: 1,
+                                  color: AppColors.borderSide,
+                                ),
+                                borderRadius: BorderRadius.circular(22),
                               ),
-                              borderRadius: BorderRadius.circular(22),
                             ),
-                          ),
-                          child: StreamBuilder<DocumentSnapshot>(
-                              stream: FirebaseFirestore.instance
-                                  .collection('users')
-                                  .doc(user.uid)
-                                  .snapshots(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData && snapshot.data!.exists) {
-                                  final data = snapshot.data!.data()
-                                      as Map<String, dynamic>;
-                                  final username = data['username'] ?? '';
-                                  return Text(
-                                    username,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
-                                      fontFamily: 'Inter',
-                                    ),
-                                  );
-                                } else {
-                                  return Text('loading...');
-                                }
-                              }),
-                        ),
+                            child: UsernameDisplay(
+                              uid: user.uid,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                                fontFamily: 'Inter',
+                              ),
+                            )),
                       ],
                     ),
                     onTap: () async {
@@ -200,19 +144,31 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   backgroundColor: Color(0xFFF4F4F4),
                                   title: Text(
                                     'Update your username below.',
-                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
                                   content: SingleChildScrollView(
                                     child: SizedBox(
-                                      height: 120,
+                                      height: 140,
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
+                                          Text(
+                                            'This name will be used across your account and may be visible to others.',
+                                            style: TextStyle(
+                                              color: Colors.black
+                                                  .withValues(alpha: 178),
+                                              fontSize: 16,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
                                           TextField(
                                             controller: _usernameEditcontroller,
                                             cursorColor: Colors.black,
@@ -245,19 +201,20 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   ),
                                   actionsAlignment: MainAxisAlignment.center,
                                   actions: [
-                                    popUpBotton(
-                                      'Cancel',
-                                      AppColors.primaryText,
-                                      AppColors.buttonText,
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        errorText = null;
-                                      },
-                                    ),
-                                    popUpBotton(
-                                      'Update',
-                                      AppColors.buttonColor,
-                                      AppColors.buttonText,
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        elevation: 0,
+                                        side: BorderSide(
+                                          color: Color(0xFFD9D9D9),
+                                          width: 1,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        fixedSize: Size(250, 45),
+                                      ),
                                       onPressed: () {
                                         final username =
                                             _usernameEditcontroller.text.trim();
@@ -272,6 +229,42 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           _updateUsername();
                                         }
                                       },
+                                      child: Text(
+                                        'Save Changes',
+                                        style: textStyleWhite.copyWith(
+                                          fontSize: 18,
+                                          color: AppColors.buttonColor,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primaryText,
+                                        elevation: 0,
+                                        side: BorderSide(
+                                          color: Color(0xFFD9D9D9),
+                                          width: 1,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        fixedSize: Size(250, 45),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        errorText = null;
+                                      },
+                                      child: Text(
+                                        'Cansel',
+                                        style: textStyleWhite.copyWith(
+                                          fontSize: 18,
+                                          color: AppColors.buttonText,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -467,7 +460,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                   SizedBox(
                     height: 40,
                   ),
-                  AnimatedButton(
+                  buildButton(
                     'Delete Account',
                     AppColors.buttonColor,
                     AppColors.buttonText,

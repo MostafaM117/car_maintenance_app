@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
@@ -10,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../widgets/darkmode_toggle_widget.dart';
 import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
@@ -97,14 +97,8 @@ class _SellerProfileState extends State<SellerProfile> {
                         ),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  username,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    fontFamily: 'Inter',
-                  ),
+                BusinessnameDisplay(
+                  uid: seller.uid,
                 ),
                 Text(
                   '${seller.email}',
@@ -175,7 +169,7 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    AnimatedButton(
+                    buildButton(
                       'Log Out',
                       AppColors.buttonColor,
                       AppColors.buttonText,

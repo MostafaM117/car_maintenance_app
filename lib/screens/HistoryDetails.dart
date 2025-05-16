@@ -2,22 +2,21 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Back-end/firestore_service.dart';
 import '../models/MaintID.dart';
 // import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
 
-class MaintenanceDetailsPage extends StatefulWidget {
+class HistoryDetailsPage extends StatefulWidget {
   final MaintenanceList maintenanceItem;
 
-  const MaintenanceDetailsPage({super.key, required this.maintenanceItem});
+  const HistoryDetailsPage({super.key, required this.maintenanceItem});
 
   @override
-  State<MaintenanceDetailsPage> createState() => _MaintenanceDetailsPageState();
+  State<HistoryDetailsPage> createState() => _HistoryDetailsPageState();
 }
 
-class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
+class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
   late FirestoreService firestoreService;
   late TextEditingController descriptionController;
   late TextEditingController mileageController;
@@ -27,10 +26,6 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
 
   bool isEditingMileage = false;
   bool isEditingDescription = false;
-  
-  // For calculating expected date
-  int currentCarMileage = 0;
-  int avgKmPerMonth = 500; // Default value
 
   late FocusNode mileageFocusNode;
   late FocusNode descriptionFocusNode;
@@ -48,61 +43,6 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
 
     mileageFocusNode = FocusNode();
     descriptionFocusNode = FocusNode();
-    
-    // Get current car mileage and avg km per month
-    _fetchCarDetails();
-  }
-  
-  // Fetch current car details to calculate expected date
-  void _fetchCarDetails() async {
-    try {
-      // Get the current car ID from MaintID
-      final maintID = MaintID();
-      final carMake = maintID.selectedMake;
-      final carModel = maintID.selectedModel;
-      final carYear = maintID.selectedYear;
-      
-      // Query Firestore to get the car details
-      final carsQuery = await FirebaseFirestore.instance
-          .collection('cars')
-          .where('make', isEqualTo: carMake)
-          .where('model', isEqualTo: carModel)
-          .where('year', isEqualTo: int.tryParse(carYear) ?? 0)
-          .limit(1)
-          .get();
-      
-      if (carsQuery.docs.isNotEmpty) {
-        final carData = carsQuery.docs.first.data();
-        setState(() {
-          // Handle any type for mileage and avgKmPerMonth safely
-          final mileageValue = carData['mileage'];
-          if (mileageValue != null) {
-            if (mileageValue is int) {
-              currentCarMileage = mileageValue;
-            } else if (mileageValue is double) {
-              currentCarMileage = mileageValue.toInt();
-            } else if (mileageValue is String) {
-              currentCarMileage = int.tryParse(mileageValue) ?? 0;
-            }
-          }
-          
-          final avgKmValue = carData['avgKmPerMonth'];
-          if (avgKmValue != null) {
-            if (avgKmValue is int) {
-              avgKmPerMonth = avgKmValue;
-            } else if (avgKmValue is double) {
-              avgKmPerMonth = avgKmValue.toInt();
-            } else if (avgKmValue is String) {
-              avgKmPerMonth = int.tryParse(avgKmValue) ?? 500;
-            }
-          }
-          
-          print("📊 Fetched car details - Mileage: $currentCarMileage, Avg KM/Month: $avgKmPerMonth");
-        });
-      }
-    } catch (e) {
-      print("❌ Error fetching car details: $e");
-    }
   }
 
   @override
@@ -296,10 +236,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      // Show calculated expected date if we have car mileage data
-                                      currentCarMileage > 0
-                                          ? widget.maintenanceItem.formatExpectedDate(currentCarMileage, avgKmPerMonth)
-                                          : _selectedDate.toString().split(' ')[0],
+                                      _selectedDate.toString().split(' ')[0],
                                       style: textStyleGray,
                                     ),
                                     if (_isEditing)

@@ -217,7 +217,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 // Submit button
                 isLoading
                     ? Center(child: CircularProgressIndicator())
-                    : AnimatedButton(
+                    : buildButton(
                         'Submit',
                         isFormComplete
                             ? AppColors.buttonColor
@@ -229,7 +229,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 const SizedBox(height: 20),
 
                 // Dismiss button
-                AnimatedButton(
+                buildButton(
                   'Dismiss',
                   AppColors.buttonText,
                   AppColors.buttonColor,

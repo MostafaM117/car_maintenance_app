@@ -302,7 +302,7 @@ class _CarMaintState extends State<CarMaint> {
                   ),
 
                   SizedBox(height: 20),
-                  AnimatedButton(
+                  buildButton(
                     'Add Car',
                     AppColors.buttonColor,
                     AppColors.secondaryText,

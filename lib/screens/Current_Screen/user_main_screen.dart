@@ -57,7 +57,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
         children: _pages,
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.primaryText,
           borderRadius: BorderRadius.circular(25),
