@@ -111,7 +111,7 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                 ),
               ),
               const SizedBox(height: 80),
-              AnimatedButton(
+              buildButton(
                   'Sign In', AppColors.buttonColor, AppColors.buttonText,
                   onPressed: () {
                 AuthService().signInWithEmailAndPassword(

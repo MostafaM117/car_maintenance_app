@@ -158,7 +158,7 @@ Widget appleButton(VoidCallback onPressed) {
   );
 }
 
-Widget AnimatedButton(
+Widget buildButton(
   String text,
   Color backgroundColor,
   Color textColor, {

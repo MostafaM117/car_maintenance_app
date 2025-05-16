@@ -110,7 +110,7 @@ class AuthService {
               ),
               actionsAlignment: MainAxisAlignment.center,
               actions: [
-                AnimatedButton(
+                buildButton(
                   onPressed: () {
                     final password = passwordcontroller.text.trim();
                     if (password.isEmpty) {
@@ -126,7 +126,7 @@ class AuthService {
                   AppColors.buttonColor,
                 ),
                 const SizedBox(height: 15),
-                AnimatedButton(
+                buildButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

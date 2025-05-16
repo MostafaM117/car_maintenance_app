@@ -28,8 +28,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
     if (newUsername.isEmpty) {
       setState(() {
         errorText = "Username can't be empty.";
-        }
-      );
+      });
       return;
     }
     await FirebaseFirestore.instance
@@ -78,10 +77,10 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                         },
                       ),
                       // Username Below Profile Picture
-                        UsernameDisplay(uid: user.uid),
-                        Text(
-                          '${user.email}',
-                          style: TextStyle(
+                      UsernameDisplay(uid: user.uid),
+                      Text(
+                        '${user.email}',
+                        style: TextStyle(
                           color: Colors.black.withOpacity(0.7),
                           fontSize: 13,
                           fontFamily: 'Inter',
@@ -107,28 +106,27 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                         ),
                         const SizedBox(height: 6),
                         Container(
-                          height: 45,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          alignment: Alignment.centerLeft,
-                          decoration: ShapeDecoration(
-                            color: Color(0xFFF4F4F4),
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                width: 1,
-                                color: AppColors.borderSide,
+                            height: 45,
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            alignment: Alignment.centerLeft,
+                            decoration: ShapeDecoration(
+                              color: Color(0xFFF4F4F4),
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  width: 1,
+                                  color: AppColors.borderSide,
+                                ),
+                                borderRadius: BorderRadius.circular(22),
                               ),
-                              borderRadius: BorderRadius.circular(22),
                             ),
-                          ),
-                          child: UsernameDisplay(
-                            uid: user.uid, 
-                            style: TextStyle( 
-                              fontSize: 14,
-                              color: Colors.grey,
-                              fontFamily: 'Inter',
+                            child: UsernameDisplay(
+                              uid: user.uid,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                                fontFamily: 'Inter',
                               ),
-                            )
-                        ),
+                            )),
                       ],
                     ),
                     onTap: () async {
@@ -146,7 +144,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   backgroundColor: Color(0xFFF4F4F4),
                                   title: Text(
                                     'Update your username below.',
-                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
@@ -159,6 +156,19 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                             MainAxisAlignment.center,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
+                                          Text(
+                                            'This name will be used across your account and may be visible to others.',
+                                            style: TextStyle(
+                                              color: Colors.black
+                                                  .withValues(alpha: 178),
+                                              fontSize: 16,
+                                              fontFamily: 'Inter',
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
                                           TextField(
                                             controller: _usernameEditcontroller,
                                             cursorColor: Colors.black,
@@ -189,21 +199,22 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                       ),
                                     ),
                                   ),
-                                  actionsAlignment: MainAxisAlignment.center,
+                                  // actionsAlignment: MainAxisAlignment.center,
                                   actions: [
-                                    popUpBotton(
-                                      'Cancel',
-                                      AppColors.primaryText,
-                                      AppColors.buttonText,
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        errorText = null;
-                                      },
-                                    ),
-                                    popUpBotton(
-                                      'Update',
-                                      AppColors.buttonColor,
-                                      AppColors.buttonText,
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        elevation: 0,
+                                        side: BorderSide(
+                                          color: Color(0xFFD9D9D9),
+                                          width: 1,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        fixedSize: Size(250, 45),
+                                      ),
                                       onPressed: () {
                                         final username =
                                             _usernameEditcontroller.text.trim();
@@ -218,7 +229,62 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           _updateUsername();
                                         }
                                       },
+                                      child: Text(
+                                        'Save Changes',
+                                        style: textStyleWhite.copyWith(
+                                          fontSize: 18,
+                                          color: AppColors.buttonColor,
+                                        ),
+                                      ),
                                     ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primaryText,
+                                        elevation: 0,
+                                        side: BorderSide(
+                                          color: Color(0xFFD9D9D9),
+                                          width: 1,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        fixedSize: Size(250, 45),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        errorText = null;
+                                      },
+                                      child: Text(
+                                        'Cansel',
+                                        style: textStyleWhite.copyWith(
+                                          fontSize: 18,
+                                          color: AppColors.buttonText,
+                                        ),
+                                      ),
+                                    ),
+                                    // popUpBotton(
+                                    //   'Update',
+                                    //   Color(0xFFD9D9D9),
+                                    //   AppColors.buttonColor,
+                                    //   onPressed: () {
+                                    //     final username =
+                                    //         _usernameEditcontroller.text.trim();
+                                    //     if (username.isEmpty) {
+                                    //       setState(() {
+                                    //         errorText =
+                                    //             "username can't be empty.";
+                                    //         return;
+                                    //       });
+                                    //     } else {
+                                    //       Navigator.of(context).pop(username);
+                                    //       _updateUsername();
+                                    //     }
+                                    //   },
+                                    // ),
                                   ],
                                 );
                               }));
@@ -413,7 +479,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                   SizedBox(
                     height: 40,
                   ),
-                  AnimatedButton(
+                  buildButton(
                     'Delete Account',
                     AppColors.buttonColor,
                     AppColors.buttonText,
