@@ -1,2 +1,0 @@
-C:/Users/Ahmed emad/Desktop/Car_app - Copy/car_maintenance_app/android/app/.cxx/Debug/4q96v4m5/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/Ahmed emad/Desktop/Car_app - Copy/car_maintenance_app/android/app/.cxx/Debug/4q96v4m5/armeabi-v7a/CMakeFiles/rebuild_cache.dir
