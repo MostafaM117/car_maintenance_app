@@ -111,7 +111,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                 ),
               ),
               const SizedBox(height: 80),
-              AnimatedButton(
+              buildButton(
                   'Sign In', AppColors.buttonColor, AppColors.buttonText,
                   onPressed: () {
                 AuthService().signInWithEmailAndPassword(

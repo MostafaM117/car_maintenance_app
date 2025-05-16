@@ -97,7 +97,9 @@ class _SellerProfileState extends State<SellerProfile> {
                         ),
                 ),
                 const SizedBox(height: 8),
-                BusinessnameDisplay(uid: seller.uid,),
+                BusinessnameDisplay(
+                  uid: seller.uid,
+                ),
                 Text(
                   '${seller.email}',
                   style: const TextStyle(
@@ -167,7 +169,7 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    AnimatedButton(
+                    buildButton(
                       'Log Out',
                       AppColors.buttonColor,
                       AppColors.buttonText,

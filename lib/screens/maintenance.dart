@@ -122,7 +122,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             right: 0,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: AnimatedButton(
+              child: buildButton(
                 'Add Maintenance',
                 AppColors.buttonColor,
                 AppColors.buttonText,
