@@ -173,7 +173,7 @@ class _CarMaintState extends State<CarMaint> {
           SafeArea(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Column(
                 children: [
                   SizedBox(height: 70),
@@ -224,76 +224,79 @@ class _CarMaintState extends State<CarMaint> {
                                 car['avgKmPerMonth'] is double
                                     ? car['avgKmPerMonth'].toInt()
                                     : car['avgKmPerMonth'] as int? ?? 0;
-                            return CarCard(
-                              // context: context,
-                              carName: '${car['make']} ${car['model']}',
-                              carId: car['id'],
-                              odometer: '$mileage KM',
-                              year: car['year'] as int? ?? 0,
-                              mileage: mileage,
-                              avgKmPerMonth: avgKmPerMonth,
-                              onCardPressed: () {
-                                _showEditForm(context, car);
-                              },
-                              onDeletePressed: () async {
-                                // Show confirmation dialog
-                                bool confirmDelete = await showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          backgroundColor: AppColors.borderSide,
-                                          title: Text(
-                                            'Are you sure you want to delete your car?',
-                                            style: textStyleWhite,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          content: Text(
-                                            'This action is permanent and cannot be undone. All your data will be permanently removed.',
-                                            style: textStyleGray,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          actions: [
-                                            popUpBotton(
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: CarCard(
+                                // context: context,
+                                carName: '${car['make']} ${car['model']}',
+                                carId: car['id'],
+                                odometer: '$mileage KM',
+                                year: car['year'] as int? ?? 0,
+                                mileage: mileage,
+                                avgKmPerMonth: avgKmPerMonth,
+                                onCardPressed: () {
+                                  _showEditForm(context, car);
+                                },
+                                onDeletePressed: () async {
+                                  // Show confirmation dialog
+                                  bool confirmDelete = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            backgroundColor: AppColors.borderSide,
+                                            title: Text(
+                                              'Are you sure you want to delete your car?',
+                                              style: textStyleWhite,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            content: Text(
+                                              'This action is permanent and cannot be undone. All your data will be permanently removed.',
+                                              style: textStyleGray,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actions: [
+                                              popUpBotton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(false),
+                                                  'Cancel',
+                                                  AppColors.primaryText,
+                                                  AppColors.buttonText),
+                                              SizedBox(
+                                                width: 15,
+                                              ),
+                                              popUpBotton(
                                                 onPressed: () =>
                                                     Navigator.of(context)
-                                                        .pop(false),
-                                                'Cancel',
-                                                AppColors.primaryText,
-                                                AppColors.buttonText),
-                                            SizedBox(
-                                              width: 15,
-                                            ),
-                                            popUpBotton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(true),
-                                              'Delete',
-                                              AppColors.buttonColor,
-                                              AppColors.buttonText,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ) ??
-                                    false;
-
-                                if (confirmDelete) {
-                                  try {
-                                    await CarService.deleteCar(car['id']);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('Car deleted successfully')),
-                                    );
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('Error deleting car: $e')),
-                                    );
+                                                        .pop(true),
+                                                'Delete',
+                                                AppColors.buttonColor,
+                                                AppColors.buttonText,
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ) ??
+                                      false;
+                              
+                                  if (confirmDelete) {
+                                    try {
+                                      await CarService.deleteCar(car['id']);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text('Car deleted successfully')),
+                                      );
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text('Error deleting car: $e')),
+                                      );
+                                    }
                                   }
-                                }
-                              },
+                                },
+                              ),
                             );
                           },
                         );
