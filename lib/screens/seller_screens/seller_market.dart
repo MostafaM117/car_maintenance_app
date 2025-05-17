@@ -2,6 +2,7 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/seller_screens/add_item.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MarketPage extends StatefulWidget {
   const MarketPage({Key? key}) : super(key: key);
@@ -136,7 +137,7 @@ class _MarketPageState extends State<MarketPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Text(
                                 'Add New Item',
                                 style: TextStyle(
@@ -145,7 +146,11 @@ class _MarketPageState extends State<MarketPage> {
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              Icon(Icons.add, size: 30, color: Colors.black),
+                              SvgPicture.asset(
+                                'assets/svg/add.svg',
+                                width: 20,
+                                height: 24,
+                              ),
                             ],
                           ),
                         ),
@@ -175,12 +180,19 @@ class _MarketPageState extends State<MarketPage> {
                                 ),
                               ),
                               IconButton(
-                                icon:
-                                    const Icon(Icons.edit, color: Colors.black),
+                                icon: SvgPicture.asset(
+                                  'assets/svg/edit.svg',
+                                  width: 20,
+                                  height: 24,
+                                ),
                                 onPressed: () => _editItem(index),
                               ),
                               IconButton(
-                                icon: const Icon(Icons.delete_outlined),
+                                icon: SvgPicture.asset(
+                                  'assets/svg/delete.svg',
+                                  width: 20,
+                                  height: 24,
+                                ),
                                 onPressed: () async {
                                   bool confirmDelete = await showDialog(
                                     context: context,
