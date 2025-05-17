@@ -156,7 +156,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
-                                          'This name will be used across your account and may be visible to others.'),
+                                            'This name will be used across your account and may be visible to others.'),
                                         SizedBox(
                                           height: 20,
                                         ),
@@ -329,8 +329,11 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text('Please enter your email and you will receive an email with a link to change your password.'),
-                                        SizedBox(height: 20,),
+                                        Text(
+                                            'Please enter your email and you will receive an email with a link to change your password.'),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
                                         TextField(
                                           controller: _emailcontroller,
                                           cursorColor: Colors.black,
@@ -364,10 +367,27 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   actions: [
                                     Column(
                                       children: [
-                                        popUpBotton(
-                                          'Send E-mail',
-                                          AppColors.buttonColor,
-                                          AppColors.buttonText,
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            elevation: 0,
+                                            side: BorderSide(
+                                              color: Color(0xFFD9D9D9),
+                                              width: 1,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            fixedSize: Size(250, 45),
+                                          ),
+                                          child: Text(
+                                            'Send E-mail',
+                                            style: textStyleWhite.copyWith(
+                                              fontSize: 18,
+                                              color: AppColors.buttonColor,
+                                            ),
+                                          ),
                                           onPressed: () async {
                                             final email =
                                                 _emailcontroller.text.trim();
@@ -428,16 +448,35 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                         SizedBox(
                                           height: 20,
                                         ),
-                                        popUpBotton(
-                                          'Cancel',
-                                          AppColors.primaryText,
-                                          AppColors.buttonText,
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                AppColors.primaryText,
+                                            elevation: 0,
+                                            side: BorderSide(
+                                              color: Color(0xFFD9D9D9),
+                                              width: 1,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            fixedSize: Size(250, 45),
+                                          ),
                                           onPressed: () {
                                             _emailcontroller.clear();
                                             Navigator.of(context).pop();
                                             errorText = null;
                                           },
+                                          child: Text(
+                                            'Cancel',
+                                            style: textStyleWhite.copyWith(
+                                              fontSize: 18,
+                                              color: AppColors.buttonText,
+                                            ),
+                                          ),
                                         ),
+                                      
                                       ],
                                     )
                                   ],
