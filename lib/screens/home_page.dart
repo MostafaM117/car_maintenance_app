@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
   String? username;
   Map<String, dynamic>? selectedCar;
   FirestoreService firestoreService = FirestoreService(MaintID());
-  Map<String, bool> itemCheckedStates = {};
   int currentCar = 0;
 
   void loadUsername() async {
@@ -205,14 +204,11 @@ class _HomePageState extends State<HomePage> {
                     onSwipe: (previousIndex, currentIndex, direction) {
                       if (previousIndex != currentIndex) {
                         setState(() {
-                          itemCheckedStates.clear();
-                          
-                          // Update current car index
                           currentCar = currentIndex!;
                           if (currentCar >= cars.length) {
                             currentCar = 0;
                           }
-                          
+
                           // Update selected car
                           selectedCar = cars[currentCar];
                           // print("�� Switched to car: "+(selectedCar?['make']).toString()+" "+(selectedCar?['model']).toString()+" (ID: "+(selectedCar?['id']).toString()+")");
@@ -227,11 +223,11 @@ class _HomePageState extends State<HomePage> {
                           maintID.selectedMake = make.toString();
                           maintID.selectedModel = model.toString();
                           maintID.selectedYear = year.toString();
-                          
+
                           // Force service update to refresh maintenance items
                           firestoreService = FirestoreService(maintID);
                           // print("💾 Refreshing maintenance data for "+make.toString()+" "+model.toString()+" "+year.toString());
-                          
+
                           // Force a complete rebuild of the widget tree
                           // This ensures maintenance items are completely refreshed
                           Future.delayed(Duration.zero, () {
@@ -314,13 +310,14 @@ class _HomePageState extends State<HomePage> {
                       ),
                       builder: (context, mileageSnapshot) {
                         if (!mileageSnapshot.hasData) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
-                        
+
                         final carId = selectedCar?["id"] ?? "";
                         final carMileage = mileageSnapshot.data ?? 0;
-                        
-                        int avgKmPerMonth = 500; 
+
+                        int avgKmPerMonth = 500;
                         final avgKmValue = selectedCar?["avgKmPerMonth"];
                         if (avgKmValue != null) {
                           if (avgKmValue is int) {
@@ -331,18 +328,19 @@ class _HomePageState extends State<HomePage> {
                             avgKmPerMonth = int.tryParse(avgKmValue) ?? 500;
                           }
                         }
-                        
+
                         // print("🚗 Car ID: "+carId.toString()+", Current Mileage: "+carMileage.toString()+", Avg KM/Month: "+avgKmPerMonth.toString());
                         final maintList = snapshot.data!
                             .where((item) => item.isDone != true)
                             .toList();
                         // print("📋 Total maintenance items: "+maintList.length.toString());
-                        
+
                         // Only proceed with mileage check if we have a valid car mileage
                         if (carMileage > 0) {
-                          for (final item in List<MaintenanceList>.from(maintList)) {
+                          for (final item
+                              in List<MaintenanceList>.from(maintList)) {
                             // print("🔧 Maintenance item: "+item.id+", Mileage: "+item.mileage.toString()+", Current car mileage: "+carMileage.toString());
-                            
+
                             // Check if this maintenance item is due based on mileage
                             if (carMileage >= item.mileage && !item.isDone) {
                               // print("🔄 Moving item "+item.id+" to history ("+item.mileage.toString()+" <= "+carMileage.toString()+")");
@@ -360,25 +358,28 @@ class _HomePageState extends State<HomePage> {
                         } else {
                           // print("! Invalid car mileage: "+carMileage.toString()+". Skipping maintenance checks.");
                         }
-                        
+
                         // Sort maintenance items by mileage
-                        maintList.sort((a, b) => a.mileage.compareTo(b.mileage));
-                        
+                        maintList
+                            .sort((a, b) => a.mileage.compareTo(b.mileage));
+
                         if (maintList.isEmpty) {
-                          return const Center(child: Text("No maintenance records available."));
+                          return const Center(
+                              child: Text("No maintenance records available."));
                         }
-                        
+
                         final upcomingMaintList = maintList
                             .where((item) => item.mileage > carMileage)
                             .take(2)
                             .toList();
-                        
+
                         if (upcomingMaintList.isEmpty) {
-                          return const Center(child: Text("No upcoming maintenance needed."));
+                          return const Center(
+                              child: Text("No upcoming maintenance needed."));
                         }
-                        
+
                         // print("🔮 Showing "+upcomingMaintList.length.toString()+" upcoming maintenance items");
-                        
+
                         return ListView.builder(
                           itemCount: upcomingMaintList.length,
                           physics: const NeverScrollableScrollPhysics(),
@@ -387,12 +388,9 @@ class _HomePageState extends State<HomePage> {
                           itemBuilder: (context, index) {
                             final maintenanceItem = upcomingMaintList[index];
 
-                            if (!itemCheckedStates.containsKey(maintenanceItem.id)) {
-                              itemCheckedStates[maintenanceItem.id] = false;
-                            }
-                            
                             if (maintenanceItem.isDone == true) {
-                              return SizedBox.shrink(); // Hides the widget visually
+                              return SizedBox
+                                  .shrink(); // Hides the widget visually
                             }
 
                             return Dismissible(
@@ -405,10 +403,8 @@ class _HomePageState extends State<HomePage> {
                                 child: Icon(Icons.check, color: Colors.white),
                               ),
                               onDismissed: (direction) async {
-                                await firestoreService.moveToHistory(maintenanceItem.id);
-                                setState(() {
-                                  itemCheckedStates[maintenanceItem.id] = true;
-                                });
+                                await firestoreService
+                                    .moveToHistory(maintenanceItem.id);
                                 // print("✅ Moved to history");
                               },
                               child: GestureDetector(
@@ -424,7 +420,8 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 child: MaintenanceCard(
                                   title: '${maintenanceItem.mileage} KM',
-                                  date: maintenanceItem.formatExpectedDate(carMileage, avgKmPerMonth),
+                                  date: maintenanceItem.formatExpectedDate(
+                                      carMileage, avgKmPerMonth),
                                 ),
                               ),
                             );
@@ -485,4 +482,3 @@ Widget _buildExploreCard(
     ),
   );
 }
-

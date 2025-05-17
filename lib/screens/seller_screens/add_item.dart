@@ -168,11 +168,15 @@ class _AddItemState extends State<AddItem> {
               // SizedBox(
               //   height: 15,
               // ),
-
-              //item Stock Count
-              buildTextField(
-                label: 'Stock Count',
-                hintText: 'Add Count',
+              buildDropdownField(
+                label: 'Product Category',
+                value: _selectedCategory,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedCategory = newValue;
+                  });
+                },
+                options: categories,
               ),
               SizedBox(
                 height: 15,
@@ -199,6 +203,7 @@ class _AddItemState extends State<AddItem> {
               SizedBox(
                 height: 25,
               ),
+
               buildTextField(
                 label: 'Store Location',
                 hintText: 'Add Store Location',

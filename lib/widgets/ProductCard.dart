@@ -8,12 +8,14 @@ class ProductCard extends StatelessWidget {
   final String image;
   final String title;
   final String price;
+  final String description;
 
   const ProductCard({
     super.key,
     required this.image,
     required this.title,
     required this.price,
+    required this.description,
   });
 
   @override
@@ -27,6 +29,7 @@ class ProductCard extends StatelessWidget {
               image: image,
               title: title,
               price: price,
+              description: description,
             ),
           ),
         );

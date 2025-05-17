@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 // import 'package:flutter/material.dart';
 
 class FirestoreService {
@@ -11,6 +12,7 @@ class FirestoreService {
   late final CollectionReference historyCollection;
   late final CollectionReference personalMaintCollection;
   late final CollectionReference productsCollection;
+  late final CollectionReference stockCollection;
   FirestoreService(MaintID maintID)
       : maintCollection = FirebaseFirestore.instance
             .collection('Maintenance_Schedule_${MaintID().maintID}') {
@@ -24,6 +26,10 @@ class FirestoreService {
         .collection("maintHistory ${MaintID().maintID}");
     productsCollection = FirebaseFirestore.instance
         .collection('products'); // Collection for products
+    stockCollection = FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(user!.uid)
+        .collection('stock'); // Collection for stock
   }
   //add special cases
   Future<void> addSpecialMaintenance(String description, bool isDone,
@@ -63,6 +69,16 @@ class FirestoreService {
     double price,
   ) async {
     try {
+      await stockCollection.add({
+        'name': name,
+        'Description': description,
+        'selectedMake': selectedMake,
+        'selectedModel': selectedModel,
+        'selectedCategory': selectedCategory,
+        'selectedAvailability': selectedAvailability,
+        'stockCount': stockCount,
+        'price': price
+      });
       await productsCollection.add({
         'name': name,
         'Description': description,
@@ -97,6 +113,63 @@ class FirestoreService {
         );
       }).toList();
     });
+  }
+
+  Stream<List<ProductItem>> getStock() {
+    return stockCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>? ?? {};
+        return ProductItem(
+          id: doc.id,
+          name: data['name'] ?? '',
+          price: data['price'] ?? 0,
+          description: data['Description'] ?? '',
+          selectedMake: data['selectedMake'] ?? '',
+          selectedModel: data['selectedModel'] ?? '',
+          selectedCategory: data['selectedCategory'] ?? '',
+          selectedAvailability: data['selectedAvailability'] ?? '',
+          stockCount: data['stockCount'] ?? 0,
+        );
+      }).toList();
+    });
+  }
+
+  Future<void> updateProduct(
+    String docId,
+    String name,
+    String description,
+    String selectedMake,
+    String selectedModel,
+    String selectedCategory,
+    String selectedAvailability,
+    int stockCount,
+    double price,
+  ) async {
+    try {
+      await stockCollection.doc(docId).update({
+        'name': name,
+        'Description': description,
+        'selectedMake': selectedMake,
+        'selectedModel': selectedModel,
+        'selectedCategory': selectedCategory,
+        'selectedAvailability': selectedAvailability,
+        'stockCount': stockCount,
+        'price': price
+      });
+      print("✅ Updated product item with ID: $docId");
+    } catch (e) {
+      print("❌ Error updating product item: $e");
+    }
+  }
+
+  Future<void> deleteProduct(String docId) async {
+    try {
+      await stockCollection.doc(docId).delete();
+      // await productsCollection.doc(docId).delete();
+      print("✅ Deleted product with ID: $docId");
+    } catch (e) {
+      print("❌ Error deleting maintenance item: $e");
+    }
   }
 
   //get maint lists
@@ -136,16 +209,14 @@ class FirestoreService {
       final data = docSnapshot.data() as Map<String, dynamic>?;
 
       if (data != null) {
-        // Make sure isDone is set to true in the data
-        data['isDone'] = true;
-        
-        // Add to history collection with isDone=true
-        await historyCollection.doc(docId).set(data);
-        
-        // Delete from personal collection after successful copy
-        await personalMaintCollection.doc(docId).delete();
-        
-        print("✅ Moved maintenance item to history: $docId");
+        // await personalMaintCollection.doc(docId).update({'isDone': true});
+
+        await historyCollection.add(data); // Copy the item to history
+
+        await personalMaintCollection
+            .doc(docId)
+            .delete(); // Delete from personal collection
+        print("✅ Moved maintenance item to history");
       } else {
         print("❌ No data found for docId: $docId");
       }
@@ -178,15 +249,12 @@ class FirestoreService {
       final data = docSnapshot.data() as Map<String, dynamic>?;
 
       if (data != null) {
-        // Make sure isDone is set to false for the active item
-        data['isDone'] = false;
-        
-        // Add to personal collection with the same document ID
-        await personalMaintCollection.doc(docId).set(data);
-        
-        // Delete from history collection after successful copy
+        // await historyCollection.doc(docId).update({'isDone': false});
+
+        await personalMaintCollection.add(data); // Copy the item to history
+
         await historyCollection.doc(docId).delete();
-        
+
         print("✅ Recovered maintenance item from history: $docId");
       } else {
         print("❌ No data found for docId: $docId");

@@ -1,0 +1,2 @@
+D:/GRAD-Dump/car_maintenance_app/android/app/.cxx/Debug/1n3a635q/x86_64/CMakeFiles/edit_cache.dir
+D:/GRAD-Dump/car_maintenance_app/android/app/.cxx/Debug/1n3a635q/x86_64/CMakeFiles/rebuild_cache.dir
