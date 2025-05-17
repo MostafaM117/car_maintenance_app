@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import '../constants/app_colors.dart';
 
@@ -65,9 +66,13 @@ Widget buildInputField({
               ),
             if (togglePasswordView != null)
               IconButton(
-                icon: Icon(
-                    obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.black54),
+                icon: SvgPicture.asset(
+                  obscureText
+                      ? 'assets/svg/eye-see.svg'
+                      : 'assets/svg/eye-lock.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 onPressed: togglePasswordView,
               ),
           ],
