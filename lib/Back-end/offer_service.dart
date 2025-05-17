@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:car_maintenance/models/offer_model.dart'; // Adjust the import path as necessary
+import 'package:car_maintenance/models/offer_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class OfferService {
