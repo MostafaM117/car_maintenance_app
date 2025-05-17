@@ -30,7 +30,7 @@ Widget buildInputField({
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        padding: EdgeInsets.only(right: 20),
+        padding: EdgeInsets.only(right: 10), //20
         height: 45,
         decoration: ShapeDecoration(
           color: AppColors.secondaryText,
@@ -44,9 +44,9 @@ Widget buildInputField({
         ),
         child: Row(
           children: [
-            const SizedBox(width: 24),
+            const SizedBox(width: 20), //24
             iconWidget,
-            const SizedBox(width: 20),
+            const SizedBox(width: 18), // 20
             Expanded(
               child: TextField(
                   controller: controller,

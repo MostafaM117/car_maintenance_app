@@ -195,7 +195,6 @@ class _AddCarScreenState extends State<AddCarScreen> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter average usage';
                     }
-                    FocusScope.of(context).unfocus();
                     return null;
                   },
                 ),

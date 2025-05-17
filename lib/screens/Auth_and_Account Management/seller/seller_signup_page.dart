@@ -19,11 +19,13 @@ class SellerSignupPage extends StatefulWidget {
 class _SellerSignupPageState extends State<SellerSignupPage> {
   final _businessnameController = TextEditingController();
   final _emailcontroller = TextEditingController();
+  final _nationalIdcontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
   final _confirmpasswordcontroller = TextEditingController();
   bool _obscureText = true;
   final String _businessnameErrorText = '';
   bool _termschecked = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -49,12 +51,20 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
         SnackBar(content: Text('Please enter a businessname')),
       );
       return null;
-    } else if (!confirmpassword()) {
+    }
+    else if (_nationalIdcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Passwords do not match')),
+        SnackBar(content: Text('Please enter your national id')),
       );
       return null;
-    } else if (_emailcontroller.text.trim().isEmpty) {
+    }
+    else if (_nationalIdcontroller.text.trim().length != 14) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a valid national id')),
+      );
+      return null;
+    }
+    else if (_emailcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An email address is required')),
       );
@@ -64,7 +74,16 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
         SnackBar(content: Text('Please enter a password to sign up')),
       );
       return null;
-    } else {
+    } else if (!confirmpassword()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Passwords do not match')),
+      );
+      return null;
+    }
+    else {
+      setState(() {
+        _isLoading = true;
+      });
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
@@ -100,6 +119,14 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
           return null;
         }
       }
+      finally {
+        // Hide loader
+        if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        }
+      }
     }
   }
 
@@ -107,6 +134,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
     await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
       'businessname': businessname,
       'email': email,
+      'National ID': _nationalIdcontroller.text.trim(),
       'uid': uid,
       'password': _passwordcontroller.text.trim(),
       'role': 'seller',
@@ -124,7 +152,8 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
+      body: _isLoading ? Center(child: CircularProgressIndicator()) 
+      : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
           child: Column(
@@ -153,10 +182,62 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   width: 24,
                   height: 24,
                 ),
-                hintText: 'Enter your businessname',
+                hintText: 'Enter your business name',
                 errorText: _businessnameErrorText,
               ),
-
+              // National Id
+              const SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.only(right: 20),
+                height: 45,
+                decoration: ShapeDecoration(
+                  color: AppColors.secondaryText,
+                  shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                  width: 1,
+                  color: AppColors.borderSide,
+                  ),
+                borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 20), //24
+                    Icon(Icons.person_pin_outlined),
+                    const SizedBox(width: 18), // 20
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(14),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        
+                        controller: _nationalIdcontroller,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your national id number',
+                          hintStyle: textStyleGray,
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(bottom: 12),
+                          
+                        ),
+                        textAlignVertical: TextAlignVertical.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // buildTextField(
+              //   hintText: 'Enter your National ID ',
+              //   controller: _nationalIdcontroller,
+              //   validator: (value) {
+              //       if (value == null || value.trim().isEmpty) {
+              //         return 'Please enter mileage';
+              //       }
+              //       return null;
+              //     },
+              // ),
               // Email address
               const SizedBox(height: 20),
               buildInputField(
@@ -226,7 +307,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                       _termschecked = value!;
                     });
                   }),
-              const SizedBox(height: 60),
+              const SizedBox(height: 30), //60
               // Signup Button requires terms to be checked
               SizedBox(
                 width: double.infinity,
