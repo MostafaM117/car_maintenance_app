@@ -98,9 +98,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                               },
                               child: MaintenanceCard(
                                 title: '${maintenanceItem.mileage} KM',
-                                date: maintenanceItem.expectedDate
-                                    .toString()
-                                    .split(' ')[0],
+                                date: 'Completed'
                               ),
                             ),
                             onDismissed: (direction) async {

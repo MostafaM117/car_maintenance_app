@@ -6,9 +6,63 @@ class MileageService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<int> getCarMileage(String carId) async {
+    if (carId.isEmpty) {
+      print('Empty car ID provided to getCarMileage');
+      return 0;
+    }
+    
     try {
+      // First attempt to get mileage
       final doc = await _firestore.collection('cars').doc(carId).get();
-      return doc.data()?['mileage'] ?? 0;
+      
+      // Handle mileage that could be either double or int
+      var rawMileage = doc.data()?['mileage'];
+      int mileage = 0;
+      
+      if (rawMileage != null) {
+        // Convert to int regardless of whether it's double or int
+        mileage = (rawMileage is double) ? rawMileage.toInt() : (rawMileage as int);
+      }
+      
+      // If mileage is 0, try up to 2 more times with a short delay
+      // This helps with race conditions when a car was just added
+      if (mileage == 0) {
+        print('Initial mileage reading is 0 for car $carId, will retry...');
+        
+        // Wait a moment for Firestore to complete any pending writes
+        await Future.delayed(const Duration(milliseconds: 500));
+        
+        // Second attempt
+        final retryDoc = await _firestore.collection('cars').doc(carId).get();
+        rawMileage = retryDoc.data()?['mileage'];
+        
+        if (rawMileage != null) {
+          mileage = (rawMileage is double) ? rawMileage.toInt() : (rawMileage as int);
+        }
+        
+        if (mileage == 0) {
+          // Wait a bit longer and try one more time
+          await Future.delayed(const Duration(milliseconds: 1000));
+          
+          // Third attempt
+          final finalDoc = await _firestore.collection('cars').doc(carId).get();
+          rawMileage = finalDoc.data()?['mileage'];
+          
+          if (rawMileage != null) {
+            mileage = (rawMileage is double) ? rawMileage.toInt() : (rawMileage as int);
+          }
+          
+          if (mileage == 0) {
+            print('After retries, mileage is still 0 for car $carId');
+          } else {
+            print('Successfully retrieved mileage on retry: $mileage');
+          }
+        } else {
+          print('Successfully retrieved mileage on first retry: $mileage');
+        }
+      }
+      
+      return mileage;
     } catch (e) {
       print('Error getting mileage: $e');
       return 0;
@@ -17,12 +71,14 @@ class MileageService {
 
   Future<void> updateCarMileage(String carId, int newMileage) async {
     try {
+      // Store mileage as int to ensure consistency
       await _firestore.collection('cars').doc(carId).update({
         'mileage': newMileage,
         'lastUpdated': FieldValue.serverTimestamp(),
       });
+      print('✅ Successfully updated mileage for car $carId to $newMileage');
     } catch (e) {
-      print('Error updating mileage: $e');
+      print('❌ Error updating mileage: $e');
       throw e;
     }
   }
