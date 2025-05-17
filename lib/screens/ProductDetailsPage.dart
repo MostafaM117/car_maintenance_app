@@ -7,12 +7,14 @@ class ProductDetailsPage extends StatelessWidget {
   final String image;
   final String title;
   final String price;
+  final String description;
 
   const ProductDetailsPage({
     super.key,
     required this.image,
     required this.title,
     required this.price,
+    required this.description,
   });
 
   @override
@@ -57,7 +59,7 @@ class ProductDetailsPage extends StatelessWidget {
             // وصف المنتج
             InfoCard(
               title: 'Description',
-              content: 'Motor Oil Toyota Corolla 2018',
+              content: description,
             ),
             const SizedBox(height: 30),
 

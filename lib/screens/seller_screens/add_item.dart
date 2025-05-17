@@ -182,15 +182,6 @@ class _AddItemState extends State<AddItem> {
               SizedBox(
                 height: 15,
               ),
-
-              //item Stock Count
-              buildTextField(
-                label: 'Stock Count',
-                hintText: 'Add Count',
-              ),
-              SizedBox(
-                height: 15,
-              ),
               buildDropdownField(
                 label: 'Availability',
                 value: _selectedAvailability,
@@ -222,13 +213,13 @@ class _AddItemState extends State<AddItem> {
               SizedBox(
                 height: 25,
               ),
-              buildTextField(
-                label: 'Store ID',
-                hintText: 'Add ID',
-              ),
-              SizedBox(
-                height: 25,
-              ),
+              // buildTextField(
+              //   label: 'Store Location',
+              //   hintText: 'Add ID',
+              // ),
+              // SizedBox(
+              //   height: 25,
+              // ),
               AnimatedButton(
                 'Add',
                 AppColors.buttonColor,

@@ -1,13 +1,30 @@
+import 'package:car_maintenance/Back-end/firestore_service.dart';
+import 'package:car_maintenance/models/MaintID.dart';
+import 'package:car_maintenance/models/ProductItemModel.dart';
+import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
 // import '../widgets/BackgroundDecoration.dart';
 import '../widgets/ProductCard.dart';
 
-class Periodicpage extends StatelessWidget {
-  const Periodicpage({
+class Periodicpage extends StatefulWidget {
+  Periodicpage({
     super.key,
   });
+
+  @override
+  State<Periodicpage> createState() => _PeriodicpageState();
+}
+
+class _PeriodicpageState extends State<Periodicpage> {
+  FirestoreService firestoreService = FirestoreService(MaintID());
+  @override
+  void initState() {
+    super.initState();
+    firestoreService =
+        FirestoreService(MaintID()); // Initialize the firestoreService variable
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +84,8 @@ class Periodicpage extends StatelessWidget {
                             _buildFilterButton('Location'),
                             const SizedBox(width: 8),
                             _buildFilterButton('Filter'),
-                            const SizedBox(width: 8),
-                            _buildFilterButton('Filter'),
+                            // const SizedBox(width: 8),
+                            // _buildFilterButton('Filter'),
                           ],
                         ),
                       ),
@@ -78,44 +95,26 @@ class Periodicpage extends StatelessWidget {
                     height: 20,
                   ),
                   Expanded(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 20,
-                      mainAxisSpacing: 20,
-                      childAspectRatio: 0.80,
-                      children: [
-                        ProductCard(
-                          image: 'assets/images/motor_oil.png',
-                          title: 'Motor Oil',
-                          price: '420 ',
-                        ),
-                        ProductCard(
-                          image: 'assets/images/motor_oil.png',
-                          title: 'Motor Oil',
-                          price: '350 ',
-                        ),
-                        ProductCard(
-                          image: 'assets/images/motor_oil.png',
-                          title: 'motor oil',
-                          price: '350 ',
-                        ),
-                        ProductCard(
-                          image: 'assets/images/motor_oil.png',
-                          title: 'motor oil',
-                          price: '350 ',
-                        ),
-                        ProductCard(
-                          image: 'assets/images/motor_oil.png',
-                          title: 'motor oil',
-                          price: '350 ',
-                        ),
-                        ProductCard(
-                          image: 'assets/images/motor_oil.png',
-                          title: 'motor oil',
-                          price: '350 ',
-                        ),
-                      ],
-                    ),
+                    child: StreamBuilder<List<ProductItem>>(
+                        stream: firestoreService.getProducts(),
+                        builder: (context, snapshot) {
+                          final products = snapshot.data ?? [];
+                          return GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 20,
+                                    mainAxisSpacing: 20,
+                                    childAspectRatio: 0.80),
+                            itemCount: products.length,
+                            itemBuilder: (context, index) => ProductCard(
+                              image: 'assets/images/motor_oil.png',
+                              title: products[index].name,
+                              price: products[index].price.toString(),
+                              description: products[index].description,
+                            ),
+                          );
+                        }),
                   ),
                 ],
               ),
