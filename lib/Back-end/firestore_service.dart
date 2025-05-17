@@ -208,7 +208,7 @@ class FirestoreService {
       final data = docSnapshot.data() as Map<String, dynamic>?;
 
       if (data != null) {
-        await personalMaintCollection.doc(docId).update({'isDone': true});
+        // await personalMaintCollection.doc(docId).update({'isDone': true});
 
         await historyCollection.add(data); // Copy the item to history
 
@@ -248,7 +248,7 @@ class FirestoreService {
       final data = docSnapshot.data() as Map<String, dynamic>?;
 
       if (data != null) {
-        await historyCollection.doc(docId).update({'isDone': false});
+        // await historyCollection.doc(docId).update({'isDone': false});
 
         await personalMaintCollection.add(data); // Copy the item to history
 

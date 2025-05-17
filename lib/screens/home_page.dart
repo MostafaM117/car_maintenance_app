@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
   String? username;
   Map<String, dynamic>? selectedCar;
   FirestoreService firestoreService = FirestoreService(MaintID());
-  Map<String, bool> itemCheckedStates = {};
   int currentCar = 0;
 
   void loadUsername() async {
@@ -383,4 +382,3 @@ Widget _buildExploreCard(
     ),
   );
 }
-
