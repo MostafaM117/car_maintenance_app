@@ -1,7 +1,7 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/seller_screens/seller_home_page.dart';
 import 'package:car_maintenance/screens/seller_screens/seller_profile.dart';
-import 'package:car_maintenance/screens/seller_screens/seller_feed.dart';
+import 'package:car_maintenance/screens/seller_screens/offer_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -20,7 +20,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
   final List<Widget> _pages = [
     SellerHomePage(),
     MarketPage(),
-    SellerFeedScreen(),
+    OfferScreen(),
     SellerProfile(),
   ];
 
@@ -28,7 +28,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
     'Home',
     'Market',
     'Profile',
-    'Feed',
+    'Offers',
   ];
 
   final List<String> _icons = [
