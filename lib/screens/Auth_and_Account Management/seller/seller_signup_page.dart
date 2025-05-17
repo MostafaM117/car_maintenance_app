@@ -43,71 +43,65 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
     }
   }
 
-  Future <UserCredential?> signup() async {
+  Future<UserCredential?> signup() async {
     if (_businessnameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a businessname')),
       );
       return null;
-    }
-
-    else if (!confirmpassword()) {
+    } else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Passwords do not match')),
       );
       return null;
-    }
-    else if (_emailcontroller.text.trim().isEmpty) {
+    } else if (_emailcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An email address is required')),
       );
       return null;
-    }
-    else if (_passwordcontroller.text.trim().isEmpty) {
+    } else if (_passwordcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a password to sign up')),
       );
       return null;
-    }
-    else {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailcontroller.text.trim(),
-              password: _passwordcontroller.text.trim());
+    } else {
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: _emailcontroller.text.trim(),
+                password: _passwordcontroller.text.trim());
 
-      await createuser(
-        _businessnameController.text.trim(),
-        _emailcontroller.text.trim(),
-        userCredential.user!.uid,
-      );
-      Navigator.pop(context);
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text('Registred Successfully, Complete Your First time setup'),
-          duration: Duration(milliseconds: 4000),
-          backgroundColor: Colors.green.shade400,
-        ),
-      );
-      return userCredential;
-    } catch (e) {
-      if(e.toString().contains('email-already-in-use')){
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('This email is already registered')),
+        await createuser(
+          _businessnameController.text.trim(),
+          _emailcontroller.text.trim(),
+          userCredential.user!.uid,
         );
-        return null;
-      }
-      else{
+        Navigator.pop(context);
+        Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-      return null;
+          SnackBar(
+            content:
+                Text('Registred Successfully, Complete Your First time setup'),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: Colors.green.shade400,
+          ),
+        );
+        return userCredential;
+      } catch (e) {
+        if (e.toString().contains('email-already-in-use')) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('This email is already registered')),
+          );
+          return null;
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${e.toString()}')),
+          );
+          return null;
+        }
       }
     }
   }
-    }
 
   Future createuser(String businessname, String email, String uid) async {
     await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
@@ -201,51 +195,62 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
               ),
               const SizedBox(height: 15),
               CheckboxListTile(
-                value: _termschecked, 
-                title: RichText(text: TextSpan(
-                  style: textStyleGray.copyWith(
-                    fontSize: 12
-                  ),
-                  children: [
-                    const TextSpan(text: 'By signing up, you agree to our '),
-                    TextSpan(
-                      text: 'Terms of Service and privacy Policy.',
-                      style: textStyleGray.copyWith(
-                        color: Colors.blue.shade200,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        // decoration: TextDecoration.underline,
-                      ),
-                      recognizer: TapGestureRecognizer()..onTap = (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => TermsAndConditionsPage()));
-                      }
-                    )
-                  ]
-                )),
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: EdgeInsets.zero,
-                onChanged: (bool? value){
-                  setState(() {
-                    _termschecked = value!;
-                  });
-                }),
+                  value: _termschecked,
+                  title: RichText(
+                      text: TextSpan(
+                          style: textStyleGray.copyWith(fontSize: 12),
+                          children: [
+                        const TextSpan(
+                            text: 'By signing up, you agree to our '),
+                        TextSpan(
+                            text: 'Terms of Service and privacy Policy.',
+                            style: textStyleGray.copyWith(
+                              color: Colors.blue.shade200,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              // decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            TermsAndConditionsPage()));
+                              })
+                      ])),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  contentPadding: EdgeInsets.zero,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _termschecked = value!;
+                    });
+                  }),
               const SizedBox(height: 60),
-              // Signup Button requires terms to be checked 
+              // Signup Button requires terms to be checked
               SizedBox(
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
-                  onPressed: (){
-                    _termschecked ? signup() : SnackBar(content: ScaffoldMessenger(child: Text('Check terms to continue')));
-                  }, 
+                  onPressed: () {
+                    _termschecked
+                        ? signup()
+                        : SnackBar(
+                            content: ScaffoldMessenger(
+                                child: Text('Check terms to continue')));
+                  },
                   style: TextButton.styleFrom(
-                    backgroundColor: _termschecked ? AppColors.buttonColor : Colors.grey,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                    backgroundColor:
+                        _termschecked ? AppColors.buttonColor : Colors.grey,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Signup', style: textStyleWhite.copyWith(color: AppColors.buttonText))
+                      Text('Signup',
+                          style: textStyleWhite.copyWith(
+                              color: AppColors.buttonText))
                     ],
                   ),
                 ),

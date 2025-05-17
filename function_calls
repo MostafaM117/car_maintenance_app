@@ -1,0 +1,167 @@
+  Future<void> _addScheduleItem() {
+    if (_formKey.currentState?.validate() ?? false) {
+      final int mileage = int.parse(_mileageController.text);
+      
+      setState(() {
+        _scheduleItems.add(
+          MaintenanceItem(
+            mileage: mileage,
+            description: _descriptionController.text,
+            // Use a placeholder date - this will be calculated dynamically based on user's car data
+            date: DateTime.now(), // Placeholder date
+          ),
+        );
+        _mileageController.clear();
+        _descriptionController.clear();
+        _selectedDate = null;
+      });
+      
+      return Future.value();
+    }
+    return Future.error('Form validation failed');
+  }
+  
+  Future<void> _copyScheduleItems(String sourceCollection) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance.collection(sourceCollection).get();
+      
+      if (snapshot.docs.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No items found in the source collection')),
+        );
+        return;
+      }
+      
+      final List<MaintenanceItem> newItems = [];
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final mileage = data['mileage'] as int? ?? 0;
+        final description = data['Description'] as String? ?? '';
+        
+        newItems.add(
+          MaintenanceItem(
+            mileage: mileage,
+            description: description,
+            // Use a placeholder date - this will be calculated dynamically based on user's car data
+            date: DateTime.now(), // Placeholder date
+          ),
+        );
+      }
+      
+      setState(() {
+        _scheduleItems.addAll(newItems);
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Copied ${newItems.length} items from $sourceCollection')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error copying schedule: $e')),
+      );
+    }
+  }
+  
+  Future<void> _saveSchedule() async {
+    if (_showDevTools) {
+      // In dev mode, ensure make/model/year are selected
+      if (_selectedMake == null || _selectedModel == null || _selectedYear == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please select make, model, and year')),
+        );
+        return;
+      }
+    } else {
+      // In normal mode, ensure a car is selected
+      if (_selectedCar == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Please select a car')),
+        );
+        return;
+      }
+    }
+    
+    if (_scheduleItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please add at least one maintenance item')),
+      );
+      return;
+    }
+    
+    try {
+      final batch = FirebaseFirestore.instance.batch();
+      final user = FirebaseAuth.instance.currentUser;
+      
+      // Set make, model, year based on mode
+      String make, model, year;
+      if (_showDevTools) {
+        make = _selectedMake!;
+        model = _selectedModel!;
+        year = _selectedYear.toString();
+      } else {
+        make = _selectedCar!['make'];
+        model = _selectedCar!['model'];
+        year = _selectedCar!['year'].toString();
+      }
+      
+      // Create collection name based on car details
+      final collectionName = 'Maintenance_Schedule_$make $model $year';
+      final userCollectionName = 'users/${user!.uid}/Maintenance_Schedule_$make $model ${year}_Personal';
+      
+      // Add each item to both collections
+      for (var item in _scheduleItems) {
+        // Create a reference to master schedule collection
+        final masterDocRef = FirebaseFirestore.instance.collection(collectionName).doc();
+        
+        // Create a reference to user's personal schedule collection
+        final userDocRef = FirebaseFirestore.instance.collection(userCollectionName).doc(masterDocRef.id);
+        
+        // Data to be saved - note we're only storing mileage and description
+        // The expected date will be calculated dynamically when user views it
+        final data = {
+          'Description': item.description,
+          'mileage': item.mileage,
+          'expectedDate': null, // Set to null or a placeholder - will be calculated for each user
+          'isDone': false,
+        };
+        
+        // Add to batch
+        batch.set(masterDocRef, data);
+        batch.set(userDocRef, data);
+      }
+      
+      // Commit batch
+      await batch.commit();
+      
+      // Update MaintID to reflect this car
+      MaintID().selectedMake = make;
+      MaintID().selectedModel = model;
+      MaintID().selectedYear = year;
+      
+      // Reset form
+      setState(() {
+        _showAddForm = false;
+        _scheduleItems = [];
+        _selectedMake = null;
+        _selectedModel = null;
+        _selectedYear = null;
+        _selectedCar = null;
+        _currentMileageController.text = '0';
+        _avgKmPerMonthController.text = '1000';
+        _mileageController.clear();
+        _descriptionController.clear();
+        _selectedDate = null;
+      });
+      
+      // Reload existing schedules
+      _loadExistingSchedules();
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Maintenance schedule added successfully')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error adding maintenance schedule: $e')),
+      );
+    }
+  } 

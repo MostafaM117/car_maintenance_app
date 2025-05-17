@@ -255,7 +255,7 @@ class FirestoreService {
 
         await historyCollection.doc(docId).delete();
 
-        print("✅ Recovered maintenance item from history");
+        print("✅ Recovered maintenance item from history: $docId");
       } else {
         print("❌ No data found for docId: $docId");
       }

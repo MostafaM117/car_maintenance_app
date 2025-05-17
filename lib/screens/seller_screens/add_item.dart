@@ -4,7 +4,6 @@ import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../models/car_data.dart';
-import '../../widgets/custom_Popup.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/seller_image-picker.dart';
 
@@ -42,25 +41,12 @@ class _AddItemState extends State<AddItem> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   // primary: false,
-      //   elevation: 0,
-      //   centerTitle: true,
-      //   title: Text(
-      //     'add new item',
-      //   ),
-      //   backgroundColor: AppColors.background,
-      // ),
       backgroundColor: AppColors.background,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Text(
-              //   'add new item',
-              //   style: textStyleWhite,
-              // ),
               ImagePickerContainer(),
               const SizedBox(height: 15),
               //item name
@@ -98,6 +84,19 @@ class _AddItemState extends State<AddItem> {
                     ),
                   ),
                 ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              buildDropdownField(
+                label: 'Product Category',
+                value: _selectedCategory,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedCategory = newValue;
+                  });
+                },
+                options: categories,
               ),
               SizedBox(
                 height: 15,
@@ -192,15 +191,6 @@ class _AddItemState extends State<AddItem> {
                   });
                 },
               ),
-
-              SizedBox(
-                height: 15,
-              ),
-              //item Stock Count
-              buildTextField(
-                  label: 'Stock Count',
-                  hintText: 'Add Count',
-                  controller: stockCountController),
               SizedBox(
                 height: 15,
               ),
@@ -213,53 +203,46 @@ class _AddItemState extends State<AddItem> {
               SizedBox(
                 height: 25,
               ),
-              // buildTextField(
-              //   label: 'Store Location',
-              //   hintText: 'Add ID',
-              // ),
-              // SizedBox(
-              //   height: 25,
-              // ),
-              AnimatedButton(
-                'Add',
-                AppColors.buttonColor,
-                AppColors.buttonText,
-                onPressed: () {
-                  firestoreService.addProduct(
-                      itemNameController.text,
-                      descriptionController.text,
-                      _selectedMake!,
-                      _selectedModel!,
-                      _selectedCategory!,
-                      _selectedAvailability!,
-                      stockCountController.text.isEmpty
-                          ? 0
-                          : int.parse(stockCountController.text),
-                      priceController.text.isEmpty
-                          ? 0.0
-                          : double.parse(priceController.text));
-                  Navigator.pop(context, itemNameController.text);
-                },
-              ),
 
-              SizedBox(
-                height: 15,
+              buildTextField(
+                label: 'Store Location',
+                hintText: 'Add Store Location',
               ),
-              AnimatedButton(
-                'Discard',
-                AppColors.primaryText,
-                AppColors.buttonText,
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (_) => const CustomPopup(
-                      title: 'Congrats!',
-                      message:
-                          'Your account is ready to use!  Now you can add you car details to get started.',
-                    ),
-                  );
-                },
+              SizedBox(
+                height: 25,
+              ),
+              Row(
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  popUpBotton(
+                    'Discard',
+                    AppColors.primaryText,
+                    AppColors.buttonText,
+                    onPressed: () => Navigator.of(context).pop(true),
+                  ),
+                  popUpBotton(
+                    'Add',
+                    AppColors.buttonColor,
+                    AppColors.buttonText,
+                    onPressed: () {
+                      firestoreService.addProduct(
+                          itemNameController.text,
+                          descriptionController.text,
+                          _selectedMake!,
+                          _selectedModel!,
+                          _selectedCategory!,
+                          _selectedAvailability!,
+                          stockCountController.text.isEmpty
+                              ? 0
+                              : int.parse(stockCountController.text),
+                          priceController.text.isEmpty
+                              ? 0.0
+                              : double.parse(priceController.text));
+                      Navigator.pop(context, itemNameController.text);
+                    },
+                  ),
+                ],
               ),
             ],
           ),

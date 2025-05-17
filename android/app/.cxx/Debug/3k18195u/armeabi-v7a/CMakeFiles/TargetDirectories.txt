@@ -1,2 +1,0 @@
-C:/Users/Ahmed emad/Desktop/Carapp_just in case/car_maintenance_app/android/app/.cxx/Debug/3k18195u/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/Ahmed emad/Desktop/Carapp_just in case/car_maintenance_app/android/app/.cxx/Debug/3k18195u/armeabi-v7a/CMakeFiles/rebuild_cache.dir

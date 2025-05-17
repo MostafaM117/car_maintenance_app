@@ -7,6 +7,8 @@ import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/mycar_Card.dart';
 import 'formscreens/formscreen1.dart';
+import '../models/MaintID.dart';
+import '../Back-end/firestore_service.dart';
 // import '../forms/carform.dart' as car_form;
 
 class CarMaint extends StatefulWidget {
@@ -98,16 +100,43 @@ class _CarMaintState extends State<CarMaint> {
                       });
 
                       try {
+                        final int newMileage = double.parse(mileageController.text.trim()).toInt();
+                        final int newAvgKm = double.parse(avgKmController.text.trim()).toInt();
+                        
                         await FirebaseFirestore.instance
                             .collection('cars')
                             .doc(car['id'])
                             .update({
-                          'mileage':
-                              double.parse(mileageController.text.trim()),
-                          'avgKmPerMonth':
-                              double.parse(avgKmController.text.trim()),
+                          'mileage': newMileage,  
+                          'avgKmPerMonth': newAvgKm, 
                           'lastUpdated': FieldValue.serverTimestamp(),
                         });
+                        
+                        final updatedMileage = double.parse(mileageController.text.trim()).toInt();
+                        print('✅ Car mileage updated to $updatedMileage - maintenance items will be checked');
+
+                        final make = car['make'].toString();
+                        final model = car['model'].toString();
+                        final year = car['year'].toString();                       
+                        // Set the maintenance ID for this car
+                        final maintID = MaintID();
+                        maintID.selectedMake = make;
+                        maintID.selectedModel = model;
+                        maintID.selectedYear = year;
+                        
+                        final firestoreService = FirestoreService(maintID);
+                        
+                        firestoreService.getMaintenanceList().first.then((maintList) {
+                          print('🔧 Checking ${maintList.length} maintenance items against new mileage: $updatedMileage');
+                          
+                          for (final item in List.from(maintList)) {
+                            if (updatedMileage >= item.mileage && !item.isDone) {
+                              print('🔄 Moving item ${item.id} to history (${item.mileage} <= $updatedMileage)');
+                              firestoreService.moveToHistory(item.id);
+                            }
+                          }
+                        });
+                        
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Car updated successfully')),
@@ -144,7 +173,7 @@ class _CarMaintState extends State<CarMaint> {
           SafeArea(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+                  const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
               child: Column(
                 children: [
                   SizedBox(height: 70),
@@ -195,76 +224,79 @@ class _CarMaintState extends State<CarMaint> {
                                 car['avgKmPerMonth'] is double
                                     ? car['avgKmPerMonth'].toInt()
                                     : car['avgKmPerMonth'] as int? ?? 0;
-                            return CarCard(
-                              // context: context,
-                              carName: '${car['make']} ${car['model']}',
-                              carId: car['id'],
-                              odometer: '$mileage KM',
-                              year: car['year'] as int? ?? 0,
-                              mileage: mileage,
-                              avgKmPerMonth: avgKmPerMonth,
-                              onCardPressed: () {
-                                _showEditForm(context, car);
-                              },
-                              onDeletePressed: () async {
-                                // Show confirmation dialog
-                                bool confirmDelete = await showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          backgroundColor: AppColors.borderSide,
-                                          title: Text(
-                                            'Are you sure you want to delete your car?',
-                                            style: textStyleWhite,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          content: Text(
-                                            'This action is permanent and cannot be undone. All your data will be permanently removed.',
-                                            style: textStyleGray,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          actions: [
-                                            popUpBotton(
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: CarCard(
+                                // context: context,
+                                carName: '${car['make']} ${car['model']}',
+                                carId: car['id'],
+                                odometer: '$mileage KM',
+                                year: car['year'] as int? ?? 0,
+                                mileage: mileage,
+                                avgKmPerMonth: avgKmPerMonth,
+                                onCardPressed: () {
+                                  _showEditForm(context, car);
+                                },
+                                onDeletePressed: () async {
+                                  // Show confirmation dialog
+                                  bool confirmDelete = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            backgroundColor: AppColors.borderSide,
+                                            title: Text(
+                                              'Are you sure you want to delete your car?',
+                                              style: textStyleWhite,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            content: Text(
+                                              'This action is permanent and cannot be undone. All your data will be permanently removed.',
+                                              style: textStyleGray,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            actions: [
+                                              popUpBotton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(false),
+                                                  'Cancel',
+                                                  AppColors.primaryText,
+                                                  AppColors.buttonText),
+                                              SizedBox(
+                                                width: 15,
+                                              ),
+                                              popUpBotton(
                                                 onPressed: () =>
                                                     Navigator.of(context)
-                                                        .pop(false),
-                                                'Cancel',
-                                                AppColors.primaryText,
-                                                AppColors.buttonText),
-                                            SizedBox(
-                                              width: 15,
-                                            ),
-                                            popUpBotton(
-                                              onPressed: () =>
-                                                  Navigator.of(context)
-                                                      .pop(true),
-                                              'Delete',
-                                              AppColors.buttonColor,
-                                              AppColors.buttonText,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ) ??
-                                    false;
-
-                                if (confirmDelete) {
-                                  try {
-                                    await CarService.deleteCar(car['id']);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('Car deleted successfully')),
-                                    );
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content:
-                                              Text('Error deleting car: $e')),
-                                    );
+                                                        .pop(true),
+                                                'Delete',
+                                                AppColors.buttonColor,
+                                                AppColors.buttonText,
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ) ??
+                                      false;
+                              
+                                  if (confirmDelete) {
+                                    try {
+                                      await CarService.deleteCar(car['id']);
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text('Car deleted successfully')),
+                                      );
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text('Error deleting car: $e')),
+                                      );
+                                    }
                                   }
-                                }
-                              },
+                                },
+                              ),
                             );
                           },
                         );
@@ -273,7 +305,7 @@ class _CarMaintState extends State<CarMaint> {
                   ),
 
                   SizedBox(height: 20),
-                  AnimatedButton(
+                  buildButton(
                     'Add Car',
                     AppColors.buttonColor,
                     AppColors.secondaryText,
