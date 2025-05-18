@@ -5,6 +5,9 @@ import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../constants/app_colors.dart';
 import '../../../widgets/info_field.dart';
 import '../../../widgets/profile_image.dart';
@@ -21,6 +24,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
   final _emailcontroller = TextEditingController();
   String? errorText;
   final user = FirebaseAuth.instance.currentUser!;
+  String? imageUrl;
 
   //Update current username
   Future<void> _updateUsername() async {
@@ -37,9 +41,56 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
         .update({'username': newUsername});
   }
 
+  //Upload Profile Images to Supabase
+  Future<void> pickAndUploadImage() async{
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if(pickedFile == null) {
+      return ;
+    }
+    //checkout this part again later
+    // final user = FirebaseAuth.instance.currentUser;
+    // if(user == null){
+    //   print('User is empty');
+    //   throw Exception('User not logged in');
+    // }
+    final file = File(pickedFile.path);
+    final fileName = '${user.uid}_${path.basename(pickedFile.path)}';
+    final storage = Supabase.instance.client.storage;
+    const bucket = 'user-profile-images';
+    try{
+    final response = await storage.from(bucket).upload(fileName, file, fileOptions: const FileOptions(upsert: true));
+
+    if (response.isNotEmpty){
+      final imageUrl = storage.from(bucket).getPublicUrl(fileName);
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+      'imageUrl': imageUrl,
+      }, SetOptions(merge: true));
+      print('✅ Image uploaded successfully: $imageUrl');
+      setState(() {
+        this.imageUrl = imageUrl;
+      });
+    }
+    else {
+      print('❌ Upload failed: Unknown error');
+    }
+    }catch (e) {
+    print('❌ Upload error: $e');
+  }
+  }
+  //loadImage
+  Future<void> loadImage() async {
+    // if (user == null) return;
+
+    final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    setState(() {
+      imageUrl = doc.data()?['imageUrl'];
+    });
+  }
   @override
   void initState() {
     super.initState();
+    loadImage();
   }
 
   @override
@@ -71,6 +122,19 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                       SizedBox(
                         height: 20,
                       ),
+//                       CircleAvatar(
+//   radius: 60,
+//   backgroundImage: imageUrl != null
+//       ? NetworkImage(imageUrl!)
+//       : const AssetImage('assets/default_profile.png') as ImageProvider,
+//   child: Align(
+//     alignment: Alignment.bottomRight,
+//     child: IconButton(
+//       icon: const Icon(Icons.camera_alt, color: Colors.white),
+//       onPressed: pickAndUploadImage,
+//     ),
+//   ),
+// ),
                       ProfileImagePicker(
                         onImagePicked: (File image) {
                           setState(() {});

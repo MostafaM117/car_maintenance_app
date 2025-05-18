@@ -138,7 +138,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     const SizedBox(height: 8),
                     ProfileOptionTile(
-                      text: 'Profile',
+                      text: 'Account Management',
                       onBackTap: () {
                         Navigator.push(
                           context,
