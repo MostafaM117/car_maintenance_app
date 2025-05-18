@@ -43,48 +43,51 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
   }
 
   //Upload Profile Images to Supabase
-  Future<void> pickAndUploadImage() async{
+  Future<void> pickAndUploadImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    if(pickedFile == null) {
-      return ;
+    if (pickedFile == null) {
+      return;
     }
     final file = File(pickedFile.path);
     final fileName = '${user.uid}_${path.basename(pickedFile.path)}';
     final storage = Supabase.instance.client.storage;
     const bucket = 'user-profile-images';
-    try{
+    try {
       final existingFiles = await storage.from(bucket).list();
       final fileExists = existingFiles.any((file) => file.name == fileName);
-      if (fileExists){
+      if (fileExists) {
         await storage.from(bucket).remove([fileName]);
         print('🗑️ Existing image deleted: $fileName');
-      // setState(() {
-      //   imageUrl = existingUrl;
-      // });
+        // setState(() {
+        //   imageUrl = existingUrl;
+        // });
       }
       await storage.from(bucket).upload(fileName, file);
-      final publicUrl  = storage.from(bucket).getPublicUrl(fileName);
+      final publicUrl = storage.from(bucket).getPublicUrl(fileName);
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-      'imageUrl': publicUrl,
+        'imageUrl': publicUrl,
       }, SetOptions(merge: true));
       print('✅ Image uploaded successfully: $publicUrl');
 
       await loadImage();
-    
+    } catch (e) {
+      print('❌ Upload error: $e');
     }
-    catch (e) {
-    print('❌ Upload error: $e');
   }
-  }
+
   //loadImage
   Future<void> loadImage() async {
-    final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
     setState(() {
       imageUrl = doc.data()?['imageUrl'];
       _isImageLoading = false;
     });
   }
+
   @override
   void initState() {
     super.initState();
@@ -120,29 +123,38 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                       SizedBox(
                         height: 20,
                       ),
-                        Stack(
-                          alignment: Alignment.bottomRight,
-                          children: [
-                            ClipOval(
-                              child: SizedBox(
-                                width: 130,
-                                height: 130,
-                                child: _isImageLoading
-                                ? Center(child: CircularProgressIndicator(),)
-                                : imageUrl != null && imageUrl!.isNotEmpty 
-                                ? Image.network(
-                                  imageUrl!,
-                                  fit: BoxFit.cover,
-                                  loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return const Center(child: CircularProgressIndicator()); 
-                                  },
-                                )
-                                : Icon(Icons.person, size: 60,),
-                              ),
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          ClipOval(
+                            child: SizedBox(
+                              width: 130,
+                              height: 130,
+                              child: _isImageLoading
+                                  ? Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : imageUrl != null && imageUrl!.isNotEmpty
+                                      ? Image.network(
+                                          imageUrl!,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          },
+                                        )
+                                      : Icon(
+                                          Icons.person,
+                                          size: 60,
+                                        ),
                             ),
-                            InkWell(
-                            onTap: () async{
+                          ),
+                          InkWell(
+                            onTap: () async {
                               setState(() {
                                 _isImageLoading = true;
                               });
@@ -155,11 +167,12 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                 color: Colors.black54,
                               ),
                               padding: const EdgeInsets.all(8),
-                              child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                              child: const Icon(Icons.edit,
+                                  color: Colors.white, size: 20),
                             ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
                       // ProfileImagePicker(
                       //   onImagePicked: (File image) {
                       //     setState(() {});
@@ -535,7 +548,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           },
                                         ),
                                         SizedBox(
-                                          height: 20,
+                                          height: 15,
                                         ),
                                         ElevatedButton(
                                           style: ElevatedButton.styleFrom(
@@ -565,7 +578,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                             ),
                                           ),
                                         ),
-                                      
                                       ],
                                     )
                                   ],

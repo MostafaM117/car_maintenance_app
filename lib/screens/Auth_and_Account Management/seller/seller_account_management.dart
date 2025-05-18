@@ -191,19 +191,21 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                   ),
                                   actionsAlignment: MainAxisAlignment.center,
                                   actions: [
-                                    popUpBotton(
-                                      'Cancel',
-                                      AppColors.primaryText,
-                                      AppColors.buttonText,
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        errorText = null;
-                                      },
-                                    ),
-                                    popUpBotton(
-                                      'Update',
-                                      AppColors.buttonColor,
-                                      AppColors.buttonText,
+                               
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        elevation: 0,
+                                        side: BorderSide(
+                                          color: Color(0xFFD9D9D9),
+                                          width: 1,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        fixedSize: Size(250, 45),
+                                      ),
                                       onPressed: () {
                                         final businessname =
                                             _businessnameEditcontroller.text
@@ -220,6 +222,42 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                           _updateBusinessname();
                                         }
                                       },
+                                      child: Text(
+                                        'Save Changes',
+                                        style: textStyleWhite.copyWith(
+                                          fontSize: 18,
+                                          color: AppColors.buttonColor,
+                                        ),
+                                      ),
+                                    ),     
+                                          SizedBox(
+                                      height: 10,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primaryText,
+                                        elevation: 0,
+                                        side: BorderSide(
+                                          color: Color(0xFFD9D9D9),
+                                          width: 1,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        fixedSize: Size(250, 45),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        errorText = null;
+                                      },
+                                      child: Text(
+                                        'Cancel',
+                                        style: textStyleWhite.copyWith(
+                                          fontSize: 18,
+                                          color: AppColors.buttonText,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 );
@@ -331,10 +369,27 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                   actions: [
                                     Column(
                                       children: [
-                                        popUpBotton(
-                                          'Send E-mail',
-                                          AppColors.buttonColor,
-                                          AppColors.buttonText,
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            elevation: 0,
+                                            side: BorderSide(
+                                              color: Color(0xFFD9D9D9),
+                                              width: 1,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            fixedSize: Size(250, 45),
+                                          ),
+                                          child: Text(
+                                            'Send E-mail',
+                                            style: textStyleWhite.copyWith(
+                                              fontSize: 18,
+                                              color: AppColors.buttonColor,
+                                            ),
+                                          ),
                                           onPressed: () async {
                                             final email =
                                                 _businessemailcontroller.text
@@ -396,17 +451,35 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                           },
                                         ),
                                         SizedBox(
-                                          height: 20,
+                                          height: 15,
                                         ),
-                                        popUpBotton(
-                                          'Cancel',
-                                          AppColors.primaryText,
-                                          AppColors.buttonText,
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                AppColors.primaryText,
+                                            elevation: 0,
+                                            side: BorderSide(
+                                              color: Color(0xFFD9D9D9),
+                                              width: 1,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            fixedSize: Size(250, 45),
+                                          ),
                                           onPressed: () {
                                             _businessemailcontroller.clear();
                                             Navigator.of(context).pop();
                                             errorText = null;
                                           },
+                                          child: Text(
+                                            'Cancel',
+                                            style: textStyleWhite.copyWith(
+                                              fontSize: 18,
+                                              color: AppColors.buttonText,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     )

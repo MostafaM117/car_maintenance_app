@@ -3,7 +3,6 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
 import 'package:car_maintenance/screens/Periodicpage.dart';
-import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:car_maintenance/screens/seller_screens/add_item.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +21,6 @@ class _MarketPageState extends State<MarketPage> {
   FirestoreService firestoreService = FirestoreService(MaintID());
 
   void _editItem(int index) async {
-    // هنا هتنتقلي لصفحة التعديل لو تحبي
-    // دلوقتي هنخليه بسيط:
     TextEditingController editController =
         TextEditingController(text: items[index]);
     await showDialog(
@@ -200,16 +197,20 @@ class _MarketPageState extends State<MarketPage> {
                                   ),
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Colors.black),
+                                  icon: SvgPicture.asset(
+                                    'assets/svg/edit.svg',
+                                    width: 24,
+                                    height: 24,
+                                  ),
                                   onPressed: () => _editItem(index),
                                 ),
                                 IconButton(
-                                  icon: const Icon(
-                                    Icons.delete_outlined,
+                                  icon: SvgPicture.asset(
+                                    'assets/svg/delete.svg',
+                                    width: 24,
+                                    height: 24,
                                   ),
                                   onPressed: () async {
-                                    // Show confirmation dialog
                                     bool confirmDelete = await showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
