@@ -25,6 +25,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
   String? errorText;
   final user = FirebaseAuth.instance.currentUser!;
   String? imageUrl;
+  bool _isImageLoading = true;
 
   //Update current username
   Future<void> _updateUsername() async {
@@ -48,43 +49,40 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
     if(pickedFile == null) {
       return ;
     }
-    //checkout this part again later
-    // final user = FirebaseAuth.instance.currentUser;
-    // if(user == null){
-    //   print('User is empty');
-    //   throw Exception('User not logged in');
-    // }
     final file = File(pickedFile.path);
     final fileName = '${user.uid}_${path.basename(pickedFile.path)}';
     final storage = Supabase.instance.client.storage;
     const bucket = 'user-profile-images';
     try{
-    final response = await storage.from(bucket).upload(fileName, file, fileOptions: const FileOptions(upsert: true));
-
-    if (response.isNotEmpty){
-      final imageUrl = storage.from(bucket).getPublicUrl(fileName);
+      final existingFiles = await storage.from(bucket).list();
+      final fileExists = existingFiles.any((file) => file.name == fileName);
+      if (fileExists){
+        await storage.from(bucket).remove([fileName]);
+        print('🗑️ Existing image deleted: $fileName');
+      // setState(() {
+      //   imageUrl = existingUrl;
+      // });
+      }
+      await storage.from(bucket).upload(fileName, file);
+      final publicUrl  = storage.from(bucket).getPublicUrl(fileName);
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-      'imageUrl': imageUrl,
+      'imageUrl': publicUrl,
       }, SetOptions(merge: true));
-      print('✅ Image uploaded successfully: $imageUrl');
-      setState(() {
-        this.imageUrl = imageUrl;
-      });
+      print('✅ Image uploaded successfully: $publicUrl');
+
+      await loadImage();
+    
     }
-    else {
-      print('❌ Upload failed: Unknown error');
-    }
-    }catch (e) {
+    catch (e) {
     print('❌ Upload error: $e');
   }
   }
   //loadImage
   Future<void> loadImage() async {
-    // if (user == null) return;
-
     final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
     setState(() {
       imageUrl = doc.data()?['imageUrl'];
+      _isImageLoading = false;
     });
   }
   @override
@@ -122,24 +120,51 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                       SizedBox(
                         height: 20,
                       ),
-//                       CircleAvatar(
-//   radius: 60,
-//   backgroundImage: imageUrl != null
-//       ? NetworkImage(imageUrl!)
-//       : const AssetImage('assets/default_profile.png') as ImageProvider,
-//   child: Align(
-//     alignment: Alignment.bottomRight,
-//     child: IconButton(
-//       icon: const Icon(Icons.camera_alt, color: Colors.white),
-//       onPressed: pickAndUploadImage,
-//     ),
-//   ),
-// ),
-                      ProfileImagePicker(
-                        onImagePicked: (File image) {
-                          setState(() {});
-                        },
-                      ),
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipOval(
+                              child: SizedBox(
+                                width: 130,
+                                height: 130,
+                                child: _isImageLoading
+                                ? Center(child: CircularProgressIndicator(),)
+                                : imageUrl != null && imageUrl!.isNotEmpty 
+                                ? Image.network(
+                                  imageUrl!,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return const Center(child: CircularProgressIndicator()); 
+                                  },
+                                )
+                                : Icon(Icons.person, size: 60,),
+                              ),
+                            ),
+                            InkWell(
+                            onTap: () async{
+                              setState(() {
+                                _isImageLoading = true;
+                              });
+                              await pickAndUploadImage();
+                              await loadImage();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black54,
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                            ),
+                            ),
+                          ],
+                        ),
+                      // ProfileImagePicker(
+                      //   onImagePicked: (File image) {
+                      //     setState(() {});
+                      //   },
+                      // ),
                       // Username Below Profile Picture
                       UsernameDisplay(uid: user.uid),
                       Text(
