@@ -1,11 +1,10 @@
+import 'package:animations/animations.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
-import 'package:car_maintenance/screens/addMaintenance.dart';
+import 'package:car_maintenance/screens/ProductDetailsPage.dart';
 import 'package:flutter/material.dart';
-
 import '../constants/app_colors.dart';
-// import '../widgets/BackgroundDecoration.dart';
 import '../widgets/ProductCard.dart';
 
 class Periodicpage extends StatefulWidget {
@@ -107,12 +106,35 @@ class _PeriodicpageState extends State<Periodicpage> {
                                     mainAxisSpacing: 20,
                                     childAspectRatio: 0.80),
                             itemCount: products.length,
-                            itemBuilder: (context, index) => ProductCard(
-                              image: 'assets/images/motor_oil.png',
-                              title: products[index].name,
-                              price: products[index].price.toString(),
-                              description: products[index].description,
-                            ),
+                            itemBuilder: (context, index) {
+                              final product = products[index];
+                              return OpenContainer(
+                                transitionType:
+                                    ContainerTransitionType.fadeThrough,
+                                transitionDuration: Duration(milliseconds: 500),
+                                closedElevation: 0,
+                                closedColor: Colors.transparent,
+                                openColor: Colors.white,
+                                closedBuilder: (context, openContainer) {
+                                  return GestureDetector(
+                                    onTap: openContainer,
+                                    child: ProductCard(
+                                      image: 'assets/images/motor_oil.png',
+                                      title: product.name,
+                                      price: product.price.toString(),
+                                    ),
+                                  );
+                                },
+                                openBuilder: (context, _) {
+                                  return ProductDetailsPage(
+                                    image: 'assets/images/motor_oil.png',
+                                    title: product.name,
+                                    price: product.price.toString(),
+                                    description: product.description,
+                                  );
+                                },
+                              );
+                            },
                           );
                         }),
                   ),
