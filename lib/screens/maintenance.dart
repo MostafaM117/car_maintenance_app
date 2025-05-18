@@ -6,6 +6,7 @@ import 'package:car_maintenance/screens/HistoryDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/maintenance_card.dart';
 
@@ -83,28 +84,48 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                         itemBuilder: (context, index) {
                           final maintenanceItem = historyList[index];
 
-                          return Dismissible(
+                          return Slidable(
                             key: Key(maintenanceItem.id),
-                            direction: DismissDirection.endToStart,
+                            startActionPane: ActionPane(
+                              motion: const DrawerMotion(),
+                              children: [
+                                SlidableAction(
+                                  onPressed: (context) async {
+                                    await firestoreService
+                                        .recoverFromHistory(maintenanceItem.id);
+                                  },
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  icon: Icons.undo,
+                                  label: 'Undo',
+                                ),
+                                SlidableAction(
+                                  onPressed: (context) {
+                                    // delete action
+                                  },
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  icon: Icons.delete,
+                                  label: 'Delete',
+                                ),
+                              ],
+                            ),
                             child: GestureDetector(
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) => HistoryDetailsPage(
-                                        maintenanceItem: maintenanceItem),
+                                      maintenanceItem: maintenanceItem,
+                                    ),
                                   ),
                                 );
                               },
                               child: MaintenanceCard(
                                 title: '${maintenanceItem.mileage} KM',
-                                date: 'Completed'
+                                date: 'Completed',
                               ),
                             ),
-                            onDismissed: (direction) async {
-                              await firestoreService
-                                  .recoverFromHistory(maintenanceItem.id);
-                            },
                           );
                         },
                       );

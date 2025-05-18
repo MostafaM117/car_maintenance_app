@@ -1,22 +1,19 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
-// import 'package:car_maintenance/screens/addMaintenance.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-// import '../AI-Chatbot/chatbot.dart';
 import '../services/user_data_helper.dart';
 import '../widgets/CarCardWidget.dart';
 import '../widgets/SubtractWave_widget.dart';
 import '../widgets/maintenance_card.dart';
 import '../Back-end/firestore_service.dart';
 import '../services/mileage_service.dart';
-// import 'maintenance.dart';
 import 'formscreens/formscreen1.dart';
 import 'maintenanceDetails.dart';
-// import 'market.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -314,7 +311,6 @@ class _HomePageState extends State<HomePage> {
                               child: CircularProgressIndicator());
                         }
 
-                        final carId = selectedCar?["id"] ?? "";
                         final carMileage = mileageSnapshot.data ?? 0;
 
                         int avgKmPerMonth = 500;
@@ -393,20 +389,30 @@ class _HomePageState extends State<HomePage> {
                                   .shrink(); // Hides the widget visually
                             }
 
-                            return Dismissible(
+                            return Slidable(
                               key: Key(maintenanceItem.id),
-                              direction: DismissDirection.startToEnd,
-                              background: Container(
-                                color: const Color.fromARGB(255, 94, 255, 82),
-                                alignment: Alignment.centerRight,
-                                padding: EdgeInsets.symmetric(horizontal: 20),
-                                child: Icon(Icons.check, color: Colors.white),
+                              startActionPane: ActionPane(
+                                motion: const DrawerMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) async {
+                                      await firestoreService
+                                          .moveToHistory(maintenanceItem.id);
+                                    },
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.black,
+                                    icon: Icons.check,
+                                    label: 'Done',
+                                  ),
+                                  SlidableAction(
+                                    onPressed: (context) {},
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.black,
+                                    icon: Icons.close,
+                                    label: 'Cancel',
+                                  ),
+                                ],
                               ),
-                              onDismissed: (direction) async {
-                                await firestoreService
-                                    .moveToHistory(maintenanceItem.id);
-                                // print("✅ Moved to history");
-                              },
                               child: GestureDetector(
                                 onTap: () {
                                   Navigator.push(
