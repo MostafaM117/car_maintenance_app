@@ -8,7 +8,6 @@ import '../widgets/mycar_Card.dart';
 import 'formscreens/formscreen1.dart';
 import '../models/MaintID.dart';
 import '../Back-end/firestore_service.dart';
-// import '../forms/carform.dart' as car_form;
 
 class CarMaint extends StatefulWidget {
   const CarMaint({super.key});
@@ -242,7 +241,7 @@ class _CarMaintState extends State<CarMaint> {
                                 year: car['year'] as int? ?? 0,
                                 mileage: mileage,
                                 avgKmPerMonth: avgKmPerMonth,
-                                onCardPressed: () {
+                                onEditPressed: () {
                                   _showEditForm(context, car);
                                 },
                                 onDeletePressed: () async {

@@ -181,7 +181,6 @@ class CarCard extends StatelessWidget {
   final int mileage;
   final int avgKmPerMonth;
   final VoidCallback? onDeletePressed;
-  final VoidCallback? onCardPressed;
   final VoidCallback? onEditPressed;
 
   const CarCard({
@@ -193,7 +192,6 @@ class CarCard extends StatelessWidget {
     required this.mileage,
     required this.avgKmPerMonth,
     this.onDeletePressed,
-    this.onCardPressed,
     this.onEditPressed,
   });
 
@@ -203,7 +201,7 @@ class CarCard extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return GestureDetector(
-      onTap: onCardPressed,
+      onTap: onEditPressed,
       child: SizedBox(
         width: screenWidth * 0.85,
         height: screenHeight * 0.23,
@@ -227,7 +225,7 @@ class CarCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           FittedBox(
-                            // fit: BoxFit.scaleDown,
+                            fit: BoxFit.scaleDown,
                             child: Text(
                               carName,
                               style: textStyleWhite.copyWith(
@@ -240,7 +238,6 @@ class CarCard extends StatelessWidget {
                               textAlign: TextAlign.justify,
                               style: textStyleWhite.copyWith(
                                 fontWeight: FontWeight.w300,
-                                // fontSize: 15,
                               )),
                         ],
                       ),
@@ -255,7 +252,6 @@ class CarCard extends StatelessWidget {
                   ],
                 ),
                 Column(
-                  // mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text.rich(
@@ -268,7 +264,6 @@ class CarCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // const SizedBox(height: 5),
                     Text.rich(
                       TextSpan(
                         text: 'Average: ',
@@ -280,29 +275,13 @@ class CarCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        // buildButton(
-                        //   'Delete',
-                        //   AppColors.buttonColor,
-                        //   AppColors.buttonText,
-                        //   onPressed: onDeletePressed,
-                        // ),
-
-                        // buildButton(
-                        //   'Edit',
-                        //   AppColors.buttonColor,
-                        //   AppColors.buttonText,
-                        //   onPressed: onDeletePressed,
-                        // ),
-                        // Action buttons
                         ElevatedButton(
                           onPressed: onDeletePressed,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            // minimumSize: const Size(70, 30),
+                            backgroundColor: AppColors.primaryText,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -312,10 +291,9 @@ class CarCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         ElevatedButton(
-                          onPressed: onDeletePressed,
+                          onPressed: onEditPressed,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.buttonColor,
-                            // minimumSize: const Size(70, 30),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -335,3 +313,4 @@ class CarCard extends StatelessWidget {
     );
   }
 }
+
