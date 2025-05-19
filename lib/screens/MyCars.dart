@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../services/car_service.dart';
-import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
 import '../widgets/mycar_Card.dart';
 import 'formscreens/formscreen1.dart';
@@ -100,43 +99,53 @@ class _CarMaintState extends State<CarMaint> {
                       });
 
                       try {
-                        final int newMileage = double.parse(mileageController.text.trim()).toInt();
-                        final int newAvgKm = double.parse(avgKmController.text.trim()).toInt();
-                        
+                        final int newMileage =
+                            double.parse(mileageController.text.trim()).toInt();
+                        final int newAvgKm =
+                            double.parse(avgKmController.text.trim()).toInt();
+
                         await FirebaseFirestore.instance
                             .collection('cars')
                             .doc(car['id'])
                             .update({
-                          'mileage': newMileage,  
-                          'avgKmPerMonth': newAvgKm, 
+                          'mileage': newMileage,
+                          'avgKmPerMonth': newAvgKm,
                           'lastUpdated': FieldValue.serverTimestamp(),
                         });
-                        
-                        final updatedMileage = double.parse(mileageController.text.trim()).toInt();
-                        print('✅ Car mileage updated to $updatedMileage - maintenance items will be checked');
+
+                        final updatedMileage =
+                            double.parse(mileageController.text.trim()).toInt();
+                        print(
+                            '✅ Car mileage updated to $updatedMileage - maintenance items will be checked');
 
                         final make = car['make'].toString();
                         final model = car['model'].toString();
-                        final year = car['year'].toString();                       
+                        final year = car['year'].toString();
                         // Set the maintenance ID for this car
                         final maintID = MaintID();
                         maintID.selectedMake = make;
                         maintID.selectedModel = model;
                         maintID.selectedYear = year;
-                        
+
                         final firestoreService = FirestoreService(maintID);
-                        
-                        firestoreService.getMaintenanceList().first.then((maintList) {
-                          print('🔧 Checking ${maintList.length} maintenance items against new mileage: $updatedMileage');
-                          
+
+                        firestoreService
+                            .getMaintenanceList()
+                            .first
+                            .then((maintList) {
+                          print(
+                              '🔧 Checking ${maintList.length} maintenance items against new mileage: $updatedMileage');
+
                           for (final item in List.from(maintList)) {
-                            if (updatedMileage >= item.mileage && !item.isDone) {
-                              print('🔄 Moving item ${item.id} to history (${item.mileage} <= $updatedMileage)');
+                            if (updatedMileage >= item.mileage &&
+                                !item.isDone) {
+                              print(
+                                  '🔄 Moving item ${item.id} to history (${item.mileage} <= $updatedMileage)');
                               firestoreService.moveToHistory(item.id);
                             }
                           }
                         });
-                        
+
                         Navigator.of(context).pop();
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Car updated successfully')),
@@ -169,7 +178,6 @@ class _CarMaintState extends State<CarMaint> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          const CurvedBackgroundDecoration(),
           SafeArea(
             child: Padding(
               padding:
@@ -225,7 +233,7 @@ class _CarMaintState extends State<CarMaint> {
                                     ? car['avgKmPerMonth'].toInt()
                                     : car['avgKmPerMonth'] as int? ?? 0;
                             return Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: CarCard(
                                 // context: context,
                                 carName: '${car['make']} ${car['model']}',
@@ -243,7 +251,8 @@ class _CarMaintState extends State<CarMaint> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            backgroundColor: AppColors.borderSide,
+                                            backgroundColor:
+                                                AppColors.borderSide,
                                             title: Text(
                                               'Are you sure you want to delete your car?',
                                               style: textStyleWhite,
@@ -278,17 +287,19 @@ class _CarMaintState extends State<CarMaint> {
                                         },
                                       ) ??
                                       false;
-                              
+
                                   if (confirmDelete) {
                                     try {
                                       await CarService.deleteCar(car['id']);
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
-                                            content:
-                                                Text('Car deleted successfully')),
+                                            content: Text(
+                                                'Car deleted successfully')),
                                       );
                                     } catch (e) {
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
                                             content:
                                                 Text('Error deleting car: $e')),
