@@ -2,7 +2,9 @@ import 'package:animations/animations.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
+import 'package:car_maintenance/models/car_data.dart';
 import 'package:car_maintenance/screens/ProductDetailsPage.dart';
+import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
 import '../widgets/ProductCard.dart';
@@ -18,6 +20,17 @@ class Periodicpage extends StatefulWidget {
 
 class _PeriodicpageState extends State<Periodicpage> {
   FirestoreService firestoreService = FirestoreService(MaintID());
+  String? filterMake;
+  String? filterModel;
+  double? minPrice;
+  double? maxPrice;
+  String? selectedLocation;
+  final List<String> _carMakes = CarData.getAllMakes();
+
+  void checkFormCompletion() {
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -78,13 +91,13 @@ class _PeriodicpageState extends State<Periodicpage> {
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            _buildFilterButton('Price'),
-                            const SizedBox(width: 8),
-                            _buildFilterButton('Location'),
-                            const SizedBox(width: 8),
-                            _buildFilterButton('Filter'),
+                            _buildFilterButton('Filters'),
                             // const SizedBox(width: 8),
-                            // _buildFilterButton('Filter'),
+                            // _buildFilterButton('Location'),
+                            // const SizedBox(width: 8),
+                            // _buildFilterButton('Make'),
+                            // const SizedBox(width: 8),
+                            // _buildFilterButton('Model'),
                           ],
                         ),
                       ),
@@ -95,7 +108,13 @@ class _PeriodicpageState extends State<Periodicpage> {
                   ),
                   Expanded(
                     child: StreamBuilder<List<ProductItem>>(
-                        stream: firestoreService.getProducts(),
+                        stream: firestoreService.getFilteredProducts(
+                          make: filterMake,
+                          model: filterModel,
+                          minPrice: minPrice,
+                          maxPrice: maxPrice,
+                          location: selectedLocation,
+                        ),
                         builder: (context, snapshot) {
                           final products = snapshot.data ?? [];
                           return GridView.builder(
@@ -149,7 +168,91 @@ class _PeriodicpageState extends State<Periodicpage> {
 
   Widget _buildFilterButton(String title) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Filter'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Add your filter options here
+                    // Car Make
+                    buildDropdownField(
+                      label: 'Car Make',
+                      value: filterMake,
+                      options: _carMakes,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          filterMake = newValue;
+                          filterModel = null;
+                          checkFormCompletion();
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 15),
+
+                    // Car Model
+                    buildDropdownField(
+                      label: 'Car Model',
+                      value: filterModel,
+                      options: filterMake == null
+                          ? []
+                          : CarData.getModelsForMake(filterMake),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          filterModel = newValue;
+                          checkFormCompletion();
+                        });
+                      },
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Min Price'),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        setState(() {
+                          minPrice = double.tryParse(value);
+                        });
+                      },
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Max Price'),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        setState(() {
+                          maxPrice = double.tryParse(value);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Apply'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      filterMake = null;
+                      filterModel = null;
+                      minPrice = null;
+                      maxPrice = null;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Reset'),
+                ),
+              ],
+            );
+          },
+        );
+      },
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black,
         backgroundColor: AppColors.secondaryText,

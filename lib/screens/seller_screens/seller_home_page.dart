@@ -136,7 +136,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Low Stoke',
+                    'Low Stock',
                     style: TextStyle(
                       color: const Color(0xFF0F0F0F),
                       fontSize: 24,
