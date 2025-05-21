@@ -18,7 +18,7 @@ class InfoField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          padding: const EdgeInsets.only(left: 8.0),
           child: Text(
             label,
             style: const TextStyle(
@@ -33,7 +33,8 @@ class InfoField extends StatelessWidget {
           child: Container(
             width: 320,
             height: 45,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            alignment: Alignment.centerLeft,
             decoration: ShapeDecoration(
               color: const Color(0xFFF4F4F4),
               shape: RoundedRectangleBorder(

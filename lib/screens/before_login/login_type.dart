@@ -38,7 +38,7 @@ class LoginType extends StatelessWidget {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          "Sign up or login as user to enjoy our services\nor as seller to manage and showcase your offerings ",
+                          "Whether you're a car owner looking to stay on top of maintenance, or a seller offering trusted parts, we've got you covered.",
                           style: textStyleGray.copyWith(fontSize: 14),
                           textAlign: TextAlign.left,
                         ),
