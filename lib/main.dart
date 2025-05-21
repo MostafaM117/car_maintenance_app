@@ -15,7 +15,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await dotenv.load();
+  try{
+    await dotenv.load(fileName: ".env");
+    }
+  catch(e){
+    print('Warning: .env file not found. Proceeding without it.');
+  }
   runApp(const MyApp());
 }
 

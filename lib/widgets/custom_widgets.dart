@@ -30,7 +30,7 @@ Widget buildInputField({
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        padding: EdgeInsets.only(right: 10), //20
+        padding: EdgeInsets.only(right: 15), //20
         height: 45,
         decoration: ShapeDecoration(
           color: AppColors.secondaryText,
