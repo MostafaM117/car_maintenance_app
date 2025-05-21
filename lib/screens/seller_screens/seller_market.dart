@@ -2,6 +2,7 @@ import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
+import 'package:car_maintenance/models/car_data.dart';
 import 'package:car_maintenance/screens/Periodicpage.dart';
 import 'package:car_maintenance/screens/seller_screens/add_item.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
@@ -19,6 +20,16 @@ class _MarketPageState extends State<MarketPage> {
   List<String> items = [];
   final TextEditingController _searchController = TextEditingController();
   FirestoreService firestoreService = FirestoreService(MaintID());
+  String? filterMake;
+  String? filterModel;
+  double? minPrice;
+  double? maxPrice;
+  String? selectedLocation;
+  final List<String> _carMakes = CarData.getAllMakes();
+
+  void checkFormCompletion() {
+    setState(() {});
+  }
 
   void _editItem(int index) async {
     TextEditingController editController =
@@ -104,11 +115,13 @@ class _MarketPageState extends State<MarketPage> {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  _buildFilterButton('Price'),
+                  _buildFilterButton('Filters'),
                   const SizedBox(width: 8),
-                  _buildFilterButton('Location'),
-                  const SizedBox(width: 8),
-                  _buildFilterButton('Filter'),
+                  // _buildFilterButton('Location'),
+                  // const SizedBox(width: 8),
+                  // _buildFilterButton('Make'),
+                  // const SizedBox(width: 8),
+                  // _buildFilterButton('Model'),
                   IconButton(
                     onPressed: () {
                       Navigator.push(
@@ -275,7 +288,91 @@ class _MarketPageState extends State<MarketPage> {
 
   Widget _buildFilterButton(String title) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Filter'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Add your filter options here
+                    // Car Make
+                    buildDropdownField(
+                      label: 'Car Make',
+                      value: filterMake,
+                      options: _carMakes,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          filterMake = newValue;
+                          filterModel = null;
+                          checkFormCompletion();
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 15),
+
+                    // Car Model
+                    buildDropdownField(
+                      label: 'Car Model',
+                      value: filterModel,
+                      options: filterMake == null
+                          ? []
+                          : CarData.getModelsForMake(filterMake),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          filterModel = newValue;
+                          checkFormCompletion();
+                        });
+                      },
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Min Price'),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        setState(() {
+                          minPrice = double.tryParse(value);
+                        });
+                      },
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Max Price'),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        setState(() {
+                          maxPrice = double.tryParse(value);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Apply'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      filterMake = null;
+                      filterModel = null;
+                      minPrice = null;
+                      maxPrice = null;
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Reset'),
+                ),
+              ],
+            );
+          },
+        );
+      },
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black,
         backgroundColor: AppColors.secondaryText,
