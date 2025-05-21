@@ -14,7 +14,7 @@ class BusinessnameDisplay extends StatelessWidget {
       builder: (context, snapshot){
         if(snapshot.hasData && snapshot.data!.exists){
           final data = snapshot.data!.data() as Map<String, dynamic>;
-          final businessname = data['businessname']?? '';
+          final businessname = data['business_name']?? '';
           return Text(
             businessname,
             style: style ?? const TextStyle(

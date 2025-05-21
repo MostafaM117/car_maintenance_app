@@ -1,4 +1,5 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/get_shop_location.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 
 class CompleteSellerInfo extends StatefulWidget {
   final String businessname;
@@ -26,23 +31,50 @@ class CompleteSellerInfo extends StatefulWidget {
 }
 
 class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
-
   final _taxsnumbercontroller = TextEditingController();
   final _phonenumbercontroller = TextEditingController();
+  final _locationController = TextEditingController();
   bool _termschecked = false;
   bool _isLoading = false;
+  LatLng? shoplocation ;
+  // final MapController mapController = MapController();
+  // LocationData? currentLocation;
+  // List<LatLng> routePoints = [];
+  // List<Marker> markers = [];
+  // final mapapiKey = dotenv.env['MAP_API_KEY'];
 
   //Finish Signing up Function
   Future<UserCredential?> finishSignup() async {
-    if (_taxsnumbercontroller.text.trim().isEmpty) {
+    final taxsnumber = _taxsnumbercontroller.text.trim();
+    final phonenumber = _phonenumbercontroller.text.trim();
+    final location = _locationController.text.trim();
+    if (taxsnumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter your tax registration number')),
       );
       return null;
     }
-    else if (_phonenumbercontroller.text.trim().isEmpty) {
+    if (taxsnumber.length != 9) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a valid tax registration number')),
+      );
+      return null;
+    }
+    else if (phonenumber.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter your phone number')),
+      );
+      return null;
+    }
+    else if (phonenumber.length != 11) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please a valid phone number')),
+      );
+      return null;
+    }
+    else if (location.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter your location')),
       );
       return null;
     }
@@ -109,15 +141,17 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
       // 'password': _passwordcontroller.text.trim(),
       'role': 'seller',
       'googleUser': false,
+      'shoplocation' : {
+        'lat' : shoplocation!.latitude,
+        'lng' : shoplocation!.longitude,
+      }
     });
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: _isLoading ? Center(child: CircularProgressIndicator()) 
+      body: _isLoading ? Center(child: CircularProgressIndicator(color: Colors.black)) 
       : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
@@ -215,7 +249,51 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
                   ],
                 ),
               ),
-              // Location logic will be here 
+              SizedBox(height: 20,),
+              GestureDetector(
+                child: Container(
+                  padding: EdgeInsets.only(right: 20),
+                  height: 45,
+                  decoration: ShapeDecoration(
+                    color: AppColors.secondaryText,
+                    shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                    width: 1,
+                    color: AppColors.borderSide,
+                    ),
+                  borderRadius: BorderRadius.circular(22),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 20), //24
+                      Icon(Icons.location_on_outlined),
+                      const SizedBox(width: 18), // 20
+                      Expanded(
+                        child: TextField(
+                          controller: _locationController,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintText: 'Get your current location',
+                            hintStyle: textStyleGray,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(bottom: 12),
+                          ),
+                          textAlignVertical: TextAlignVertical.center,
+                        ),)
+                    ],
+                  ),
+                ),
+                onTap: () async{
+                  LatLng? selectedLocation = 
+                  await Navigator.push(context , MaterialPageRoute(builder: (context)=> GetShopLocation()));
+                  if(selectedLocation != null){
+                    _locationController.text = '${selectedLocation.latitude},${selectedLocation.longitude}';
+                    shoplocation = selectedLocation;
+                  }
+                },
+              ),
               // Uploading image logic will be here 
               const SizedBox(height: 15),
               CheckboxListTile(

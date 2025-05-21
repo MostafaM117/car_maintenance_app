@@ -77,7 +77,13 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a password to sign up')),
       );
-    } else if (!confirmpassword()) {
+    } 
+    else if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Your password should be at least 6 characters')),
+      );
+    } 
+    else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Passwords do not match')),
       );

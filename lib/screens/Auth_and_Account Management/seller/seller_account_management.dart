@@ -35,7 +35,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
     await FirebaseFirestore.instance
         .collection('sellers')
         .doc(seller.uid)
-        .update({'businessname': newBusinessname});
+        .update({'business_name': newBusinessname});
   }
 
   @override
@@ -135,7 +135,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                           .doc(seller.uid)
                           .get();
                       final latestUsername =
-                          userDoc.data()?['businessname'] ?? '';
+                          userDoc.data()?['business_name'] ?? '';
                       _businessnameEditcontroller.text = latestUsername;
                       final result = await showDialog(
                           context: context,
