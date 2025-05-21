@@ -37,11 +37,6 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
   bool _termschecked = false;
   bool _isLoading = false;
   LatLng? shoplocation ;
-  // final MapController mapController = MapController();
-  // LocationData? currentLocation;
-  // List<LatLng> routePoints = [];
-  // List<Marker> markers = [];
-  // final mapapiKey = dotenv.env['MAP_API_KEY'];
 
   //Finish Signing up Function
   Future<UserCredential?> finishSignup() async {
@@ -159,7 +154,6 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 50),
-
               Text(
                 'Complete your business account details',
                 style: textStyleGray.copyWith(
@@ -310,7 +304,6 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
                               color: Colors.blue.shade200,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
-                              // decoration: TextDecoration.underline,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {

@@ -215,45 +215,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                 hintText: 'Confirm your password',
                 obscureText: _obscureText,
               ),
-              // const SizedBox(height: 15),
               const SizedBox(height: 40), //60
-              // Signup Button requires terms to be checked
-              // SizedBox(
-              //   width: double.infinity,
-              //   height: 45,
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       _termschecked
-              //           // ? signup()
-              //           ? Navigator.push(context, MaterialPageRoute(
-              //             builder: (context)=> CompleteSellerInfo(
-              //               businessname: _businessnameController.text.trim(),
-              //               nationalId: _nationalIdcontroller.text.trim(),
-              //               email: _emailcontroller.text.trim(),
-              //             )))
-              //           : ScaffoldMessenger.of(context).showSnackBar(
-              //               SnackBar(
-              //                 content: Text(
-              //                   'Terms of Service must be checked'),duration: Duration(seconds: 2),),
-              //                   );
-
-              //     },
-              //     style: TextButton.styleFrom(
-              //       backgroundColor:
-              //           _termschecked ? AppColors.buttonColor : Colors.grey,
-              //       shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(25)),
-              //     ),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         Text('Signup',
-              //             style: textStyleWhite.copyWith(
-              //                 color: AppColors.buttonText))
-              //       ],
-              //     ),
-              //   ),
-              // ),
               buildButton(
                 'Sign up',
                 AppColors.buttonColor,

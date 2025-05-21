@@ -104,7 +104,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8),
                         Container(
                             height: 45,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -144,54 +144,55 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                 return AlertDialog(
                                   backgroundColor: Color(0xFFF4F4F4),
                                   title: Text(
-                                    'Update your businessname below.',
-                                    textAlign: TextAlign.center,
+                                    'Update your \nbusiness name below',
+                                    textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                        fontSize: 20),
                                   ),
                                   content: SingleChildScrollView(
-                                    child: SizedBox(
-                                      height: 120,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextField(
-                                            controller:
-                                                _businessnameEditcontroller,
-                                            cursorColor: Colors.black,
-                                            decoration: InputDecoration(
-                                              label: Text('Username'),
-                                              labelStyle: TextStyle(
-                                                  color: errorText != null
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .error
-                                                      : Colors.black),
-                                              errorText: errorText,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                            'This name will be used across your account and may be visible to others.'),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextField(
+                                          controller:
+                                              _businessnameEditcontroller,
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            label: Text('Business name'),
+                                            labelStyle: TextStyle(
+                                                color: errorText != null
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .error
+                                                    : Colors.black),
+                                            errorText: errorText,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   actionsAlignment: MainAxisAlignment.center,
                                   actions: [
-                               
                                     ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.transparent,
@@ -289,7 +290,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8),
                         Container(
                             height: 45,
                             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -321,48 +322,50 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                   backgroundColor: Color(0xFFF4F4F4),
                                   title: Text(
                                     'Change your Password',
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                        fontSize: 20),
                                   ),
                                   content: SingleChildScrollView(
-                                    child: SizedBox(
-                                      height: 120,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextField(
-                                            controller:
-                                                _businessemailcontroller,
-                                            cursorColor: Colors.black,
-                                            decoration: InputDecoration(
-                                              label: Text('email'),
-                                              labelStyle: TextStyle(
-                                                  color: errorText != null
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .error
-                                                      : Colors.black),
-                                              errorText: errorText,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                            'Please verify that this is your email. You will receive an email with a link to change your password.'),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextField(
+                                          controller:
+                                              _businessemailcontroller,
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            label: Text('email'),
+                                            labelStyle: TextStyle(
+                                                color: errorText != null
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .error
+                                                    : Colors.black),
+                                            errorText: errorText,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(22),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   actionsAlignment: MainAxisAlignment.center,
