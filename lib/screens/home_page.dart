@@ -1,6 +1,7 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
+import 'package:car_maintenance/screens/user_offers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -264,9 +265,13 @@ class _HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildExploreCard(),
-                _buildExploreCard(),
-                _buildExploreCard(),
+                _buildExploreCard("offers", Icons.local_offer,
+                    const Color.fromARGB(255, 73, 209, 78), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserFeedScreen()),
+                  );
+                }),
               ],
             ),
 
@@ -447,15 +452,18 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget _buildExploreCard(
-    // BuildContext context, String title, IconData icon, Color color, VoidCallback onTap
-    ) {
+  String title,
+  IconData icon,
+  Color color,
+  VoidCallback onTap,
+) {
   return GestureDetector(
-    // onTap: ,
+    onTap: onTap,
     child: Container(
       width: 100,
       height: 45,
       decoration: ShapeDecoration(
-        color: AppColors.secondaryText,
+        color: color, // AppColors.secondaryText or passed color
         shape: RoundedRectangleBorder(
           side: BorderSide(
             width: 1,
@@ -464,25 +472,23 @@ Widget _buildExploreCard(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              // color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
+          Icon(
+            icon,
+            size: 18,
+            color: Colors.white,
+          ),
+          SizedBox(width: 6),
+          Text(
+            title[0].toUpperCase() + title.substring(1), // Capitalize
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.white,
             ),
           ),
-          SizedBox(height: 8),
-          // Text(
-          //   title,
-          //   style: TextStyle(
-          //     fontSize: 14,
-          //     fontWeight: FontWeight.w500,
-          //     color: Colors.black87,
-          //   ),
-          // ),
         ],
       ),
     ),
