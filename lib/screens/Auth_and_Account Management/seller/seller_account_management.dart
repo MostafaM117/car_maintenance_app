@@ -5,6 +5,9 @@ import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../constants/app_colors.dart';
 import '../../../widgets/info_field.dart';
 import '../../../widgets/profile_image.dart';
@@ -22,6 +25,9 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
   final _businessemailcontroller = TextEditingController();
   String? errorText;
   final seller = FirebaseAuth.instance.currentUser!;
+  final user = FirebaseAuth.instance.currentUser!;
+  String? imageUrl;
+  bool _isImageLoading = true;
 
   //Update current username
   Future<void> _updateBusinessname() async {
@@ -38,9 +44,55 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
         .update({'business_name': newBusinessname});
   }
 
+  //Upload Profile Images to Supabase
+  Future<void> pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      return;
+    }
+    final file = File(pickedFile.path);
+    final fileName = '${seller.uid}_${path.basename(pickedFile.path)}';
+    final storage = Supabase.instance.client.storage;
+    const bucket = 'shop-images';
+    try {
+      final existingFiles = await storage.from(bucket).list();
+      final fileExists = existingFiles.any((file) => file.name == fileName);
+      String? publicUrl;
+      if (fileExists) {
+        publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        print('File already exists: $fileName, reusing URL.');
+      }
+      else{
+        await storage.from(bucket).upload(fileName, file);
+        publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        print('Image uploaded successfully: $publicUrl');
+      }
+      await FirebaseFirestore.instance.collection('seller').doc(user.uid).set({
+        'shop_imageUrl': publicUrl,
+      }, SetOptions(merge: true));
+      await loadImage();
+    } catch (e) {
+      print('Upload error: $e');
+    }
+  }
+
+  //loadImage
+  Future<void> loadImage() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('seller')
+        .doc(user.uid)
+        .get();
+    setState(() {
+      imageUrl = doc.data()?['shop_imageUrl'];
+      _isImageLoading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    loadImage();
   }
 
   @override
@@ -70,11 +122,62 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                   Column(
                     children: [
                       SizedBox(height: 20),
-                      ProfileImagePicker(
-                        onImagePicked: (File image) {
-                          setState(() {});
-                        },
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          ClipOval(
+                            child: SizedBox(
+                              width: 130,
+                              height: 130,
+                              child: _isImageLoading
+                                  ? Center(
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  : imageUrl != null && imageUrl!.isNotEmpty
+                                      ? Image.network(
+                                          imageUrl!,
+                                          fit: BoxFit.cover,
+                                          loadingBuilder: (context, child,
+                                              loadingProgress) {
+                                            if (loadingProgress == null){
+                                              return child;
+                                            }
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          },
+                                        )
+                                      : Icon(
+                                          Icons.person,
+                                          size: 60,
+                                        ),
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              setState(() {
+                                _isImageLoading = true;
+                              });
+                              await pickAndUploadImage();
+                              await loadImage();
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black54,
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: const Icon(Icons.edit,
+                                  color: Colors.white, size: 20),
+                            ),
+                          ),
+                        ],
                       ),
+                      // ProfileImagePicker(
+                      //   onImagePicked: (File image) {
+                      //     setState(() {});
+                      //   },
+                      // ),
                       BusinessnameDisplay(
                         uid: seller.uid,
                       ),
