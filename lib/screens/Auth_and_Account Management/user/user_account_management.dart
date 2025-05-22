@@ -56,23 +56,22 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
     try {
       final existingFiles = await storage.from(bucket).list();
       final fileExists = existingFiles.any((file) => file.name == fileName);
+      String? publicUrl;
       if (fileExists) {
-        await storage.from(bucket).remove([fileName]);
-        print('🗑️ Existing image deleted: $fileName');
-        // setState(() {
-        //   imageUrl = existingUrl;
-        // });
+        publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        print('File already exists: $fileName, reusing URL.');
       }
-      await storage.from(bucket).upload(fileName, file);
-      final publicUrl = storage.from(bucket).getPublicUrl(fileName);
+      else{
+        await storage.from(bucket).upload(fileName, file);
+        publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        print('Image uploaded successfully: $publicUrl');
+      }
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'imageUrl': publicUrl,
       }, SetOptions(merge: true));
-      print('✅ Image uploaded successfully: $publicUrl');
-
       await loadImage();
     } catch (e) {
-      print('❌ Upload error: $e');
+      print('Upload error: $e');
     }
   }
 
@@ -140,8 +139,9 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           fit: BoxFit.cover,
                                           loadingBuilder: (context, child,
                                               loadingProgress) {
-                                            if (loadingProgress == null)
+                                            if (loadingProgress == null) {
                                               return child;
+                                            }
                                             return const Center(
                                                 child:
                                                     CircularProgressIndicator());
