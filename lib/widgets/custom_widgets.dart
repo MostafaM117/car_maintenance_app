@@ -20,6 +20,8 @@ final textStyleGray = const TextStyle(
 );
 Widget buildInputField({
   required TextEditingController controller,
+  List<TextInputFormatter>? inputFormatters,
+  TextInputType? keyboardType,
   required String hintText,
   bool obscureText = false,
   VoidCallback? togglePasswordView,
@@ -52,6 +54,8 @@ Widget buildInputField({
               child: TextField(
                   controller: controller,
                   obscureText: obscureText,
+                  inputFormatters: inputFormatters,
+                  keyboardType: keyboardType,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: hintText,
