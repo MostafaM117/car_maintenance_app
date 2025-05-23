@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import '../constants/app_colors.dart';
@@ -246,6 +247,7 @@ Widget buildDropdownField({
 
 Widget buildTextField({
   TextEditingController? controller,
+  List<TextInputFormatter>? inputFormatters,
   String? hintText,
   String? label,
   String? Function(dynamic value)? validator,
@@ -277,6 +279,7 @@ Widget buildTextField({
         alignment: Alignment.center,
         child: TextField(
           keyboardType: TextInputType.number,
+          inputFormatters: inputFormatters,
           controller: controller,
           enabled: enabled,
           decoration: InputDecoration(
