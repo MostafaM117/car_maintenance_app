@@ -29,7 +29,7 @@ class CarCardWidget extends StatelessWidget {
             model: model,
             year: year,
             width: 180,
-            height: 95,
+            height: 100, //95
             fit: BoxFit.cover,
           ),
           Padding(

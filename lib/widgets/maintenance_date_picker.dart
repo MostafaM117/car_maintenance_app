@@ -37,9 +37,10 @@ class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
       children: [
         Text(
           'Last periodic Maintenance ',
-          style: textStyleWhite
+          style: textStyleWhite.copyWith(
+              fontSize: 16, fontWeight: FontWeight.w500),
         ),
-        // const SizedBox(height: 8),
+        const SizedBox(height: 8),
         GestureDetector(
           onTap: () => _selectDate(context),
           child: Container(

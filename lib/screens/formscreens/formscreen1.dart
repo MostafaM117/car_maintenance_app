@@ -7,6 +7,7 @@ import 'package:car_maintenance/widgets/ProgressStepsBar.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:car_maintenance/widgets/maintenance_date_picker.dart';
 import 'package:car_maintenance/screens/Current_Screen/user_main_screen.dart';
+import 'package:flutter/services.dart';
 
 class AddCarScreen extends StatefulWidget {
   @override
@@ -175,6 +176,10 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 // Mileage
                 buildTextField(
                   label: 'Current car mileage (Approx.)',
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(7),
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                   controller: mileageController,
                   hintText: 'Mileage (KM)',
                   validator: (value) {
@@ -189,6 +194,10 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 // Avg usage
                 buildTextField(
                   label: 'Average monthly usage (KM)',
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(6),
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                   controller: avgKmController,
                   hintText: 'Average (KM)',
                   validator: (value) {
@@ -203,9 +212,9 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 // Maintenance date
                 MaintenanceDatePicker(
                   onDateSelected: (DateTime date) {
+                    FocusScope.of(context).requestFocus(FocusNode());
                     setState(() {
                       lastMaintenanceDate = date;
-                      FocusScope.of(context).unfocus();
                       checkFormCompletion();
                     });
                   },
