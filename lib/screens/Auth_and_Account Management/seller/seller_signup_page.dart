@@ -221,6 +221,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                 AppColors.buttonColor,
                 AppColors.buttonText, 
                 onPressed: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
                   checkSignupdata();
                   _signupdatachecked ? 
                   Navigator.push(context, MaterialPageRoute(
