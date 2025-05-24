@@ -29,18 +29,10 @@ class _SellerProfileState extends State<SellerProfile> {
       FirebaseFirestore.instance.collection('sellers');
   bool isEnglish = true;
   bool isDarkMode = false;
+
   @override
   void initState() {
     super.initState();
-    loadSellername();
-  }
-
-  void loadSellername() async {
-    String? fetchedUsername = await getSellername();
-    if (!mounted) return;
-    setState(() {
-      username = fetchedUsername ?? 'seller';
-    });
   }
 
   @override

@@ -1,18 +1,18 @@
 import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:car_maintenance/screens/MyCars.dart';
+import 'package:car_maintenance/screens/user_screens/MyCars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../services/user_data_helper.dart';
-import '../widgets/custom_widgets.dart';
-import '../widgets/darkmode_toggle_widget.dart';
-import '../widgets/language_toggle_widget.dart';
-import '../widgets/profile_option_tile.dart.dart';
-import 'Auth_and_Account Management/user/user_account_management.dart';
-import 'Auth_and_Account Management/auth_service.dart';
-import 'Terms_and_conditionspage .dart';
+import '../../services/user_data_helper.dart';
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/darkmode_toggle_widget.dart';
+import '../../widgets/language_toggle_widget.dart';
+import '../../widgets/profile_option_tile.dart.dart';
+import '../Auth_and_Account Management/user/user_account_management.dart';
+import '../Auth_and_Account Management/auth_service.dart';
+import '../Terms_and_conditionspage .dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});

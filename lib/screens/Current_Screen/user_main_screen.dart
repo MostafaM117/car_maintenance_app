@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:car_maintenance/screens/home_page.dart';
-import 'package:car_maintenance/screens/maintenance.dart';
-import 'package:car_maintenance/screens/market.dart';
-import 'package:car_maintenance/screens/profile.dart';
+import 'package:car_maintenance/screens/user_screens/home_page.dart';
+import 'package:car_maintenance/screens/user_screens/maintenance.dart';
+import 'package:car_maintenance/screens/user_screens/market.dart';
+import 'package:car_maintenance/screens/user_screens/profile.dart';
 import '../../AI-Chatbot/chatbot.dart';
 
 class UserMainScreen extends StatefulWidget {

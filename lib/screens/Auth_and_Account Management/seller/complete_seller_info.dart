@@ -111,7 +111,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-                Text('Registred Successfully, Complete Your First time setup'),
+                Text('Registred Successfully'),
             duration: Duration(milliseconds: 4000),
             backgroundColor: Colors.green.shade400,
           ),
@@ -158,7 +158,8 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
       'shoplocation' : {
         'lat' : shoplocation!.latitude,
         'lng' : shoplocation!.longitude,
-      }
+      },
+      'store_verified': false,
     });
   }
 
