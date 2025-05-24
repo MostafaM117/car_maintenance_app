@@ -25,7 +25,6 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
   final _businessemailcontroller = TextEditingController();
   String? errorText;
   final seller = FirebaseAuth.instance.currentUser!;
-  final user = FirebaseAuth.instance.currentUser!;
   String? imageUrl;
   bool _isImageLoading = true;
 
@@ -68,7 +67,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
         publicUrl = storage.from(bucket).getPublicUrl(fileName);
         print('Image uploaded successfully: $publicUrl');
       }
-      await FirebaseFirestore.instance.collection('seller').doc(user.uid).set({
+      await FirebaseFirestore.instance.collection('sellers').doc(seller.uid).set({
         'shop_imageUrl': publicUrl,
       }, SetOptions(merge: true));
       await loadImage();
@@ -80,8 +79,8 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
   //loadImage
   Future<void> loadImage() async {
     final doc = await FirebaseFirestore.instance
-        .collection('seller')
-        .doc(user.uid)
+        .collection('sellers')
+        .doc(seller.uid)
         .get();
     setState(() {
       imageUrl = doc.data()?['shop_imageUrl'];
@@ -122,62 +121,58 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                   Column(
                     children: [
                       SizedBox(height: 20),
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          ClipOval(
-                            child: SizedBox(
-                              width: 130,
-                              height: 130,
-                              child: _isImageLoading
-                                  ? Center(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : imageUrl != null && imageUrl!.isNotEmpty
-                                      ? Image.network(
-                                          imageUrl!,
-                                          fit: BoxFit.cover,
-                                          loadingBuilder: (context, child,
-                                              loadingProgress) {
-                                            if (loadingProgress == null){
-                                              return child;
-                                            }
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          },
-                                        )
-                                      : Icon(
-                                          Icons.person,
-                                          size: 60,
-                                        ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              setState(() {
-                                _isImageLoading = true;
-                              });
-                              await pickAndUploadImage();
-                              await loadImage();
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.black54,
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: AppColors.lightGray,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipOval(
+                              child: SizedBox(
+                                width: 130,
+                                height: 130,
+                                child: _isImageLoading
+                                    ? Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : imageUrl != null && imageUrl!.isNotEmpty
+                                        ? Image.network(
+                                            imageUrl!,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null){
+                                                return child;
+                                              }
+                                              return const Center(
+                                                  child: CircularProgressIndicator());
+                                            },
+                                          )
+                                        : Icon(Icons.person, size: 60),
+                                        // Image.asset('assets/default_profile.png'),
                               ),
-                              padding: const EdgeInsets.all(8),
-                              child: const Icon(Icons.edit,
-                                  color: Colors.white, size: 20),
                             ),
-                          ),
-                        ],
+                            InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  _isImageLoading = true;
+                                });
+                                await pickAndUploadImage();
+                                await loadImage();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black54,
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                child: const Icon(Icons.edit,
+                                    color: Colors.white, size: 20),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      // ProfileImagePicker(
-                      //   onImagePicked: (File image) {
-                      //     setState(() {});
-                      //   },
-                      // ),
                       BusinessnameDisplay(
                         uid: seller.uid,
                       ),
@@ -644,7 +639,7 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                 AppColors.buttonText,
                                 onPressed: () {
                                   SellerDeleteAccount()
-                                      .sellerdeleteAccount(context);
+                                    .sellerdeleteAccount(context);
                                 },
                               ),
                             ],
