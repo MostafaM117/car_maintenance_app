@@ -130,8 +130,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                           children: [
                             ClipOval(
                               child: SizedBox(
-                                width: 130,
-                                height: 130,
+                                width: 120,
+                                height: 120,
                                 child: _isImageLoading
                                     ? Center(
                                         child: CircularProgressIndicator(),
@@ -175,11 +175,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                           ],
                         ),
                       ),
-                      // ProfileImagePicker(
-                      //   onImagePicked: (File image) {
-                      //     setState(() {});
-                      //   },
-                      // ),
                       // Username Below Profile Picture
                       UsernameDisplay(uid: user.uid),
                       Text(

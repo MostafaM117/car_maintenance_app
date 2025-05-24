@@ -26,25 +26,8 @@ class _ProfileState extends State<Profile> {
   final user = FirebaseAuth.instance.currentUser!;
   final CollectionReference users =
       FirebaseFirestore.instance.collection('users');
-  File? _profileImage;
   bool isEnglish = true;
   bool isDarkMode = false;
-  @override
-  void initState() {
-    super.initState();
-    loadUsername();
-    _loadImage();
-  }
-
-  void _loadImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? imagePath = prefs.getString('profileImagePath');
-    if (imagePath != null) {
-      setState(() {
-        _profileImage = File(imagePath);
-      });
-    }
-  }
 
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
@@ -54,6 +37,11 @@ class _ProfileState extends State<Profile> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    loadUsername();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,26 +63,36 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.grey.shade300, width: 1),
-                  ),
-                  child: _profileImage != null
-                      ? ClipOval(
-                          child: Image.file(
-                            _profileImage!,
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : const Icon(
-                          Icons.person,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
-                ),
+                // Profile Picture Using Stream
+                StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(user.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return CircleAvatar(
+                          radius: 60,
+                          backgroundColor: AppColors.lightGray,
+                          child: CircularProgressIndicator()
+                        );
+                      }
+                        final data = snapshot.data!.data() as Map<String, dynamic>;
+                        final imageUrl = data['imageUrl'];
+                        return CircleAvatar(
+                          radius: 60,
+                          backgroundColor: AppColors.lightGray,
+                          child: ClipOval(
+                            child: SizedBox(
+                            width: 130,
+                            height: 130,
+                            child: Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ));
+                    }),
                 const SizedBox(height: 8),
                 StreamBuilder<DocumentSnapshot>(
                     stream: FirebaseFirestore.instance

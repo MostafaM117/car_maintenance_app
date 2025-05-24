@@ -129,8 +129,8 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                           children: [
                             ClipOval(
                               child: SizedBox(
-                                width: 130,
-                                height: 130,
+                                width: 120,
+                                height: 120,
                                 child: _isImageLoading
                                     ? Center(
                                         child: CircularProgressIndicator(),
