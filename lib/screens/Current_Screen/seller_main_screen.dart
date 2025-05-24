@@ -64,7 +64,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: AppColors.primaryText,
                 borderRadius: BorderRadius.circular(22),
@@ -77,7 +77,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
                 tabBorderRadius: 22,
                 onTabChange: _onItemTapped,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                 tabs: List.generate(
                   _labels.length,
                   (index) => GButton(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/app_colors.dart';
-import '../../widgets/BackgroundDecoration.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/stores_card.dart';
 
@@ -19,14 +18,13 @@ class _MyStoresState extends State<MyStores> {
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
-          const CurvedBackgroundDecoration(),
           SafeArea(
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
               child: Column(
                 children: [
-                  SizedBox(height: 70),
+                  SizedBox(height: 50),
                   Text(
                     "My Stores",
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
