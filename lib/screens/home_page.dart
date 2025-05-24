@@ -265,8 +265,22 @@ class _HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildExploreCard("offers", Icons.local_offer,
-                    const Color.fromARGB(255, 73, 209, 78), () {
+                _buildExploreCard(
+                    "offers", Icons.local_offer, AppColors.borderSide, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserFeedScreen()),
+                  );
+                }),
+                _buildExploreCard(
+                    "offers", Icons.local_offer, AppColors.borderSide, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserFeedScreen()),
+                  );
+                }),
+                _buildExploreCard(
+                    "offers", Icons.local_offer, AppColors.borderSide, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => UserFeedScreen()),
@@ -282,7 +296,7 @@ class _HomePageState extends State<HomePage> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Your Next Maintenance',
+                  'Next Maintenance',
                   style: TextStyle(
                     color: const Color(0xFF0F0F0F),
                     fontSize: 24,
@@ -458,39 +472,40 @@ Widget _buildExploreCard(
   VoidCallback onTap,
 ) {
   return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      width: 100,
-      height: 45,
-      decoration: ShapeDecoration(
-        color: color, // AppColors.secondaryText or passed color
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: 1,
-            color: AppColors.borderSide,
+      onTap: onTap,
+      child: Container(
+        width: 105,
+        height: 70,
+        decoration: ShapeDecoration(
+          color: color, // AppColors.secondaryText or passed color
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              width: 1,
+              color: AppColors.borderSide,
+            ),
+            borderRadius: BorderRadius.circular(12),
           ),
-          borderRadius: BorderRadius.circular(12),
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 18,
-            color: Colors.white,
-          ),
-          SizedBox(width: 6),
-          Text(
-            title[0].toUpperCase() + title.substring(1), // Capitalize
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 18,
               color: Colors.white,
             ),
-          ),
-        ],
+            SizedBox(width: 6),
+            Text(
+              title[0].toUpperCase() + title.substring(1), // Capitalize
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
+    
   );
 }

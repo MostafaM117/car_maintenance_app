@@ -97,19 +97,14 @@ class _MarketPageState extends State<MarketPage> {
                 children: [
                   _buildFilterButton('Filters'),
                   const SizedBox(width: 8),
-                  // _buildFilterButton('Location'),
-                  // const SizedBox(width: 8),
-                  // _buildFilterButton('Make'),
-                  // const SizedBox(width: 8),
-                  // _buildFilterButton('Model'),
                   IconButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Periodicpage(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => Periodicpage(),
+                      //   ),
+                      // );
                     },
                     icon: Icon(Icons.filter_list),
                   ),
