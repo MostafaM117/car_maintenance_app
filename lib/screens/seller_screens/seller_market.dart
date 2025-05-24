@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
@@ -8,6 +9,8 @@ import 'package:car_maintenance/screens/seller_screens/add_item.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
+import 'edit_item.dart';
 
 class MarketPage extends StatefulWidget {
   const MarketPage({Key? key}) : super(key: key);
@@ -31,34 +34,11 @@ class _MarketPageState extends State<MarketPage> {
     setState(() {});
   }
 
-  void _editItem(int index) async {
-    TextEditingController editController =
-        TextEditingController(text: items[index]);
-    await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Edit Item'),
-        content: TextField(
-          controller: editController,
-          decoration: InputDecoration(hintText: 'Enter new name'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                items[index] = editController.text.trim();
-              });
-              Navigator.pop(context);
-            },
-            child: Text('Save'),
-          ),
-        ],
+  void _editItem(ProductItem item) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditItem(item: item),
       ),
     );
   }
@@ -215,7 +195,7 @@ class _MarketPageState extends State<MarketPage> {
                                     width: 24,
                                     height: 24,
                                   ),
-                                  onPressed: () => _editItem(index),
+                                  onPressed: () => _editItem(product),
                                 ),
                                 IconButton(
                                   icon: SvgPicture.asset(
@@ -224,48 +204,65 @@ class _MarketPageState extends State<MarketPage> {
                                     height: 24,
                                   ),
                                   onPressed: () async {
-                                    bool confirmDelete = await showDialog(
+                                    bool confirmDelete = false;
+
+                                    await AwesomeDialog(
                                       context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          backgroundColor: AppColors.borderSide,
-                                          title: Text(
+                                      dialogType: DialogType.noHeader,
+                                      animType: AnimType.scale,
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20, vertical: 10),
+                                      dialogBackgroundColor:
+                                          AppColors.borderSide,
+                                      dismissOnTouchOutside: true,
+                                      body: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
                                             'Are you sure you want to delete this Item?',
                                             style: textStyleWhite,
                                             textAlign: TextAlign.center,
                                           ),
-                                          content: Text(
+                                          const SizedBox(height: 10),
+                                          Text(
                                             'This action is permanent and cannot be undone. All Item’s data will be permanently removed.',
                                             style: textStyleGray,
                                             textAlign: TextAlign.center,
                                           ),
-                                          actions: [
-                                            popUpBotton(
-                                                onPressed: () =>
-                                                    Navigator.of(context)
-                                                        .pop(false),
+                                          const SizedBox(height: 20),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              popUpBotton(
                                                 'Cancel',
                                                 AppColors.primaryText,
-                                                AppColors.buttonText),
-                                            SizedBox(
-                                              width: 15,
-                                            ),
-                                            popUpBotton(
-                                              onPressed: () {
-                                                firestoreService
-                                                    .deleteProduct(product.id);
-                                                Navigator.of(context).pop(true);
-                                              },
-                                              'Delete',
-                                              AppColors.buttonColor,
-                                              AppColors.buttonText,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                                AppColors.buttonText,
+                                                onPressed: () {
+                                                  confirmDelete = false;
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                              const SizedBox(width: 15),
+                                              popUpBotton(
+                                                'Delete',
+                                                AppColors.buttonColor,
+                                                AppColors.buttonText,
+                                                onPressed: () {
+                                                  firestoreService
+                                                      .deleteProduct(
+                                                          product.id);
+                                                  confirmDelete = true;
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ).show();
 
-                                    if (confirmDelete == true) {
+                                    if (confirmDelete) {
                                       setState(() {
                                         items.removeAt(index);
                                       });
