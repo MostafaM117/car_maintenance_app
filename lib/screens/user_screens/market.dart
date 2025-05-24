@@ -2,8 +2,8 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
 // import '../widgets/BackgroundDecoration.dart';
-import '../widgets/custom_widgets.dart';
-import 'Periodicpage.dart';
+import '../../widgets/custom_widgets.dart';
+import '../Periodicpage.dart';
 
 class Market extends StatelessWidget {
   Market({super.key});

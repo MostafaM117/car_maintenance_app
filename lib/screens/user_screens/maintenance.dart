@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import '../widgets/custom_widgets.dart';
-import '../widgets/maintenance_card.dart';
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/maintenance_card.dart';
 
 class MaintenanceScreen extends StatefulWidget {
   const MaintenanceScreen({super.key});
