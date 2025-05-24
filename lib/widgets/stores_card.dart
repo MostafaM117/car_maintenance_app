@@ -1,8 +1,6 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
-import 'custom_widgets.dart';
-
 class StoreCard extends StatelessWidget {
   final String storeName;
   final String taxNumber;
@@ -26,75 +24,96 @@ class StoreCard extends StatelessWidget {
 
     return SizedBox(
       width: screenWidth * 0.85,
-      height: screenHeight * 0.20,
+      height: screenHeight * 0.23,
       child: Card(
         color: AppColors.secondaryText,
-        elevation: 2,
+        elevation: 4,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(22),
         ),
-        margin: const EdgeInsets.symmetric(vertical: 8),
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding:
+              const EdgeInsets.only(top: 13, left: 13, right: 13, bottom: 2),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Top Row (Store Name + Tax Number)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            storeName,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.buttonColor,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          taxNumber,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppColors.primaryText,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    storeName,
+                    style: const TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
-                  Text(
-                    storeNumber,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: AppColors.primaryText,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        'Tax Num',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                        ),
+                      ),
+                      Text(
+                        taxNumber,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              // Location & Phone
+              Text(
+                locationDetails,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                storeNumber,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14,
+                ),
+              ),
               const Spacer(),
+              // Buttons Row
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    locationDetails,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: AppColors.primaryText,
-                    ),
-                  ),
-                  popUpBotton(
-                    'Delete Store ',
-                    AppColors.buttonColor,
-                    AppColors.buttonText,
+                  ElevatedButton(
                     onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryText,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: const Text("Delete",
+                        style: TextStyle(color: Colors.white)),
+                  ),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.buttonColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: const Text("Edit",
+                        style: TextStyle(color: Colors.white)),
                   ),
                 ],
               ),
