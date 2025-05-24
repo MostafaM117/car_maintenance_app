@@ -1,6 +1,6 @@
 import 'package:car_maintenance/screens/Current_Screen/seller_main_screen.dart';
 import 'package:car_maintenance/screens/Current_Screen/user_main_screen.dart';
-import 'package:car_maintenance/screens/before_login/login_type.dart';
+// import 'package:car_maintenance/screens/before_login/login_type.dart';
 import 'package:car_maintenance/screens/before_login/welcome_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

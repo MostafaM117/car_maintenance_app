@@ -1,0 +1,2 @@
+D:/test/car_maintenance_app/android/app/.cxx/Debug/496y1j3f/x86_64/CMakeFiles/edit_cache.dir
+D:/test/car_maintenance_app/android/app/.cxx/Debug/496y1j3f/x86_64/CMakeFiles/rebuild_cache.dir

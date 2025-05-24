@@ -1,5 +1,5 @@
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/complete_seller_info.dart';
-import 'package:flutter/gestures.dart';
+// import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';

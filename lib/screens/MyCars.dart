@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,6 +19,7 @@ class CarMaint extends StatefulWidget {
 
 class _CarMaintState extends State<CarMaint> {
   // Function to show the edit form dialog
+
   void _showEditForm(BuildContext context, Map<String, dynamic> car) {
     final TextEditingController mileageController = TextEditingController(
         text: (car['mileage'] is double
@@ -32,143 +34,136 @@ class _CarMaintState extends State<CarMaint> {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     bool isLoading = false;
 
-    showDialog(
+    AwesomeDialog(
+      padding: EdgeInsets.all(12),
       context: context,
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: AppColors.secondaryText,
-              title: Text(
-                'Edit ${car['make']} ${car['model']} Details.',
-                style: textStyleWhite,
-              ),
-              content: Form(
-                key: _formKey,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Mileage
-                      buildTextField(
-                        label: 'Current car mileage (Approx.)',
-                        controller: mileageController,
-                        hintText: 'Mileage (KM)',
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter mileage';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 15),
-
-                      // Avg usage
-                      buildTextField(
-                        label: 'Average monthly usage (KM)',
-                        controller: avgKmController,
-                        hintText: 'Average (KM)',
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Please enter average usage';
-                          }
-                          return null;
-                        },
-                      ),
-                    ],
-                  ),
+      dialogType: DialogType.noHeader,
+      animType: AnimType.scale,
+      body: StatefulBuilder(
+        builder: (context, setState) {
+          return Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Text(
+                  'Edit ${car['make']} ${car['model']} Details',
+                  style: textStyleWhite.copyWith(fontSize: 18),
                 ),
-              ),
-              actions: [
+                const SizedBox(height: 15),
+                buildTextField(
+                  label: 'Current car mileage (Approx.)',
+                  controller: mileageController,
+                  hintText: 'Mileage (KM)',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter mileage';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 15),
+                buildTextField(
+                  label: 'Average monthly usage (KM)',
+                  controller: avgKmController,
+                  hintText: 'Average (KM)',
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter average usage';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 25),
                 isLoading
                     ? CircularProgressIndicator()
-                    : popUpBotton(
-                        'Cancel',
-                        AppColors.primaryText,
-                        AppColors.buttonText,
-                        onPressed: () => Navigator.of(context).pop(),
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          popUpBotton(
+                            'Cancel',
+                            AppColors.primaryText,
+                            AppColors.buttonText,
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          popUpBotton(
+                            'Save',
+                            AppColors.buttonColor,
+                            AppColors.buttonText,
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                setState(() => isLoading = true);
+
+                                try {
+                                  final int newMileage = double.parse(
+                                          mileageController.text.trim())
+                                      .toInt();
+                                  final int newAvgKm =
+                                      double.parse(avgKmController.text.trim())
+                                          .toInt();
+
+                                  await FirebaseFirestore.instance
+                                      .collection('cars')
+                                      .doc(car['id'])
+                                      .update({
+                                    'mileage': newMileage,
+                                    'avgKmPerMonth': newAvgKm,
+                                    'lastUpdated': FieldValue.serverTimestamp(),
+                                  });
+
+                                  final updatedMileage = newMileage;
+
+                                  final make = car['make'].toString();
+                                  final model = car['model'].toString();
+                                  final year = car['year'].toString();
+
+                                  final maintID = MaintID()
+                                    ..selectedMake = make
+                                    ..selectedModel = model
+                                    ..selectedYear = year;
+
+                                  final firestoreService =
+                                      FirestoreService(maintID);
+
+                                  firestoreService
+                                      .getMaintenanceList()
+                                      .first
+                                      .then((maintList) {
+                                    for (final item in List.from(maintList)) {
+                                      if (updatedMileage >= item.mileage &&
+                                          !item.isDone) {
+                                        firestoreService.moveToHistory(item.id);
+                                      }
+                                    }
+                                  });
+
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Car updated successfully'),
+                                    ),
+                                  );
+                                } catch (e) {
+                                  setState(() => isLoading = false);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error updating car: $e'),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                        ],
                       ),
-                const SizedBox(width: 10),
-                popUpBotton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        isLoading = true;
-                      });
-
-                      try {
-                        final int newMileage =
-                            double.parse(mileageController.text.trim()).toInt();
-                        final int newAvgKm =
-                            double.parse(avgKmController.text.trim()).toInt();
-
-                        await FirebaseFirestore.instance
-                            .collection('cars')
-                            .doc(car['id'])
-                            .update({
-                          'mileage': newMileage,
-                          'avgKmPerMonth': newAvgKm,
-                          'lastUpdated': FieldValue.serverTimestamp(),
-                        });
-
-                        final updatedMileage =
-                            double.parse(mileageController.text.trim()).toInt();
-                        print(
-                            '✅ Car mileage updated to $updatedMileage - maintenance items will be checked');
-
-                        final make = car['make'].toString();
-                        final model = car['model'].toString();
-                        final year = car['year'].toString();
-                        // Set the maintenance ID for this car
-                        final maintID = MaintID();
-                        maintID.selectedMake = make;
-                        maintID.selectedModel = model;
-                        maintID.selectedYear = year;
-
-                        final firestoreService = FirestoreService(maintID);
-
-                        firestoreService
-                            .getMaintenanceList()
-                            .first
-                            .then((maintList) {
-                          print(
-                              '🔧 Checking ${maintList.length} maintenance items against new mileage: $updatedMileage');
-
-                          for (final item in List.from(maintList)) {
-                            if (updatedMileage >= item.mileage &&
-                                !item.isDone) {
-                              print(
-                                  '🔄 Moving item ${item.id} to history (${item.mileage} <= $updatedMileage)');
-                              firestoreService.moveToHistory(item.id);
-                            }
-                          }
-                        });
-
-                        Navigator.of(context).pop();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Car updated successfully')),
-                        );
-                      } catch (e) {
-                        setState(() {
-                          isLoading = false;
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error updating car: $e')),
-                        );
-                      }
-                    }
-                  },
-                  'Update',
-                  AppColors.buttonColor,
-                  AppColors.buttonText,
-                ),
               ],
-            );
-          },
-        );
-      },
-    );
+            ),
+          );
+        },
+      ),
+      dialogBackgroundColor: AppColors.secondaryText,
+    ).show();
   }
 
   @override
@@ -245,47 +240,60 @@ class _CarMaintState extends State<CarMaint> {
                                   _showEditForm(context, car);
                                 },
                                 onDeletePressed: () async {
-                                  // Show confirmation dialog
-                                  bool confirmDelete = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            backgroundColor:
-                                                AppColors.borderSide,
-                                            title: Text(
-                                              'Are you sure you want to delete your car?',
-                                              style: textStyleWhite,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            content: Text(
-                                              'This action is permanent and cannot be undone. All your data will be permanently removed.',
-                                              style: textStyleGray,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            actions: [
+                                  bool confirmDelete = false;
+
+                                  await AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.noHeader,
+                                    animType: AnimType.scale,
+                                    dialogBackgroundColor:
+                                        AppColors.secondaryText,
+                                    body: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            'Are you sure you want to delete your car?',
+                                            style: textStyleWhite,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 15),
+                                          Text(
+                                            'This action is permanent and cannot be undone. All your data will be permanently removed.',
+                                            style: textStyleGray,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          const SizedBox(height: 25),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
                                               popUpBotton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(false),
-                                                  'Cancel',
-                                                  AppColors.primaryText,
-                                                  AppColors.buttonText),
-                                              SizedBox(
-                                                width: 15,
+                                                'Cancel',
+                                                AppColors.primaryText,
+                                                AppColors.buttonText,
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(); // false
+                                                },
                                               ),
+                                              const SizedBox(width: 15),
                                               popUpBotton(
-                                                onPressed: () =>
-                                                    Navigator.of(context)
-                                                        .pop(true),
                                                 'Delete',
                                                 AppColors.buttonColor,
                                                 AppColors.buttonText,
+                                                onPressed: () {
+                                                  confirmDelete = true;
+                                                  Navigator.of(context).pop();
+                                                },
                                               ),
                                             ],
-                                          );
-                                        },
-                                      ) ??
-                                      false;
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ).show();
 
                                   if (confirmDelete) {
                                     try {
