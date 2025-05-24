@@ -38,17 +38,6 @@ class _ChatbotState extends State<Chatbot> {
 
   List<ChatMessage> messages = [];
 
-  // Get Current Username from Database
-  // final user = FirebaseAuth.instance.currentUser;
-  // String? username;
-  // void loadUsername() async {
-  //   String? fetchedUsername = await getUsername();
-  //   setState(() {
-  //     username = fetchedUsername;
-  //   });
-  // }
-  //////
-  // ChatUser currentUser = ChatUser(id: "0", firstName: "Mostafa");
   late ChatUser currentUser;
   ChatUser geminiBot = ChatUser(
       id: "bot",

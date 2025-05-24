@@ -6,14 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import '../services/user_data_helper.dart';
-import '../widgets/CarCardWidget.dart';
-import '../widgets/SubtractWave_widget.dart';
-import '../widgets/maintenance_card.dart';
-import '../Back-end/firestore_service.dart';
-import '../services/mileage_service.dart';
-import 'formscreens/formscreen1.dart';
-import 'maintenanceDetails.dart';
+import '../../services/user_data_helper.dart';
+import '../../widgets/CarCardWidget.dart';
+import '../../widgets/SubtractWave_widget.dart';
+import '../../widgets/maintenance_card.dart';
+import '../../Back-end/firestore_service.dart';
+import '../../services/mileage_service.dart';
+import '../formscreens/formscreen1.dart';
+import '../maintenanceDetails.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage extends StatefulWidget {
