@@ -1,6 +1,7 @@
 // import 'package:car_maintenance/models/MaintID.dart';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/widgets/car_image_widget.dart';
+import 'package:flutter_svg/svg.dart';
 import '../constants/app_colors.dart';
 import 'custom_widgets.dart';
 import 'package:car_maintenance/widgets/mileage_display.dart';
@@ -14,7 +15,9 @@ class CarCardWidget extends StatelessWidget {
     String? model = car['model'];
     int? year = car['year'];
     String carId = car['id'];
-
+    final int mileage = car['mileage'] is double
+        ? (car['mileage'] as double).toInt()
+        : car['mileage'] as int? ?? 0;
     return Card(
       color: AppColors.secondaryText,
       shape: RoundedRectangleBorder(
@@ -22,7 +25,8 @@ class CarCardWidget extends StatelessWidget {
       ),
       elevation: 1,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
+        // mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           CarImageWidget(
             make: make,
@@ -33,28 +37,60 @@ class CarCardWidget extends StatelessWidget {
             fit: BoxFit.cover,
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+            padding: const EdgeInsets.fromLTRB(15.0, 0, 15.0, 10.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              // mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          '$make $model',
-                          style: textStyleWhite,
+                        Row(
+                          children: [
+                            Text(
+                              '$make $model',
+                              style: textStyleWhite,
+                            ),
+                            const SizedBox(width: 7),
+                            Text(
+                              '$year',
+                              style: textStyleGray,
+                            ),
+                          ],
                         ),
-                        Text(
-                          '$year',
-                          style: TextStyle(color: Colors.grey),
+                        Row(
+                          children: [
+                            Text.rich(
+                              TextSpan(
+                                text: 'Mileage: ',
+                                style: textStyleWhite,
+                                children: [
+                                  TextSpan(
+                                      text: mileage.toString(),
+                                      style: textStyleGray),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: SvgPicture.asset(
+                                'assets/svg/edit.svg',
+                                width: 15,
+                                height: 15,
+                              ),
+                            )
+                          ],
                         ),
                       ],
                     ),
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
                           'Car ID',
@@ -70,23 +106,24 @@ class CarCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 22,
-                      child: MileageDisplay(
-                        carId: carId,
-                        currentMileage: car['mileage'] ?? 0,
-                        avgKmPerMonth: car['avgKmPerMonth'] ?? 0,
-                        onMileageUpdated: (newMileage) {
-                          print('Updated mileage for car $carId: $newMileage');
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                // SizedBox(height: 8),
+
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.start,
+                //   children: [
+                //     SizedBox(
+                //       height: 22,
+                //       child: MileageDisplay(
+                //         carId: carId,
+                //         currentMileage: car['mileage'] ?? 0,
+                //         avgKmPerMonth: car['avgKmPerMonth'] ?? 0,
+                //         onMileageUpdated: (newMileage) {
+                //           print('Updated mileage for car $carId: $newMileage');
+                //         },
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

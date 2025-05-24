@@ -65,26 +65,36 @@ class _SellerProfileState extends State<SellerProfile> {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return CircleAvatar(
-                          radius: 60,
-                          backgroundColor: AppColors.lightGray,
-                          child: CircularProgressIndicator()
-                        );
+                            radius: 60,
+                            backgroundColor: AppColors.lightGray,
+                            child: CircularProgressIndicator());
                       }
-                        final data = snapshot.data!.data() as Map<String, dynamic>;
-                        final imageUrl = data['shop_imageUrl'];
+                      final data =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      final imageUrl = data['shop_imageUrl'] as String?;
+                      if (imageUrl == null || imageUrl.isEmpty) {
                         return CircleAvatar(
                           radius: 60,
                           backgroundColor: AppColors.lightGray,
-                          child: ClipOval(
-                            child: SizedBox(
+                          child:
+                              Icon(Icons.person, size: 60, color: Colors.grey),
+                        );
+                      }
+
+                      return CircleAvatar(
+                        radius: 60,
+                        backgroundColor: AppColors.lightGray,
+                        child: ClipOval(
+                          child: SizedBox(
                             width: 130,
                             height: 130,
                             child: Image.network(
-                                imageUrl,
-                                fit: BoxFit.cover,
-                              ),
+                              imageUrl,
+                              fit: BoxFit.cover,
                             ),
-                          ));
+                          ),
+                        ),
+                      );
                     }),
                 const SizedBox(height: 8),
                 BusinessnameDisplay(
