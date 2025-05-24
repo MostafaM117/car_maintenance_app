@@ -29,7 +29,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
 
   final List<String> _labels = [
     'Home',
-    'MNT',
+    'Maintain',
     'Chatbot',
     'Market',
     'Profile',
