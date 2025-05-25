@@ -21,14 +21,14 @@ class CompleteSellerInfo extends StatefulWidget {
   final String businessname;
   final String businessemail;
   final String password;
-  final String nationalId;
+  final String nationalID;
 
   const CompleteSellerInfo({
     super.key, 
     required this.businessname, 
     required this.businessemail,
     required this.password,
-    required this.nationalId,
+    required this.nationalID,
     });
 
   @override
@@ -100,7 +100,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
         await createuser(
           widget.businessname,
           widget.businessemail,
-          widget.nationalId,
+          widget.nationalID,
           userCredential.user!.uid,
           idImageUrl1!,
           idImageUrl2!,
@@ -141,12 +141,12 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
     }
   }
 
-  Future createuser(String businessname, String email, String nationalId, String uid, String idImageUrl1,
+  Future createuser(String businessname, String email, String nationalID, String uid, String idImageUrl1,
   String idImageUrl2) async {
     await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
       'business_name': businessname,
       'email': email,
-      'National_ID': nationalId,
+      'National_ID': nationalID,
       'uid': uid,
       'tax_registration_number': _taxsnumbercontroller.text.trim(),
       'phone_number': _phonenumbercontroller.text.trim(),

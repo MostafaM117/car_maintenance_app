@@ -227,7 +227,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   Navigator.push(context, MaterialPageRoute(
                           builder: (context)=> CompleteSellerInfo(
                             businessname: _businessnameController.text.trim(),
-                            nationalId: _nationalIdcontroller.text.trim(),
+                            nationalID: _nationalIdcontroller.text.trim(),
                             businessemail: _businessemailcontroller.text.trim(),
                             password: _passwordcontroller.text.trim(),
                           )))
