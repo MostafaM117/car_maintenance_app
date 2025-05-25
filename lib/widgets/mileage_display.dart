@@ -102,93 +102,11 @@ class _MileageDisplayState extends State<MileageDisplay> {
     super.dispose();
   }
 
-  Future<void> _updateMileage() async {
-    if (!mounted) return;
-
-    try {
-      final newMileage = int.parse(_controller.text);
-
-      await FirebaseFirestore.instance
-          .collection('cars')
-          .doc(widget.carId)
-          .update({
-        'mileage': newMileage,
-        'lastUpdated': FieldValue.serverTimestamp(),
-      });
-
-      if (mounted) {
-        setState(() {
-          _isEditing = false;
-          _displayMileage = newMileage;
-        });
-
-        widget.onMileageUpdated?.call(newMileage);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Mileage updated successfully to $newMileage km')),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        print(
-            'MILEAGE DEBUG: Error updating mileage for car ${widget.carId}: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update mileage: $e')),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_isEditing) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 70,
-            child: TextField(
-              controller: _controller,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                isDense: true,
-                suffixText: 'km',
-                border: OutlineInputBorder(),
-              ),
-              style: TextStyle(fontSize: 12),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.check, size: 16),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-            onPressed: _updateMileage,
-            color: Colors.green,
-          ),
-          IconButton(
-            icon: const Icon(Icons.close, size: 16),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-            onPressed: () {
-              setState(() {
-                _isEditing = false;
-                _controller.text = _displayMileage.toString();
-              });
-            },
-            color: Colors.red,
-          ),
-        ],
-      );
-    }
-
     return InkWell(
       onTap: () {
-        setState(() {
-          _isEditing = true;
-        });
+        _showMileageEditDialog(context);
       },
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -209,6 +127,87 @@ class _MileageDisplayState extends State<MileageDisplay> {
           Icon(Icons.edit, size: 12, color: Colors.grey),
         ],
       ),
+    );
+  }
+  
+  void _showMileageEditDialog(BuildContext context) {
+    // Create a TextEditingController with the current mileage
+    final editController = TextEditingController(text: _displayMileage.toString());
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update Mileage'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: editController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Mileage',
+                  suffixText: 'km',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                autofocus: true,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: Text('Save'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                try {
+                  final newMileage = int.parse(editController.text);
+                  
+                  await FirebaseFirestore.instance
+                      .collection('cars')
+                      .doc(widget.carId)
+                      .update({
+                    'mileage': newMileage,
+                    'lastUpdated': FieldValue.serverTimestamp(),
+                  });
+                  
+                  if (mounted) {
+                    setState(() {
+                      _displayMileage = newMileage;
+                    });
+                    
+                    widget.onMileageUpdated?.call(newMileage);
+                    
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Mileage updated successfully to $newMileage km')),
+                    );
+                  }
+                  
+                  Navigator.of(context).pop();
+                } catch (e) {
+                  print('MILEAGE DEBUG: Error updating mileage for car ${widget.carId}: $e');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to update mileage: $e')),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

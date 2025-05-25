@@ -22,7 +22,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
   final TextEditingController descriptionController = TextEditingController();
   String? _pageTitle;
   bool _isEditingTitle = false;
-  String? _status;
+  String? _status = 'Upcoming'; // Default status
 
   DateTime? selectedDate;
 
@@ -227,7 +227,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                               if (_status == 'Completed') {
                                 firestoreService.addSpecialMaintenance(
                                     descriptionController.text,
-                                    false,
+                                    true, // Set isDone to true for completed items
                                     mileageController.text.isNotEmpty
                                         ? int.parse(mileageController.text)
                                         : 0,

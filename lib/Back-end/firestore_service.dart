@@ -28,12 +28,17 @@ class FirestoreService {
   //add special cases
   Future<void> addSpecialMaintenance(String description, bool isDone,
       int mileage, DateTime expectedDate) async {
-    await historyCollection.add({
-      "Description": description,
-      "isDone": true,
-      "mileage": mileage,
-      "expectedDate": expectedDate
-    });
+    try {
+      await historyCollection.add({
+        "Description": description,
+        "isDone": true, // Always set to true for history items
+        "mileage": mileage,
+        "expectedDate": expectedDate
+      });
+      print("✅ Added completed maintenance to history: $mileage KM");
+    } catch (e) {
+      print("❌ Error adding maintenance to history: $e");
+    }
   }
 
   Future<void> cloneMaintenanceToUser({
@@ -165,10 +170,15 @@ class FirestoreService {
 
   Stream<List<MaintenanceList>> getMaintenanceHistory() {
     return historyCollection.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
+      final items = snapshot.docs.map((doc) {
         final data = doc.data() as Map<String, dynamic>? ?? {};
         return MaintenanceList.fromJson(data, doc.id);
       }).toList();
+      
+      // Sort maintenance history items by mileage in ascending order
+      items.sort((a, b) => a.mileage.compareTo(b.mileage));
+      
+      return items;
     });
   }
 
