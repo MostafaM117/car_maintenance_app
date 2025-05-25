@@ -27,32 +27,12 @@ class _SellerProfileState extends State<SellerProfile> {
   final seller = FirebaseAuth.instance.currentUser!;
   final CollectionReference users =
       FirebaseFirestore.instance.collection('sellers');
-  File? _profileImage;
   bool isEnglish = true;
   bool isDarkMode = false;
+
   @override
   void initState() {
     super.initState();
-    loadSellername();
-    _loadImage();
-  }
-
-  void _loadImage() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? imagePath = prefs.getString('profileImagePath');
-    if (imagePath != null) {
-      setState(() {
-        _profileImage = File(imagePath);
-      });
-    }
-  }
-
-  void loadSellername() async {
-    String? fetchedUsername = await getSellername();
-    if (!mounted) return;
-    setState(() {
-      username = fetchedUsername ?? 'seller';
-    });
   }
 
   @override
@@ -76,26 +56,45 @@ class _SellerProfileState extends State<SellerProfile> {
                   ),
                 ),
                 const SizedBox(height: 15),
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.grey.shade300, width: 1),
-                  ),
-                  child: _profileImage != null
-                      ? ClipOval(
-                          child: Image.file(
-                            _profileImage!,
-                            fit: BoxFit.cover,
+                // Profile Picture Using Stream
+                StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('sellers')
+                        .doc(seller.uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return CircleAvatar(
+                            radius: 60,
+                            backgroundColor: AppColors.lightGray,
+                            child: CircularProgressIndicator());
+                      }
+                        final data = snapshot.data!.data() as Map<String, dynamic>;
+                        final imageUrl = data['shop_imageUrl'] as String?;
+
+                      if (imageUrl == null || imageUrl.isEmpty) {
+                        return CircleAvatar(
+                          radius: 60,
+                          backgroundColor: AppColors.lightGray,
+                          child:
+                              Icon(Icons.person, size: 60, color: Colors.grey),
+                        );
+                      }
+                      return CircleAvatar(
+                        radius: 60,
+                        backgroundColor: AppColors.lightGray,
+                        child: ClipOval(
+                          child: SizedBox(
+                            width: 130,
+                            height: 130,
+                            child: Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        )
-                      : const Icon(
-                          Icons.person,
-                          size: 50,
-                          color: Colors.grey,
                         ),
-                ),
+                      );
+                    }),
                 const SizedBox(height: 8),
                 BusinessnameDisplay(
                   uid: seller.uid,

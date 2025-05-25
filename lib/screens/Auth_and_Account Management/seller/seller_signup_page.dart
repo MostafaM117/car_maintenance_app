@@ -1,11 +1,8 @@
-import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/complete_seller_info.dart';
+// import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../../../constants/app_colors.dart';
 import '../../../widgets/custom_widgets.dart';
 
@@ -18,17 +15,18 @@ class SellerSignupPage extends StatefulWidget {
 
 class _SellerSignupPageState extends State<SellerSignupPage> {
   final _businessnameController = TextEditingController();
-  final _emailcontroller = TextEditingController();
+  final _businessemailcontroller = TextEditingController();
+  final _nationalIdcontroller = TextEditingController();
   final _passwordcontroller = TextEditingController();
   final _confirmpasswordcontroller = TextEditingController();
   bool _obscureText = true;
   final String _businessnameErrorText = '';
-  bool _termschecked = false;
+  bool _signupdatachecked = false;
 
   @override
   void dispose() {
     _businessnameController.dispose();
-    _emailcontroller.dispose();
+    _businessemailcontroller.dispose();
     _passwordcontroller.dispose();
     _confirmpasswordcontroller.dispose();
     super.dispose();
@@ -43,81 +41,58 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
     }
   }
 
-  Future <UserCredential?> signup() async {
-    if (_businessnameController.text.trim().isEmpty) {
+  void checkSignupdata (){
+    final businessemail = _businessemailcontroller.text.trim();
+    final businessname = _businessnameController.text.trim();
+    final password = _passwordcontroller.text.trim();
+    final nationalId = _nationalIdcontroller.text.trim();
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+    if (businessname.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a businessname')),
       );
-      return null;
     }
-
+    else if (nationalId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter your national id')),
+      );
+    }
+    else if (nationalId.length != 14) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a valid national id')),
+      );
+    }
+    else if (businessemail.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An email address is required')),
+      );
+    } 
+    else if (!emailRegex.hasMatch(businessemail)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a valid email address')),
+      );
+    } 
+    else if (password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter a password to sign up')),
+      );
+    } 
+    else if (password.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Your password should be at least 6 characters')),
+      );
+    } 
     else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Passwords do not match')),
       );
-      return null;
     }
-    else if (_emailcontroller.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An email address is required')),
-      );
-      return null;
+    else{
+      setState(() {
+        _signupdatachecked = true;
+      });
     }
-    else if (_passwordcontroller.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a password to sign up')),
-      );
-      return null;
-    }
-    else {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: _emailcontroller.text.trim(),
-              password: _passwordcontroller.text.trim());
-
-      await createuser(
-        _businessnameController.text.trim(),
-        _emailcontroller.text.trim(),
-        userCredential.user!.uid,
-      );
-      Navigator.pop(context);
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text('Registred Successfully, Complete Your First time setup'),
-          duration: Duration(milliseconds: 4000),
-          backgroundColor: Colors.green.shade400,
-        ),
-      );
-      return userCredential;
-    } catch (e) {
-      if(e.toString().contains('email-already-in-use')){
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('This email is already registered')),
-        );
-        return null;
-      }
-      else{
-        ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${e.toString()}')),
-      );
-      return null;
-      }
-    }
-  }
-    }
-
-  Future createuser(String businessname, String email, String uid) async {
-    await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
-      'businessname': businessname,
-      'email': email,
-      'uid': uid,
-      'password': _passwordcontroller.text.trim(),
-      'role': 'seller',
-      'googleUser': false,
-    });
   }
 
   void _toggletoviewpassword() {
@@ -137,7 +112,6 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 50),
-
               Text(
                 'Create your business account now',
                 style: textStyleWhite.copyWith(fontSize: 24),
@@ -159,15 +133,57 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   width: 24,
                   height: 24,
                 ),
-                hintText: 'Enter your businessname',
+                hintText: 'Enter your business name',
                 errorText: _businessnameErrorText,
               ),
-
+              // National Id
+              const SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.only(right: 20),
+                height: 45,
+                decoration: ShapeDecoration(
+                  color: AppColors.secondaryText,
+                  shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                  width: 1,
+                  color: AppColors.borderSide,
+                  ),
+                borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+                alignment: Alignment.center,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 20), //24
+                    Icon(Icons.person_pin_outlined),
+                    const SizedBox(width: 18), // 20
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(14),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        
+                        controller: _nationalIdcontroller,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your national id number',
+                          hintStyle: textStyleGray,
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.only(bottom: 12),
+                          
+                        ),
+                        textAlignVertical: TextAlignVertical.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               // Email address
               const SizedBox(height: 20),
               buildInputField(
                 hintText: 'Enter your business email ',
-                controller: _emailcontroller,
+                controller: _businessemailcontroller,
                 iconWidget: SvgPicture.asset(
                   'assets/svg/inpox.svg',
                   width: 24,
@@ -199,57 +215,25 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                 hintText: 'Confirm your password',
                 obscureText: _obscureText,
               ),
-              const SizedBox(height: 15),
-              CheckboxListTile(
-                value: _termschecked, 
-                title: RichText(text: TextSpan(
-                  style: textStyleGray.copyWith(
-                    fontSize: 12
-                  ),
-                  children: [
-                    const TextSpan(text: 'By signing up, you agree to our '),
-                    TextSpan(
-                      text: 'Terms of Service and privacy Policy.',
-                      style: textStyleGray.copyWith(
-                        color: Colors.blue.shade200,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                        // decoration: TextDecoration.underline,
-                      ),
-                      recognizer: TapGestureRecognizer()..onTap = (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => TermsAndConditionsPage()));
-                      }
-                    )
-                  ]
-                )),
-                controlAffinity: ListTileControlAffinity.leading,
-                contentPadding: EdgeInsets.zero,
-                onChanged: (bool? value){
-                  setState(() {
-                    _termschecked = value!;
-                  });
-                }),
-              const SizedBox(height: 60),
-              // Signup Button requires terms to be checked 
-              SizedBox(
-                width: double.infinity,
-                height: 45,
-                child: ElevatedButton(
-                  onPressed: (){
-                    _termschecked ? signup() : SnackBar(content: ScaffoldMessenger(child: Text('Check terms to continue')));
-                  }, 
-                  style: TextButton.styleFrom(
-                    backgroundColor: _termschecked ? AppColors.buttonColor : Colors.grey,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Signup', style: textStyleWhite.copyWith(color: AppColors.buttonText))
-                    ],
-                  ),
+              const SizedBox(height: 40), //60
+              buildButton(
+                'Sign up',
+                AppColors.buttonColor,
+                AppColors.buttonText, 
+                onPressed: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  checkSignupdata();
+                  _signupdatachecked ? 
+                  Navigator.push(context, MaterialPageRoute(
+                          builder: (context)=> CompleteSellerInfo(
+                            businessname: _businessnameController.text.trim(),
+                            nationalId: _nationalIdcontroller.text.trim(),
+                            businessemail: _businessemailcontroller.text.trim(),
+                            password: _passwordcontroller.text.trim(),
+                          )))
+                  : print('Error Signing up');
+                }
                 ),
-              ),
               const SizedBox(height: 10),
 
               buildOrSeparator(),

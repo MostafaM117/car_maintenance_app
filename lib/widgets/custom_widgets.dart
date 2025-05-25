@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import '../constants/app_colors.dart';
 
@@ -18,6 +20,8 @@ final textStyleGray = const TextStyle(
 );
 Widget buildInputField({
   required TextEditingController controller,
+  List<TextInputFormatter>? inputFormatters,
+  TextInputType? keyboardType,
   required String hintText,
   bool obscureText = false,
   VoidCallback? togglePasswordView,
@@ -29,7 +33,7 @@ Widget buildInputField({
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Container(
-        padding: EdgeInsets.only(right: 20),
+        padding: EdgeInsets.only(right: 15), //20
         height: 45,
         decoration: ShapeDecoration(
           color: AppColors.secondaryText,
@@ -43,13 +47,15 @@ Widget buildInputField({
         ),
         child: Row(
           children: [
-            const SizedBox(width: 24),
+            const SizedBox(width: 20), //24
             iconWidget,
-            const SizedBox(width: 20),
+            const SizedBox(width: 18), // 20
             Expanded(
               child: TextField(
                   controller: controller,
                   obscureText: obscureText,
+                  inputFormatters: inputFormatters,
+                  keyboardType: keyboardType,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: hintText,
@@ -65,9 +71,13 @@ Widget buildInputField({
               ),
             if (togglePasswordView != null)
               IconButton(
-                icon: Icon(
-                    obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.black54),
+                icon: SvgPicture.asset(
+                  obscureText
+                      ? 'assets/svg/eye-see.svg'
+                      : 'assets/svg/eye-lock.svg',
+                  width: 24,
+                  height: 24,
+                ),
                 onPressed: togglePasswordView,
               ),
           ],
@@ -241,6 +251,7 @@ Widget buildDropdownField({
 
 Widget buildTextField({
   TextEditingController? controller,
+  List<TextInputFormatter>? inputFormatters,
   String? hintText,
   String? label,
   String? Function(dynamic value)? validator,
@@ -272,6 +283,7 @@ Widget buildTextField({
         alignment: Alignment.center,
         child: TextField(
           keyboardType: TextInputType.number,
+          inputFormatters: inputFormatters,
           controller: controller,
           enabled: enabled,
           decoration: InputDecoration(

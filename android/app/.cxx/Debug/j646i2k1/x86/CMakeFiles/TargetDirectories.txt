@@ -1,0 +1,2 @@
+F:/Coding Space/Work Flow/graduation_project/car_maintenance_app/android/app/.cxx/Debug/j646i2k1/x86/CMakeFiles/edit_cache.dir
+F:/Coding Space/Work Flow/graduation_project/car_maintenance_app/android/app/.cxx/Debug/j646i2k1/x86/CMakeFiles/rebuild_cache.dir

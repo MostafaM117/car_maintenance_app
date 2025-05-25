@@ -5,6 +5,9 @@ import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../constants/app_colors.dart';
 import '../../../widgets/info_field.dart';
 import '../../../widgets/profile_image.dart';
@@ -21,6 +24,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
   final _emailcontroller = TextEditingController();
   String? errorText;
   final user = FirebaseAuth.instance.currentUser!;
+  String? imageUrl;
+  bool _isImageLoading = true;
 
   //Update current username
   Future<void> _updateUsername() async {
@@ -37,9 +42,55 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
         .update({'username': newUsername});
   }
 
+  //Upload Profile Images to Supabase
+  Future<void> pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      return;
+    }
+    final file = File(pickedFile.path);
+    final fileName = '${user.uid}_${path.basename(pickedFile.path)}';
+    final storage = Supabase.instance.client.storage;
+    const bucket = 'user-profile-images';
+    try {
+      final existingFiles = await storage.from(bucket).list();
+      final fileExists = existingFiles.any((file) => file.name == fileName);
+      String? publicUrl;
+      if (fileExists) {
+        publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        print('File already exists: $fileName, reusing URL.');
+      }
+      else{
+        await storage.from(bucket).upload(fileName, file);
+        publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        print('Image uploaded successfully: $publicUrl');
+      }
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'imageUrl': publicUrl,
+      }, SetOptions(merge: true));
+      await loadImage();
+    } catch (e) {
+      print('Upload error: $e');
+    }
+  }
+
+  //loadImage
+  Future<void> loadImage() async {
+    final doc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    setState(() {
+      imageUrl = doc.data()?['imageUrl'];
+      _isImageLoading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    loadImage();
   }
 
   @override
@@ -71,10 +122,58 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                       SizedBox(
                         height: 20,
                       ),
-                      ProfileImagePicker(
-                        onImagePicked: (File image) {
-                          setState(() {});
-                        },
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: AppColors.lightGray,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipOval(
+                              child: SizedBox(
+                                width: 120,
+                                height: 120,
+                                child: _isImageLoading
+                                    ? Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : imageUrl != null && imageUrl!.isNotEmpty
+                                        ? Image.network(
+                                            imageUrl!,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            },
+                                          )
+                                        : Icon(Icons.person,size: 60,),
+                                        // Image.asset('assets/default_profile.png'),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  _isImageLoading = true;
+                                });
+                                await pickAndUploadImage();
+                                await loadImage();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black54,
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                child: const Icon(Icons.edit,
+                                    color: Colors.white, size: 20),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       // Username Below Profile Picture
                       UsernameDisplay(uid: user.uid),
@@ -143,60 +242,50 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                 return AlertDialog(
                                   backgroundColor: Color(0xFFF4F4F4),
                                   title: Text(
-                                    'Update your username below.',
+                                    'Update your username below',
+                                    textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                        fontSize: 20),
                                   ),
                                   content: SingleChildScrollView(
-                                    child: SizedBox(
-                                      height: 140,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            'This name will be used across your account and may be visible to others.',
-                                            style: TextStyle(
-                                              color: Colors.black
-                                                  .withValues(alpha: 178),
-                                              fontSize: 16,
-                                              fontFamily: 'Inter',
-                                              fontWeight: FontWeight.w400,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                            'This name will be used across your account and may be visible to others.'),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextField(
+                                          controller: _usernameEditcontroller,
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            label: Text('Username'),
+                                            labelStyle: TextStyle(
+                                                color: errorText != null
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .error
+                                                    : Colors.black),
+                                            errorText: errorText,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          TextField(
-                                            controller: _usernameEditcontroller,
-                                            cursorColor: Colors.black,
-                                            decoration: InputDecoration(
-                                              label: Text('Username'),
-                                              labelStyle: TextStyle(
-                                                  color: errorText != null
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .error
-                                                      : Colors.black),
-                                              errorText: errorText,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   actionsAlignment: MainAxisAlignment.center,
@@ -259,7 +348,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                         errorText = null;
                                       },
                                       child: Text(
-                                        'Cansel',
+                                        'Cancel',
                                         style: textStyleWhite.copyWith(
                                           fontSize: 18,
                                           color: AppColors.buttonText,
@@ -328,57 +417,76 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   backgroundColor: Color(0xFFF4F4F4),
                                   title: Text(
                                     'Change your Password',
-                                    textAlign: TextAlign.center,
+                                    textAlign: TextAlign.left,
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                        fontSize: 20),
                                   ),
                                   content: SingleChildScrollView(
-                                    child: SizedBox(
-                                      height: 120,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextField(
-                                            controller: _emailcontroller,
-                                            cursorColor: Colors.black,
-                                            decoration: InputDecoration(
-                                              label: Text('email'),
-                                              labelStyle: TextStyle(
-                                                  color: errorText != null
-                                                      ? Theme.of(context)
-                                                          .colorScheme
-                                                          .error
-                                                      : Colors.black),
-                                              errorText: errorText,
-                                              border: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.black),
-                                                borderRadius:
-                                                    BorderRadius.circular(22),
-                                              ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                            'Please enter your email and you will receive an email with a link to change your password.'),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextField(
+                                          controller: _emailcontroller,
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            label: Text('Enter your email'),
+                                            labelStyle: TextStyle(
+                                                color: errorText != null
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .error
+                                                    : Colors.black),
+                                            errorText: errorText,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   actionsAlignment: MainAxisAlignment.center,
                                   actions: [
                                     Column(
                                       children: [
-                                        popUpBotton(
-                                          'Send E-mail',
-                                          AppColors.buttonColor,
-                                          AppColors.buttonText,
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            elevation: 0,
+                                            side: BorderSide(
+                                              color: Color(0xFFD9D9D9),
+                                              width: 1,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            fixedSize: Size(250, 45),
+                                          ),
+                                          child: Text(
+                                            'Send E-mail',
+                                            style: textStyleWhite.copyWith(
+                                              fontSize: 18,
+                                              color: AppColors.buttonColor,
+                                            ),
+                                          ),
                                           onPressed: () async {
                                             final email =
                                                 _emailcontroller.text.trim();
@@ -437,17 +545,35 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           },
                                         ),
                                         SizedBox(
-                                          height: 20,
+                                          height: 15,
                                         ),
-                                        popUpBotton(
-                                          'Cancel',
-                                          AppColors.primaryText,
-                                          AppColors.buttonText,
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                AppColors.primaryText,
+                                            elevation: 0,
+                                            side: BorderSide(
+                                              color: Color(0xFFD9D9D9),
+                                              width: 1,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            fixedSize: Size(250, 45),
+                                          ),
                                           onPressed: () {
                                             _emailcontroller.clear();
                                             Navigator.of(context).pop();
                                             errorText = null;
                                           },
+                                          child: Text(
+                                            'Cancel',
+                                            style: textStyleWhite.copyWith(
+                                              fontSize: 18,
+                                              color: AppColors.buttonText,
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     )

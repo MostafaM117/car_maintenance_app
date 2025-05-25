@@ -1,7 +1,7 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/seller_screens/seller_home_page.dart';
 import 'package:car_maintenance/screens/seller_screens/seller_profile.dart';
-import 'package:car_maintenance/screens/seller_screens/seller_feed.dart';
+import 'package:car_maintenance/screens/seller_screens/offer_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -20,15 +20,15 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
   final List<Widget> _pages = [
     SellerHomePage(),
     MarketPage(),
+    OfferScreen(),
     SellerProfile(),
-    SellerFeedScreen(),
   ];
 
   final List<String> _labels = [
     'Home',
     'Market',
     'Profile',
-    'Feed',
+    'Offers',
   ];
 
   final List<String> _icons = [
@@ -64,7 +64,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               decoration: BoxDecoration(
                 color: AppColors.primaryText,
                 borderRadius: BorderRadius.circular(22),
@@ -77,7 +77,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
                 tabBorderRadius: 22,
                 onTabChange: _onItemTapped,
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                 tabs: List.generate(
                   _labels.length,
                   (index) => GButton(

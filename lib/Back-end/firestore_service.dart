@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:car_maintenance/Back-end/offer_service.dart';
 // import 'package:flutter/material.dart';
 
 class FirestoreService {
@@ -11,6 +12,9 @@ class FirestoreService {
   late final CollectionReference historyCollection;
   late final CollectionReference personalMaintCollection;
   late final CollectionReference productsCollection;
+  late final CollectionReference stockCollection;
+  final OfferService offerService = OfferService();
+  
   FirestoreService(MaintID maintID)
       : maintCollection = FirebaseFirestore.instance
             .collection('Maintenance_Schedule_${MaintID().maintID}') {
@@ -24,7 +28,12 @@ class FirestoreService {
         .collection("maintHistory ${MaintID().maintID}");
     productsCollection = FirebaseFirestore.instance
         .collection('products'); // Collection for products
+    stockCollection = FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(user!.uid)
+        .collection('stock'); // Collection for stock
   }
+
   //add special cases
   Future<void> addSpecialMaintenance(String description, bool isDone,
       int mileage, DateTime expectedDate) async {
@@ -67,7 +76,19 @@ class FirestoreService {
     int stockCount,
     double price,
   ) async {
+    final businessName = await offerService.getBusinessName();
     try {
+      await stockCollection.add({
+        'name': name,
+        'Description': description,
+        'selectedMake': selectedMake,
+        'selectedModel': selectedModel,
+        'selectedCategory': selectedCategory,
+        'selectedAvailability': selectedAvailability,
+        'stockCount': stockCount,
+        'price': price,
+        'Store Name': businessName
+      });
       await productsCollection.add({
         'name': name,
         'Description': description,
@@ -76,7 +97,8 @@ class FirestoreService {
         'selectedCategory': selectedCategory,
         'selectedAvailability': selectedAvailability,
         'stockCount': stockCount,
-        'price': price
+        'price': price,
+        'Store Name': businessName
       });
       print("✅ Added product item");
     } catch (e) {
@@ -102,6 +124,110 @@ class FirestoreService {
         );
       }).toList();
     });
+  }
+
+  Stream<List<ProductItem>> getFilteredProducts({
+    String? make,
+    String? model,
+    double? minPrice,
+    double? maxPrice,
+    String? location,
+  }) {
+    Query query = productsCollection;
+
+    if (make != null && make.isNotEmpty) {
+      query = query.where('selectedMake', isEqualTo: make);
+    }
+
+    if (model != null && model.isNotEmpty) {
+      query = query.where('selectedModel', isEqualTo: model);
+    }
+
+    if (minPrice != null) {
+      query = query.where('price', isGreaterThanOrEqualTo: minPrice);
+    }
+
+    if (maxPrice != null) {
+      query = query.where('price', isLessThanOrEqualTo: maxPrice);
+    }
+
+    // if (location != null && location.isNotEmpty) {
+    //   query = query.where('selectedAvailability', isEqualTo: location);
+    // }
+
+    return query.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return ProductItem(
+          id: doc.id,
+          name: data['name'],
+          price: data['price'],
+          description: data['Description'],
+          selectedMake: data['selectedMake'],
+          selectedModel: data['selectedModel'],
+          selectedCategory: data['selectedCategory'],
+          selectedAvailability: data['selectedAvailability'],
+          stockCount: data['stockCount'],
+        );
+      }).toList();
+    });
+  }
+
+  Stream<List<ProductItem>> getStock() {
+    return stockCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>? ?? {};
+        return ProductItem(
+          id: doc.id,
+          name: data['name'] ?? '',
+          price: data['price'] ?? 0,
+          description: data['Description'] ?? '',
+          selectedMake: data['selectedMake'] ?? '',
+          selectedModel: data['selectedModel'] ?? '',
+          selectedCategory: data['selectedCategory'] ?? '',
+          selectedAvailability: data['selectedAvailability'] ?? '',
+          stockCount: data['stockCount'] ?? 0,
+        );
+      }).toList();
+    });
+  }
+
+  Future<void> updateProduct(
+    String docId,
+    String name,
+    String description,
+    String selectedMake,
+    String selectedModel,
+    String selectedCategory,
+    String selectedAvailability,
+    int stockCount,
+    double price,
+  ) async {
+    try {
+      await stockCollection.doc(docId).update({
+        'name': name,
+        'Description': description,
+        'selectedMake': selectedMake,
+        'selectedModel': selectedModel,
+        'selectedCategory': selectedCategory,
+        'selectedAvailability': selectedAvailability,
+        'stockCount': stockCount,
+        'price': price
+      });
+      print("✅ Updated product item with ID: $docId");
+    } catch (e) {
+      print("❌ Error updating product item: $e");
+    }
+  }
+
+  Future<void> deleteProduct(String docId) async {
+    try {
+      await stockCollection.doc(docId).delete();
+      // await productsCollection.doc(docId).delete();
+      print("✅ Deleted product with ID: $docId");
+    } catch (e) {
+      print("❌ Error deleting maintenance item: $e");
+    }
   }
 
   //get maint lists
