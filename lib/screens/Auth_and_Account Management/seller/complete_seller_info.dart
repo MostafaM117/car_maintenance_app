@@ -159,6 +159,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
         'lat' : shoplocation!.latitude,
         'lng' : shoplocation!.longitude,
       },
+      'seller_data_completed': true,
       'store_verified': false,
     });
   }
