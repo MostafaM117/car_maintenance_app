@@ -65,13 +65,13 @@ class _SellerProfileState extends State<SellerProfile> {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return CircleAvatar(
-                          radius: 60,
-                          backgroundColor: AppColors.lightGray,
-                          child: CircularProgressIndicator()
-                        );
+                            radius: 60,
+                            backgroundColor: AppColors.lightGray,
+                            child: CircularProgressIndicator());
                       }
                         final data = snapshot.data!.data() as Map<String, dynamic>;
                         final imageUrl = data['shop_imageUrl'] as String?;
+
                       if (imageUrl == null || imageUrl.isEmpty) {
                         return CircleAvatar(
                           radius: 60,

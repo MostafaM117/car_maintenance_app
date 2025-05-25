@@ -59,7 +59,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   'Your all-in-one solution for car maintenance and spare parts',
                   style: TextStyle(
                     color: AppColors.primaryText,
-                    fontSize: screenWidth * 0.09,
+                    fontSize: screenWidth * 0.08,
                     fontWeight: FontWeight.w400,
                   ),
                 ),

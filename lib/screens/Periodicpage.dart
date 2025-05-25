@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
@@ -10,13 +11,14 @@ import '../constants/app_colors.dart';
 import '../widgets/ProductCard.dart';
 
 class Periodicpage extends StatefulWidget {
-  Periodicpage({
-    super.key,
-  });
+  final String title;
+
+  const Periodicpage({super.key, required this.title});
 
   @override
   State<Periodicpage> createState() => _PeriodicpageState();
 }
+
 
 class _PeriodicpageState extends State<Periodicpage> {
   FirestoreService firestoreService = FirestoreService(MaintID());
@@ -26,6 +28,7 @@ class _PeriodicpageState extends State<Periodicpage> {
   double? maxPrice;
   String? selectedLocation;
   final List<String> _carMakes = CarData.getAllMakes();
+  final TextEditingController _searchController = TextEditingController();
 
   void checkFormCompletion() {
     setState(() {});
@@ -54,7 +57,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                   SizedBox(height: 50),
                   Center(
                     child: Text(
-                      "Periodic",
+                    widget.title,
                       style:
                           TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                     ),
@@ -62,45 +65,39 @@ class _PeriodicpageState extends State<Periodicpage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Container(
-                        height: 40,
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFFF4F4F4),
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(
-                              width: 1,
-                              color: AppColors.borderSide,
+                      Expanded(
+                        // ← هذا يملأ المساحة المتاحة
+                        child: Container(
+                          height: 40,
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFFF4F4F4),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                width: 1,
+                                color: AppColors.borderSide,
+                              ),
+                              borderRadius: BorderRadius.circular(22),
                             ),
-                            borderRadius: BorderRadius.circular(22),
                           ),
-                        ),
-                        child: TextField(
-                          controller: TextEditingController(),
-                          decoration: InputDecoration(
-                            hintText: 'Search',
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search',
+                              border: InputBorder.none,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 15,
+                                vertical: 10,
+                              ),
+                              suffixIcon: Icon(Icons.search)
+                            ),
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            _buildFilterButton('Filters'),
-                            // const SizedBox(width: 8),
-                            // _buildFilterButton('Location'),
-                            // const SizedBox(width: 8),
-                            // _buildFilterButton('Make'),
-                            // const SizedBox(width: 8),
-                            // _buildFilterButton('Model'),
-                          ],
-                        ),
-                      ),
+                      const SizedBox(width: 10),
+                      _buildFilterButton('Filters'),
                     ],
                   ),
                   SizedBox(
@@ -169,16 +166,25 @@ class _PeriodicpageState extends State<Periodicpage> {
   Widget _buildFilterButton(String title) {
     return ElevatedButton(
       onPressed: () {
-        showDialog(
+        AwesomeDialog(
+          
           context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Filter'),
-              content: SingleChildScrollView(
+          dialogType: DialogType.noHeader,
+          animType: AnimType.scale, 
+          dialogBackgroundColor: AppColors.secondaryText,
+          padding: const EdgeInsets.all(16),
+          body: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Add your filter options here
+                    Text(
+                      'Filter',
+                      style: textStyleWhite.copyWith(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 15),
                     // Car Make
                     buildDropdownField(
                       label: 'Car Make',
@@ -193,7 +199,6 @@ class _PeriodicpageState extends State<Periodicpage> {
                       },
                     ),
                     const SizedBox(height: 15),
-
                     // Car Model
                     buildDropdownField(
                       label: 'Car Model',
@@ -208,53 +213,65 @@ class _PeriodicpageState extends State<Periodicpage> {
                         });
                       },
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Min Price'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
+                    const SizedBox(height: 15),
+                    buildTextField(
+                      label: 'Min Price',
+                      validator: (value) {
                         setState(() {
                           minPrice = double.tryParse(value);
                         });
+                        return null;
                       },
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Max Price'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
+                    const SizedBox(height: 10),
+                    buildTextField(
+                      label: 'Max Price',
+                      validator: (value) {
                         setState(() {
                           maxPrice = double.tryParse(value);
                         });
+                        return null;
                       },
                     ),
+                    const SizedBox(height: 20),
+                    // Actions
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        popUpBotton(
+                          'Reset',
+                          AppColors.primaryText,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            setState(() {
+                              filterMake = null;
+                              filterModel = null;
+                              minPrice = null;
+                              maxPrice = null;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        const SizedBox(width: 15),
+                        popUpBotton(
+                          'Apply',
+                          AppColors.buttonColor,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
-              ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Apply'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      filterMake = null;
-                      filterModel = null;
-                      minPrice = null;
-                      maxPrice = null;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Reset'),
-                ),
-              ],
-            );
-          },
-        );
+              );
+            },
+          ),
+        ).show();
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black,
+        foregroundColor: AppColors.primaryText,
         backgroundColor: AppColors.secondaryText,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

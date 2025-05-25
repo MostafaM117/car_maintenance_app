@@ -48,7 +48,8 @@ class Market extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Periodicpage(),
+                                builder: (context) =>
+                                    Periodicpage(title: categories[index]),
                               ),
                             );
                           },
