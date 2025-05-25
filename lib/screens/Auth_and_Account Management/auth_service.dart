@@ -279,6 +279,8 @@ class AuthService {
               'role': 'seller',
               'username': username,
               'businessname': 'seller',
+              'seller_data_completed': false,
+              'store_verified': false,
             });
           }
           _showSnackBar(
