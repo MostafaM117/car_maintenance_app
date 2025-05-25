@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/mileage_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// A widget that displays and allows editing of a car's mileage
 class MileageDisplay extends StatefulWidget {
   final String carId;
   final dynamic currentMileage;
@@ -16,6 +17,80 @@ class MileageDisplay extends StatefulWidget {
     this.onMileageUpdated,
   }) : super(key: key);
 
+  static void showMileageEditDialog(BuildContext context, String carId, int currentMileage, {Function(int)? onMileageUpdated}) {
+    final editController = TextEditingController(text: currentMileage.toString());
+    
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Update Mileage'),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: editController,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  labelText: 'Mileage',
+                  suffixText: 'km',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                autofocus: true,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            ElevatedButton(
+              child: Text('Save'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                try {
+                  final newMileage = int.parse(editController.text);
+                  
+                  await FirebaseFirestore.instance
+                      .collection('cars')
+                      .doc(carId)
+                      .update({
+                    'mileage': newMileage,
+                    'lastUpdated': FieldValue.serverTimestamp(),
+                  });
+                  
+                  onMileageUpdated?.call(newMileage);
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Mileage updated successfully to $newMileage km')),
+                  );
+                  
+                  Navigator.of(context).pop();
+                } catch (e) {
+                  print('MILEAGE DEBUG: Error updating mileage for car $carId: $e');
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to update mileage: $e')),
+                  );
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   State<MileageDisplay> createState() => _MileageDisplayState();
 }
@@ -23,7 +98,6 @@ class MileageDisplay extends StatefulWidget {
 class _MileageDisplayState extends State<MileageDisplay> {
   final MileageService _mileageService = MileageService();
   late TextEditingController _controller;
-  bool _isEditing = false;
   int _displayMileage = 0;
 
   @override
@@ -102,93 +176,24 @@ class _MileageDisplayState extends State<MileageDisplay> {
     super.dispose();
   }
 
-  Future<void> _updateMileage() async {
-    if (!mounted) return;
-
-    try {
-      final newMileage = int.parse(_controller.text);
-
-      await FirebaseFirestore.instance
-          .collection('cars')
-          .doc(widget.carId)
-          .update({
-        'mileage': newMileage,
-        'lastUpdated': FieldValue.serverTimestamp(),
-      });
-
-      if (mounted) {
-        setState(() {
-          _isEditing = false;
-          _displayMileage = newMileage;
-        });
-
-        widget.onMileageUpdated?.call(newMileage);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Mileage updated successfully to $newMileage km')),
-        );
-      }
-    } catch (e) {
-      if (mounted) {
-        print(
-            'MILEAGE DEBUG: Error updating mileage for car ${widget.carId}: $e');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update mileage: $e')),
-        );
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_isEditing) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 70,
-            child: TextField(
-              controller: _controller,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-                isDense: true,
-                suffixText: 'km',
-                border: OutlineInputBorder(),
-              ),
-              style: TextStyle(fontSize: 12),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.check, size: 16),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-            onPressed: _updateMileage,
-            color: Colors.green,
-          ),
-          IconButton(
-            icon: const Icon(Icons.close, size: 16),
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-            onPressed: () {
-              setState(() {
-                _isEditing = false;
-                _controller.text = _displayMileage.toString();
-              });
-            },
-            color: Colors.red,
-          ),
-        ],
-      );
-    }
-
     return InkWell(
       onTap: () {
-        setState(() {
-          _isEditing = true;
-        });
+        // Use the static method directly, passing the state data
+        MileageDisplay.showMileageEditDialog(
+          context, 
+          widget.carId, 
+          _displayMileage,
+          onMileageUpdated: (newMileage) {
+            if (mounted) {
+              setState(() {
+                _displayMileage = newMileage;
+              });
+              widget.onMileageUpdated?.call(newMileage);
+            }
+          }
+        );
       },
       child: Row(
         mainAxisSize: MainAxisSize.min,

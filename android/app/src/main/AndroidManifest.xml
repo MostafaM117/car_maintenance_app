@@ -1,5 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+<uses-permission android:name="android.permission.VIBRATE"/>
+<uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
+<uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <application
         android:label="car_maintenance"
         android:name="${applicationName}"
@@ -10,6 +15,8 @@
             android:launchMode="singleTop"
             android:taskAffinity=""
             android:theme="@style/LaunchTheme"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">

@@ -14,8 +14,8 @@ import '../../Back-end/firestore_service.dart';
 import '../../services/mileage_service.dart';
 import '../formscreens/formscreen1.dart';
 import '../maintenanceDetails.dart';
+import '../../notifications/notification.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -28,9 +28,12 @@ class _HomePageState extends State<HomePage> {
   final CollectionReference carsCollection =
       FirebaseFirestore.instance.collection('cars');
   String? username;
+  late Stream<List<Map<String, dynamic>>> carsStream;
+  List<Map<String, dynamic>> cars = [];
   Map<String, dynamic>? selectedCar;
-  FirestoreService firestoreService = FirestoreService(MaintID());
   int currentCar = 0;
+  FirestoreService firestoreService = FirestoreService(MaintID());
+  Map<String, bool> itemCheckedStates = {};
 
   void loadUsername() async {
     String? fetchedUsername = await getUsername();
@@ -69,19 +72,108 @@ class _HomePageState extends State<HomePage> {
     loadUsername();
     firestoreService = FirestoreService(MaintID());
     MaintID().addListener(_updateService);
+    
+    // Initialize notifications when the app starts
+    _initializeNotifications();
+    
+    // Listen for changes in the cars collection
+    _setupCarsListener();
+  }
+
+  // Setup listener for changes in the cars collection
+  void _setupCarsListener() {
+    carsCollection
+        .where('userId', isEqualTo: user.uid)
+        .snapshots()
+        .listen((snapshot) {
+      if (snapshot.docs.isEmpty) {
+        // No cars available, clear maintenance data
+        setState(() {
+          selectedCar = null;
+          cars = [];
+          currentCar = 0;
+          // Reset MaintID to clear maintenance data
+          final maintID = MaintID();
+          maintID.selectedMake = '';
+          maintID.selectedModel = '';
+          maintID.selectedYear = '';
+          firestoreService = FirestoreService(maintID);
+        });
+      } else {
+        // Update cars list
+        List<Map<String, dynamic>> updatedCars = [];
+        for (var doc in snapshot.docs) {
+          Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
+          car['id'] = doc.id;
+          updatedCars.add(car);
+        }
+        
+        setState(() {
+          cars = updatedCars;
+          
+          // If selected car was deleted, select the first car
+          if (selectedCar != null) {
+            final stillExists = cars.any((car) => car['id'] == selectedCar!['id']);
+            if (!stillExists && cars.isNotEmpty) {
+              currentCar = 0;
+              selectedCar = cars[0];
+              
+              // Update MaintID for the new selected car
+              final maintID = MaintID();
+              maintID.selectedMake = selectedCar!['make'].toString();
+              maintID.selectedModel = selectedCar!['model'].toString();
+              maintID.selectedYear = selectedCar!['year'].toString();
+              
+              // Update firestore service
+              firestoreService = FirestoreService(maintID);
+            }
+          } else if (cars.isNotEmpty) {
+            // No car was selected, select the first one
+            currentCar = 0;
+            selectedCar = cars[0];
+            
+            // Update MaintID for the new selected car
+            final maintID = MaintID();
+            maintID.selectedMake = selectedCar!['make'].toString();
+            maintID.selectedModel = selectedCar!['model'].toString();
+            maintID.selectedYear = selectedCar!['year'].toString();
+            
+            // Update firestore service and clone maintenance data
+            firestoreService = FirestoreService(maintID);
+            cloneMaintenanceToUser(
+              source: firestoreService.maintCollection,
+              target: FirebaseFirestore.instance
+                  .collection('users')
+                  .doc(user.uid)
+                  .collection('Maintenance_Schedule_${MaintID().maintID}_Personal'),
+            );
+          }
+        });
+      }
+    });
   }
 
   void _updateService() {
     setState(() {
       firestoreService = FirestoreService(MaintID());
-      cloneMaintenanceToUser(
-        source: firestoreService.maintCollection,
-        target: FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .collection('Maintenance_Schedule_${MaintID().maintID}_Personal'),
-      );
+      
+      // Only clone maintenance data if a car is selected
+      if (selectedCar != null) {
+        cloneMaintenanceToUser(
+          source: firestoreService.maintCollection,
+          target: FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .collection('Maintenance_Schedule_${MaintID().maintID}_Personal'),
+        );
+      }
     });
+  }
+
+  // Initialize the notification service
+  Future<void> _initializeNotifications() async {
+    final notiService = NotiService();
+    await notiService.initNotification();
   }
 
   @override
@@ -117,30 +209,24 @@ class _HomePageState extends State<HomePage> {
                   .where('userId', isEqualTo: user.uid)
                   .snapshots(),
               builder: (context, snapshot) {
-                // if (snapshot.connectionState == ConnectionState.waiting) {
-                //   return CircularProgressIndicator();
-                // }
-
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
 
                 if (!snapshot.hasData) {
-                  return CircularProgressIndicator(); // أو أي لودينغ مناسب
+                  return CircularProgressIndicator();
                 }
 
-                List<Map<String, dynamic>> cars = [];
+                // This is now handled by the _setupCarsListener method
+                // We'll keep this code here just for the UI building part
+                List<Map<String, dynamic>> carsFromSnapshot = [];
                 for (var doc in snapshot.data!.docs) {
                   Map<String, dynamic> car = doc.data() as Map<String, dynamic>;
                   car['id'] = doc.id;
-                  cars.add(car);
-                }
-                // Set selectedCar to the current car
-                if (cars.isNotEmpty && currentCar < cars.length) {
-                  selectedCar = cars[currentCar];
+                  carsFromSnapshot.add(car);
                 }
 
-                if (cars.isEmpty) {
+                if (carsFromSnapshot.isEmpty) {
                   return SizedBox(
                     height: 210,
                     width: 300,
@@ -150,7 +236,10 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => AddCarScreen()),
-                        );
+                        ).then((_) {
+                          // Force refresh when returning from add car screen
+                          setState(() {});
+                        });
                       },
                       child: Card(
                         color: AppColors.secondaryText,
@@ -171,63 +260,41 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
 
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (cars.isNotEmpty) {
-                    final newMake = cars[currentCar]['make'].toString();
-                    final newModel = cars[currentCar]['model'].toString();
-                    final newYear = cars[currentCar]['year'].toString();
-
-                    final maintID = MaintID();
-                    if (maintID.selectedMake != newMake ||
-                        maintID.selectedModel != newModel ||
-                        maintID.selectedYear != newYear) {
-                      maintID.selectedMake = newMake;
-                      maintID.selectedModel = newModel;
-                      maintID.selectedYear = newYear;
-                    }
-                  }
-                });
-
-                int cardsToDisplay = cars.length > 3 ? 3 : cars.length;
+                int cardsToDisplay = carsFromSnapshot.length > 3 ? 3 : carsFromSnapshot.length;
 
                 return SizedBox(
                   height: 210,
                   width: 300,
                   child: CardSwiper(
-                    cardsCount: cars.length,
+                    cardsCount: carsFromSnapshot.length,
                     cardBuilder: (BuildContext context, int index,
                         int realIndex, int percentThresholdX) {
-                      return CarCardWidget(car: cars[index]);
+                      return CarCardWidget(car: carsFromSnapshot[index]);
                     },
                     onSwipe: (previousIndex, currentIndex, direction) {
                       if (previousIndex != currentIndex) {
                         setState(() {
                           currentCar = currentIndex!;
-                          if (currentCar >= cars.length) {
+                          if (currentCar >= carsFromSnapshot.length) {
                             currentCar = 0;
                           }
 
                           // Update selected car
-                          selectedCar = cars[currentCar];
-                          // print("�� Switched to car: "+(selectedCar?['make']).toString()+" "+(selectedCar?['model']).toString()+" (ID: "+(selectedCar?['id']).toString()+")");
+                          selectedCar = carsFromSnapshot[currentCar];
+                          // print("Switched to car: "+(selectedCar?['make']).toString()+" "+(selectedCar?['model']).toString()+" (ID: "+(selectedCar?['id']).toString()+")");
 
                           // Update MaintID for correct maintenance collection
-                          final make = cars[currentCar]['make'];
-                          final model = cars[currentCar]['model'];
-                          final year = cars[currentCar]['year'];
+                          final make = carsFromSnapshot[currentCar]['make'];
+                          final model = carsFromSnapshot[currentCar]['model'];
+                          final year = carsFromSnapshot[currentCar]['year'];
 
                           // Get the MaintID singleton and update it
                           final maintID = MaintID();
                           maintID.selectedMake = make.toString();
                           maintID.selectedModel = model.toString();
                           maintID.selectedYear = year.toString();
-
-                          // Force service update to refresh maintenance items
+                          
                           firestoreService = FirestoreService(maintID);
-                          // print("💾 Refreshing maintenance data for "+make.toString()+" "+model.toString()+" "+year.toString());
-
-                          // Force a complete rebuild of the widget tree
-                          // This ensures maintenance items are completely refreshed
                           Future.delayed(Duration.zero, () {
                             if (mounted) setState(() {});
                           });
@@ -293,17 +360,31 @@ class _HomePageState extends State<HomePage> {
 
             Padding(
               padding: const EdgeInsets.only(left: 10),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Next Maintenance',
-                  style: TextStyle(
-                    color: const Color(0xFF0F0F0F),
-                    fontSize: 24,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w600,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Next Maintenance',
+                    style: TextStyle(
+                      color: const Color(0xFF0F0F0F),
+                      fontSize: 24,
+                      fontFamily: 'Inter',
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
+                  TextButton(
+                    onPressed: () {
+                      _showMaintenancePopup(context);
+                    },
+                    child: Text(
+                      'View All',
+                      style: TextStyle(
+                        color: AppColors.buttonColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 10),
@@ -312,8 +393,10 @@ class _HomePageState extends State<HomePage> {
               child: SingleChildScrollView(
                 padding: EdgeInsets.zero, // Remove default padding
                 // Use a key based on the car ID to force rebuild when car changes
-                child: StreamBuilder<List<MaintenanceList>>(
-                  key: ValueKey('maintenance-${selectedCar?['id'] ?? 'none'}'),
+                child: selectedCar == null 
+                ? Center(child: Text("Please add a car to see maintenance items"))
+                : StreamBuilder<List<MaintenanceList>>(
+                  key: ValueKey('maintenance-${selectedCar?['id'] ?? 'none'}-${DateTime.now().millisecondsSinceEpoch}'),
                   stream: firestoreService.getMaintenanceList(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData || snapshot.data == null) {
@@ -342,23 +425,14 @@ class _HomePageState extends State<HomePage> {
                           } else if (avgKmValue is String) {
                             avgKmPerMonth = int.tryParse(avgKmValue) ?? 500;
                           }
-                        }
-
-                        // print("🚗 Car ID: "+carId.toString()+", Current Mileage: "+carMileage.toString()+", Avg KM/Month: "+avgKmPerMonth.toString());
+                        }                        
                         final maintList = snapshot.data!
                             .where((item) => item.isDone != true)
                             .toList();
-                        // print("📋 Total maintenance items: "+maintList.length.toString());
-
-                        // Only proceed with mileage check if we have a valid car mileage
                         if (carMileage > 0) {
-                          for (final item
-                              in List<MaintenanceList>.from(maintList)) {
-                            // print("🔧 Maintenance item: "+item.id+", Mileage: "+item.mileage.toString()+", Current car mileage: "+carMileage.toString());
-
-                            // Check if this maintenance item is due based on mileage
+                          for (final item in List<MaintenanceList>.from(maintList)) {
+                            
                             if (carMileage >= item.mileage && !item.isDone) {
-                              // print("🔄 Moving item "+item.id+" to history ("+item.mileage.toString()+" <= "+carMileage.toString()+")");
                               try {
                                 firestoreService.moveToHistory(item.id);
                                 maintList.remove(item);
@@ -385,23 +459,45 @@ class _HomePageState extends State<HomePage> {
 
                         final upcomingMaintList = maintList
                             .where((item) => item.mileage > carMileage)
-                            .take(2)
                             .toList();
+                        final displayedMaintList = upcomingMaintList.take(2).toList();
+                        
+                        final notiService = NotiService();                     
+                        // Initialize notifications first
+                        notiService.initNotification();
 
-                        if (upcomingMaintList.isEmpty) {
-                          return const Center(
-                              child: Text("No upcoming maintenance needed."));
+                        notiService.cancelNotification();
+
+                        final carMake = selectedCar?['make'] ?? 'Your car';
+                        final carModel = selectedCar?['model'] ?? '';
+                        final carInfo = '$carMake $carModel';
+                        
+                        for (final item in displayedMaintList) {
+                          final expectedDate = item.calculateExpectedDate(carMileage, avgKmPerMonth);
+                          final formattedDate = item.formatExpectedDate(carMileage, avgKmPerMonth);
+                          final notifyDate = expectedDate.subtract(const Duration(days: 7));
+                          
+                          // Schedule the notification if it's in the future
+                          if (notifyDate.isAfter(DateTime.now())) {
+                            notiService.scheduleNotificationAtDate(
+                              id: item.id.hashCode,
+                              title: 'Maintenance Reminder: $carInfo',
+                              body: '${item.mileage} KM maintenance is due on $formattedDate',
+                              dateTime: notifyDate,
+                            );
+                          }
                         }
-
-                        // print("🔮 Showing "+upcomingMaintList.length.toString()+" upcoming maintenance items");
-
+                        
+                        if (displayedMaintList.isEmpty) {
+                          return const Center(child: Text("No upcoming maintenance needed."));
+                        }                       
                         return ListView.builder(
-                          itemCount: upcomingMaintList.length,
+                          itemCount: displayedMaintList.length,
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           padding: EdgeInsets.zero, // Remove default padding
                           itemBuilder: (context, index) {
-                            final maintenanceItem = upcomingMaintList[index];
+                            final maintenanceItem = displayedMaintList[index];
 
                             if (maintenanceItem.isDone == true) {
                               return SizedBox
@@ -461,6 +557,120 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showMaintenancePopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            height: MediaQuery.of(context).size.height * 0.7,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'All Upcoming Maintenance',
+                      style: TextStyle(
+                        color: AppColors.buttonColor,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: StreamBuilder<List<MaintenanceList>>(
+                    stream: firestoreService.getMaintenanceList(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      
+                      final maintList = snapshot.data!
+                          .where((item) => item.isDone != true)
+                          .toList();
+                          
+                      if (maintList.isEmpty) {
+                        return const Center(child: Text("No maintenance records available."));
+                      }
+                      
+                      return FutureBuilder<int>(
+                        future: MileageService().getCarMileage(selectedCar?["id"] ?? ""),
+                        builder: (context, mileageSnapshot) {
+                          if (!mileageSnapshot.hasData) {
+                            return const Center(child: CircularProgressIndicator());
+                          }
+                          
+                          final carMileage = mileageSnapshot.data ?? 0;
+                          
+                          int avgKmPerMonth = 500; 
+                          final avgKmValue = selectedCar?["avgKmPerMonth"];
+                          if (avgKmValue != null) {
+                            if (avgKmValue is int) {
+                              avgKmPerMonth = avgKmValue;
+                            } else if (avgKmValue is double) {
+                              avgKmPerMonth = avgKmValue.toInt();
+                            } else if (avgKmValue is String) {
+                              avgKmPerMonth = int.tryParse(avgKmValue) ?? 500;
+                            }
+                          }
+                          
+                          maintList.sort((a, b) => a.mileage.compareTo(b.mileage));
+                          
+                          final upcomingMaintList = maintList
+                              .where((item) => item.mileage > carMileage)
+                              .toList();
+                          
+                          return ListView.builder(
+                            itemCount: upcomingMaintList.length,
+                            padding: EdgeInsets.zero,
+                            itemBuilder: (context, index) {
+                              final maintenanceItem = upcomingMaintList[index];
+                              
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => MaintenanceDetailsPage(
+                                        maintenanceItem: maintenanceItem,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: MaintenanceCard(
+                                  title: '${maintenanceItem.mileage} KM',
+                                  date: maintenanceItem.formatExpectedDate(carMileage, avgKmPerMonth),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
