@@ -91,8 +91,8 @@ class CarCardWidget extends StatelessWidget {
                               },
                               child: SvgPicture.asset(
                                 'assets/svg/edit.svg',
-                                width: 15,
-                                height: 15,
+                                width: 20,
+                                height: 20,
                               ),
                             )
                           ],
