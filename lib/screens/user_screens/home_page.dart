@@ -17,6 +17,8 @@ import '../maintenanceDetails.dart';
 import '../../notifications/notification.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import 'notifications .dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -203,8 +205,14 @@ class _HomePageState extends State<HomePage> {
                   ? 'Welcome Back, ${username!.split(' ').first}'
                   : 'Welcome Back, User',
               svgAssetPath: 'assets/svg/notification.svg',
-              suptext:'Tap here and we’ll help you out!',
-              onTap: () {},
+              suptext: 'Tap here and we’ll help you out!',
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationsPage(),
+                    ));
+              },
             ),
             SizedBox(height: 15),
 

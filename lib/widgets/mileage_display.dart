@@ -13,12 +13,12 @@ class MileageDisplay extends StatefulWidget {
   final Function(int)? onMileageUpdated;
 
   const MileageDisplay({
-    Key? key,
+    super.key,
     required this.carId,
     required this.currentMileage,
     required this.avgKmPerMonth,
     this.onMileageUpdated,
-  }) : super(key: key);
+  });
 
   static void showMileageEditDialog(
     BuildContext context,
@@ -38,7 +38,7 @@ class MileageDisplay extends StatefulWidget {
       dismissOnBackKeyPress: true,
       keyboardAware: true,
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -63,18 +63,7 @@ class MileageDisplay extends StatefulWidget {
               ),
             ),
             SizedBox(height: 16),
-            // TextField(
-            //   controller: editController,
-            //   keyboardType: TextInputType.number,
-            //   decoration: InputDecoration(
-            //     labelText: 'Mileage',
-            //     suffixText: 'km',
-            //     border: OutlineInputBorder(
-            //       borderRadius: BorderRadius.circular(10),
-            //     ),
-            //   ),
-            //   autofocus: true,
-            // ),
+
             buildTextField(
               label: 'Current car mileage (Approx.)',
               controller: editController,
@@ -90,12 +79,7 @@ class MileageDisplay extends StatefulWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                // TextButton(
-                //   onPressed: () {
-                //     Navigator.of(context).pop();
-                //   },
-                //   child: Text('Cancel'),
-                // ),
+
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
@@ -174,44 +158,6 @@ class MileageDisplay extends StatefulWidget {
                     ),
                   ),
                 ),
-                // SizedBox(width: 12),
-                // ElevatedButton(
-                //   style: ElevatedButton.styleFrom(
-                //     backgroundColor: Colors.red,
-                //     foregroundColor: Colors.white,
-                //   ),
-                //   onPressed: () async {
-                //     try {
-                //       final newMileage = int.parse(editController.text);
-
-                //       await FirebaseFirestore.instance
-                //           .collection('cars')
-                //           .doc(carId)
-                //           .update({
-                //         'mileage': newMileage,
-                //         'lastUpdated': FieldValue.serverTimestamp(),
-                //       });
-
-                //       onMileageUpdated?.call(newMileage);
-
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         SnackBar(
-                //           content: Text(
-                //               'Mileage updated successfully to $newMileage km'),
-                //         ),
-                //       );
-
-                //       Navigator.of(context).pop();
-                //     } catch (e) {
-                //       ScaffoldMessenger.of(context).showSnackBar(
-                //         SnackBar(
-                //           content: Text('Failed to update mileage: $e'),
-                //         ),
-                //       );
-                //     }
-                //   },
-                //   child: Text('Save'),
-                // ),
               ],
             ),
           ],
