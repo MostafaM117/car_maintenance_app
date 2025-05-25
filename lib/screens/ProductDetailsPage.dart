@@ -37,7 +37,7 @@ class ProductDetailsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              child: Image.asset(image, height: 200),
+              child: Image.network(image, height: 200),
             ),
             const SizedBox(height: 16),
             Row(

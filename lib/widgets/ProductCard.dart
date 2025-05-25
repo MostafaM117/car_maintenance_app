@@ -29,7 +29,7 @@ class ProductCard extends StatelessWidget {
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            child: Image.asset(
+            child: Image.network(
               image,
               height: 100,
               width: double.infinity,

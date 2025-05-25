@@ -32,7 +32,7 @@ class _EditItemState extends State<EditItem> {
   final List<String> _carMakes = CarData.getAllMakes();
 
   late FirestoreService firestoreService;
-
+  String? uploadedImageUrl;
   @override
   void initState() {
     super.initState();
@@ -65,8 +65,13 @@ class _EditItemState extends State<EditItem> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ImagePickerContainer(),
-
+              ImagePickerContainer(
+                onImageUploaded: (String url) {
+                  setState(() {
+                    uploadedImageUrl = url;
+                  });
+                },
+              ),
               const SizedBox(height: 15),
 
               // Product Name

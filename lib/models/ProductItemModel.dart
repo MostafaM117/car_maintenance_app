@@ -7,7 +7,7 @@ class ProductItem {
   final String description;
   final String selectedMake;
   final String selectedModel;
-  File? image; // Optional image field
+  final String? imageUrl; // Optional image URL
   final String selectedCategory;
   final String selectedAvailability;
   final int stockCount;
@@ -18,7 +18,7 @@ class ProductItem {
     required this.description,
     required this.selectedMake,
     required this.selectedModel,
-    this.image,
+    this.imageUrl,
     required this.selectedCategory,
     required this.selectedAvailability,
     required this.stockCount,
@@ -36,6 +36,7 @@ class ProductItem {
       selectedAvailability: data['selectedAvailability'] ?? '',
       stockCount: data['stockCount'] ?? 0,
       price: data['price']?.toDouble() ?? 0.0,
+      imageUrl: data['imageUrl'], // Optional image URL
     );
   }
 }

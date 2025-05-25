@@ -68,8 +68,10 @@ class FirestoreService {
     String selectedAvailability,
     int stockCount,
     double price,
+    String imageUrl, // Added imageUrl parameter
   ) async {
     final businessName = await offerService.getBusinessName();
+    print(businessName);
     try {
       await stockCollection.add({
         'name': name,
@@ -80,7 +82,8 @@ class FirestoreService {
         'selectedAvailability': selectedAvailability,
         'stockCount': stockCount,
         'price': price,
-        'Store Name': businessName
+        'Store Name': businessName,
+        'imageUrl': imageUrl,
       });
       await productsCollection.add({
         'name': name,
@@ -91,7 +94,8 @@ class FirestoreService {
         'selectedAvailability': selectedAvailability,
         'stockCount': stockCount,
         'price': price,
-        'Store Name': businessName
+        'Store Name': businessName,
+        'imageUrl': imageUrl, // Added imageUrl to products collection
       });
       print("✅ Added product item");
     } catch (e) {
@@ -114,6 +118,7 @@ class FirestoreService {
           selectedCategory: data['selectedCategory'] ?? '',
           selectedAvailability: data['selectedAvailability'] ?? '',
           stockCount: data['stockCount'] ?? 0,
+          imageUrl: data['imageUrl'] ?? '', // Added imageUrl field
         );
       }).toList();
     });
@@ -144,25 +149,46 @@ class FirestoreService {
       query = query.where('price', isLessThanOrEqualTo: maxPrice);
     }
 
+    // Uncomment this if you plan to use location filtering
     // if (location != null && location.isNotEmpty) {
     //   query = query.where('selectedAvailability', isEqualTo: location);
     // }
 
     return query.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return ProductItem(
-          id: doc.id,
-          name: data['name'],
-          price: data['price'],
-          description: data['Description'],
-          selectedMake: data['selectedMake'],
-          selectedModel: data['selectedModel'],
-          selectedCategory: data['selectedCategory'],
-          selectedAvailability: data['selectedAvailability'],
-          stockCount: data['stockCount'],
-        );
-      }).toList();
+      print("🔍 query returned ${snapshot.docs.length} docs");
+
+      final products = snapshot.docs
+          .map((doc) {
+            try {
+              final data = doc.data() as Map<String, dynamic>;
+              print("📦 Mapping product: $data");
+
+              final product = ProductItem(
+                id: doc.id,
+                name: data['name'] ?? 'Unnamed',
+                price: (data['price'] ?? 0).toDouble(),
+                description: data['Description'] ?? '',
+                selectedMake: data['selectedMake'] ?? '',
+                selectedModel: data['selectedModel'] ?? '',
+                selectedCategory: data['selectedCategory'] ?? '',
+                selectedAvailability: data['selectedAvailability'] ?? '',
+                stockCount: data['stockCount'] ?? 0,
+                imageUrl: data['imageUrl'] ?? '',
+              );
+
+              print("✅ Created ProductItem: ${product.name}");
+              return product;
+            } catch (e, stack) {
+              print("❌ Failed to map product doc ${doc.id}: $e");
+              return null;
+            }
+          })
+          .whereType<ProductItem>()
+          .toList();
+
+      print("🏷️ Building grid with ${products.length} products");
+
+      return products;
     });
   }
 
@@ -180,6 +206,7 @@ class FirestoreService {
           selectedCategory: data['selectedCategory'] ?? '',
           selectedAvailability: data['selectedAvailability'] ?? '',
           stockCount: data['stockCount'] ?? 0,
+          imageUrl: data['imageUrl'] ?? '', // Added imageUrl field
         );
       }).toList();
     });

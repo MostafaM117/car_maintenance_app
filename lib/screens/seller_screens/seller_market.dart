@@ -99,12 +99,14 @@ class _MarketPageState extends State<MarketPage> {
                   const SizedBox(width: 8),
                   IconButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => Periodicpage(),
-                      //   ),
-                      // );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Periodicpage(
+                            title: 'Periodic',
+                          ),
+                        ),
+                      );
                     },
                     icon: Icon(Icons.filter_list),
                   ),

@@ -19,7 +19,6 @@ class Periodicpage extends StatefulWidget {
   State<Periodicpage> createState() => _PeriodicpageState();
 }
 
-
 class _PeriodicpageState extends State<Periodicpage> {
   FirestoreService firestoreService = FirestoreService(MaintID());
   String? filterMake;
@@ -57,7 +56,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                   SizedBox(height: 50),
                   Center(
                     child: Text(
-                    widget.title,
+                      widget.title,
                       style:
                           TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                     ),
@@ -85,14 +84,13 @@ class _PeriodicpageState extends State<Periodicpage> {
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
-                              hintText: 'Search',
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              suffixIcon: Icon(Icons.search)
-                            ),
+                                hintText: 'Search',
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 10,
+                                ),
+                                suffixIcon: Icon(Icons.search)),
                           ),
                         ),
                       ),
@@ -113,7 +111,12 @@ class _PeriodicpageState extends State<Periodicpage> {
                           location: selectedLocation,
                         ),
                         builder: (context, snapshot) {
-                          final products = snapshot.data ?? [];
+                          final products =
+                              snapshot.data?.where((p) => p != null).toList() ??
+                                  [];
+                          print("📦 Final product count: ${products.length}");
+                          print(
+                              "🏷️ Building grid with ${products.length} products");
                           return GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -123,8 +126,10 @@ class _PeriodicpageState extends State<Periodicpage> {
                                     childAspectRatio: 0.80),
                             itemCount: products.length,
                             itemBuilder: (context, index) {
+                              print("🔸 itemBuilder for index $index");
                               final product = products[index];
                               return OpenContainer(
+                                // opencontainers can't have null values, guess what my filter function requires
                                 transitionType:
                                     ContainerTransitionType.fadeThrough,
                                 transitionDuration: Duration(milliseconds: 500),
@@ -135,7 +140,9 @@ class _PeriodicpageState extends State<Periodicpage> {
                                   return GestureDetector(
                                     onTap: openContainer,
                                     child: ProductCard(
-                                      image: 'assets/images/motor_oil.png',
+                                      image: product
+                                              .imageUrl ?? // fix the null check default img
+                                          'https://rqcercxrslptgjffolve.supabase.co/storage/v1/object/public/products-images/Fixing%20dumbassery_IMG-20250526-WA0000.jpg',
                                       title: product.name,
                                       price: product.price.toString(),
                                     ),
@@ -143,7 +150,9 @@ class _PeriodicpageState extends State<Periodicpage> {
                                 },
                                 openBuilder: (context, _) {
                                   return ProductDetailsPage(
-                                    image: 'assets/images/motor_oil.png',
+                                    image: product
+                                            .imageUrl ?? // fix the null check default img
+                                        'https://rqcercxrslptgjffolve.supabase.co/storage/v1/object/public/products-images/Fixing%20dumbassery_IMG-20250526-WA0000.jpg',
                                     title: product.name,
                                     price: product.price.toString(),
                                     description: product.description,
@@ -167,10 +176,9 @@ class _PeriodicpageState extends State<Periodicpage> {
     return ElevatedButton(
       onPressed: () {
         AwesomeDialog(
-          
           context: context,
           dialogType: DialogType.noHeader,
-          animType: AnimType.scale, 
+          animType: AnimType.scale,
           dialogBackgroundColor: AppColors.secondaryText,
           padding: const EdgeInsets.all(16),
           body: StatefulBuilder(
@@ -249,6 +257,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                               minPrice = null;
                               maxPrice = null;
                             });
+                            checkFormCompletion();
                             Navigator.of(context).pop();
                           },
                         ),
@@ -258,6 +267,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                           AppColors.buttonColor,
                           AppColors.buttonText,
                           onPressed: () {
+                            checkFormCompletion();
                             Navigator.of(context).pop();
                           },
                         ),

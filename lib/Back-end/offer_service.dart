@@ -18,7 +18,7 @@ class OfferService {
       final doc = await sellersCollection.doc(uid).get();
       if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
-        return data['businessname'] ?? '';
+        return data['business_name'] ?? '';
       } else {
         print('❌ Seller document not found');
         return '';
