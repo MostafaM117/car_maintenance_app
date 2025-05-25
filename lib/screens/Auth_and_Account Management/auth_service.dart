@@ -277,8 +277,7 @@ class AuthService {
               'googleUser': true,
               'uid': user.uid,
               'role': 'seller',
-              'username': username,
-              'businessname': 'seller',
+              'business_name': username,
               'seller_data_completed': false,
               'store_verified': false,
             });
