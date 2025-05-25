@@ -49,6 +49,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
               SubtractWave(
                 text: 'Welcome Back, ${username.split(' ').first}',
                 svgAssetPath: 'assets/svg/notification.svg',
+                suptext: 'Tap here and we’ll help you out!',
                 onTap: () {},
               ),
               SizedBox(height: 15),

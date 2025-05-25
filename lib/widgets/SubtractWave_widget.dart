@@ -6,6 +6,7 @@ import 'custom_widgets.dart';
 
 class SubtractWave extends StatelessWidget {
   final String text;
+  final String suptext;
   final String svgAssetPath;
 
   final dynamic onTap;
@@ -13,6 +14,7 @@ class SubtractWave extends StatelessWidget {
   const SubtractWave(
       {super.key,
       required this.text,
+      required this.suptext,
       required this.svgAssetPath,
       required this.onTap});
 
@@ -25,13 +27,25 @@ class SubtractWave extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              text,
-              style: textStyleWhite.copyWith(color: Colors.white),
+            padding: const EdgeInsets.only(top: 3),
+            child: Column(
+              children: [
+                Text(
+                  text,
+                  style: textStyleWhite.copyWith(color: Colors.white),
+                ),
+                Text(
+                  suptext,
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.5),
+                    fontSize: 13,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
             ),
           ),
           ClipPath(
@@ -43,22 +57,22 @@ class SubtractWave extends StatelessWidget {
               child: Align(
                 alignment: Alignment.center,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 30, right: 20),
+                  padding: const EdgeInsets.only(bottom: 20, right: 20),
                   child: Container(
-                    height: 26,
-                    width: 26,
+                    height: 30,
+                    width: 30,
                     decoration: ShapeDecoration(
                       color: AppColors.secondaryText,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(22),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                     child: GestureDetector(
                       onTap: onTap,
                       child: SvgPicture.asset(
                         svgAssetPath,
-                        width: 20,
-                        height: 20,
+                        width: 24,
+                        height: 24,
                         color: Colors.black,
                       ),
                     ),
