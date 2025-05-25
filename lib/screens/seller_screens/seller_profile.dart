@@ -69,9 +69,9 @@ class _SellerProfileState extends State<SellerProfile> {
                             backgroundColor: AppColors.lightGray,
                             child: CircularProgressIndicator());
                       }
-                      final data =
-                          snapshot.data!.data() as Map<String, dynamic>;
-                      final imageUrl = data['shop_imageUrl'] as String?;
+                        final data = snapshot.data!.data() as Map<String, dynamic>;
+                        final imageUrl = data['shop_imageUrl'] as String?;
+
                       if (imageUrl == null || imageUrl.isEmpty) {
                         return CircleAvatar(
                           radius: 60,
@@ -80,7 +80,6 @@ class _SellerProfileState extends State<SellerProfile> {
                               Icon(Icons.person, size: 60, color: Colors.grey),
                         );
                       }
-
                       return CircleAvatar(
                         radius: 60,
                         backgroundColor: AppColors.lightGray,
