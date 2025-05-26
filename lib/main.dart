@@ -1,3 +1,4 @@
+import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryText),
         useMaterial3: true,
       ),
       home:

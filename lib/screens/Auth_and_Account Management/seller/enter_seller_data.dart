@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/get_shop_location.dart';
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/store_not_verified.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,33 +11,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class CompleteSellerInfo extends StatefulWidget {
-  final String businessname;
-  final String businessemail;
-  final String password;
-  final String nationalID;
-
-  const CompleteSellerInfo({
-    super.key, 
-    required this.businessname, 
-    required this.businessemail,
-    required this.password,
-    required this.nationalID,
-    });
+class EnterSellerData extends StatefulWidget {
+  const EnterSellerData({super.key});
 
   @override
-  State<CompleteSellerInfo> createState() => _CompleteSellerInfoState();
+  State<EnterSellerData> createState() => _EnterSellerDataState();
 }
 
-class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
+class _EnterSellerDataState extends State<EnterSellerData> {
+
+  final _nationalIDcontroller = TextEditingController();
   final _taxsnumbercontroller = TextEditingController();
   final _phonenumbercontroller = TextEditingController();
   final _locationController = TextEditingController();
@@ -45,9 +35,11 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
   LatLng? shoplocation ;
   String? idImageUrl1;
   String? idImageUrl2;
+  final seller = FirebaseAuth.instance.currentUser!;
 
-  //Finish Signing up Function
-  Future<UserCredential?> finishSignup() async {
+  //Finish Signing up with Google
+  Future<UserCredential?> finishSignupWithGoogle() async {
+    final nationalID = _nationalIDcontroller.text.trim();
     final taxsnumber = _taxsnumbercontroller.text.trim();
     final phonenumber = _phonenumbercontroller.text.trim();
     final location = _locationController.text.trim();
@@ -92,43 +84,36 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
         _isLoading = true;
       });
       try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: widget.businessemail,
-                password: widget.password);
-
-        await createuser(
-          widget.businessname,
-          widget.businessemail,
-          widget.nationalID,
-          userCredential.user!.uid,
-          idImageUrl1!,
-          idImageUrl2!,
-        );
-        Navigator.pop(context);
-        Navigator.pop(context);
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('Registred Successfully'),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: Colors.green.shade400,
-          ),
-        );
-        return userCredential;
+        await FirebaseFirestore.instance.collection('sellers').doc(seller.uid).update({
+        'National_ID': nationalID,
+        'tax_registration_number': taxsnumber,
+        'phone_number': phonenumber,
+        'id_image1': idImageUrl1,
+        'id_image2': idImageUrl2,
+        'seller_data_completed': true,
+        'shoplocation' : {
+        'lat' : shoplocation!.latitude,
+        'lng' : shoplocation!.longitude,
+        },
+        });
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => StoreNotVerified()),
+          (route) => false);
+        // ScaffoldMessenger.of(context).showSnackBar(
+        //   SnackBar(
+        //     content:
+        //         Text('Data Completed Successfully'),
+        //     duration: Duration(milliseconds: 4000),
+        //     backgroundColor: Colors.green.shade400,
+        //   ),
+        // );
       } catch (e) {
-        if (e.toString().contains('email-already-in-use')) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('This email is already registered')),
-          );
-          return null;
-        } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error: ${e.toString()}')),
           );
           return null;
-        }
+        
       }
       finally {
         // Hide loader
@@ -139,29 +124,6 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
         }
       }
     }
-  }
-
-  Future createuser(String businessname, String email, String nationalID, String uid, String idImageUrl1,
-  String idImageUrl2) async {
-    await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
-      'business_name': businessname,
-      'email': email,
-      'National_ID': nationalID,
-      'uid': uid,
-      'tax_registration_number': _taxsnumbercontroller.text.trim(),
-      'phone_number': _phonenumbercontroller.text.trim(),
-      // 'password': _passwordcontroller.text.trim(),
-      'role': 'seller',
-      'googleUser': false,
-      'id_image1': idImageUrl1,
-      'id_image2': idImageUrl2,
-      'shoplocation' : {
-        'lat' : shoplocation!.latitude,
-        'lng' : shoplocation!.longitude,
-      },
-      'seller_data_completed': true,
-      'store_verified': false,
-    });
   }
 
   Future<void> pickAndUploadImage() async {
@@ -210,6 +172,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
     _idimagesController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,6 +193,18 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
                 ),
               ),
               const SizedBox(height: 30),
+              // National ID
+              buildInputField(
+                iconWidget: Icon(Icons.person_pin_outlined),
+                controller: _nationalIDcontroller,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(14),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                hintText: 'Enter your national id number',
+              ),
+              SizedBox(height: 20,),
               // Tax Registration Number 
               buildInputField(
                 iconWidget: Icon(Icons.person_pin_outlined),
@@ -381,7 +356,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
                 child: ElevatedButton(
                   onPressed: () {
                     _termschecked
-                        ? finishSignup()
+                        ? finishSignupWithGoogle()
                         : ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(

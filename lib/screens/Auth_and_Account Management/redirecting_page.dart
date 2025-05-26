@@ -1,3 +1,4 @@
+import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/enter_seller_data.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/store_not_verified.dart';
 import 'package:car_maintenance/screens/Current_Screen/seller_main_screen.dart';
 import 'package:car_maintenance/screens/Current_Screen/user_main_screen.dart';
@@ -51,7 +52,10 @@ class RedirectingPage extends StatelessWidget {
                       }
                       else if(sellersnapshot.hasData && sellersnapshot.data!.exists){
                         final sellerData = sellersnapshot.data!.data() as Map<String, dynamic>; 
-                          if(sellerData['store_verified'] == false){
+                          if(sellerData['seller_data_completed'] == false){
+                            return EnterSellerData();
+                          }
+                          else if(sellerData['store_verified'] == false){
                             return StoreNotVerified();
                           }
                           else{
