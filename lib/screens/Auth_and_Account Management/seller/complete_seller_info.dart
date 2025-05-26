@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/get_shop_location.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
@@ -9,8 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:path/path.dart' as path;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class CompleteSellerInfo extends StatefulWidget {
   final String businessname;
@@ -34,9 +39,12 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
   final _taxsnumbercontroller = TextEditingController();
   final _phonenumbercontroller = TextEditingController();
   final _locationController = TextEditingController();
+  final _idimagesController = TextEditingController();
   bool _termschecked = false;
   bool _isLoading = false;
   LatLng? shoplocation ;
+  String? idImageUrl1;
+  String? idImageUrl2;
 
   //Finish Signing up Function
   Future<UserCredential?> finishSignup() async {
@@ -73,6 +81,12 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
       );
       return null;
     }
+    else if (idImageUrl1 == null || idImageUrl2 == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please upload the front and back sides of your national ID')),
+      );
+      return null;
+    }
     else {
       setState(() {
         _isLoading = true;
@@ -88,6 +102,8 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
           widget.businessemail,
           widget.nationalId,
           userCredential.user!.uid,
+          idImageUrl1!,
+          idImageUrl2!,
         );
         Navigator.pop(context);
         Navigator.pop(context);
@@ -95,7 +111,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content:
-                Text('Registred Successfully, Complete Your First time setup'),
+                Text('Registred Successfully'),
             duration: Duration(milliseconds: 4000),
             backgroundColor: Colors.green.shade400,
           ),
@@ -125,7 +141,8 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
     }
   }
 
-  Future createuser(String businessname, String email, String nationalId, String uid) async {
+  Future createuser(String businessname, String email, String nationalId, String uid, String idImageUrl1,
+  String idImageUrl2) async {
     await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
       'business_name': businessname,
       'email': email,
@@ -136,11 +153,61 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
       // 'password': _passwordcontroller.text.trim(),
       'role': 'seller',
       'googleUser': false,
+      'id_image1': idImageUrl1,
+      'id_image2': idImageUrl2,
       'shoplocation' : {
         'lat' : shoplocation!.latitude,
         'lng' : shoplocation!.longitude,
-      }
+      },
+      'store_verified': false,
     });
+  }
+
+  Future<void> pickAndUploadImage() async {
+    final picker = ImagePicker();
+    final List <XFile>? pickedFiles = await picker.pickMultiImage();
+    if (pickedFiles == null || pickedFiles.length < 2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select the front and back sides of your national ID')),
+      );
+      return;
+    }
+    else if (pickedFiles.length > 2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('You can\'t upload more than 2 images'), backgroundColor: Colors.red,),
+      );
+      return;
+    }
+
+    final storage = Supabase.instance.client.storage;
+    const bucket = 'seller-id-images';
+    List<String> urls =[];
+    try {
+      List<String> imageNames = [];
+      for(var i = 0; i < 2; i++){
+        final pickedFile = pickedFiles[i];
+        final file = File(pickedFile.path);
+        final fileName = '${DateTime.now().microsecondsSinceEpoch}_${path.basename(pickedFile.path)}';
+        imageNames.add(path.basename(pickedFile.path)); 
+        await storage.from(bucket).upload(fileName, file);
+        final publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        urls.add(publicUrl);
+      }
+      setState(() {
+        idImageUrl1 = urls[0];
+        idImageUrl2 = urls[1];
+        _idimagesController.text = imageNames.join(', ');
+      });
+      print('ID images uploaded.');
+    } catch (e) {
+      print('Upload error: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    _idimagesController.dispose();
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -163,87 +230,30 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
               ),
               const SizedBox(height: 30),
               // Tax Registration Number 
-              Container(
-                padding: EdgeInsets.only(right: 20),
-                height: 45,
-                decoration: ShapeDecoration(
-                  color: AppColors.secondaryText,
-                  shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                  width: 1,
-                  color: AppColors.borderSide,
-                  ),
-                borderRadius: BorderRadius.circular(22),
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 20), //24
-                    Icon(Icons.person_pin_outlined),
-                    const SizedBox(width: 18), // 20
-                    Expanded(
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(9),
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        controller: _taxsnumbercontroller,
-                        decoration: InputDecoration(
-                          hintText: 'Enter your tax registration number',
-                          hintStyle: textStyleGray,
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(bottom: 12),
-                        ),
-                        textAlignVertical: TextAlignVertical.center,
-                      ),
-                    ),
-                  ],
-                ),
+              buildInputField(
+                iconWidget: Icon(Icons.person_pin_outlined),
+                controller: _taxsnumbercontroller,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(9),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                hintText: 'Enter your tax registration number',
               ),
               SizedBox(height: 20,),
               // Phone number
-              Container(
-                padding: EdgeInsets.only(right: 20),
-                height: 45,
-                decoration: ShapeDecoration(
-                  color: AppColors.secondaryText,
-                  shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                  width: 1,
-                  color: AppColors.borderSide,
-                  ),
-                borderRadius: BorderRadius.circular(22),
-                  ),
-                ),
-                alignment: Alignment.center,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 20), //24
-                    Icon(Icons.phone),
-                    const SizedBox(width: 18), // 20
-                    Expanded(
-                      child: TextField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          LengthLimitingTextInputFormatter(11),
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        controller: _phonenumbercontroller,
-                        decoration: InputDecoration(
-                          hintText: 'Enter your business phone number',
-                          hintStyle: textStyleGray,
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(bottom: 12),
-                        ),
-                        textAlignVertical: TextAlignVertical.center,
-                      ),
-                    ),
-                  ],
-                ),
+              buildInputField(
+                iconWidget: Icon(Icons.phone),
+                controller: _phonenumbercontroller,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(11),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                hintText: 'Enter your business phone number',
               ),
               SizedBox(height: 20,),
+              // Location
               GestureDetector(
                 child: Container(
                   padding: EdgeInsets.only(right: 20),
@@ -280,6 +290,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
                   ),
                 ),
                 onTap: () async{
+                  FocusScope.of(context).requestFocus(FocusNode());
                   LatLng? selectedLocation = 
                   await Navigator.push(context , MaterialPageRoute(builder: (context)=> GetShopLocation()));
                   if(selectedLocation != null){
@@ -288,7 +299,47 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
                   }
                 },
               ),
-              // Uploading image logic will be here 
+              SizedBox(height: 20,),
+              // Uploading image
+              GestureDetector(
+                child: Container(
+                  padding: EdgeInsets.only(right: 20),
+                  height: 45,
+                  decoration: ShapeDecoration(
+                    color: AppColors.secondaryText,
+                    shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                    width: 1,
+                    color: AppColors.borderSide,
+                    ),
+                  borderRadius: BorderRadius.circular(22),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 20), //24
+                      Icon(Icons.image_outlined),
+                      const SizedBox(width: 18), // 20
+                      Expanded(
+                        child: TextField(
+                          controller: _idimagesController,
+                          enabled: false,
+                          decoration: InputDecoration(
+                            hintText: 'Upload Your Images',
+                            hintStyle: textStyleGray,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(bottom: 12),
+                          ),
+                          textAlignVertical: TextAlignVertical.center,
+                        ),)
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  pickAndUploadImage();
+                },
+              ),
               const SizedBox(height: 15),
               CheckboxListTile(
                   value: _termschecked,

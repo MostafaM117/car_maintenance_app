@@ -122,62 +122,59 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                       SizedBox(
                         height: 20,
                       ),
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          ClipOval(
-                            child: SizedBox(
-                              width: 130,
-                              height: 130,
-                              child: _isImageLoading
-                                  ? Center(
-                                      child: CircularProgressIndicator(),
-                                    )
-                                  : imageUrl != null && imageUrl!.isNotEmpty
-                                      ? Image.network(
-                                          imageUrl!,
-                                          fit: BoxFit.cover,
-                                          loadingBuilder: (context, child,
-                                              loadingProgress) {
-                                            if (loadingProgress == null) {
-                                              return child;
-                                            }
-                                            return const Center(
-                                                child:
-                                                    CircularProgressIndicator());
-                                          },
-                                        )
-                                      : Icon(
-                                          Icons.person,
-                                          size: 60,
-                                        ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () async {
-                              setState(() {
-                                _isImageLoading = true;
-                              });
-                              await pickAndUploadImage();
-                              await loadImage();
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.black54,
+                      CircleAvatar(
+                        radius: 60,
+                        backgroundColor: AppColors.lightGray,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipOval(
+                              child: SizedBox(
+                                width: 120,
+                                height: 120,
+                                child: _isImageLoading
+                                    ? Center(
+                                        child: CircularProgressIndicator(),
+                                      )
+                                    : imageUrl != null && imageUrl!.isNotEmpty
+                                        ? Image.network(
+                                            imageUrl!,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (context, child,
+                                                loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              }
+                                              return const Center(
+                                                  child:
+                                                      CircularProgressIndicator());
+                                            },
+                                          )
+                                        : Icon(Icons.person,size: 60,),
+                                        // Image.asset('assets/default_profile.png'),
                               ),
-                              padding: const EdgeInsets.all(8),
-                              child: const Icon(Icons.edit,
-                                  color: Colors.white, size: 20),
                             ),
-                          ),
-                        ],
+                            InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  _isImageLoading = true;
+                                });
+                                await pickAndUploadImage();
+                                await loadImage();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black54,
+                                ),
+                                padding: const EdgeInsets.all(8),
+                                child: const Icon(Icons.edit,
+                                    color: Colors.white, size: 20),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      // ProfileImagePicker(
-                      //   onImagePicked: (File image) {
-                      //     setState(() {});
-                      //   },
-                      // ),
                       // Username Below Profile Picture
                       UsernameDisplay(uid: user.uid),
                       Text(

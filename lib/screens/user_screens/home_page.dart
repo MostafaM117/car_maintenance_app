@@ -6,14 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import '../services/user_data_helper.dart';
-import '../widgets/CarCardWidget.dart';
-import '../widgets/SubtractWave_widget.dart';
-import '../widgets/maintenance_card.dart';
-import '../Back-end/firestore_service.dart';
-import '../services/mileage_service.dart';
-import 'formscreens/formscreen1.dart';
-import 'maintenanceDetails.dart';
+import '../../services/user_data_helper.dart';
+import '../../widgets/CarCardWidget.dart';
+import '../../widgets/SubtractWave_widget.dart';
+import '../../widgets/maintenance_card.dart';
+import '../../Back-end/firestore_service.dart';
+import '../../services/mileage_service.dart';
+import '../formscreens/formscreen1.dart';
+import '../maintenanceDetails.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage extends StatefulWidget {
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.only(
           right: 11,
           left: 11,
-          top: 20,
+          top: 30,
         ),
         child: Column(
           children: [
@@ -265,8 +265,22 @@ class _HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildExploreCard("offers", Icons.local_offer,
-                    const Color.fromARGB(255, 73, 209, 78), () {
+                _buildExploreCard(
+                    "offers", Icons.local_offer, AppColors.borderSide, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserFeedScreen()),
+                  );
+                }),
+                _buildExploreCard(
+                    "offers", Icons.local_offer, AppColors.borderSide, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => UserFeedScreen()),
+                  );
+                }),
+                _buildExploreCard(
+                    "offers", Icons.local_offer, AppColors.borderSide, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => UserFeedScreen()),
@@ -282,7 +296,7 @@ class _HomePageState extends State<HomePage> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Your Next Maintenance',
+                  'Next Maintenance',
                   style: TextStyle(
                     color: const Color(0xFF0F0F0F),
                     fontSize: 24,
@@ -458,39 +472,40 @@ Widget _buildExploreCard(
   VoidCallback onTap,
 ) {
   return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      width: 100,
-      height: 45,
-      decoration: ShapeDecoration(
-        color: color, // AppColors.secondaryText or passed color
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: 1,
-            color: AppColors.borderSide,
+      onTap: onTap,
+      child: Container(
+        width: 105,
+        height: 70,
+        decoration: ShapeDecoration(
+          color: color, // AppColors.secondaryText or passed color
+          shape: RoundedRectangleBorder(
+            side: BorderSide(
+              width: 1,
+              color: AppColors.borderSide,
+            ),
+            borderRadius: BorderRadius.circular(12),
           ),
-          borderRadius: BorderRadius.circular(12),
         ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 18,
-            color: Colors.white,
-          ),
-          SizedBox(width: 6),
-          Text(
-            title[0].toUpperCase() + title.substring(1), // Capitalize
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 18,
               color: Colors.white,
             ),
-          ),
-        ],
+            SizedBox(width: 6),
+            Text(
+              title[0].toUpperCase() + title.substring(1), // Capitalize
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
+    
   );
 }

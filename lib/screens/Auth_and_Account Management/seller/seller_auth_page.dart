@@ -1,8 +1,6 @@
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_login_page.dart';
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_signup_page.dart';
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/user/user_signup_page.dart';
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/user/user_login_page.dart';
 import 'package:flutter/material.dart';
+import 'seller_login_page.dart';
+import 'seller_signup_page.dart';
 
 class SellerAuthPage extends StatefulWidget {
   const SellerAuthPage({super.key});

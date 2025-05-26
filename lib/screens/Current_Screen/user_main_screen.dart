@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:car_maintenance/screens/home_page.dart';
-import 'package:car_maintenance/screens/maintenance.dart';
-import 'package:car_maintenance/screens/market.dart';
-import 'package:car_maintenance/screens/profile.dart';
+import 'package:car_maintenance/screens/user_screens/home_page.dart';
+import 'package:car_maintenance/screens/user_screens/maintenance.dart';
+import 'package:car_maintenance/screens/user_screens/market.dart';
+import 'package:car_maintenance/screens/user_screens/profile.dart';
 import '../../AI-Chatbot/chatbot.dart';
 
 class UserMainScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
 
   final List<String> _labels = [
     'Home',
-    'MNT',
+    'Maintain',
     'Chatbot',
     'Market',
     'Profile',
@@ -57,7 +57,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
         children: _pages,
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: AppColors.primaryText,
           borderRadius: BorderRadius.circular(25),
@@ -69,7 +69,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
           gap: 5,
           tabBorderRadius: 22,
           onTabChange: _onItemTapped,
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           tabs: List.generate(
             _labels.length,
             (index) => GButton(

@@ -2,7 +2,6 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
-
 class ProductCard extends StatelessWidget {
   final String image;
   final String title;
@@ -60,6 +59,12 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
+                    'Seller Name',
+                    style: textStyleGray.copyWith(
+                      color: AppColors.buttonText,
+                    ),
+                  ),
+                  Text(
                     '$price LE',
                     style: textStyleGray.copyWith(
                         color: AppColors.borderSide,
@@ -67,51 +72,6 @@ class ProductCard extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class InfoCard extends StatelessWidget {
-  final String title;
-  final String content;
-  final String? highlight;
-
-  const InfoCard({
-    required this.title,
-    required this.content,
-    this.highlight,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.only(top: 3, bottom: 10, left: 15, right: 15),
-      decoration: BoxDecoration(
-        color: AppColors.secondaryText,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title,
-              style: textStyleGray.copyWith(
-                  fontSize: 18, color: AppColors.primaryText)),
-          const SizedBox(height: 8),
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: content, style: textStyleWhite),
-                if (highlight != null)
-                  TextSpan(
-                      text: '\n$highlight',
-                      style: textStyleGray.copyWith(
-                          color: AppColors.buttonColor, fontSize: 18)),
-              ],
             ),
           ),
         ],
