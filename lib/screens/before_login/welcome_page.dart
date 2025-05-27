@@ -48,7 +48,7 @@ class _WelcomePageState extends State<WelcomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  ' Welcome to Motorgy',
+                  'Welcome to Motorgy',
                   style: TextStyle(
                     color: AppColors.primaryText,
                     fontSize: screenWidth * 0.09,
@@ -59,8 +59,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   'Your all-in-one solution for car maintenance and spare parts',
                   style: TextStyle(
                     color: AppColors.primaryText,
-                    fontSize: screenWidth * 0.08,
-                    fontWeight: FontWeight.w400,
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
               ],

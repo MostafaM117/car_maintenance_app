@@ -53,11 +53,11 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        child: Padding(
+      body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
               Text(
@@ -151,7 +151,7 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                 ),
               )
             ],
-          ),
+          
         ),
       ),
     );
