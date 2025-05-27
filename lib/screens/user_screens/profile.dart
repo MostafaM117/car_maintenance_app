@@ -1,10 +1,8 @@
-import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/user_screens/MyCars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/darkmode_toggle_widget.dart';
@@ -53,14 +51,16 @@ class _ProfileState extends State<Profile> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                const SizedBox(height: 15),
+
                 const Text(
-                  'Profile',
+                  'Account',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
                     color: Colors.black,
+                    fontSize: 40,
                     fontFamily: 'Inter',
+                    height: 0,
+                    letterSpacing: 9.20,
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -148,7 +148,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     const SizedBox(height: 8),
                     ProfileOptionTile(
-                      text: 'Account Management',
+                      text: 'Profile',
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -204,14 +204,19 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: 20,
                     ),
-                    buildButton(
-                      'Log Out',
-                      AppColors.buttonColor,
-                      AppColors.buttonText,
-                      onPressed: () {
-                        AuthService().signOut(context);
-                      },
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: buildButton(
+                        'Log Out',
+                        AppColors.buttonColor,
+                        AppColors.buttonText,
+                        onPressed: () {
+                          AuthService().signOut(context);
+                        },
+                      ),
                     ),
+
+                    
                   ],
                 ),
               ),

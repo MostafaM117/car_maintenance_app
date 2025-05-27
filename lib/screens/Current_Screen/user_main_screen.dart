@@ -32,7 +32,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
     'Maintain',
     'Chatbot',
     'Market',
-    'Profile',
+    'Account',
   ];
 
   final List<String> _icons = [

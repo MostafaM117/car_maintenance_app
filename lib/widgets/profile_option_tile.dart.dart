@@ -32,25 +32,13 @@ class ProfileOptionTile extends StatelessWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                  
-                    SizedBox(width: 8),
-                    Text(
-                      text,
-                      style: textStyleGray.copyWith(
-                        fontSize: 14,
-                        color: AppColors.primaryText,
-                      ),
-                    ),
-                  ],
-                ),
-                
-              ],
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            child: Text(
+              text,
+              style: textStyleGray.copyWith(
+                fontSize: 14,
+                color: AppColors.primaryText,
+              ),
             ),
           ),
         ),

@@ -53,103 +53,105 @@ class _UserLoginPageState extends State<UserLoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25, ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 50),
-            Text(
-              'Sign in to Motorgy',
-              style: textStyleWhite.copyWith(
-                  fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Welcome back! Please enter your details!',
-              style: textStyleGray.copyWith(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 25),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 50),
+              Text(
+                'Sign in to Motorgy',
+                style: textStyleWhite.copyWith(
+                    fontSize: 24, fontWeight: FontWeight.bold),
               ),
-            ),
-            const SizedBox(height: 30),
-            buildInputField(
-                controller: _emailcontroller,
-                iconWidget: SvgPicture.asset(
-                  'assets/svg/inpox.svg',
-                  width: 24,
-                  height: 24,
+              const SizedBox(height: 12),
+              Text(
+                'Welcome back! Please enter your details!',
+                style: textStyleGray.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-                hintText: 'Enter your email '),
-            const SizedBox(height: 20),
-            buildInputField(
-                controller: _passwordcontroller,
-                iconWidget: SvgPicture.asset(
-                  'assets/svg/lock.svg',
-                  width: 20,
-                  height: 24,
-                ),
-                hintText: 'Enter your password',
-                obscureText: _obscureText,
-                togglePasswordView: _toggletoviewpassword),
-            const SizedBox(height: 15),
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ForgotPassword(),
+              ),
+              const SizedBox(height: 30),
+              buildInputField(
+                  controller: _emailcontroller,
+                  iconWidget: SvgPicture.asset(
+                    'assets/svg/inpox.svg',
+                    width: 24,
+                    height: 24,
                   ),
-                ),
-                child: Text(
-                  'Forgot Password?',
-                  style: textStyleWhite.copyWith(
-                      fontSize: 12, fontWeight: FontWeight.w500),
-                ),
-              ),
-            ),
-            const SizedBox(height: 80),
-            buildButton('Sign In', AppColors.buttonColor, AppColors.buttonText,
-                onPressed: () {
-              AuthService().signInWithEmailAndPassword(
-                  context,
-                  _emailcontroller.text.trim(),
-                  _passwordcontroller.text.trim(),
-                  'user');
-            }),
-            const SizedBox(height: 15),
-            buildOrSeparator(),
-            const SizedBox(height: 15),
-            googleButton(handleGoogleSignIn),
-            const SizedBox(height: 15),
-            // appleButton(() {}),
-            // const SizedBox(height: 15),
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  widget.showUserSignupPage();
-                },
-                child: Text.rich(
-                  TextSpan(
-                    text: 'Don’t have an account? ',
+                  hintText: 'Enter your email '),
+              const SizedBox(height: 20),
+              buildInputField(
+                  controller: _passwordcontroller,
+                  iconWidget: SvgPicture.asset(
+                    'assets/svg/lock.svg',
+                    width: 20,
+                    height: 24,
+                  ),
+                  hintText: 'Enter your password',
+                  obscureText: _obscureText,
+                  togglePasswordView: _toggletoviewpassword),
+              const SizedBox(height: 15),
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ForgotPassword(),
+                    ),
+                  ),
+                  child: Text(
+                    'Forgot Password?',
                     style: textStyleWhite.copyWith(
                         fontSize: 12, fontWeight: FontWeight.w500),
-                    children: [
-                      TextSpan(
-                        text: 'Sign up',
-                        style: textStyleWhite.copyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ],
                   ),
                 ),
               ),
-            )
-          ],
+              const SizedBox(height: 80),
+              buildButton(
+                  'Sign In', AppColors.buttonColor, AppColors.buttonText,
+                  onPressed: () {
+                AuthService().signInWithEmailAndPassword(
+                    context,
+                    _emailcontroller.text.trim(),
+                    _passwordcontroller.text.trim(),
+                    'user');
+              }),
+              const SizedBox(height: 15),
+              buildOrSeparator(),
+              const SizedBox(height: 15),
+              googleButton(handleGoogleSignIn),
+              const SizedBox(height: 15),
+              // appleButton(() {}),
+              // const SizedBox(height: 15),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    widget.showUserSignupPage();
+                  },
+                  child: Text.rich(
+                    TextSpan(
+                      text: 'Don’t have an account? ',
+                      style: textStyleWhite.copyWith(
+                          fontSize: 12, fontWeight: FontWeight.w500),
+                      children: [
+                        TextSpan(
+                          text: 'Sign up',
+                          style: textStyleWhite.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

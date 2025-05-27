@@ -1,15 +1,18 @@
+import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
-// import 'package:car_maintenance/screens/user_offers.dart';
+import 'package:car_maintenance/screens/addMaintenance.dart';
+import 'package:car_maintenance/screens/user_offers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
-import 'package:flutter_svg/svg.dart';
+// import 'package:flutter_svg/svg.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/CarCardWidget.dart';
 import '../../widgets/SubtractWave_widget.dart';
+import '../../widgets/exploreCard.dart';
 import '../../widgets/maintenance_card.dart';
 import '../../Back-end/firestore_service.dart';
 import '../../services/mileage_service.dart';
@@ -354,43 +357,36 @@ class _HomePageState extends State<HomePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildExploreCard("ADD \nMaintenance", () {
-                          // تنفيذ الأكشن عند الضغط
+                        ExploreCard(
+                          title: "ADD \nMaintenance", 
+                          onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddMaintenance()),
+                          );
                         }),
-                        _buildExploreCard("ASK \nCHAT BOT", () {
-                          // تنفيذ الأكشن عند الضغط
+                        ExploreCard(
+                          title: "ASK \nCHAT BOT",
+                          onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Chatbot(
+                                  userId:
+                                      FirebaseAuth.instance.currentUser!.uid),
+                            ),
+                          );
                         }),
-                        _buildExploreCard('CHECKOUT\nOFFERS', () {
-                          // تنفيذ الأكشن عند الضغط
+                        ExploreCard(
+                          title: 'CHECKOUT\nOFFERS', 
+                          onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserFeedScreen()),
+                          );
                         }),
-
-                        // _buildExploreCard(
-                        //     "offers", Icons.local_offer, AppColors.borderSide,
-                        //     () {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => UserFeedScreen()),
-                        //   );
-                        // }),
-                        // _buildExploreCard(
-                        //     "offers", Icons.local_offer, AppColors.borderSide,
-                        //     () {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => UserFeedScreen()),
-                        //   );
-                        // }),
-                        // _buildExploreCard(
-                        //     "offers", Icons.local_offer, AppColors.borderSide,
-                        //     () {
-                        //   Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => UserFeedScreen()),
-                        //   );
-                        // }),
                       ],
                     ),
                     // SizedBox(height: 15),
@@ -754,55 +750,4 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _buildExploreCard(
-  String title,
-  // IconData icon,
-  VoidCallback onTap,
-) {
-  return GestureDetector(
-    onTap: onTap,
-    child: Container(
-      width: 105,
-      height: 90,
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 1,
-          color: AppColors.borderSide,
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            /// 🖼️ الخلفية PNG
-            Image.asset(
-              'assets/covers/Screens_cover.png', // <-- هنا بدل svg حطينا png
-              fit: BoxFit.cover,
-            ),
 
-            /// 🖤 شفافية فوق الصورة لتحسين القراءة
-            // Container(
-            //   color: Colors.black.withOpacity(0.3),
-            // ),
-            Column(
-              // crossAxisAlignment: CrossAxisAlignment.,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
-    ),
-  );
-}
