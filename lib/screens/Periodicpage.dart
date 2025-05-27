@@ -126,7 +126,6 @@ class _PeriodicpageState extends State<Periodicpage> {
                                     childAspectRatio: 0.80),
                             itemCount: products.length,
                             itemBuilder: (context, index) {
-                              print("🔸 itemBuilder for index $index");
                               final product = products[index];
                               return OpenContainer(
                                 // opencontainers can't have null values, guess what my filter function requires
@@ -140,22 +139,20 @@ class _PeriodicpageState extends State<Periodicpage> {
                                   return GestureDetector(
                                     onTap: openContainer,
                                     child: ProductCard(
-                                      image: product
-                                              .imageUrl ?? // fix the null check default img
-                                          'https://rqcercxrslptgjffolve.supabase.co/storage/v1/object/public/products-images/Fixing%20dumbassery_IMG-20250526-WA0000.jpg',
+                                      image: product.imageUrl,
                                       title: product.name,
                                       price: product.price.toString(),
+                                      businessName: product.businessName,
                                     ),
                                   );
                                 },
                                 openBuilder: (context, _) {
                                   return ProductDetailsPage(
-                                    image: product
-                                            .imageUrl ?? // fix the null check default img
-                                        'https://rqcercxrslptgjffolve.supabase.co/storage/v1/object/public/products-images/Fixing%20dumbassery_IMG-20250526-WA0000.jpg',
+                                    image: product.imageUrl,
                                     title: product.name,
                                     price: product.price.toString(),
                                     description: product.description,
+                                    businessName: product.businessName,
                                   );
                                 },
                               );

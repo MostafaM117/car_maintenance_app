@@ -118,7 +118,8 @@ class FirestoreService {
           selectedCategory: data['selectedCategory'] ?? '',
           selectedAvailability: data['selectedAvailability'] ?? '',
           stockCount: data['stockCount'] ?? 0,
-          imageUrl: data['imageUrl'] ?? '', // Added imageUrl field
+          imageUrl: data['imageUrl'] ?? '',
+          businessName: data['Store Name'] ?? '', // Added imageUrl field
         );
       }).toList();
     });
@@ -130,8 +131,12 @@ class FirestoreService {
     double? minPrice,
     double? maxPrice,
     String? location,
+    String? businessName,
   }) {
     Query query = productsCollection;
+    if (businessName != null && businessName.isNotEmpty) {
+      query = query.where('Store Name', isEqualTo: businessName);
+    }
 
     if (make != null && make.isNotEmpty) {
       query = query.where('selectedMake', isEqualTo: make);
@@ -149,7 +154,6 @@ class FirestoreService {
       query = query.where('price', isLessThanOrEqualTo: maxPrice);
     }
 
-    // Uncomment this if you plan to use location filtering
     // if (location != null && location.isNotEmpty) {
     //   query = query.where('selectedAvailability', isEqualTo: location);
     // }
@@ -174,6 +178,7 @@ class FirestoreService {
                 selectedAvailability: data['selectedAvailability'] ?? '',
                 stockCount: data['stockCount'] ?? 0,
                 imageUrl: data['imageUrl'] ?? '',
+                businessName: data['Store Name'] ?? '',
               );
 
               print("✅ Created ProductItem: ${product.name}");
@@ -206,7 +211,9 @@ class FirestoreService {
           selectedCategory: data['selectedCategory'] ?? '',
           selectedAvailability: data['selectedAvailability'] ?? '',
           stockCount: data['stockCount'] ?? 0,
-          imageUrl: data['imageUrl'] ?? '', // Added imageUrl field
+          imageUrl: data['imageUrl'] ?? '',
+          businessName: data['Store Name'] ?? '',
+          // Added imageUrl field
         );
       }).toList();
     });

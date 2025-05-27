@@ -7,6 +7,7 @@ class ProductDetailsPage extends StatelessWidget {
   final String title;
   final String price;
   final String description;
+  final String businessName;
 
   const ProductDetailsPage({
     super.key,
@@ -14,6 +15,7 @@ class ProductDetailsPage extends StatelessWidget {
     required this.title,
     required this.price,
     required this.description,
+    required this.businessName,
   });
 
   @override
@@ -119,7 +121,7 @@ class ProductDetailsPage extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    'Shop Name',
+                    businessName,
                     style: textStyleGray.copyWith(
                       fontSize: 14,
                     ),
