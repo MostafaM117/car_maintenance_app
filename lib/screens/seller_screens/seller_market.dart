@@ -4,7 +4,7 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
 import 'package:car_maintenance/models/car_data.dart';
-import 'package:car_maintenance/screens/Periodicpage.dart';
+// import 'package:car_maintenance/screens/Periodicpage.dart';
 import 'package:car_maintenance/screens/seller_screens/add_item.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +65,7 @@ class _MarketPageState extends State<MarketPage> {
               ),
               const SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Container(
@@ -82,36 +83,29 @@ class _MarketPageState extends State<MarketPage> {
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
-                          hintText: 'Search',
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                        ),
+                            hintText: 'Search',
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            suffixIcon: Icon(Icons.search_rounded)),
                       ),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
+                  const SizedBox(width: 10),
                   _buildFilterButton('Filters'),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => Periodicpage(),
-                      //   ),
-                      // );
-                    },
-                    icon: Icon(Icons.filter_list),
-                  ),
-                  // const SizedBox(width: 8),
-                  // _buildFilterButton('Filter'),
                 ],
               ),
+              // const SizedBox(height: 10),
+              // Row(
+              //   children: [
+              //     _buildFilterButton('Filters'),
+
+              //     // const SizedBox(width: 8),
+              //     // _buildFilterButton('Filter'),
+              //   ],
+              // ),
               const SizedBox(height: 20),
               // Input for new item
               GestureDetector(
@@ -138,8 +132,8 @@ class _MarketPageState extends State<MarketPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Add New Item',
                         style: TextStyle(
                           color: Colors.grey,
@@ -147,13 +141,17 @@ class _MarketPageState extends State<MarketPage> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      Icon(Icons.add, size: 30, color: Colors.black),
+                      SvgPicture.asset(
+                        'assets/svg/add.svg',
+                        width: 24,
+                        height: 24,
+                      ),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               // Items List
               Expanded(
                 child: StreamBuilder<List<ProductItem>>(
@@ -278,19 +276,126 @@ class _MarketPageState extends State<MarketPage> {
     );
   }
 
+  // Widget _buildFilterButton(String title) {
+  //   return ElevatedButton(
+  //     onPressed: () {
+  //       showDialog(
+  //         context: context,
+  //         builder: (context) {
+  //           return AlertDialog(
+  //             title: Text('Filter'),
+  //             content: SingleChildScrollView(
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: [
+  //                   // Add your filter options here
+  //                   // Car Make
+  //                   buildDropdownField(
+  //                     label: 'Car Make',
+  //                     value: filterMake,
+  //                     options: _carMakes,
+  //                     onChanged: (String? newValue) {
+  //                       setState(() {
+  //                         filterMake = newValue;
+  //                         filterModel = null;
+  //                         checkFormCompletion();
+  //                       });
+  //                     },
+  //                   ),
+  //                   const SizedBox(height: 15),
+
+  //                   // Car Model
+  //                   buildDropdownField(
+  //                     label: 'Car Model',
+  //                     value: filterModel,
+  //                     options: filterMake == null
+  //                         ? []
+  //                         : CarData.getModelsForMake(filterMake),
+  //                     onChanged: (String? newValue) {
+  //                       setState(() {
+  //                         filterModel = newValue;
+  //                         checkFormCompletion();
+  //                       });
+  //                     },
+  //                   ),
+  //                   TextField(
+  //                     decoration: InputDecoration(labelText: 'Min Price'),
+  //                     keyboardType: TextInputType.number,
+  //                     onChanged: (value) {
+  //                       setState(() {
+  //                         minPrice = double.tryParse(value);
+  //                       });
+  //                     },
+  //                   ),
+  //                   TextField(
+  //                     decoration: InputDecoration(labelText: 'Max Price'),
+  //                     keyboardType: TextInputType.number,
+  //                     onChanged: (value) {
+  //                       setState(() {
+  //                         maxPrice = double.tryParse(value);
+  //                       });
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             actions: [
+  //               ElevatedButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: Text('Apply'),
+  //               ),
+  //               ElevatedButton(
+  //                 onPressed: () {
+  //                   setState(() {
+  //                     filterMake = null;
+  //                     filterModel = null;
+  //                     minPrice = null;
+  //                     maxPrice = null;
+  //                   });
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: Text('Reset'),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     },
+  //     style: ElevatedButton.styleFrom(
+  //       foregroundColor: Colors.black,
+  //       backgroundColor: AppColors.secondaryText,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(20),
+  //       ),
+  //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  //     ),
+  //     child: Text(title),
+  //   );
+  // }
+
   Widget _buildFilterButton(String title) {
     return ElevatedButton(
       onPressed: () {
-        showDialog(
+        AwesomeDialog(
           context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Filter'),
-              content: SingleChildScrollView(
+          dialogType: DialogType.noHeader,
+          animType: AnimType.scale,
+          dialogBackgroundColor: AppColors.secondaryText,
+          padding: const EdgeInsets.all(16),
+          body: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Add your filter options here
+                    Text(
+                      'Filter',
+                      style: textStyleWhite.copyWith(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 15),
                     // Car Make
                     buildDropdownField(
                       label: 'Car Make',
@@ -305,7 +410,6 @@ class _MarketPageState extends State<MarketPage> {
                       },
                     ),
                     const SizedBox(height: 15),
-
                     // Car Model
                     buildDropdownField(
                       label: 'Car Model',
@@ -320,53 +424,65 @@ class _MarketPageState extends State<MarketPage> {
                         });
                       },
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Min Price'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
+                    const SizedBox(height: 15),
+                    buildTextField(
+                      label: 'Min Price',
+                      validator: (value) {
                         setState(() {
                           minPrice = double.tryParse(value);
                         });
+                        return null;
                       },
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Max Price'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
+                    const SizedBox(height: 10),
+                    buildTextField(
+                      label: 'Max Price',
+                      validator: (value) {
                         setState(() {
                           maxPrice = double.tryParse(value);
                         });
+                        return null;
                       },
                     ),
+                    const SizedBox(height: 20),
+                    // Actions
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        popUpBotton(
+                          'Reset',
+                          AppColors.primaryText,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            setState(() {
+                              filterMake = null;
+                              filterModel = null;
+                              minPrice = null;
+                              maxPrice = null;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        const SizedBox(width: 15),
+                        popUpBotton(
+                          'Apply',
+                          AppColors.buttonColor,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
-              ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Apply'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      filterMake = null;
-                      filterModel = null;
-                      minPrice = null;
-                      maxPrice = null;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Reset'),
-                ),
-              ],
-            );
-          },
-        );
+              );
+            },
+          ),
+        ).show();
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black,
+        foregroundColor: AppColors.primaryText,
         backgroundColor: AppColors.secondaryText,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
