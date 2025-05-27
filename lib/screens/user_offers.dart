@@ -29,7 +29,7 @@ class UserFeedScreen extends StatelessWidget {
                 child: ListTile(
                   title: Text(offer.title),
                   subtitle: Text('${offer.description}\n'
-                      'Seller: ${offer.businessname}\n'
+                      'Seller: ${offer.business_name}\n'
                       'Original Price: \$${offer.originalPrice}\n'
                       'Discount: ${offer.discountPercentage}%\n'
                       'Price After Discount: \$${offer.priceAfterDiscount}\n'

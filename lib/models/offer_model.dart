@@ -7,10 +7,9 @@ class Offer {
   final double originalPrice;
   final double discountPercentage;
   final double priceAfterDiscount;
-
   final DateTime validUntil;
-
-  final String businessname;
+  final String business_name;
+  final String imageUrl;
 
   Offer({
     required this.id,
@@ -20,7 +19,8 @@ class Offer {
     required this.discountPercentage,
     required this.priceAfterDiscount,
     required this.validUntil,
-    required this.businessname,
+    required this.business_name,
+    this.imageUrl = '',
   });
 
   Offer copyWith({
@@ -29,7 +29,8 @@ class Offer {
     String? description,
     double? price,
     DateTime? validUntil,
-    String? businessname,
+    String? business_name,
+    String? imageUrl,
   }) {
     return Offer(
       id: id ?? this.id,
@@ -39,7 +40,8 @@ class Offer {
       discountPercentage: discountPercentage,
       priceAfterDiscount: priceAfterDiscount,
       validUntil: validUntil ?? this.validUntil,
-      businessname: businessname ?? this.businessname,
+      business_name: business_name ?? this.business_name,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 
@@ -51,7 +53,8 @@ class Offer {
       'discountPercentage': discountPercentage,
       'priceAfterDiscount': priceAfterDiscount,
       'validUntil': validUntil,
-      'businessname': businessname,
+      'business_name': business_name,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -65,7 +68,8 @@ class Offer {
       discountPercentage: (data['discountPercentage'] as num).toDouble(),
       priceAfterDiscount: (data['priceAfterDiscount'] as num).toDouble(),
       validUntil: (data['validUntil'] as Timestamp).toDate(),
-      businessname: data['businessname'] ?? 'Unknown Business',
+      business_name: data['business_name'] ?? 'Unknown Business',
+      imageUrl: data['imageUrl'] ?? '',
     );
   }
 }
