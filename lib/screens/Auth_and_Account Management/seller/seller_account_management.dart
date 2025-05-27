@@ -5,6 +5,7 @@ import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -87,6 +88,35 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
       _isImageLoading = false;
     });
   }
+  //Delete Image
+  Future<void> deleteProfileImage() async {
+    const bucket = 'shop-images';
+    try{
+      if(imageUrl == null || imageUrl!.isEmpty){
+        return;
+      }
+      else{
+        final uri = Uri.parse(imageUrl!);
+        final segments = uri.pathSegments;
+        final bucketIndex = segments.indexOf(bucket);
+        if (bucketIndex == -1 || bucketIndex + 1 >= segments.length) {
+        throw Exception("Could not extract file name from imageUrl.");
+        }
+        final filename = segments[bucketIndex + 1];
+        await Supabase.instance.client.storage.from(bucket).remove([filename]);
+        await FirebaseFirestore.instance.collection('sellers').doc(seller.uid).update({
+          'shop_imageUrl': FieldValue.delete(),
+        });
+        setState(() {
+          imageUrl == null;
+          _isImageLoading = false;
+        });
+        print('Image deleted successfully.');
+      }
+    } catch(e){
+      print('Error While deleting profile image $e');
+    }
+  }
 
   @override
   void initState() {
@@ -154,11 +184,64 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                             ),
                             InkWell(
                               onTap: () async {
-                                setState(() {
-                                  _isImageLoading = true;
-                                });
-                                await pickAndUploadImage();
-                                await loadImage();
+                                showModalBottomSheet(
+                                  backgroundColor: AppColors.background,
+                                  context: context, 
+                                  builder: (context){
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.upload_outlined,
+                                            color: AppColors.primaryText,),
+                                          title: Text(
+                                            'Upload an image',
+                                            style: TextStyle(
+                                              color: AppColors.primaryText
+                                            ),),
+                                          onTap: () async{
+                                            Navigator.pop(context);
+                                            setState(() {
+                                              _isImageLoading = true;
+                                              });
+                                            await pickAndUploadImage();
+                                            await loadImage();
+                                          },
+                                        ),
+                                        ListTile(
+                                          leading: SvgPicture.asset(
+                                            'assets/svg/delete.svg', width: 24, height: 24, 
+                                            color: 
+                                            (imageUrl == null || imageUrl!.isEmpty)
+                                            ? Colors.grey
+                                            : AppColors.primaryText,
+                                            ),
+                                          title: Text(
+                                            'Delete image',
+                                            style: TextStyle(
+                                              color: (imageUrl == null || imageUrl!.isEmpty)
+                                              ? Colors.grey
+                                              : AppColors.primaryText,
+                                              ),
+                                            ),
+                                          onTap: (imageUrl == null || imageUrl!.isEmpty)
+                                            ? null
+                                            :() async{
+                                            Navigator.pop(context);
+                                            setState(() {
+                                              _isImageLoading = true;
+                                              });
+                                              await deleteProfileImage(); 
+                                              await loadImage();
+                                              setState(() {
+                                                _isImageLoading = false;
+                                              });
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
                               },
                               child: Container(
                                 decoration: BoxDecoration(
