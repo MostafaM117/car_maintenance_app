@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/maintenance_card.dart';
 
@@ -44,6 +45,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -55,9 +57,9 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                const Text(
-                  'Maintenance',
-                  style: TextStyle(
+                Text(
+                  l10n.maintenance,
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 32,
                     fontFamily: 'Inter',
@@ -75,12 +77,12 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       }
                       final historyList = snapshot.data!;
                       if (historyList.isEmpty) {
-                        return const Center(
-                            child: Text("No maintenance history available."));
+                        return Center(child: Text(l10n.noMaintenanceHistory));
                       }
 
                       // Make sure the list is sorted by mileage
-                      historyList.sort((a, b) => a.mileage.compareTo(b.mileage));
+                      historyList
+                          .sort((a, b) => a.mileage.compareTo(b.mileage));
 
                       return ListView.builder(
                         itemCount: historyList.length,
@@ -100,7 +102,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black,
                                   icon: Icons.undo,
-                                  label: 'Undo',
+                                  label: l10n.undo,
                                 ),
                                 SlidableAction(
                                   onPressed: (context) {
@@ -109,7 +111,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black,
                                   icon: Icons.delete,
-                                  label: 'Delete',
+                                  label: l10n.delete,
                                 ),
                               ],
                             ),
@@ -129,7 +131,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                               },
                               child: MaintenanceCard(
                                 title: '${maintenanceItem.mileage} KM',
-                                date: 'Completed',
+                                date: l10n.completed,
                               ),
                             ),
                           );
@@ -148,7 +150,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: buildButton(
-                'Add Maintenance',
+                l10n.addMaintenance,
                 AppColors.buttonColor,
                 AppColors.buttonText,
                 onPressed: () {

@@ -1,5 +1,6 @@
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../constants/app_colors.dart';
 
@@ -27,28 +28,37 @@ class NotificationsPage extends StatefulWidget {
 class _NotificationsPageState extends State<NotificationsPage> {
   // بيانات ثابتة
   List<NotificationModel> notifications = [
-    NotificationModel(
-      id: 1,
-      title: 'Maintenance Reminder',
-      body: 'Your car needs maintenance soon.',
-      date: '2024-06-01',
-      isRead: false,
-    ),
-    NotificationModel(
-      id: 2,
-      title: 'Offer Available',
-      body: 'Special discount on oil change!',
-      date: '2024-05-28',
-      isRead: true,
-    ),
-    NotificationModel(
-      id: 3,
-      title: 'Insurance Expiry',
-      body: 'Your insurance will expire in 10 days.',
-      date: '2024-05-25',
-      isRead: false,
-    ),
+    // Will be replaced with dynamic data later
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Example static data - replace with fetching from your source
+    notifications = [
+      NotificationModel(
+        id: 1,
+        title: 'Maintenance Reminder',
+        body: 'Your car needs maintenance soon.',
+        date: '2024-06-01',
+        isRead: false,
+      ),
+      NotificationModel(
+        id: 2,
+        title: 'Offer Available',
+        body: 'Special discount on oil change!',
+        date: '2024-05-28',
+        isRead: true,
+      ),
+      NotificationModel(
+        id: 3,
+        title: 'Insurance Expiry',
+        body: 'Your insurance will expire in 10 days.',
+        date: '2024-05-25',
+        isRead: false,
+      ),
+    ];
+  }
 
   void markAsRead(int index) {
     setState(() {
@@ -58,6 +68,32 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    // Using static data for now, replace with fetching from database
+    List<NotificationModel> notifications = [
+      NotificationModel(
+        id: 1,
+        title: l10n.maintenanceReminderTitle,
+        body: l10n.maintenanceReminderBody,
+        date: '2024-06-01',
+        isRead: false,
+      ),
+      NotificationModel(
+        id: 2,
+        title: l10n.offerAvailableTitle,
+        body: l10n.offerAvailableBody,
+        date: '2024-05-28',
+        isRead: true,
+      ),
+      NotificationModel(
+        id: 3,
+        title: l10n.insuranceExpiryTitle,
+        body: l10n.insuranceExpiryBody,
+        date: '2024-05-25',
+        isRead: false,
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -70,7 +106,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 children: [
                   SizedBox(height: 20),
                   Text(
-                    'Notifications',
+                    l10n.notifications,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
@@ -125,7 +161,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             notification.title,

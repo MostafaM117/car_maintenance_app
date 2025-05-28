@@ -8,6 +8,7 @@ import 'package:car_maintenance/widgets/offer_img.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/offercard.dart';
 
@@ -82,9 +83,9 @@ class _OfferScreenState extends State<OfferScreen> {
       clearForm();
     } catch (e) {
       print('❌ Error saving offer: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving offer')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error saving offer')));
     }
   }
 
@@ -129,6 +130,7 @@ class _OfferScreenState extends State<OfferScreen> {
   }
 
   void showOfferFormDialog() {
+    final l10n = AppLocalizations.of(context)!;
     AwesomeDialog(
       context: context,
       dialogType: DialogType.noHeader,
@@ -143,39 +145,37 @@ class _OfferScreenState extends State<OfferScreen> {
             children: [
               customFormField(
                 controller: _titleController,
-                label: 'Title',
-                hintText: 'Add Title',
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Enter a title' : null,
+                label: l10n.title,
+                hintText: l10n.add,
+                validator: (v) => v == null || v.isEmpty ? l10n.required : null,
               ),
               customFormField(
                 controller: _descriptionController,
-                label: 'Description',
-                hintText: 'Add Description',
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Enter a description' : null,
+                label: l10n.description,
+                hintText: l10n.add,
+                validator: (v) => v == null || v.isEmpty ? l10n.required : null,
               ),
               customFormField(
                 controller: _originalPriceController,
-                label: 'Original Price',
-                hintText: 'Add price',
+                label: l10n.originalPrice,
+                hintText: l10n.add,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Enter original price';
+                  if (v == null || v.isEmpty) return l10n.required;
                   final n = double.tryParse(v);
-                  if (n == null || n <= 0) return 'Enter a valid price';
+                  if (n == null || n <= 0) return l10n.invalidFormat;
                   return null;
                 },
               ),
               customFormField(
                 controller: _discountController,
-                label: 'Discount %',
-                hintText: 'Enter discount',
+                label: l10n.discount,
+                hintText: l10n.add,
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 validator: (v) {
-                  if (v == null || v.isEmpty) return 'Enter discount';
+                  if (v == null || v.isEmpty) return l10n.required;
                   final n = double.tryParse(v);
-                  if (n == null || n < 0 || n > 100) return 'Enter 0-100%';
+                  if (n == null || n < 0 || n > 100) return l10n.invalidFormat;
                   return null;
                 },
               ),
@@ -192,15 +192,12 @@ class _OfferScreenState extends State<OfferScreen> {
                   Expanded(
                     child: Text(
                       _validUntil == null
-                          ? 'Select valid until date'
-                          : 'Valid Until: ${_validUntil!.toLocal().toString().split(' ')[0]}',
+                          ? l10n.select
+                          : '${l10n.validUntil}: ${_validUntil!.toLocal().toString().split(' ')[0]}',
                       style: TextStyle(color: AppColors.primaryText),
                     ),
                   ),
-                  TextButton(
-                    onPressed: pickDate,
-                    child: Text('Pick Date'),
-                  )
+                  TextButton(onPressed: pickDate, child: Text(l10n.choose)),
                 ],
               ),
               SizedBox(height: 16),
@@ -208,7 +205,7 @@ class _OfferScreenState extends State<OfferScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   popUpBotton(
-                    'Discard',
+                    l10n.cancel,
                     AppColors.primaryText,
                     AppColors.buttonText,
                     onPressed: () {
@@ -217,7 +214,7 @@ class _OfferScreenState extends State<OfferScreen> {
                     },
                   ),
                   popUpBotton(
-                    editingOfferId == null ? 'Add' : 'Update',
+                    editingOfferId == null ? l10n.add : l10n.update,
                     AppColors.buttonColor,
                     AppColors.buttonText,
                     onPressed: () async {
@@ -236,6 +233,7 @@ class _OfferScreenState extends State<OfferScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       floatingActionButton: FloatingActionButton.extended(
@@ -243,7 +241,7 @@ class _OfferScreenState extends State<OfferScreen> {
           clearForm();
           showOfferFormDialog();
         },
-        label: Text('Add Offer'),
+        label: Text(l10n.add),
         icon: Icon(Icons.add),
       ),
       body: Padding(
@@ -251,19 +249,21 @@ class _OfferScreenState extends State<OfferScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Offers",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
+            Text(
+              l10n.offers,
+              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+            ),
             SizedBox(height: 16),
             Expanded(
               child: StreamBuilder<List<Offer>>(
                 stream: offerService.getOffers(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasError) return Text('Error loading offers');
+                  if (snapshot.hasError) return Text(l10n.error);
                   if (!snapshot.hasData)
                     return Center(child: CircularProgressIndicator());
 
                   final offers = snapshot.data!;
-                  if (offers.isEmpty) return Text('No offers found.');
+                  if (offers.isEmpty) return Text(l10n.noData);
 
                   return ListView.builder(
                     itemCount: offers.length,
@@ -277,7 +277,6 @@ class _OfferScreenState extends State<OfferScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Show image if URL is available
                               if (offer.imageUrl.isNotEmpty)
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
@@ -287,8 +286,11 @@ class _OfferScreenState extends State<OfferScreen> {
                                     height: 180,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
-                                    imageErrorBuilder:
-                                        (context, error, stackTrace) {
+                                    imageErrorBuilder: (
+                                      context,
+                                      error,
+                                      stackTrace,
+                                    ) {
                                       return Image.asset(
                                         'assets/images/offer.jpg',
                                         height: 100,
@@ -299,21 +301,29 @@ class _OfferScreenState extends State<OfferScreen> {
                                   ),
                                 ),
                               SizedBox(height: 8),
-                              Text(offer.title,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
+                              Text(
+                                offer.title,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               SizedBox(height: 6),
                               Text(offer.description),
                               SizedBox(height: 6),
-                              Text('Seller: ${offer.business_name}'),
+                              Text('${l10n.seller}: ${offer.business_name}'),
                               Text(
-                                  'Original Price: \$${offer.originalPrice.toStringAsFixed(2)}'),
-                              Text('Discount: ${offer.discountPercentage}%'),
+                                '${l10n.originalPrice}: \$${offer.originalPrice.toStringAsFixed(2)}',
+                              ),
                               Text(
-                                  'Price After Discount: \$${offer.priceAfterDiscount.toStringAsFixed(2)}'),
+                                '${l10n.discount}: ${offer.discountPercentage}%',
+                              ),
                               Text(
-                                  'Valid Until: ${offer.validUntil.toLocal().toString().split(' ')[0]}'),
+                                '${l10n.priceAfterDiscount}: \$${offer.priceAfterDiscount.toStringAsFixed(2)}',
+                              ),
+                              Text(
+                                '${l10n.validUntil}: ${offer.validUntil.toLocal().toString().split(' ')[0]}',
+                              ),
                               SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,

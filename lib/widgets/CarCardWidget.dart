@@ -1,16 +1,21 @@
 // import 'package:car_maintenance/models/MaintID.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:car_maintenance/widgets/car_image_widget.dart';
 import 'package:flutter_svg/svg.dart';
 import '../constants/app_colors.dart';
 import 'custom_widgets.dart';
 import 'package:car_maintenance/widgets/mileage_display.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:car_maintenance/widgets/localized_text.dart';
 
 class CarCardWidget extends StatelessWidget {
   final Map<String, dynamic> car;
   const CarCardWidget({Key? key, required this.car}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isRTL = Localizations.localeOf(context).languageCode == 'ar';
     String? make = car['make'];
     String? model = car['model'];
     int? year = car['year'];
@@ -50,51 +55,63 @@ class CarCardWidget extends StatelessWidget {
                       // mainAxisSize: MainAxisSize.min,
                       children: [
                         Row(
-                          children: [
-                            Text(
-                              '$make $model',
-                              style: textStyleWhite,
-                            ),
-                            const SizedBox(width: 7),
-                            Text(
-                              '$year',
-                              style: textStyleGray,
-                            ),
-                          ],
+                          children: isRTL
+                              ? [
+                                  Text(
+                                    '$year',
+                                    style: textStyleGray,
+                                  ),
+                                  const SizedBox(width: 7),
+                                  Text(
+                                    '$make $model',
+                                    style: textStyleWhite,
+                                  ),
+                                ]
+                              : [
+                                  Text(
+                                    '$make $model',
+                                    style: textStyleWhite,
+                                  ),
+                                  const SizedBox(width: 7),
+                                  Text(
+                                    '$year',
+                                    style: textStyleGray,
+                                  ),
+                                ],
                         ),
                         Row(
                           children: [
-                            Text.rich(
-                              TextSpan(
-                                text: 'Mileage: ',
-                                style: textStyleWhite,
-                                children: [
-                                  TextSpan(
-                                      text: mileage.toString(),
-                                      style: textStyleGray),
-                                ],
+                            Text(
+                              l10n.mileageLabel,
+                              style: textStyleWhite,
+                            ),
+                            Text(
+                              ' ${mileage.toString()} km',
+                              style: textStyleGray,
+                            ),
+                            SizedBox(width: 5),
+                            Transform(
+                              alignment: Alignment.center,
+                              transform: Matrix4.rotationY(isRTL ? pi : 0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  MileageDisplay.showMileageEditDialog(
+                                    context,
+                                    carId,
+                                    mileage,
+                                    onMileageUpdated: (newMileage) {
+                                      print(
+                                          'Updated mileage for car $carId: $newMileage');
+                                    },
+                                  );
+                                },
+                                child: SvgPicture.asset(
+                                  'assets/svg/edit.svg',
+                                  width: 20,
+                                  height: 20,
+                                ),
                               ),
                             ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                MileageDisplay.showMileageEditDialog(
-                                  context, 
-                                  carId, 
-                                  mileage,
-                                  onMileageUpdated: (newMileage) {
-                                    print('Updated mileage for car $carId: $newMileage');
-                                  },
-                                );
-                              },
-                              child: SvgPicture.asset(
-                                'assets/svg/edit.svg',
-                                width: 20,
-                                height: 20,
-                              ),
-                            )
                           ],
                         ),
                       ],

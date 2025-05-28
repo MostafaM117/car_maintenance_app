@@ -7,6 +7,7 @@ import '../Back-end/firestore_service.dart';
 import '../models/MaintID.dart';
 // import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MaintenanceDetailsPage extends StatefulWidget {
   final MaintenanceList maintenanceItem;
@@ -27,7 +28,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
 
   bool isEditingMileage = false;
   bool isEditingDescription = false;
-  
+
   // For calculating expected date
   int currentCarMileage = 0;
   int avgKmPerMonth = 500; // Default value
@@ -48,11 +49,11 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
 
     mileageFocusNode = FocusNode();
     descriptionFocusNode = FocusNode();
-    
+
     // Get current car mileage and avg km per month
     _fetchCarDetails();
   }
-  
+
   // Fetch current car details to calculate expected date
   void _fetchCarDetails() async {
     try {
@@ -61,7 +62,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
       final carMake = maintID.selectedMake;
       final carModel = maintID.selectedModel;
       final carYear = maintID.selectedYear;
-      
+
       // Query Firestore to get the car details
       final carsQuery = await FirebaseFirestore.instance
           .collection('cars')
@@ -70,7 +71,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
           .where('year', isEqualTo: int.tryParse(carYear) ?? 0)
           .limit(1)
           .get();
-      
+
       if (carsQuery.docs.isNotEmpty) {
         final carData = carsQuery.docs.first.data();
         setState(() {
@@ -85,7 +86,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
               currentCarMileage = int.tryParse(mileageValue) ?? 0;
             }
           }
-          
+
           final avgKmValue = carData['avgKmPerMonth'];
           if (avgKmValue != null) {
             if (avgKmValue is int) {
@@ -96,8 +97,9 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
               avgKmPerMonth = int.tryParse(avgKmValue) ?? 500;
             }
           }
-          
-          print("📊 Fetched car details - Mileage: $currentCarMileage, Avg KM/Month: $avgKmPerMonth");
+
+          print(
+              "📊 Fetched car details - Mileage: $currentCarMileage, Avg KM/Month: $avgKmPerMonth");
         });
       }
     } catch (e) {
@@ -150,6 +152,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -186,8 +189,8 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    'Maintenance Type', // هنا اسم الحقل
+                                  LocalizedText(
+                                    text: l10n.maintenanceType,
                                     style: textStyleWhite.copyWith(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -223,8 +226,7 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
                                               isCollapsed: true,
-                                              hintText:
-                                                  'Current mileage', // النص المساعد
+                                              hintText: l10n.currentMileage,
                                               hintStyle: textStyleGray.copyWith(
                                                   fontWeight: FontWeight.w400),
                                             ),
@@ -268,8 +270,8 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Expected Date',
+                            LocalizedText(
+                              text: 'Expected Date',
                               style: textStyleWhite.copyWith(
                                   fontSize: 16, fontWeight: FontWeight.w500),
                             ),
@@ -298,8 +300,13 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                                     Text(
                                       // Show calculated expected date if we have car mileage data
                                       currentCarMileage > 0
-                                          ? widget.maintenanceItem.formatExpectedDate(currentCarMileage, avgKmPerMonth)
-                                          : _selectedDate.toString().split(' ')[0],
+                                          ? widget.maintenanceItem
+                                              .formatExpectedDate(
+                                                  currentCarMileage,
+                                                  avgKmPerMonth)
+                                          : _selectedDate
+                                              .toString()
+                                              .split(' ')[0],
                                       style: textStyleGray,
                                     ),
                                     if (_isEditing)
@@ -337,16 +344,17 @@ class _MaintenanceDetailsPageState extends State<MaintenanceDetailsPage> {
                         const SizedBox(height: 12),
                         buildDropdownField(
                           value: _status,
-                          options: ['Upcoming', 'Completed'],
+                          options: [l10n.upcoming, l10n.completed],
                           onChanged: null,
-                          label: 'Maintenance Status',
+                          label: l10n.maintenanceStatus,
+                          context: context,
                         ),
                         const SizedBox(height: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              'Description',
+                            LocalizedText(
+                              text: l10n.description,
                               style: textStyleWhite.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,

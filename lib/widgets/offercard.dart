@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class OfferCard extends StatelessWidget {
   final String title;
@@ -18,6 +19,7 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
@@ -36,10 +38,9 @@ class OfferCard extends StatelessWidget {
                 : Container(
                     height: 150,
                     color: Colors.grey[200],
-                    child: Center(child: Text('Image')),
+                    child: Center(child: Text(l10n.imagePlaceholder)),
                   ),
           ),
-
           Container(
             padding: EdgeInsets.all(12),
             decoration: BoxDecoration(

@@ -1,16 +1,17 @@
-import 'dart:io';
+// import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
 import 'package:car_maintenance/screens/seller_screens/my_stores.dart';
-import 'package:car_maintenance/services/seller/seller_data_helper.dart';
+// import 'package:car_maintenance/services/seller/seller_data_helper.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/darkmode_toggle_widget.dart';
 import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
@@ -37,6 +38,7 @@ class _SellerProfileState extends State<SellerProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -45,12 +47,11 @@ class _SellerProfileState extends State<SellerProfile> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Profile',
-                  style: TextStyle(
+                Text(
+                  l10n.profile,
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
                     color: Colors.black,
                     fontFamily: 'Inter',
                   ),
@@ -69,8 +70,9 @@ class _SellerProfileState extends State<SellerProfile> {
                             backgroundColor: AppColors.lightGray,
                             child: CircularProgressIndicator());
                       }
-                        final data = snapshot.data!.data() as Map<String, dynamic>;
-                        final imageUrl = data['shop_imageUrl'] as String?;
+                      final data =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      final imageUrl = data['shop_imageUrl'] as String?;
 
                       if (imageUrl == null || imageUrl.isEmpty) {
                         return CircleAvatar(
@@ -100,7 +102,16 @@ class _SellerProfileState extends State<SellerProfile> {
                   uid: seller.uid,
                 ),
                 Text(
-                  '${seller.email}',
+                  l10n.emailLabel,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+                Text(
+                  seller.email ?? '',
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.normal,
@@ -117,7 +128,7 @@ class _SellerProfileState extends State<SellerProfile> {
                   children: [
                     const SizedBox(height: 8),
                     ProfileOptionTile(
-                      text: 'Profile',
+                      text: l10n.profile,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -129,7 +140,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     ),
                     const SizedBox(height: 20),
                     ProfileOptionTile(
-                      text: 'MyStores',
+                      text: l10n.myStores,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -157,7 +168,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     ),
                     const SizedBox(height: 20),
                     ProfileOptionTile(
-                      text: 'Terms & Conditions',
+                      text: l10n.termsAndConditions,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -169,7 +180,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     ),
                     const SizedBox(height: 20),
                     buildButton(
-                      'Log Out',
+                      l10n.logOut,
                       AppColors.buttonColor,
                       AppColors.buttonText,
                       onPressed: () async {

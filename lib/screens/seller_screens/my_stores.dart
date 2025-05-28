@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../constants/app_colors.dart';
 import '../../widgets/custom_widgets.dart';
@@ -14,6 +15,7 @@ class MyStores extends StatefulWidget {
 class _MyStoresState extends State<MyStores> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -26,7 +28,7 @@ class _MyStoresState extends State<MyStores> {
                 children: [
                   SizedBox(height: 50),
                   Text(
-                    "My Stores",
+                    l10n.myStoresSeller,
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                   ),
                   SizedBox(height: 20),
@@ -38,7 +40,7 @@ class _MyStoresState extends State<MyStores> {
                   ),
                   SizedBox(height: 20),
                   buildButton(
-                    'Add New Store',
+                    l10n.addNewStoreButton,
                     AppColors.buttonColor,
                     AppColors.secondaryText,
                     onPressed: () {},
