@@ -33,12 +33,12 @@ class SubtractWave extends StatelessWidget {
             padding: const EdgeInsets.only(top: 3),
             child: Column(
               children: [
-                Text(
-                  text,
+                LocalizedText(
+                  text: text,
                   style: textStyleWhite.copyWith(color: Colors.white),
                 ),
-                Text(
-                  suptext,
+                LocalizedText(
+                  text: suptext,
                   style: TextStyle(
                     color: Colors.white.withOpacity(0.5),
                     fontSize: 13,

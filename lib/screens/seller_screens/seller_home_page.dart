@@ -3,6 +3,7 @@ import 'package:car_maintenance/screens/seller_screens/offer_feed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../constants/app_colors.dart';
 import '../../services/seller/seller_data_helper.dart';
@@ -37,6 +38,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
@@ -50,9 +52,9 @@ class _SellerHomePageState extends State<SellerHomePage> {
             children: [
               SizedBox(height: 10),
               SubtractWave(
-                text: 'Welcome Back, ${username.split(' ').first}',
+                text: l10n.welcomeBackSeller(username.split(' ').first),
                 svgAssetPath: 'assets/svg/notification.svg',
-                suptext: 'Tap here and we’ll help you out!',
+                suptext: l10n.tapForHelpSeller,
                 onTap: () {},
               ),
               SizedBox(height: 15),
@@ -61,7 +63,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Explore',
+                    l10n.exploreSeller,
                     style: TextStyle(
                       color: const Color(0xFF0F0F0F),
                       fontSize: 24,
@@ -76,7 +78,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ExploreCard(
-                      title: 'ADD\nNEW ITEM',
+                      title: l10n.addNewItemSeller,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -84,7 +86,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                         );
                       }),
                   ExploreCard(
-                      title: 'ADD\nOFFER',
+                      title: l10n.addOfferSeller,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -93,7 +95,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           ),
                         );
                       }),
-                  ExploreCard(title: 'CHECKOUT\nOFFERS', onTap: () {}),
+                  ExploreCard(title: l10n.checkoutOffersSeller, onTap: () {}),
                 ],
               ),
               SizedBox(height: 5),
@@ -102,7 +104,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Best Selling',
+                    l10n.bestSellingSeller,
                     style: TextStyle(
                       color: const Color(0xFF0F0F0F),
                       fontSize: 24,
@@ -127,7 +129,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Low Stock',
+                    l10n.lowStockSeller,
                     style: TextStyle(
                       color: const Color(0xFF0F0F0F),
                       fontSize: 24,

@@ -1,4 +1,3 @@
-
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
@@ -57,27 +56,33 @@ class CarCard extends StatelessWidget {
                         children: [
                           FittedBox(
                             fit: BoxFit.scaleDown,
-                            child: Text(
-                              carName,
+                            child: LocalizedText(
+                              text: carName,
                               style: textStyleWhite.copyWith(
                                   color: AppColors.buttonColor,
                                   fontWeight: FontWeight.w600),
                             ),
                           ),
                           const SizedBox(width: 10),
-                          Text(year.toString(),
-                              textAlign: TextAlign.justify,
-                              style: textStyleWhite.copyWith(
-                                fontWeight: FontWeight.w300,
-                              )),
+                          LocalizedText(
+                            text: year.toString(),
+                            style: textStyleWhite.copyWith(
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     Column(
                       children: [
-                        Text("Car ID", style: textStyleWhite),
-                        Text(carId.substring(carId.length - 4),
-                            style: textStyleGray),
+                        LocalizedText(
+                          text: "Car ID",
+                          style: textStyleWhite,
+                        ),
+                        LocalizedText(
+                          text: carId.substring(carId.length - 4),
+                          style: textStyleGray,
+                        ),
                       ],
                     ),
                   ],
@@ -85,26 +90,13 @@ class CarCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text.rich(
-                      TextSpan(
-                        text: 'Mileage: ',
-                        style: textStyleWhite,
-                        children: [
-                          TextSpan(
-                              text: mileage.toString(), style: textStyleGray),
-                        ],
-                      ),
+                    LocalizedText(
+                      text: 'Mileage: ${mileage.toString()}',
+                      style: textStyleWhite,
                     ),
-                    Text.rich(
-                      TextSpan(
-                        text: 'Average: ',
-                        style: textStyleWhite,
-                        children: [
-                          TextSpan(
-                              text: avgKmPerMonth.toString(),
-                              style: textStyleGray),
-                        ],
-                      ),
+                    LocalizedText(
+                      text: 'Average: ${avgKmPerMonth.toString()}',
+                      style: textStyleWhite,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -144,4 +136,3 @@ class CarCard extends StatelessWidget {
     );
   }
 }
-

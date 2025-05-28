@@ -1,11 +1,11 @@
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../constants/app_colors.dart';
 import '../../models/ProductItemModel.dart';
 import '../../models/car_data.dart';
-import '../../widgets/custom_widgets.dart';
-import '../../widgets/seller_image-picker.dart';
+import '../../widgets/custom_widgets.dart' as custom;
 
 class EditItem extends StatefulWidget {
   final ProductItem item;
@@ -58,6 +58,7 @@ class _EditItemState extends State<EditItem> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Padding(
@@ -65,7 +66,7 @@ class _EditItemState extends State<EditItem> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ImagePickerContainer(),
+              const custom.ImagePickerContainer(),
 
               const SizedBox(height: 15),
 
@@ -74,9 +75,9 @@ class _EditItemState extends State<EditItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Product Name',
-                    style: textStyleWhite.copyWith(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                    l10n.productNameLabel,
+                    style: custom.textStyleWhite
+                        .copyWith(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
                   Container(
                     height: 45,
@@ -94,11 +95,11 @@ class _EditItemState extends State<EditItem> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         isCollapsed: true,
-                        hintText: 'Add Product Name',
-                        hintStyle:
-                            textStyleGray.copyWith(fontWeight: FontWeight.w400),
+                        hintText: l10n.addProductHint,
+                        hintStyle: custom.textStyleGray
+                            .copyWith(fontWeight: FontWeight.w400),
                       ),
-                      style: textStyleGray,
+                      style: custom.textStyleGray,
                       textAlignVertical: TextAlignVertical.center,
                     ),
                   ),
@@ -111,8 +112,8 @@ class _EditItemState extends State<EditItem> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Description',
-                      style: textStyleWhite.copyWith(fontSize: 16)),
+                  Text(l10n.descriptionLabel,
+                      style: custom.textStyleWhite.copyWith(fontSize: 16)),
                   Container(
                     width: 350,
                     height: 133.79,
@@ -128,8 +129,9 @@ class _EditItemState extends State<EditItem> {
                       controller: descriptionController,
                       maxLines: null,
                       expands: true,
-                      decoration: InputDecoration.collapsed(hintText: ''),
-                      style: textStyleWhite,
+                      decoration: InputDecoration.collapsed(
+                          hintText: l10n.descriptionHint),
+                      style: custom.textStyleWhite,
                     ),
                   ),
                 ],
@@ -138,8 +140,8 @@ class _EditItemState extends State<EditItem> {
               const SizedBox(height: 15),
 
               // Car Make Dropdown
-              buildDropdownField(
-                label: 'Car Make',
+              custom.buildDropdownField(
+                label: l10n.carMakeLabel,
                 value: _selectedMake,
                 options: _carMakes,
                 onChanged: (String? newValue) {
@@ -149,13 +151,14 @@ class _EditItemState extends State<EditItem> {
                     checkFormCompletion();
                   });
                 },
+                context: context,
               ),
 
               const SizedBox(height: 15),
 
               // Car Model Dropdown
-              buildDropdownField(
-                label: 'Car Model',
+              custom.buildDropdownField(
+                label: l10n.carModelLabel,
                 value: _selectedModel,
                 options: _selectedMake == null
                     ? []
@@ -166,13 +169,14 @@ class _EditItemState extends State<EditItem> {
                     checkFormCompletion();
                   });
                 },
+                context: context,
               ),
 
               const SizedBox(height: 15),
 
               // Product Category Dropdown
-              buildDropdownField(
-                label: 'Product Category',
+              custom.buildDropdownField(
+                label: l10n.productCategoryLabel,
                 value: _selectedCategory,
                 options: categories,
                 onChanged: (String? newValue) {
@@ -180,13 +184,14 @@ class _EditItemState extends State<EditItem> {
                     _selectedCategory = newValue;
                   });
                 },
+                context: context,
               ),
 
               const SizedBox(height: 15),
 
               // Availability Dropdown
-              buildDropdownField(
-                label: 'Availability',
+              custom.buildDropdownField(
+                label: l10n.availabilityLabel,
                 value: _selectedAvailability,
                 options: availability,
                 onChanged: (String? newValue) {
@@ -194,31 +199,32 @@ class _EditItemState extends State<EditItem> {
                     _selectedAvailability = newValue;
                   });
                 },
+                context: context,
               ),
 
               const SizedBox(height: 15),
 
               // Stock Count
-              buildTextField(
-                label: 'Stock Count',
-                hintText: 'Add Count',
+              custom.buildTextField(
+                label: l10n.stockCountLabel,
+                hintText: l10n.addCountHint,
                 controller: stockCountController,
               ),
 
               const SizedBox(height: 15),
 
               // Price
-              buildTextField(
-                label: 'Price',
-                hintText: 'Add Price',
+              custom.buildTextField(
+                label: l10n.priceLabel,
+                hintText: l10n.addPriceHint,
                 controller: priceController,
               ),
 
               const SizedBox(height: 25),
 
-              buildTextField(
-                label: 'Store Location',
-                hintText: 'Add Store Location',
+              custom.buildTextField(
+                label: l10n.storeLocationLabel,
+                hintText: l10n.addStoreLocationHint,
               ),
 
               const SizedBox(height: 25),
@@ -226,14 +232,14 @@ class _EditItemState extends State<EditItem> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  popUpBotton(
-                    'Discard',
+                  custom.popUpBotton(
+                    l10n.discardButton,
                     AppColors.primaryText,
                     AppColors.buttonText,
                     onPressed: () => Navigator.of(context).pop(),
                   ),
-                  popUpBotton(
-                    'Save',
+                  custom.popUpBotton(
+                    l10n.save,
                     AppColors.buttonColor,
                     AppColors.buttonText,
                     onPressed: () {

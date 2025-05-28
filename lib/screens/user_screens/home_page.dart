@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // import 'package:flutter_svg/svg.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/CarCardWidget.dart';
@@ -193,6 +194,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Padding(
@@ -206,10 +208,10 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 10),
             SubtractWave(
               text: username != null
-                  ? 'Welcome Back, ${username!.split(' ').first}'
-                  : 'Welcome Back, User',
+                  ? l10n.welcome(username?.split(' ').first ?? '')
+                  : l10n.welcome(''),
               svgAssetPath: 'assets/svg/notification.svg',
-              suptext: 'Tap here and we’ll help you out!',
+              suptext: l10n.tapForHelp,
               onTap: () {
                 Navigator.push(
                     context,
@@ -358,35 +360,35 @@ class _HomePageState extends State<HomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ExploreCard(
-                          title: "ADD \nMaintenance", 
-                          onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddMaintenance()),
-                          );
-                        }),
+                            title: "ADD \nMaintenance",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddMaintenance()),
+                              );
+                            }),
                         ExploreCard(
-                          title: "ASK \nCHAT BOT",
-                          onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Chatbot(
-                                  userId:
-                                      FirebaseAuth.instance.currentUser!.uid),
-                            ),
-                          );
-                        }),
+                            title: "ASK \nCHAT BOT",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Chatbot(
+                                      userId: FirebaseAuth
+                                          .instance.currentUser!.uid),
+                                ),
+                              );
+                            }),
                         ExploreCard(
-                          title: 'CHECKOUT\nOFFERS', 
-                          onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserFeedScreen()),
-                          );
-                        }),
+                            title: 'CHECKOUT\nOFFERS',
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserFeedScreen()),
+                              );
+                            }),
                       ],
                     ),
                     // SizedBox(height: 15),
@@ -749,5 +751,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
