@@ -35,8 +35,8 @@ class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Last periodic Maintenance ',
+        LocalizedText(
+          text: 'Last periodic Maintenance ',
           style: textStyleWhite.copyWith(
               fontSize: 16, fontWeight: FontWeight.w500),
         ),
@@ -58,8 +58,8 @@ class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
               ),
             ),
             alignment: Alignment.centerLeft,
-            child: Text(
-              lastMaintenanceDate == null
+            child: LocalizedText(
+              text: lastMaintenanceDate == null
                   ? 'Select Maintenance Date'
                   : '${lastMaintenanceDate!.day}/${lastMaintenanceDate!.month}/${lastMaintenanceDate!.year}',
               style: textStyleGray,

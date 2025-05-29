@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../services/car_service.dart';
 import '../../widgets/custom_widgets.dart';
@@ -21,6 +22,7 @@ class _CarMaintState extends State<CarMaint> {
   // Function to show the edit form dialog
 
   void _showEditForm(BuildContext context, Map<String, dynamic> car) {
+    final l10n = AppLocalizations.of(context)!;
     final TextEditingController mileageController = TextEditingController(
         text: (car['mileage'] is double
                 ? car['mileage'].toInt()
@@ -46,29 +48,29 @@ class _CarMaintState extends State<CarMaint> {
             child: Column(
               children: [
                 Text(
-                  'Edit ${car['make']} ${car['model']} Details',
+                  l10n.editCarDetails(car['make'], car['model']),
                   style: textStyleWhite.copyWith(fontSize: 18),
                 ),
                 const SizedBox(height: 15),
                 buildTextField(
-                  label: 'Current car mileage (Approx.)',
+                  label: l10n.currentMileageLabel,
                   controller: mileageController,
-                  hintText: 'Mileage (KM)',
+                  hintText: l10n.mileageHint,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter mileage';
+                      return l10n.enterMileageError;
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 15),
                 buildTextField(
-                  label: 'Average monthly usage (KM)',
+                  label: l10n.avgMonthlyUsageLabel,
                   controller: avgKmController,
-                  hintText: 'Average (KM)',
+                  hintText: l10n.avgKmHint,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter average usage';
+                      return l10n.enterAvgUsageError;
                     }
                     return null;
                   },
@@ -80,7 +82,7 @@ class _CarMaintState extends State<CarMaint> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           popUpBotton(
-                            'Cancel',
+                            l10n.cancel,
                             AppColors.primaryText,
                             AppColors.buttonText,
                             onPressed: () {
@@ -88,7 +90,7 @@ class _CarMaintState extends State<CarMaint> {
                             },
                           ),
                           popUpBotton(
-                            'Save',
+                            l10n.save,
                             AppColors.buttonColor,
                             AppColors.buttonText,
                             onPressed: () async {
@@ -141,14 +143,14 @@ class _CarMaintState extends State<CarMaint> {
                                   Navigator.of(context).pop();
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Car updated successfully'),
+                                      content: Text(l10n.carUpdatedSuccess),
                                     ),
                                   );
                                 } catch (e) {
                                   setState(() => isLoading = false);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Error updating car: $e'),
+                                      content: Text(l10n.errorUpdatingCar(e.toString())),
                                     ),
                                   );
                                 }
@@ -168,6 +170,7 @@ class _CarMaintState extends State<CarMaint> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -180,7 +183,7 @@ class _CarMaintState extends State<CarMaint> {
                 children: [
                   SizedBox(height: 70),
                   Text(
-                    "My Cars",
+                    l10n.myCars,
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                   ),
                   SizedBox(height: 20),
@@ -197,13 +200,11 @@ class _CarMaintState extends State<CarMaint> {
 
                         if (snapshot.hasError) {
                           return Center(
-                              child: Text('Error: ${snapshot.error}'));
+                              child: Text(l10n.dataError(snapshot.error.toString())));
                         }
 
                         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return Center(
-                              child: Text(
-                                  'No cars found. Add a car to see it here.'));
+                          return Center(child: Text(l10n.noCarsFound));
                         }
 
                         // Convert documents to List of Maps

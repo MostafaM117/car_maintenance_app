@@ -1,5 +1,8 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/providers/language_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import 'custom_widgets.dart';
 
@@ -30,11 +33,16 @@ class _LanguageToggleState extends State<LanguageToggle> {
     setState(() {
       _isEnglish = english;
       widget.onToggle(_isEnglish);
+      // Update the actual language using LanguageProvider
+      final languageProvider =
+          Provider.of<LanguageProvider>(context, listen: false);
+      languageProvider.setLanguage(english ? 'en' : 'ar');
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: 320,
       height: 55,
@@ -56,7 +64,7 @@ class _LanguageToggleState extends State<LanguageToggle> {
             Row(
               children: [
                 Text(
-                  "Language",
+                  l10n.language,
                   style: textStyleGray.copyWith(
                     fontSize: 14,
                     color: AppColors.primaryText,
@@ -83,7 +91,7 @@ class _LanguageToggleState extends State<LanguageToggle> {
                       ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 6),
-                      child: Text("ع",
+                      child: Text(l10n.arabicLanguage,
                           style: TextStyle(
                             color: !_isEnglish ? Colors.white : Colors.black,
                           )),
@@ -102,7 +110,7 @@ class _LanguageToggleState extends State<LanguageToggle> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 6),
                       child: Text(
-                        "Eng",
+                        l10n.englishLanguage,
                         style: TextStyle(
                           color: !_isEnglish ? Colors.black : Colors.white,
                         ),

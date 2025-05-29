@@ -19,7 +19,6 @@ class Periodicpage extends StatefulWidget {
   State<Periodicpage> createState() => _PeriodicpageState();
 }
 
-
 class _PeriodicpageState extends State<Periodicpage> {
   FirestoreService firestoreService = FirestoreService(MaintID());
   String? filterMake;
@@ -57,7 +56,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                   SizedBox(height: 50),
                   Center(
                     child: Text(
-                    widget.title,
+                      widget.title,
                       style:
                           TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                     ),
@@ -69,7 +68,6 @@ class _PeriodicpageState extends State<Periodicpage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        // ← هذا يملأ المساحة المتاحة
                         child: Container(
                           height: 40,
                           decoration: ShapeDecoration(
@@ -85,14 +83,13 @@ class _PeriodicpageState extends State<Periodicpage> {
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
-                              hintText: 'Search',
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              suffixIcon: Icon(Icons.search)
-                            ),
+                                hintText: 'Search',
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 10,
+                                ),
+                                suffixIcon: Icon(Icons.search_rounded)),
                           ),
                         ),
                       ),
@@ -167,10 +164,9 @@ class _PeriodicpageState extends State<Periodicpage> {
     return ElevatedButton(
       onPressed: () {
         AwesomeDialog(
-          
           context: context,
           dialogType: DialogType.noHeader,
-          animType: AnimType.scale, 
+          animType: AnimType.scale,
           dialogBackgroundColor: AppColors.secondaryText,
           padding: const EdgeInsets.all(16),
           body: StatefulBuilder(
@@ -197,6 +193,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                           checkFormCompletion();
                         });
                       },
+                      context: context,
                     ),
                     const SizedBox(height: 15),
                     // Car Model
@@ -212,13 +209,14 @@ class _PeriodicpageState extends State<Periodicpage> {
                           checkFormCompletion();
                         });
                       },
+                      context: context,
                     ),
                     const SizedBox(height: 15),
                     buildTextField(
                       label: 'Min Price',
                       validator: (value) {
                         setState(() {
-                          minPrice = double.tryParse(value);
+                          minPrice = double.tryParse(value ?? '');
                         });
                         return null;
                       },
@@ -228,7 +226,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                       label: 'Max Price',
                       validator: (value) {
                         setState(() {
-                          maxPrice = double.tryParse(value);
+                          maxPrice = double.tryParse(value ?? '');
                         });
                         return null;
                       },

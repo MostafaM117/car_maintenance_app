@@ -1,10 +1,14 @@
+import 'package:car_maintenance/screens/seller_screens/add_item.dart';
+import 'package:car_maintenance/screens/seller_screens/offer_feed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../constants/app_colors.dart';
 import '../../services/seller/seller_data_helper.dart';
 import '../../widgets/SubtractWave_widget.dart';
+import '../../widgets/exploreCard.dart';
 
 class SellerHomePage extends StatefulWidget {
   const SellerHomePage({super.key});
@@ -34,6 +38,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
@@ -47,9 +52,9 @@ class _SellerHomePageState extends State<SellerHomePage> {
             children: [
               SizedBox(height: 10),
               SubtractWave(
-                text: 'Welcome Back, ${username.split(' ').first}',
+                text: l10n.welcomeBackSeller(username.split(' ').first),
                 svgAssetPath: 'assets/svg/notification.svg',
-                suptext: 'Tap here and we’ll help you out!',
+                suptext: l10n.tapForHelpSeller,
                 onTap: () {},
               ),
               SizedBox(height: 15),
@@ -58,7 +63,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Explore',
+                    l10n.exploreSeller,
                     style: TextStyle(
                       color: const Color(0xFF0F0F0F),
                       fontSize: 24,
@@ -72,9 +77,25 @@ class _SellerHomePageState extends State<SellerHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildExploreCard(),
-                  _buildExploreCard(),
-                  _buildExploreCard(),
+                  ExploreCard(
+                      title: l10n.addNewItemSeller,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddItem()),
+                        );
+                      }),
+                  ExploreCard(
+                      title: l10n.addOfferSeller,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OfferScreen(),
+                          ),
+                        );
+                      }),
+                  ExploreCard(title: l10n.checkoutOffersSeller, onTap: () {}),
                 ],
               ),
               SizedBox(height: 5),
@@ -83,7 +104,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Best Selling',
+                    l10n.bestSellingSeller,
                     style: TextStyle(
                       color: const Color(0xFF0F0F0F),
                       fontSize: 24,
@@ -108,7 +129,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Low Stock',
+                    l10n.lowStockSeller,
                     style: TextStyle(
                       color: const Color(0xFF0F0F0F),
                       fontSize: 24,
@@ -133,40 +154,6 @@ class _SellerHomePageState extends State<SellerHomePage> {
       ),
     );
   }
-}
-
-Widget _buildExploreCard(
-    // BuildContext context, String title, IconData icon, Color color, VoidCallback onTap
-    ) {
-  return GestureDetector(
-    // onTap: ,
-    child: Container(
-      width: 100,
-      height: 60,
-      decoration: ShapeDecoration(
-        color: AppColors.secondaryText,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: 1,
-            color: AppColors.borderSide,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-          ),
-          SizedBox(height: 8),
-        ],
-      ),
-    ),
-  );
 }
 
 Widget _buildSellingCard(

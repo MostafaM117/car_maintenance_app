@@ -13,6 +13,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CompleteSellerInfo extends StatefulWidget {
   final String businessname;
@@ -209,6 +211,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
   }
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: _isLoading ? Center(child: CircularProgressIndicator(color: Colors.black)) 
@@ -220,186 +223,128 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
             children: [
               const SizedBox(height: 50),
               Text(
-                'Complete your business account details',
+                l10n.completeBusinessInfo,
+                style: textStyleWhite.copyWith(fontSize: 24),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                l10n.completeBusinessInfoDescription,
                 style: textStyleGray.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 30),
-              // Tax Registration Number 
               buildInputField(
-                iconWidget: Icon(Icons.person_pin_outlined),
                 controller: _taxsnumbercontroller,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(9),
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-                hintText: 'Enter your tax registration number',
+                iconWidget: SvgPicture.asset(
+                  'assets/svg/tax.svg',
+                  width: 24,
+                  height: 24,
+                ),
+                hintText: l10n.taxNumberHint,
               ),
-              SizedBox(height: 20,),
-              // Phone number
+              const SizedBox(height: 20),
               buildInputField(
-                iconWidget: Icon(Icons.phone),
                 controller: _phonenumbercontroller,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(11),
-                  FilteringTextInputFormatter.digitsOnly,
+                iconWidget: SvgPicture.asset(
+                  'assets/svg/phone.svg',
+                  width: 24,
+                  height: 24,
+                ),
+                hintText: l10n.phoneNumberHint,
+              ),
+              const SizedBox(height: 20),
+              buildInputField(
+                controller: _locationController,
+                iconWidget: SvgPicture.asset(
+                  'assets/svg/location.svg',
+                  width: 24,
+                  height: 24,
+                ),
+                hintText: l10n.locationHint,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                l10n.uploadIdImages,
+                style: textStyleWhite.copyWith(fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        // Upload front ID image
+                      },
+                      child: Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/svg/upload.svg',
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                l10n.frontIdImage,
+                                style: textStyleGray,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        // Upload back ID image
+                      },
+                      child: Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/svg/upload.svg',
+                                width: 24,
+                                height: 24,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                l10n.backIdImage,
+                                style: textStyleGray,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
-                hintText: 'Enter your business phone number',
               ),
-              SizedBox(height: 20,),
-              // Location
-              GestureDetector(
-                child: Container(
-                  padding: EdgeInsets.only(right: 20),
-                  height: 45,
-                  decoration: ShapeDecoration(
-                    color: AppColors.secondaryText,
-                    shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                    width: 1,
-                    color: AppColors.borderSide,
-                    ),
-                  borderRadius: BorderRadius.circular(22),
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 20), //24
-                      Icon(Icons.location_on_outlined),
-                      const SizedBox(width: 18), // 20
-                      Expanded(
-                        child: TextField(
-                          controller: _locationController,
-                          enabled: false,
-                          decoration: InputDecoration(
-                            hintText: 'Get your current location',
-                            hintStyle: textStyleGray,
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(bottom: 12),
-                          ),
-                          textAlignVertical: TextAlignVertical.center,
-                        ),)
-                    ],
-                  ),
-                ),
-                onTap: () async{
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  LatLng? selectedLocation = 
-                  await Navigator.push(context , MaterialPageRoute(builder: (context)=> GetShopLocation()));
-                  if(selectedLocation != null){
-                    _locationController.text = '${selectedLocation.latitude},${selectedLocation.longitude}';
-                    shoplocation = selectedLocation;
-                  }
+              const SizedBox(height: 40),
+              buildButton(
+                l10n.completeRegistration,
+                AppColors.buttonColor,
+                AppColors.buttonText,
+                onPressed: () {
+                  finishSignup();
                 },
-              ),
-              SizedBox(height: 20,),
-              // Uploading image
-              GestureDetector(
-                child: Container(
-                  padding: EdgeInsets.only(right: 20),
-                  height: 45,
-                  decoration: ShapeDecoration(
-                    color: AppColors.secondaryText,
-                    shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                    width: 1,
-                    color: AppColors.borderSide,
-                    ),
-                  borderRadius: BorderRadius.circular(22),
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 20), //24
-                      Icon(Icons.image_outlined),
-                      const SizedBox(width: 18), // 20
-                      Expanded(
-                        child: TextField(
-                          controller: _idimagesController,
-                          enabled: false,
-                          decoration: InputDecoration(
-                            hintText: 'Upload Your Images',
-                            hintStyle: textStyleGray,
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(bottom: 12),
-                          ),
-                          textAlignVertical: TextAlignVertical.center,
-                        ),)
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  pickAndUploadImage();
-                },
-              ),
-              const SizedBox(height: 15),
-              CheckboxListTile(
-                  value: _termschecked,
-                  title: RichText(
-                      text: TextSpan(
-                          style: textStyleGray.copyWith(fontSize: 12),
-                          children: [
-                        const TextSpan(
-                            text: 'By signing up, you agree to our '),
-                        TextSpan(
-                            text: 'Terms of Service and privacy Policy.',
-                            style: textStyleGray.copyWith(
-                              color: Colors.blue.shade200,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TermsAndConditionsPage()));
-                              })
-                      ])),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  contentPadding: EdgeInsets.zero,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _termschecked = value!;
-                    });
-                  }),
-              const SizedBox(height: 30), //60
-              // Signup Button requires terms to be checked
-              SizedBox(
-                width: double.infinity,
-                height: 45,
-                child: ElevatedButton(
-                  onPressed: () {
-                    _termschecked
-                        ? finishSignup()
-                        : ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Terms of Service must be checked'),),
-                                );
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor:
-                        _termschecked ? AppColors.buttonColor : Colors.grey,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Finish Signing up',
-                          style: textStyleWhite.copyWith(
-                              color: AppColors.buttonText))
-                    ],
-                  ),
-                ),
               ),
             ],
           ),

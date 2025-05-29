@@ -4,11 +4,12 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
 import 'package:car_maintenance/models/car_data.dart';
-import 'package:car_maintenance/screens/Periodicpage.dart';
+// import 'package:car_maintenance/screens/Periodicpage.dart';
 import 'package:car_maintenance/screens/seller_screens/add_item.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'edit_item.dart';
 
@@ -45,6 +46,7 @@ class _MarketPageState extends State<MarketPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -55,7 +57,7 @@ class _MarketPageState extends State<MarketPage> {
             children: [
               Center(
                 child: Text(
-                  'Market',
+                  l10n.sellerMarketTitle,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -65,6 +67,7 @@ class _MarketPageState extends State<MarketPage> {
               ),
               const SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: Container(
@@ -82,36 +85,29 @@ class _MarketPageState extends State<MarketPage> {
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
-                          hintText: 'Search',
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                        ),
+                            hintText: l10n.searchHint,
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            suffixIcon: Icon(Icons.search_rounded)),
                       ),
                     ),
                   ),
+                  const SizedBox(width: 10),
+                  _buildFilterButton(l10n.filtersButton),
                 ],
               ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  _buildFilterButton('Filters'),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => Periodicpage(),
-                      //   ),
-                      // );
-                    },
-                    icon: Icon(Icons.filter_list),
-                  ),
-                  // const SizedBox(width: 8),
-                  // _buildFilterButton('Filter'),
-                ],
-              ),
+              // const SizedBox(height: 10),
+              // Row(
+              //   children: [
+              //     _buildFilterButton('Filters'),
+
+              //     // const SizedBox(width: 8),
+              //     // _buildFilterButton('Filter'),
+              //   ],
+              // ),
               const SizedBox(height: 20),
               // Input for new item
               GestureDetector(
@@ -138,22 +134,26 @@ class _MarketPageState extends State<MarketPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text(
-                        'Add New Item',
+                        l10n.addNewItemButton,
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      Icon(Icons.add, size: 30, color: Colors.black),
+                      SvgPicture.asset(
+                        'assets/svg/add.svg',
+                        width: 24,
+                        height: 24,
+                      ),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               // Items List
               Expanded(
                 child: StreamBuilder<List<ProductItem>>(
@@ -214,13 +214,13 @@ class _MarketPageState extends State<MarketPage> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            'Are you sure you want to delete this Item?',
+                                            l10n.confirmDeleteItemTitle,
                                             style: textStyleWhite,
                                             textAlign: TextAlign.center,
                                           ),
                                           const SizedBox(height: 10),
                                           Text(
-                                            'This action is permanent and cannot be undone. All Item’s data will be permanently removed.',
+                                            l10n.confirmDeleteItemBody,
                                             style: textStyleGray,
                                             textAlign: TextAlign.center,
                                           ),
@@ -230,7 +230,7 @@ class _MarketPageState extends State<MarketPage> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               popUpBotton(
-                                                'Cancel',
+                                                l10n.cancel,
                                                 AppColors.primaryText,
                                                 AppColors.buttonText,
                                                 onPressed: () {
@@ -240,7 +240,7 @@ class _MarketPageState extends State<MarketPage> {
                                               ),
                                               const SizedBox(width: 15),
                                               popUpBotton(
-                                                'Delete',
+                                                l10n.delete,
                                                 AppColors.buttonColor,
                                                 AppColors.buttonText,
                                                 onPressed: () {
@@ -279,21 +279,29 @@ class _MarketPageState extends State<MarketPage> {
   }
 
   Widget _buildFilterButton(String title) {
+    final l10n = AppLocalizations.of(context)!;
     return ElevatedButton(
       onPressed: () {
-        showDialog(
+        AwesomeDialog(
           context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Filter'),
-              content: SingleChildScrollView(
+          dialogType: DialogType.noHeader,
+          animType: AnimType.scale,
+          dialogBackgroundColor: AppColors.secondaryText,
+          padding: const EdgeInsets.all(16),
+          body: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Add your filter options here
-                    // Car Make
+                    Text(
+                      l10n.filter,
+                      style: textStyleWhite.copyWith(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 15),
                     buildDropdownField(
-                      label: 'Car Make',
+                      label: l10n.carMakeLabel,
                       value: filterMake,
                       options: _carMakes,
                       onChanged: (String? newValue) {
@@ -303,12 +311,11 @@ class _MarketPageState extends State<MarketPage> {
                           checkFormCompletion();
                         });
                       },
+                      context: context,
                     ),
                     const SizedBox(height: 15),
-
-                    // Car Model
                     buildDropdownField(
-                      label: 'Car Model',
+                      label: l10n.carModelLabel,
                       value: filterModel,
                       options: filterMake == null
                           ? []
@@ -319,54 +326,66 @@ class _MarketPageState extends State<MarketPage> {
                           checkFormCompletion();
                         });
                       },
+                      context: context,
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Min Price'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
+                    const SizedBox(height: 15),
+                    buildTextField(
+                      label: l10n.minPriceLabel,
+                      validator: (value) {
                         setState(() {
-                          minPrice = double.tryParse(value);
+                          minPrice = double.tryParse(value ?? '');
                         });
+                        return null;
                       },
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Max Price'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
+                    const SizedBox(height: 10),
+                    buildTextField(
+                      label: l10n.maxPriceLabel,
+                      validator: (value) {
                         setState(() {
-                          maxPrice = double.tryParse(value);
+                          maxPrice = double.tryParse(value ?? '');
                         });
+                        return null;
                       },
                     ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        popUpBotton(
+                          l10n.reset,
+                          AppColors.primaryText,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            setState(() {
+                              filterMake = null;
+                              filterModel = null;
+                              minPrice = null;
+                              maxPrice = null;
+                            });
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        const SizedBox(width: 15),
+                        popUpBotton(
+                          l10n.apply,
+                          AppColors.buttonColor,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
-              ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Apply'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      filterMake = null;
-                      filterModel = null;
-                      minPrice = null;
-                      maxPrice = null;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Reset'),
-                ),
-              ],
-            );
-          },
-        );
+              );
+            },
+          ),
+        ).show();
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black,
+        foregroundColor: AppColors.primaryText,
         backgroundColor: AppColors.secondaryText,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

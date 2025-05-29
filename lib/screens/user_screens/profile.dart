@@ -1,10 +1,9 @@
-import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/user_screens/MyCars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/darkmode_toggle_widget.dart';
@@ -45,6 +44,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -53,14 +53,15 @@ class _ProfileState extends State<Profile> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Profile',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
+                const SizedBox(height: 15),
+                Text(
+                  l10n.account,
+                  style: const TextStyle(
                     color: Colors.black,
+                    fontSize: 40,
                     fontFamily: 'Inter',
+                    height: 0,
+                    letterSpacing: 9.20,
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -148,7 +149,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     const SizedBox(height: 8),
                     ProfileOptionTile(
-                      text: 'Account Management',
+                      text: l10n.profile,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -161,7 +162,7 @@ class _ProfileState extends State<Profile> {
                       height: 20,
                     ),
                     ProfileOptionTile(
-                      text: 'MyCars',
+                      text: l10n.myCars,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -191,7 +192,7 @@ class _ProfileState extends State<Profile> {
                       height: 20,
                     ),
                     ProfileOptionTile(
-                      text: 'Terms & Conditions',
+                      text: l10n.termsAndConditions,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -204,13 +205,16 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: 20,
                     ),
-                    buildButton(
-                      'Log Out',
-                      AppColors.buttonColor,
-                      AppColors.buttonText,
-                      onPressed: () {
-                        AuthService().signOut(context);
-                      },
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: buildButton(
+                        l10n.logOut,
+                        AppColors.buttonColor,
+                        AppColors.buttonText,
+                        onPressed: () {
+                          AuthService().signOut(context);
+                        },
+                      ),
                     ),
                   ],
                 ),

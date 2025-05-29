@@ -1,7 +1,10 @@
-import 'package:car_maintenance/screens/before_login/login_type.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../constants/app_colors.dart';
 import '../../widgets/custom_widgets.dart';
+import 'login_type.dart';
+import 'package:provider/provider.dart';
+import '../../providers/language_provider.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
@@ -13,14 +16,37 @@ class WelcomePage extends StatefulWidget {
 class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final languageProvider = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
+          // Language Switch Button
           Positioned(
-            left: -screenWidth * 0.2,
+            top: screenHeight * 0.05,
+            right: screenWidth * 0.05,
+            child: IconButton(
+              icon: Text(
+                isArabic ? 'EN' : 'AR',
+                style: TextStyle(
+                  color: AppColors.primaryText,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                languageProvider.setLanguage(isArabic ? 'en' : 'ar');
+              },
+            ),
+          ),
+          Positioned(
+            left: isArabic ? null : -screenWidth * 0.2,
+            right: isArabic ? -screenWidth * 0.2 : null,
             top: screenHeight * 0.2,
             child: Container(
               width: screenWidth * 0.9,
@@ -33,22 +59,28 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           Positioned(
             top: screenHeight * 0.22,
+            left: isArabic ? null : 0,
+            right: isArabic ? 0 : null,
             child: Image.asset(
-              "assets/images/Hyundai.png",
+              isArabic
+                  ? "assets/images/Hyundair.png"
+                  : "assets/images/Hyundai.png",
               width: screenWidth * 0.8,
               fit: BoxFit.cover,
             ),
           ),
           Container(
             margin: EdgeInsets.only(
-              left: screenWidth * 0.1,
+              left: isArabic ? 0 : screenWidth * 0.1,
+              right: isArabic ? screenWidth * 0.1 : 0,
               top: screenHeight * 0.68,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 Text(
-                  ' Welcome to Motorgy',
+                  l10n.welcomeToMotorgy,
                   style: TextStyle(
                     color: AppColors.primaryText,
                     fontSize: screenWidth * 0.09,
@@ -56,11 +88,11 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                 ),
                 Text(
-                  'Your all-in-one solution for car maintenance and spare parts',
+                  l10n.appDescription,
                   style: TextStyle(
                     color: AppColors.primaryText,
-                    fontSize: screenWidth * 0.08,
-                    fontWeight: FontWeight.w400,
+                    fontSize: screenWidth * 0.05,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
               ],
@@ -77,7 +109,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 bottom: screenHeight * 0.05,
               ),
               child: buildButton(
-                'Get Started',
+                l10n.getStarted,
                 AppColors.buttonColor,
                 AppColors.buttonText,
                 onPressed: () {
