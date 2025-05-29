@@ -3,7 +3,6 @@ import 'package:car_maintenance/screens/user_screens/MyCars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/darkmode_toggle_widget.dart';
@@ -44,7 +43,6 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -54,9 +52,10 @@ class _ProfileState extends State<Profile> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 15),
-                Text(
-                  l10n.account,
-                  style: const TextStyle(
+
+                const Text(
+                  'Account',
+                  style: TextStyle(
                     color: Colors.black,
                     fontSize: 40,
                     fontFamily: 'Inter',
@@ -149,7 +148,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     const SizedBox(height: 8),
                     ProfileOptionTile(
-                      text: l10n.profile,
+                      text: 'Profile',
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -162,7 +161,7 @@ class _ProfileState extends State<Profile> {
                       height: 20,
                     ),
                     ProfileOptionTile(
-                      text: l10n.myCars,
+                      text: 'MyCars',
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -192,7 +191,7 @@ class _ProfileState extends State<Profile> {
                       height: 20,
                     ),
                     ProfileOptionTile(
-                      text: l10n.termsAndConditions,
+                      text: 'Terms & Conditions',
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -208,7 +207,7 @@ class _ProfileState extends State<Profile> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: buildButton(
-                        l10n.logOut,
+                        'Log Out',
                         AppColors.buttonColor,
                         AppColors.buttonText,
                         onPressed: () {
@@ -216,6 +215,8 @@ class _ProfileState extends State<Profile> {
                         },
                       ),
                     ),
+
+                    
                   ],
                 ),
               ),

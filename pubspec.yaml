@@ -30,8 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
   flutter_svg: ^2.0.17
   google_nav_bar: ^5.0.7
   shared_preferences: ^2.5.3
@@ -88,8 +86,6 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-
-  generate: true  # Add this line for localization
 
   # To add assets to your application, add an assets section, like this:
   assets:

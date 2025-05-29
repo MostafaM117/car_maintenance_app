@@ -2,7 +2,6 @@ import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_servi
 import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../widgets/custom_widgets.dart';
@@ -52,7 +51,6 @@ class _UserLoginPageState extends State<UserLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
@@ -63,14 +61,17 @@ class _UserLoginPageState extends State<UserLoginPage> {
             children: [
               const SizedBox(height: 50),
               Text(
-                l10n.welcomeBack("User"),
+                'Sign in to Motorgy',
                 style: textStyleWhite.copyWith(
                     fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(
-                l10n.userLoginWelcome,
-                style: textStyleGray,
+                'Welcome back! Please enter your details!',
+                style: textStyleGray.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(height: 30),
               buildInputField(
@@ -80,7 +81,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     width: 24,
                     height: 24,
                   ),
-                  hintText: l10n.emailHint),
+                  hintText: 'Enter your email '),
               const SizedBox(height: 20),
               buildInputField(
                   controller: _passwordcontroller,
@@ -89,7 +90,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     width: 20,
                     height: 24,
                   ),
-                  hintText: l10n.passwordHint,
+                  hintText: 'Enter your password',
                   obscureText: _obscureText,
                   togglePasswordView: _toggletoviewpassword),
               const SizedBox(height: 15),
@@ -103,7 +104,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     ),
                   ),
                   child: Text(
-                    l10n.forgotPassword,
+                    'Forgot Password?',
                     style: textStyleWhite.copyWith(
                         fontSize: 12, fontWeight: FontWeight.w500),
                   ),
@@ -111,7 +112,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
               ),
               const SizedBox(height: 80),
               buildButton(
-                  l10n.login, AppColors.buttonColor, AppColors.buttonText,
+                  'Sign In', AppColors.buttonColor, AppColors.buttonText,
                   onPressed: () {
                 AuthService().signInWithEmailAndPassword(
                     context,
@@ -120,9 +121,9 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     'user');
               }),
               const SizedBox(height: 15),
-              buildOrSeparator(context),
+              buildOrSeparator(),
               const SizedBox(height: 15),
-              googleButton(handleGoogleSignIn, context),
+              googleButton(handleGoogleSignIn),
               const SizedBox(height: 15),
               // appleButton(() {}),
               // const SizedBox(height: 15),
@@ -133,12 +134,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   },
                   child: Text.rich(
                     TextSpan(
-                      text: '${l10n.noAccount} ',
+                      text: 'Don’t have an account? ',
                       style: textStyleWhite.copyWith(
                           fontSize: 12, fontWeight: FontWeight.w500),
                       children: [
                         TextSpan(
-                          text: l10n.register,
+                          text: 'Sign up',
                           style: textStyleWhite.copyWith(
                             fontSize: 12,
                             fontWeight: FontWeight.w900,

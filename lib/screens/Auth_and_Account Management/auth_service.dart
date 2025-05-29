@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../widgets/custom_widgets.dart';
 
@@ -52,7 +51,6 @@ class AuthService {
   Future<String> _getUserPassword(BuildContext context) async {
     final TextEditingController passwordcontroller = TextEditingController();
     String? errorText;
-    final l10n = AppLocalizations.of(context)!;
     final result = await showDialog(
         context: context,
         barrierDismissible: false,
@@ -70,8 +68,8 @@ class AuthService {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      l10n.firstTimeGoogleSignIn,
+                    const Text(
+                      'It’s your first time using Google sign in. Please confirm your password.',
                     ),
                     const SizedBox(height: 12),
                     TextField(
@@ -79,7 +77,7 @@ class AuthService {
                       obscureText: _obscureText,
                       cursorColor: Colors.black,
                       decoration: InputDecoration(
-                        hintText: l10n.passwordHint,
+                        hintText: 'Enter password',
                         hintStyle: const TextStyle(color: Colors.black54),
                         errorText: errorText,
                         border: OutlineInputBorder(
