@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
+import 'package:car_maintenance/Back-end/offer_service.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
@@ -28,7 +29,20 @@ class _MarketPageState extends State<MarketPage> {
   double? minPrice;
   double? maxPrice;
   String? selectedLocation;
+  final OfferService offerService = OfferService();
+  String? businessName;
   final List<String> _carMakes = CarData.getAllMakes();
+
+  void getMyBusinessName() async {
+    businessName = await offerService.getBusinessName();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getMyBusinessName();
+    super.initState();
+  }
 
   void checkFormCompletion() {
     setState(() {});
@@ -159,7 +173,14 @@ class _MarketPageState extends State<MarketPage> {
               // Items List
               Expanded(
                 child: StreamBuilder<List<ProductItem>>(
-                    stream: firestoreService.getStock(),
+                    stream: firestoreService.getFilteredProducts(
+                      make: filterMake,
+                      model: filterModel,
+                      minPrice: minPrice,
+                      maxPrice: maxPrice,
+                      location: selectedLocation,
+                      businessName: businessName,
+                    ),
                     builder: (context, snapshot) {
                       final productList = snapshot.data ?? [];
 
@@ -283,16 +304,24 @@ class _MarketPageState extends State<MarketPage> {
   Widget _buildFilterButton(String title) {
     return ElevatedButton(
       onPressed: () {
-        showDialog(
+        AwesomeDialog(
           context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: Text('Filter'),
-              content: SingleChildScrollView(
+          dialogType: DialogType.noHeader,
+          animType: AnimType.scale,
+          dialogBackgroundColor: AppColors.secondaryText,
+          padding: const EdgeInsets.all(16),
+          body: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Add your filter options here
+                    Text(
+                      'Filter',
+                      style: textStyleWhite.copyWith(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 15),
                     // Car Make
                     buildDropdownField(
                       label: 'Car Make',
@@ -307,7 +336,6 @@ class _MarketPageState extends State<MarketPage> {
                       },
                     ),
                     const SizedBox(height: 15),
-
                     // Car Model
                     buildDropdownField(
                       label: 'Car Model',
@@ -322,53 +350,67 @@ class _MarketPageState extends State<MarketPage> {
                         });
                       },
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Min Price'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
+                    const SizedBox(height: 15),
+                    buildTextField(
+                      label: 'Min Price',
+                      validator: (value) {
                         setState(() {
                           minPrice = double.tryParse(value);
                         });
+                        return null;
                       },
                     ),
-                    TextField(
-                      decoration: InputDecoration(labelText: 'Max Price'),
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
+                    const SizedBox(height: 10),
+                    buildTextField(
+                      label: 'Max Price',
+                      validator: (value) {
                         setState(() {
                           maxPrice = double.tryParse(value);
                         });
+                        return null;
                       },
                     ),
+                    const SizedBox(height: 20),
+                    // Actions
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        popUpBotton(
+                          'Reset',
+                          AppColors.primaryText,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            setState(() {
+                              filterMake = null;
+                              filterModel = null;
+                              minPrice = null;
+                              maxPrice = null;
+                            });
+                            checkFormCompletion();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        const SizedBox(width: 15),
+                        popUpBotton(
+                          'Apply',
+                          AppColors.buttonColor,
+                          AppColors.buttonText,
+                          onPressed: () {
+                            checkFormCompletion();
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    )
                   ],
                 ),
-              ),
-              actions: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Apply'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      filterMake = null;
-                      filterModel = null;
-                      minPrice = null;
-                      maxPrice = null;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Reset'),
-                ),
-              ],
-            );
-          },
-        );
+              );
+            },
+          ),
+        ).show();
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.black,
+        foregroundColor: AppColors.primaryText,
         backgroundColor: AppColors.secondaryText,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),

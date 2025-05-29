@@ -252,6 +252,7 @@ class _EditItemState extends State<EditItem> {
                         _selectedAvailability!,
                         int.tryParse(stockCountController.text) ?? 0,
                         double.tryParse(priceController.text) ?? 0.0,
+                        uploadedImageUrl ?? widget.item.imageUrl,
                       );
                       Navigator.pop(context);
                     },

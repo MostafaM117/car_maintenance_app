@@ -160,6 +160,7 @@ class FirestoreService {
 
     return query.snapshots().map((snapshot) {
       print("🔍 query returned ${snapshot.docs.length} docs");
+      print("🏷️ Filtering products with businessName: $businessName");
 
       final products = snapshot.docs
           .map((doc) {
@@ -213,7 +214,6 @@ class FirestoreService {
           stockCount: data['stockCount'] ?? 0,
           imageUrl: data['imageUrl'] ?? '',
           businessName: data['Store Name'] ?? '',
-          // Added imageUrl field
         );
       }).toList();
     });
@@ -229,9 +229,10 @@ class FirestoreService {
     String selectedAvailability,
     int stockCount,
     double price,
+    String imageUrl, // Optional image URL
   ) async {
     try {
-      await stockCollection.doc(docId).update({
+      await productsCollection.doc(docId).update({
         'name': name,
         'Description': description,
         'selectedMake': selectedMake,
@@ -239,7 +240,9 @@ class FirestoreService {
         'selectedCategory': selectedCategory,
         'selectedAvailability': selectedAvailability,
         'stockCount': stockCount,
-        'price': price
+        'price': price,
+        'imageUrl': imageUrl, // Update image URL
+        'Store Name': await offerService.getBusinessName(),
       });
       print("✅ Updated product item with ID: $docId");
     } catch (e) {
@@ -249,7 +252,7 @@ class FirestoreService {
 
   Future<void> deleteProduct(String docId) async {
     try {
-      await stockCollection.doc(docId).delete();
+      await productsCollection.doc(docId).delete();
       // await productsCollection.doc(docId).delete();
       print("✅ Deleted product with ID: $docId");
     } catch (e) {
