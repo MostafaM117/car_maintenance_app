@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/get_shop_location.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/store_not_verified.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
@@ -100,14 +98,6 @@ class _EnterSellerDataState extends State<EnterSellerData> {
           context,
           MaterialPageRoute(builder: (context) => StoreNotVerified()),
           (route) => false);
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content:
-        //         Text('Data Completed Successfully'),
-        //     duration: Duration(milliseconds: 4000),
-        //     backgroundColor: Colors.green.shade400,
-        //   ),
-        // );
       } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error: ${e.toString()}')),
@@ -124,6 +114,7 @@ class _EnterSellerDataState extends State<EnterSellerData> {
         }
       }
     }
+    return null;
   }
 
   Future<void> pickAndUploadImage() async {

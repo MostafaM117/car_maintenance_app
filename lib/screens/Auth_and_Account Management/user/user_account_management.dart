@@ -11,7 +11,6 @@ import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../constants/app_colors.dart';
 import '../../../widgets/info_field.dart';
-import '../../../widgets/profile_image.dart';
 
 class UserAccountManagement extends StatefulWidget {
   const UserAccountManagement({super.key});
@@ -136,9 +135,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                   const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
               child: Column(
                 children: [
-                  // SizedBox(
-                  //   height: 60,
-                  // ),
                   Text(
                     "Account",
                     style: textStyleWhite.copyWith(

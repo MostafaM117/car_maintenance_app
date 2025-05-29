@@ -11,8 +11,6 @@ import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../constants/app_colors.dart';
 import '../../../widgets/info_field.dart';
-// import '../../../widgets/profile_image.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 
 class SellerAccountManagement extends StatefulWidget {
   const SellerAccountManagement({super.key});

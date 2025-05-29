@@ -6,7 +6,7 @@ import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -76,7 +76,7 @@ class _ChatbotState extends State<Chatbot> {
     }).toList();
 
     print(
-        "Loaded ${messagesList.length} messages for chat $chatId"); // Debugging print
+        "Loaded ${messagesList.length} messages for chat $chatId");
     return messagesList;
   }
 
@@ -91,14 +91,34 @@ class _ChatbotState extends State<Chatbot> {
     Navigator.of(context).pop();
   }
 
-// NewChat
-  void createNewChat() {
+// NewChat Button function
+  Future<void> createNewChat() async{
     setState(() {
       activeChatId = null;
       messages = [];
     });
     chatService.setActiveChatId(null);
-    Navigator.of(context).pop(); // close the drawer
+    Navigator.of(context).pop();
+  }
+// Delete Chat 
+  Future<void> deleteChat(String chatId) async{
+    final chatRef = FirebaseFirestore.instance.collection('users').doc(widget.userId).collection('chats').doc(chatId);
+    final messagesSnapshot = await chatRef.collection('messages').get();
+    for(var doc in messagesSnapshot.docs){
+      await doc.reference.delete();
+    }
+    await chatRef.delete();
+    if (activeChatId == chatId){
+      print('activeChatId is now null');
+      setState(() {
+        activeChatId = null;
+        messages = [];
+        messageController.clear();
+      });
+    }
+    else{
+      print('activeChatId is not null');
+    }
   }
 
   @override
@@ -121,7 +141,6 @@ class _ChatbotState extends State<Chatbot> {
 
   //voiceChat
   Future<void> _startSpeechToText() async {
-    var status = await Permission.microphone.request();
     bool available = await _speech.initialize(onStatus: (status) {
       if (status == 'done' || status == 'notListening') {
         setState(() => _isListening = false);
@@ -142,25 +161,9 @@ class _ChatbotState extends State<Chatbot> {
         },
       );
     }
-    // if(status.isGranted){
-    //   speechService.startListening(
-    //   onResult: (result) {
-    //     setState(() {
-    //       messageController.text = result.recognizedWords;
-    //       messageController.selection = TextSelection.fromPosition(
-    //         TextPosition(offset: messageController.text.length),
-    //       );
-    //     });
-    //   },
-    // );
-    // }
-    // else{print('Microphone permission not granted');
-    // return;
-    // }
   }
 
   void _stopListening() async {
-    // speechService.stopListening();
     await _speech.stop();
     setState(() => _isListening = false);
   }
@@ -201,9 +204,6 @@ class _ChatbotState extends State<Chatbot> {
                   );
                 }
                 final docs = snapshot.data!.docs;
-                if (docs.isEmpty) {
-                  return Text('No Chats');
-                }
                 return ListView(
                   children: [
                     DrawerHeader(child: Text('past chats')),
@@ -215,34 +215,71 @@ class _ChatbotState extends State<Chatbot> {
                       },
                     ),
                     Divider(),
+                    if (docs.isEmpty) 
+                      const ListTile(
+                        title: Text('No past chats yet'),
+                        )
+                    else 
                     ...docs.map((doc) {
                       final data = doc.data() as Map<String, dynamic>;
                       final title = data['title'] ?? 'Untitled';
                       final chatId = doc.id;
                       return ListTile(
-                        title: Text(title),
-                        onTap: () {
-                          print("Chat tapped: $chatId");
-                          switchChat(chatId);
-                        },
+                        title: InkWell(
+                          onTap: () {
+                              print("Chat tapped: $chatId");
+                              switchChat(chatId);
+                            },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(title, overflow: TextOverflow.ellipsis,),
+                              IconButton(
+                                onPressed: () async{
+                                  bool confirmDelete = await showDialog(
+                                    context: context, 
+                                    builder: (_)=> AlertDialog(
+                                      title: Text('Confirm Delete'),
+                                      content: Text('Are you sure you want to delete this chat?\n This action can\'t be undone.'),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: (){
+                                            Navigator.pop(context, true);
+                                          }, 
+                                          child: Text('Confirm')),
+                                        TextButton(
+                                          onPressed: (){
+                                            Navigator.pop(context, false);
+                                          }, 
+                                          child: Text('Cancel')),
+                                      ],
+                                    ));
+                                    if(confirmDelete){
+                                      await deleteChat(chatId);
+                                      if(activeChatId == null){
+                                      await createNewChat();
+                                      }
+                                    }
+                                }, 
+                                icon: SvgPicture.asset('assets/svg/delete.svg', width: 24, height: 24,),
+                                )
+                            ],
+                          ),
+                        ),
+                        
                       );
                     })
                   ],
                 );
               }),
         ),
-        body: DashChat(
+        body:
+        DashChat(
           currentUser: currentUser,
           onSend: (chatMsg) => _sendMessage(chatMsg),
           messages: messages,
           inputOptions: InputOptions(
               textController: messageController,
-              // inputDecoration: InputDecoration(
-              //   hintText: 'Type a message...',
-              //   border: OutlineInputBorder(
-              //     borderRadius: BorderRadius.circular(10)
-              //   )
-              // ),
               trailing: [
                 IconButton(
                     onPressed: () {
