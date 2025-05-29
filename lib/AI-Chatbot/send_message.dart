@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class ChatLogic {
   final String userId;
