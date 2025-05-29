@@ -94,8 +94,8 @@ Widget buildMaintenanceCard({
         ),
         SizedBox(height: 15),
         Center(
-          child: LocalizedText(
-            text: title,
+          child: Text(
+            title,
             style: textStyleWhite.copyWith(
               color: AppColors.buttonColor,
               fontSize: 20,
@@ -107,22 +107,13 @@ Widget buildMaintenanceCard({
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            LocalizedText(
-              text: "Expected Date",
-              style: textStyleGray,
-            ),
-            LocalizedText(
-              text: date,
-              style: textStyleGray,
-            ),
+            Text("Expected Date", style: textStyleGray),
+            Text(date, style: textStyleGray),
           ],
         ),
         SizedBox(height: 20),
         ...tasks.map(
-          (task) => LocalizedText(
-            text: task,
-            style: textStyleWhite,
-          ),
+          (task) => Text(task, style: textStyleWhite),
         ),
       ],
     ),

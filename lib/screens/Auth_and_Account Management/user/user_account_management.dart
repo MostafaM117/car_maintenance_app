@@ -11,7 +11,6 @@ import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../constants/app_colors.dart';
 import '../../../widgets/info_field.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserAccountManagement extends StatefulWidget {
   const UserAccountManagement({super.key});
@@ -61,7 +60,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
       if (fileExists) {
         publicUrl = storage.from(bucket).getPublicUrl(fileName);
         print('File already exists: $fileName, reusing URL.');
-      } else {
+      }
+      else{
         await storage.from(bucket).upload(fileName, file);
         publicUrl = storage.from(bucket).getPublicUrl(fileName);
         print('Image uploaded successfully: $publicUrl');
@@ -86,26 +86,23 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
       _isImageLoading = false;
     });
   }
-
   //Delete Image
   Future<void> deleteProfileImage() async {
     const bucket = 'user-profile-images';
-    try {
-      if (imageUrl == null || imageUrl!.isEmpty) {
+    try{
+      if(imageUrl == null || imageUrl!.isEmpty){
         return;
-      } else {
+      }
+      else{
         final uri = Uri.parse(imageUrl!);
         final segments = uri.pathSegments;
         final bucketIndex = segments.indexOf(bucket);
         if (bucketIndex == -1 || bucketIndex + 1 >= segments.length) {
-          throw Exception("Could not extract file name from imageUrl.");
+        throw Exception("Could not extract file name from imageUrl.");
         }
         final filename = segments[bucketIndex + 1];
         await Supabase.instance.client.storage.from(bucket).remove([filename]);
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .update({
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({
           'imageUrl': FieldValue.delete(),
         });
         setState(() {
@@ -114,7 +111,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
         });
         print('Image deleted successfully.');
       }
-    } catch (e) {
+    } catch(e){
       print('Error While deleting profile image $e');
     }
   }
@@ -127,7 +124,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: false,
@@ -180,78 +176,70 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                                       CircularProgressIndicator());
                                             },
                                           )
-                                        : Icon(
-                                            Icons.person,
-                                            size: 60,
-                                          ),
-                                // Image.asset('assets/default_profile.png'),
+                                        : Icon(Icons.person,size: 60,),
+                                        // Image.asset('assets/default_profile.png'),
                               ),
                             ),
                             InkWell(
                               onTap: () async {
                                 showModalBottomSheet(
-                                    backgroundColor: AppColors.background,
-                                    context: context,
-                                    builder: (context) {
-                                      return Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          ListTile(
-                                            leading: Icon(
-                                              Icons.upload_outlined,
-                                              color: AppColors.primaryText,
-                                            ),
-                                            title: Text(
-                                              'Upload an image',
-                                              style: TextStyle(
-                                                  color: AppColors.primaryText),
-                                            ),
-                                            onTap: () async {
-                                              Navigator.pop(context);
-                                              setState(() {
-                                                _isImageLoading = true;
+                                  backgroundColor: AppColors.background,
+                                  context: context, 
+                                  builder: (context){
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.upload_outlined,
+                                            color: AppColors.primaryText,),
+                                          title: Text(
+                                            'Upload an image',
+                                            style: TextStyle(
+                                              color: AppColors.primaryText
+                                            ),),
+                                          onTap: () async{
+                                            Navigator.pop(context);
+                                            setState(() {
+                                              _isImageLoading = true;
                                               });
-                                              await pickAndUploadImage();
-                                              await loadImage();
-                                            },
-                                          ),
-                                          ListTile(
-                                            leading: SvgPicture.asset(
-                                              'assets/svg/delete.svg',
-                                              width: 24,
-                                              height: 24,
-                                              color: (imageUrl == null ||
-                                                      imageUrl!.isEmpty)
-                                                  ? Colors.grey
-                                                  : AppColors.primaryText,
+                                            await pickAndUploadImage();
+                                            await loadImage();
+                                          },
+                                        ),
+                                        ListTile(
+                                          leading: SvgPicture.asset(
+                                            'assets/svg/delete.svg', width: 24, height: 24, 
+                                            color: 
+                                            (imageUrl == null || imageUrl!.isEmpty)
+                                            ? Colors.grey
+                                            : AppColors.primaryText,
                                             ),
-                                            title: Text(
-                                              'Delete image',
-                                              style: TextStyle(
-                                                color: (imageUrl == null ||
-                                                        imageUrl!.isEmpty)
-                                                    ? Colors.grey
-                                                    : AppColors.primaryText,
+                                          title: Text(
+                                            'Delete image',
+                                            style: TextStyle(
+                                              color: (imageUrl == null || imageUrl!.isEmpty)
+                                              ? Colors.grey
+                                              : AppColors.primaryText,
                                               ),
                                             ),
-                                            onTap: (imageUrl == null ||
-                                                    imageUrl!.isEmpty)
-                                                ? null
-                                                : () async {
-                                                    Navigator.pop(context);
-                                                    setState(() {
-                                                      _isImageLoading = true;
-                                                    });
-                                                    await deleteProfileImage();
-                                                    await loadImage();
-                                                    setState(() {
-                                                      _isImageLoading = false;
-                                                    });
-                                                  },
-                                          )
-                                        ],
-                                      );
-                                    });
+                                          onTap: (imageUrl == null || imageUrl!.isEmpty)
+                                            ? null
+                                            :() async{
+                                            Navigator.pop(context);
+                                            setState(() {
+                                              _isImageLoading = true;
+                                              });
+                                              await deleteProfileImage(); 
+                                              await loadImage();
+                                              setState(() {
+                                                _isImageLoading = false;
+                                              });
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -345,7 +333,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(l10n.nameUsageInfo),
+                                        Text(
+                                            'This name will be used across your account and may be visible to others.'),
                                         SizedBox(
                                           height: 20,
                                         ),
@@ -353,7 +342,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           controller: _usernameEditcontroller,
                                           cursorColor: Colors.black,
                                           decoration: InputDecoration(
-                                            label: Text(l10n.usernameLabel),
+                                            label: Text('Username'),
                                             labelStyle: TextStyle(
                                                 color: errorText != null
                                                     ? Theme.of(context)
@@ -518,7 +507,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           MainAxisAlignment.center,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text(l10n.emailResetInfo),
+                                        Text(
+                                            'Please enter your email and you will receive an email with a link to change your password.'),
                                         SizedBox(
                                           height: 20,
                                         ),
@@ -526,7 +516,7 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                           controller: _emailcontroller,
                                           cursorColor: Colors.black,
                                           decoration: InputDecoration(
-                                            label: Text(l10n.emailLabel),
+                                            label: Text('Enter your email'),
                                             labelStyle: TextStyle(
                                                 color: errorText != null
                                                     ? Theme.of(context)

@@ -5,7 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../widgets/custom_widgets.dart';
@@ -45,65 +44,71 @@ class _UserSignupState extends State<UserSignupPage> {
     }
   }
 
-  Future<UserCredential?> signup() async {
+  Future <UserCredential?> signup() async {
     if (_usernameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a username')),
       );
       return null;
-    } else if (!confirmpassword()) {
+    }
+
+    else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Passwords do not match')),
       );
       return null;
-    } else if (_emailcontroller.text.trim().isEmpty) {
+    }
+    else if (_emailcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An email address is required')),
       );
       return null;
-    } else if (_passwordcontroller.text.trim().isEmpty) {
+    }
+    else if (_passwordcontroller.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please enter a password to sign up')),
       );
       return null;
-    } else {
-      try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: _emailcontroller.text.trim(),
-                password: _passwordcontroller.text.trim());
+    }
+    else {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: _emailcontroller.text.trim(),
+              password: _passwordcontroller.text.trim());
 
-        await createuser(
-          _usernameController.text.trim(),
-          _emailcontroller.text.trim(),
-          userCredential.user!.uid,
-        );
-        Navigator.pop(context);
-        Navigator.pop(context);
+      await createuser(
+        _usernameController.text.trim(),
+        _emailcontroller.text.trim(),
+        userCredential.user!.uid,
+      );
+      Navigator.pop(context);
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content:
+              Text('Registred Successfully, Complete Your First time setup'),
+          duration: Duration(milliseconds: 4000),
+          backgroundColor: Colors.green.shade400,
+        ),
+      );
+      return userCredential;
+    } catch (e) {
+      if(e.toString().contains('email-already-in-use')){
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('Registred Successfully, Complete Your First time setup'),
-            duration: Duration(milliseconds: 4000),
-            backgroundColor: Colors.green.shade400,
-          ),
+          SnackBar(content: Text('This email is already registered')),
         );
-        return userCredential;
-      } catch (e) {
-        if (e.toString().contains('email-already-in-use')) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('This email is already registered')),
-          );
-          return null;
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: ${e.toString()}')),
-          );
-          return null;
-        }
+        return null;
+      }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
+      return null;
       }
     }
   }
+    }
 
   Future createuser(String username, String email, String uid) async {
     await FirebaseFirestore.instance.collection('users').doc(uid).set({
@@ -125,7 +130,6 @@ class _UserSignupState extends State<UserSignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
@@ -135,19 +139,21 @@ class _UserSignupState extends State<UserSignupPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 50),
+
               Text(
-                l10n.register,
+                'Sign up to appName',
                 style: textStyleWhite.copyWith(fontSize: 24),
               ),
               const SizedBox(height: 12),
               Text(
-                l10n.userLoginWelcome,
+                'Welcome! Please enter your details!',
                 style: textStyleGray.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 30),
+              // // Username
               buildInputField(
                 controller: _usernameController,
                 iconWidget: SvgPicture.asset(
@@ -155,7 +161,7 @@ class _UserSignupState extends State<UserSignupPage> {
                   width: 24,
                   height: 24,
                 ),
-                hintText: l10n.usernameHint,
+                hintText: 'Username',
                 errorText: _usernameErrorText,
                 suffixWidget: _isCheckingUsername
                     ? const SizedBox(
@@ -165,9 +171,11 @@ class _UserSignupState extends State<UserSignupPage> {
                       )
                     : null,
               ),
+
+              // Email address
               const SizedBox(height: 20),
               buildInputField(
-                hintText: l10n.emailHint,
+                hintText: 'Enter your email ',
                 controller: _emailcontroller,
                 iconWidget: SvgPicture.asset(
                   'assets/svg/inpox.svg',
@@ -175,6 +183,7 @@ class _UserSignupState extends State<UserSignupPage> {
                   height: 24,
                 ),
               ),
+              //Password
               const SizedBox(height: 20),
               buildInputField(
                 controller: _passwordcontroller,
@@ -183,10 +192,11 @@ class _UserSignupState extends State<UserSignupPage> {
                   width: 20,
                   height: 24,
                 ),
-                hintText: l10n.passwordHint,
+                hintText: 'Enter your password',
                 obscureText: _obscureText,
                 togglePasswordView: _toggletoviewpassword,
               ),
+              //Confirm Password
               const SizedBox(height: 20),
               buildInputField(
                 controller: _confirmpasswordcontroller,
@@ -195,70 +205,63 @@ class _UserSignupState extends State<UserSignupPage> {
                   width: 20,
                   height: 24,
                 ),
-                hintText: l10n.confirmPasswordHint,
+                hintText: 'Confirm Password',
                 obscureText: _obscureText,
               ),
               const SizedBox(height: 15),
               CheckboxListTile(
-                  value: _termschecked,
-                  title: RichText(
-                      text: TextSpan(
-                          style: textStyleGray.copyWith(fontSize: 12),
-                          children: [
-                        TextSpan(text: l10n.termsAgreement),
-                        TextSpan(
-                            text: l10n.termsAndPrivacy,
-                            style: textStyleGray.copyWith(
-                              color: Colors.blue.shade200,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            TermsAndConditionsPage()));
-                              })
-                      ])),
-                  controlAffinity: ListTileControlAffinity.leading,
-                  contentPadding: EdgeInsets.zero,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _termschecked = value!;
-                    });
-                  }),
+                value: _termschecked, 
+                title: RichText(text: TextSpan(
+                  style: textStyleGray.copyWith(
+                    fontSize: 12
+                  ),
+                  children: [
+                    const TextSpan(text: 'By signing up, you agree to our '),
+                    TextSpan(
+                      text: 'Terms of Service and privacy Policy.',
+                      style: textStyleGray.copyWith(
+                        color: Colors.blue.shade200,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        // decoration: TextDecoration.underline,
+                      ),
+                      recognizer: TapGestureRecognizer()..onTap = (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => TermsAndConditionsPage()));
+                      }
+                    )
+                  ]
+                )),
+                controlAffinity: ListTileControlAffinity.leading,
+                contentPadding: EdgeInsets.zero,
+                onChanged: (bool? value){
+                  setState(() {
+                    _termschecked = value!;
+                  });
+                }),
               const SizedBox(height: 60),
+              // Signup Button requires terms to be checked 
               SizedBox(
                 width: double.infinity,
                 height: 45,
                 child: ElevatedButton(
-                  onPressed: () {
-                    _termschecked
-                        ? signup()
-                        : SnackBar(
-                            content: ScaffoldMessenger(
-                                child: Text(l10n.checkTermsToContinue)));
-                  },
+                  onPressed: (){
+                    _termschecked ? signup() : SnackBar(content: ScaffoldMessenger(child: Text('Check terms to continue')));
+                  }, 
                   style: TextButton.styleFrom(
-                    backgroundColor:
-                        _termschecked ? AppColors.buttonColor : Colors.grey,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)),
+                    backgroundColor: _termschecked ? AppColors.buttonColor : Colors.grey,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(l10n.register,
-                          style: textStyleWhite.copyWith(
-                              color: AppColors.buttonText))
+                      Text('Signup', style: textStyleWhite.copyWith(color: AppColors.buttonText))
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              buildOrSeparator(context),
+
+              buildOrSeparator(),
               const SizedBox(height: 15),
               Center(
                 child: GestureDetector(
@@ -267,12 +270,12 @@ class _UserSignupState extends State<UserSignupPage> {
                   },
                   child: Text.rich(
                     TextSpan(
-                      text: '${l10n.haveAccount} ',
+                      text: 'Already have an accoun? ',
                       style: textStyleWhite.copyWith(
                           fontSize: 12, fontWeight: FontWeight.w500),
                       children: [
                         TextSpan(
-                          text: l10n.login,
+                          text: 'Sign in',
                           style: textStyleWhite.copyWith(
                             fontSize: 12,
                             fontWeight: FontWeight.w900,

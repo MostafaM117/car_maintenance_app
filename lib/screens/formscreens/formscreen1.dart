@@ -8,7 +8,6 @@ import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:car_maintenance/widgets/maintenance_date_picker.dart';
 import 'package:car_maintenance/screens/Current_Screen/user_main_screen.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AddCarScreen extends StatefulWidget {
   @override
@@ -99,7 +98,6 @@ class _AddCarScreenState extends State<AddCarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -115,22 +113,18 @@ class _AddCarScreenState extends State<AddCarScreen> {
                   totalCount: 12,
                 ),
                 const SizedBox(height: 24),
-                Text(
-                    username != null
-                        ? l10n.welcome(username!)
-                        : l10n.welcome("User"),
+                Text(username != null ? 'Hi $username' : 'Hi User',
                     style: textStyleWhite.copyWith(fontSize: 24)),
                 const SizedBox(height: 8),
                 Text(
-                  l10n.formWelcomeMessage,
+                  'Please fill in your car details to continue.',
                   style: textStyleGray,
                 ),
                 const SizedBox(height: 25),
 
                 // Car Make
                 buildDropdownField(
-                  context: context,
-                  label: l10n.brand,
+                  label: 'Car Make',
                   value: _selectedMake,
                   options: _carMakes,
                   onChanged: (String? newValue) {
@@ -146,8 +140,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
 
                 // Car Model
                 buildDropdownField(
-                  context: context,
-                  label: l10n.model,
+                  label: 'Car Model',
                   value: _selectedModel,
                   options: _selectedMake == null
                       ? []
@@ -164,8 +157,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
 
                 // Model Year
                 buildDropdownField(
-                  context: context,
-                  label: l10n.year,
+                  label: 'Model Year',
                   value: _selectedYear?.toString(),
                   options: (_selectedMake == null || _selectedModel == null)
                       ? []
@@ -183,16 +175,16 @@ class _AddCarScreenState extends State<AddCarScreen> {
 
                 // Mileage
                 buildTextField(
-                  label: l10n.currentMileageLabel,
+                  label: 'Current car mileage (Approx.)',
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(7),
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   controller: mileageController,
-                  hintText: l10n.mileageHint,
+                  hintText: 'Mileage (KM)',
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return l10n.enterMileageError;
+                      return 'Please enter mileage';
                     }
                     return null;
                   },
@@ -201,16 +193,16 @@ class _AddCarScreenState extends State<AddCarScreen> {
 
                 // Avg usage
                 buildTextField(
-                  label: l10n.avgMonthlyUsageLabel,
+                  label: 'Average monthly usage (KM)',
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(6),
                     FilteringTextInputFormatter.digitsOnly,
                   ],
                   controller: avgKmController,
-                  hintText: l10n.avgKmHint,
+                  hintText: 'Average (KM)',
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return l10n.enterAvgUsageError;
+                      return 'Please enter average usage';
                     }
                     return null;
                   },
@@ -234,7 +226,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
                 isLoading
                     ? Center(child: CircularProgressIndicator())
                     : buildButton(
-                        l10n.submit,
+                        'Submit',
                         isFormComplete
                             ? AppColors.buttonColor
                             : AppColors.secondaryText,
@@ -246,7 +238,7 @@ class _AddCarScreenState extends State<AddCarScreen> {
 
                 // Dismiss button
                 buildButton(
-                  l10n.cancel,
+                  'Dismiss',
                   AppColors.buttonText,
                   AppColors.buttonColor,
                   onPressed: () {

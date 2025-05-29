@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../Back-end/firestore_service.dart';
 import '../constants/app_colors.dart';
 import '../models/MaintID.dart';
@@ -49,7 +48,6 @@ class _AddMaintenanceState extends State<AddMaintenance> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
@@ -93,7 +91,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                             ),
                           )
                         : Text(
-                            _pageTitle ?? l10n.maintenanceName,
+                            _pageTitle ?? "Maintenance Name",
                             style: TextStyle(
                               color: const Color(0xFFDA1F11),
                               fontSize: 24,
@@ -104,8 +102,8 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                   ),
                   const SizedBox(height: 12),
                   buildTextField(
-                    label: l10n.mileageLabel,
-                    hintText: l10n.currentMileage,
+                    label: 'Mileage',
+                    hintText: 'Current mileage',
                     controller: mileageController,
                   ),
                   const SizedBox(height: 12), // Date Picker
@@ -153,7 +151,6 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                       });
                     },
                     label: ' Maintenance Status',
-                    context: context,
                   ),
                   const SizedBox(height: 12),
                   // Attachments Field

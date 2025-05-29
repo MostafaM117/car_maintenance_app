@@ -6,7 +6,6 @@ import '../Back-end/firestore_service.dart';
 import '../models/MaintID.dart';
 // import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HistoryDetailsPage extends StatefulWidget {
   final MaintenanceList maintenanceItem;
@@ -21,7 +20,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
   late FirestoreService firestoreService;
   late TextEditingController descriptionController;
   late TextEditingController mileageController;
-  late String _status;
+  String _status = 'Upcoming';
   bool _isEditing = false;
   DateTime _selectedDate = DateTime.now();
 
@@ -39,17 +38,11 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
         TextEditingController(text: widget.maintenanceItem.description);
     mileageController =
         TextEditingController(text: widget.maintenanceItem.mileage.toString());
+    _status = widget.maintenanceItem.isDone ? 'Completed' : 'Upcoming';
     _selectedDate = widget.maintenanceItem.expectedDate;
 
     mileageFocusNode = FocusNode();
     descriptionFocusNode = FocusNode();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final l10n = AppLocalizations.of(context)!;
-    _status = widget.maintenanceItem.isDone ? l10n.completed : l10n.upcoming;
   }
 
   @override
@@ -64,8 +57,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
 
   void _saveChanges() {
     // Check if status changed to Completed
-    final l10n = AppLocalizations.of(context)!;
-    if (_status == l10n.completed && !widget.maintenanceItem.isDone) {
+    if (_status == 'Completed' && !widget.maintenanceItem.isDone) {
       // Move to history instead of updating
       firestoreService.moveToHistory(widget.maintenanceItem.id);
     } else {
@@ -75,7 +67,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
         descriptionController.text,
         int.parse(mileageController.text),
         _selectedDate,
-        _status == l10n.completed,
+        _status == 'Completed',
       );
     }
 
@@ -91,14 +83,13 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
     );
 
     // If marked as completed, navigate back
-    if (_status == l10n.completed) {
+    if (_status == 'Completed') {
       Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -110,9 +101,9 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
-                  Center(
+                  const Center(
                     child: Text(
-                      l10n.maintenanceDetails,
+                      'Maintenance Details',
                       style: TextStyle(
                         color: AppColors.buttonColor,
                         fontSize: 24,
@@ -136,7 +127,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    l10n.maintenanceType,
+                                    'Maintenance Type', // هنا اسم الحقل
                                     style: textStyleWhite.copyWith(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -172,7 +163,8 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                                             decoration: InputDecoration(
                                               border: InputBorder.none,
                                               isCollapsed: true,
-                                              hintText: l10n.currentMileage,
+                                              hintText:
+                                                  'Current mileage', // النص المساعد
                                               hintStyle: textStyleGray.copyWith(
                                                   fontWeight: FontWeight.w400),
                                             ),
@@ -217,7 +209,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.expectedDate,
+                              'Expected Date',
                               style: textStyleWhite.copyWith(
                                   fontSize: 16, fontWeight: FontWeight.w500),
                             ),
@@ -282,17 +274,16 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                         const SizedBox(height: 12),
                         buildDropdownField(
                           value: _status,
-                          options: [l10n.upcoming, l10n.completed],
+                          options: ['Upcoming', 'Completed'],
                           onChanged: null,
-                          label: l10n.maintenanceStatus,
-                          context: context,
+                          label: 'Maintenance Status',
                         ),
                         const SizedBox(height: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.description,
+                              'Description',
                               style: textStyleWhite.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -362,7 +353,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               popUpBotton(
-                                l10n.back,
+                                'Back',
                                 AppColors.primaryText,
                                 AppColors.buttonText,
                                 onPressed: () {
@@ -370,7 +361,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                                 },
                               ),
                               popUpBotton(
-                                _isEditing ? l10n.save : l10n.edit,
+                                _isEditing ? "Save" : "Edit",
                                 AppColors.buttonColor,
                                 AppColors.buttonText,
                                 onPressed: () {
