@@ -1,11 +1,10 @@
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:car_maintenance/screens/seller_screens/seller_home_page.dart';
 import 'package:car_maintenance/screens/seller_screens/seller_profile.dart';
 import 'package:car_maintenance/screens/seller_screens/offer_feed.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import '../seller_screens/seller_market.dart';
+import '../seller_screens/seller_home_page.dart';
 
 class SellerMainScreen extends StatefulWidget {
   const SellerMainScreen({super.key});
@@ -19,21 +18,18 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
 
   final List<Widget> _pages = [
     SellerHomePage(),
-    MarketPage(),
     OfferScreen(),
     SellerProfile(),
   ];
 
   final List<String> _labels = [
     'Home',
-    'Market',
     'Account',
     'Offers',
   ];
 
   final List<String> _icons = [
     'assets/svg/home.svg',
-    'assets/svg/shop.svg',
     'assets/svg/user.svg',
     'assets/svg/user.svg',
     // 'assets/svg/feed.svg',
