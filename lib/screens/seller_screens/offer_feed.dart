@@ -1,7 +1,15 @@
+import 'dart:io';
+
 import 'package:car_maintenance/Back-end/offer_service.dart';
+import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/offer_model.dart';
+import 'package:car_maintenance/widgets/custom_Form_Field.dart';
+import 'package:car_maintenance/widgets/offer_img.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import '../../widgets/custom_widgets.dart';
+import '../../widgets/offercard.dart';
 
 class OfferScreen extends StatefulWidget {
   const OfferScreen({super.key});
@@ -20,7 +28,7 @@ class _OfferScreenState extends State<OfferScreen> {
   final TextEditingController _originalPriceController =
       TextEditingController();
   final TextEditingController _discountController = TextEditingController();
-
+  String? _selectedImage;
   DateTime? _validUntil;
   String? editingOfferId;
 
@@ -41,8 +49,8 @@ class _OfferScreenState extends State<OfferScreen> {
       return;
     }
 
-    final businessName = await offerService.getBusinessName();
-    if (businessName.isEmpty) {
+    final business_name = await offerService.getBusinessName();
+    if (business_name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: Could not fetch business name')),
       );
@@ -61,7 +69,8 @@ class _OfferScreenState extends State<OfferScreen> {
       discountPercentage: discount,
       priceAfterDiscount: discountedPrice,
       validUntil: _validUntil!,
-      businessname: businessName,
+      business_name: business_name,
+      imageUrl: _selectedImage ?? '',
     );
 
     try {
@@ -86,6 +95,7 @@ class _OfferScreenState extends State<OfferScreen> {
     _discountController.clear();
     _validUntil = null;
     editingOfferId = null;
+    _selectedImage = null;
     setState(() {});
   }
 
@@ -96,7 +106,7 @@ class _OfferScreenState extends State<OfferScreen> {
     _discountController.text = offer.discountPercentage.toString();
     _validUntil = offer.validUntil;
     editingOfferId = offer.id;
-    setState(() {});
+    showOfferFormDialog();
   }
 
   Future<void> deleteOffer(String id) async {
@@ -118,90 +128,139 @@ class _OfferScreenState extends State<OfferScreen> {
     }
   }
 
+  void showOfferFormDialog() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.noHeader,
+      animType: AnimType.scale,
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      dialogBackgroundColor: AppColors.background,
+      body: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              customFormField(
+                controller: _titleController,
+                label: 'Title',
+                hintText: 'Add Title',
+                validator: (v) =>
+                    v == null || v.isEmpty ? 'Enter a title' : null,
+              ),
+              customFormField(
+                controller: _descriptionController,
+                label: 'Description',
+                hintText: 'Add Description',
+                validator: (v) =>
+                    v == null || v.isEmpty ? 'Enter a description' : null,
+              ),
+              customFormField(
+                controller: _originalPriceController,
+                label: 'Original Price',
+                hintText: 'Add price',
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Enter original price';
+                  final n = double.tryParse(v);
+                  if (n == null || n <= 0) return 'Enter a valid price';
+                  return null;
+                },
+              ),
+              customFormField(
+                controller: _discountController,
+                label: 'Discount %',
+                hintText: 'Enter discount',
+                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                validator: (v) {
+                  if (v == null || v.isEmpty) return 'Enter discount';
+                  final n = double.tryParse(v);
+                  if (n == null || n < 0 || n > 100) return 'Enter 0-100%';
+                  return null;
+                },
+              ),
+              OfferImg(
+                onImageUploaded: (url) {
+                  setState(() {
+                    _selectedImage = url;
+                  });
+                },
+              ),
+              SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      _validUntil == null
+                          ? 'Select valid until date'
+                          : 'Valid Until: ${_validUntil!.toLocal().toString().split(' ')[0]}',
+                      style: TextStyle(color: AppColors.primaryText),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: pickDate,
+                    child: Text('Pick Date'),
+                  )
+                ],
+              ),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  popUpBotton(
+                    'Discard',
+                    AppColors.primaryText,
+                    AppColors.buttonText,
+                    onPressed: () {
+                      clearForm();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  popUpBotton(
+                    editingOfferId == null ? 'Add' : 'Update',
+                    AppColors.buttonColor,
+                    AppColors.buttonText,
+                    onPressed: () async {
+                      await saveOffer();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).show();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Offers Management')),
+      backgroundColor: AppColors.background,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          clearForm();
+          showOfferFormDialog();
+        },
+        label: Text('Add Offer'),
+        icon: Icon(Icons.add),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Form
-            Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _titleController,
-                    decoration: InputDecoration(labelText: 'Title'),
-                    validator: (v) =>
-                        v == null || v.isEmpty ? 'Enter a title' : null,
-                  ),
-                  TextFormField(
-                    controller: _descriptionController,
-                    decoration: InputDecoration(labelText: 'Description'),
-                    validator: (v) =>
-                        v == null || v.isEmpty ? 'Enter a description' : null,
-                  ),
-                  TextFormField(
-                    controller: _originalPriceController,
-                    decoration: InputDecoration(labelText: 'Original Price'),
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return 'Enter original price';
-                      final n = double.tryParse(v);
-                      if (n == null || n <= 0) return 'Enter a valid price';
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _discountController,
-                    decoration: InputDecoration(labelText: 'Discount %'),
-                    keyboardType:
-                        TextInputType.numberWithOptions(decimal: true),
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return 'Enter discount';
-                      final n = double.tryParse(v);
-                      if (n == null || n < 0 || n > 100) return 'Enter 0-100%';
-                      return null;
-                    },
-                  ),
-                  Row(
-                    children: [
-                      Text(_validUntil == null
-                          ? 'Select valid until date'
-                          : 'Valid Until: ${_validUntil!.toLocal().toString().split(' ')[0]}'),
-                      Spacer(),
-                      TextButton(
-                        onPressed: pickDate,
-                        child: Text('Pick Date'),
-                      )
-                    ],
-                  ),
-                  ElevatedButton(
-                    onPressed: saveOffer,
-                    child: Text(
-                        editingOfferId == null ? 'Add Offer' : 'Update Offer'),
-                  ),
-                  if (editingOfferId != null)
-                    TextButton(
-                      onPressed: clearForm,
-                      child: Text('Cancel'),
-                    ),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 20),
-
-            // List of offers
+            Text("Offers",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
+            SizedBox(height: 16),
             Expanded(
               child: StreamBuilder<List<Offer>>(
                 stream: offerService.getOffers(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) return Text('Error loading offers');
-                  if (!snapshot.hasData) return CircularProgressIndicator();
+                  if (!snapshot.hasData)
+                    return Center(child: CircularProgressIndicator());
 
                   final offers = snapshot.data!;
                   if (offers.isEmpty) return Text('No offers found.');
@@ -211,26 +270,63 @@ class _OfferScreenState extends State<OfferScreen> {
                     itemBuilder: (context, index) {
                       final offer = offers[index];
                       return Card(
-                        margin: EdgeInsets.symmetric(vertical: 6),
-                        child: ListTile(
-                          title: Text(offer.title),
-                          subtitle: Text('${offer.description}\n'
-                              'Seller: ${offer.businessname}\n'
-                              'Original Price: \$${offer.originalPrice}\n'
-                              'Discount: ${offer.discountPercentage}%\n'
-                              'Price After Discount: \$${offer.priceAfterDiscount}\n'
-                              'Valid Until: ${offer.validUntil.toLocal().toString().split(' ')[0]}'),
-                          isThreeLine: true,
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
+                        elevation: 2,
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () => startEditing(offer),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () => deleteOffer(offer.id),
+                              // Show image if URL is available
+                              if (offer.imageUrl.isNotEmpty)
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: FadeInImage.assetNetwork(
+                                    placeholder: 'assets/images/offer.jpg',
+                                    image: offer.imageUrl,
+                                    height: 180,
+                                    width: double.infinity,
+                                    fit: BoxFit.cover,
+                                    imageErrorBuilder:
+                                        (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'assets/images/offer.jpg',
+                                        height: 100,
+                                        width: double.infinity,
+                                        fit: BoxFit.contain,
+                                      );
+                                    },
+                                  ),
+                                ),
+                              SizedBox(height: 8),
+                              Text(offer.title,
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                              SizedBox(height: 6),
+                              Text(offer.description),
+                              SizedBox(height: 6),
+                              Text('Seller: ${offer.business_name}'),
+                              Text(
+                                  'Original Price: \$${offer.originalPrice.toStringAsFixed(2)}'),
+                              Text('Discount: ${offer.discountPercentage}%'),
+                              Text(
+                                  'Price After Discount: \$${offer.priceAfterDiscount.toStringAsFixed(2)}'),
+                              Text(
+                                  'Valid Until: ${offer.validUntil.toLocal().toString().split(' ')[0]}'),
+                              SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(Icons.edit, color: Colors.blue),
+                                    onPressed: () => startEditing(offer),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () => deleteOffer(offer.id),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

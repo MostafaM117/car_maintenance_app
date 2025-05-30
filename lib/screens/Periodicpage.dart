@@ -68,7 +68,6 @@ class _PeriodicpageState extends State<Periodicpage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        // ← هذا يملأ المساحة المتاحة
                         child: Container(
                           height: 40,
                           decoration: ShapeDecoration(

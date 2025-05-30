@@ -79,11 +79,20 @@ class CarCardWidget extends StatelessWidget {
                               width: 5,
                             ),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                MileageDisplay.showMileageEditDialog(
+                                  context, 
+                                  carId, 
+                                  mileage,
+                                  onMileageUpdated: (newMileage) {
+                                    print('Updated mileage for car $carId: $newMileage');
+                                  },
+                                );
+                              },
                               child: SvgPicture.asset(
                                 'assets/svg/edit.svg',
-                                width: 15,
-                                height: 15,
+                                width: 20,
+                                height: 20,
                               ),
                             )
                           ],

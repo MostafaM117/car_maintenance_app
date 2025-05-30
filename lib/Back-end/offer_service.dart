@@ -24,7 +24,7 @@ class OfferService {
         return '';
       }
     } catch (e) {
-      print('❌ Error fetching businessname: $e');
+      print('❌ Error fetching business_name: $e');
       return '';
     }
   }
@@ -71,10 +71,10 @@ class OfferService {
     }
   }
 
-  /// (Optional) Get offers filtered by seller ID (businessname)
-  Stream<List<Offer>> getOffersByBusinessName(String businessname) {
+  /// (Optional) Get offers filtered by seller ID (business_name)
+  Stream<List<Offer>> getOffersByBusinessName(String business_name) {
     return offersCollection
-        .where('businessname', isEqualTo: businessname)
+        .where('businessname', isEqualTo: business_name)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Offer.fromFirestore(doc)).toList());

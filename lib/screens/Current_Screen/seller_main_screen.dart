@@ -27,7 +27,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
   final List<String> _labels = [
     'Home',
     'Market',
-    'Profile',
+    'Account',
     'Offers',
   ];
 

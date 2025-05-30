@@ -226,7 +226,6 @@ class _AddItemState extends State<AddItem> {
                 height: 25,
               ),
               Row(
-                // crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   popUpBotton(

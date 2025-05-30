@@ -79,6 +79,9 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                             child: Text("No maintenance history available."));
                       }
 
+                      // Make sure the list is sorted by mileage
+                      historyList.sort((a, b) => a.mileage.compareTo(b.mileage));
+
                       return ListView.builder(
                         itemCount: historyList.length,
                         itemBuilder: (context, index) {
@@ -119,7 +122,10 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                       maintenanceItem: maintenanceItem,
                                     ),
                                   ),
-                                );
+                                ).then((_) {
+                                  // Refresh the UI when coming back from details
+                                  setState(() {});
+                                });
                               },
                               child: MaintenanceCard(
                                 title: '${maintenanceItem.mileage} KM',

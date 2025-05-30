@@ -5,7 +5,7 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
 import 'package:car_maintenance/models/car_data.dart';
-import 'package:car_maintenance/screens/Periodicpage.dart';
+// import 'package:car_maintenance/screens/Periodicpage.dart';
 import 'package:car_maintenance/screens/seller_screens/add_item.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +105,7 @@ class _MarketPageState extends State<MarketPage> {
                               vertical: 10,
                             ),
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.search),
+                              icon: Icon(Icons.search_rounded),
                               onPressed: () {
                                 setState(() {
                                   // Trigger search with current text
@@ -120,6 +120,15 @@ class _MarketPageState extends State<MarketPage> {
                   _buildFilterButton('Filters'),
                 ],
               ),
+              // const SizedBox(height: 10),
+              // Row(
+              //   children: [
+              //     _buildFilterButton('Filters'),
+
+              //     // const SizedBox(width: 8),
+              //     // _buildFilterButton('Filter'),
+              //   ],
+              // ),
               const SizedBox(height: 20),
               // Input for new item
               GestureDetector(
@@ -146,8 +155,8 @@ class _MarketPageState extends State<MarketPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
+                    children: [
+                      const Text(
                         'Add New Item',
                         style: TextStyle(
                           color: Colors.grey,
@@ -155,13 +164,17 @@ class _MarketPageState extends State<MarketPage> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      Icon(Icons.add, size: 30, color: Colors.black),
+                      SvgPicture.asset(
+                        'assets/svg/add.svg',
+                        width: 24,
+                        height: 24,
+                      ),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               // Items List
               Expanded(
                 child: StreamBuilder<List<ProductItem>>(
@@ -295,6 +308,105 @@ class _MarketPageState extends State<MarketPage> {
     );
   }
 
+  // Widget _buildFilterButton(String title) {
+  //   return ElevatedButton(
+  //     onPressed: () {
+  //       showDialog(
+  //         context: context,
+  //         builder: (context) {
+  //           return AlertDialog(
+  //             title: Text('Filter'),
+  //             content: SingleChildScrollView(
+  //               child: Column(
+  //                 mainAxisSize: MainAxisSize.min,
+  //                 children: [
+  //                   // Add your filter options here
+  //                   // Car Make
+  //                   buildDropdownField(
+  //                     label: 'Car Make',
+  //                     value: filterMake,
+  //                     options: _carMakes,
+  //                     onChanged: (String? newValue) {
+  //                       setState(() {
+  //                         filterMake = newValue;
+  //                         filterModel = null;
+  //                         checkFormCompletion();
+  //                       });
+  //                     },
+  //                   ),
+  //                   const SizedBox(height: 15),
+
+  //                   // Car Model
+  //                   buildDropdownField(
+  //                     label: 'Car Model',
+  //                     value: filterModel,
+  //                     options: filterMake == null
+  //                         ? []
+  //                         : CarData.getModelsForMake(filterMake),
+  //                     onChanged: (String? newValue) {
+  //                       setState(() {
+  //                         filterModel = newValue;
+  //                         checkFormCompletion();
+  //                       });
+  //                     },
+  //                   ),
+  //                   TextField(
+  //                     decoration: InputDecoration(labelText: 'Min Price'),
+  //                     keyboardType: TextInputType.number,
+  //                     onChanged: (value) {
+  //                       setState(() {
+  //                         minPrice = double.tryParse(value);
+  //                       });
+  //                     },
+  //                   ),
+  //                   TextField(
+  //                     decoration: InputDecoration(labelText: 'Max Price'),
+  //                     keyboardType: TextInputType.number,
+  //                     onChanged: (value) {
+  //                       setState(() {
+  //                         maxPrice = double.tryParse(value);
+  //                       });
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             actions: [
+  //               ElevatedButton(
+  //                 onPressed: () {
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: Text('Apply'),
+  //               ),
+  //               ElevatedButton(
+  //                 onPressed: () {
+  //                   setState(() {
+  //                     filterMake = null;
+  //                     filterModel = null;
+  //                     minPrice = null;
+  //                     maxPrice = null;
+  //                   });
+  //                   Navigator.of(context).pop();
+  //                 },
+  //                 child: Text('Reset'),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     },
+  //     style: ElevatedButton.styleFrom(
+  //       foregroundColor: Colors.black,
+  //       backgroundColor: AppColors.secondaryText,
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(20),
+  //       ),
+  //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  //     ),
+  //     child: Text(title),
+  //   );
+  // }
+
   Widget _buildFilterButton(String title) {
     return ElevatedButton(
       onPressed: () {
@@ -383,6 +495,7 @@ class _MarketPageState extends State<MarketPage> {
                               searchQuery = null;
                             });
                             checkFormCompletion();
+
                             Navigator.of(context).pop();
                           },
                         ),

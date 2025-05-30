@@ -1,3 +1,5 @@
+import 'package:car_maintenance/screens/seller_screens/add_item.dart';
+import 'package:car_maintenance/screens/seller_screens/offer_feed.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../../constants/app_colors.dart';
 import '../../services/seller/seller_data_helper.dart';
 import '../../widgets/SubtractWave_widget.dart';
+import '../../widgets/exploreCard.dart';
 
 class SellerHomePage extends StatefulWidget {
   const SellerHomePage({super.key});
@@ -49,6 +52,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
               SubtractWave(
                 text: 'Welcome Back, ${username.split(' ').first}',
                 svgAssetPath: 'assets/svg/notification.svg',
+                suptext: 'Tap here and we’ll help you out!',
                 onTap: () {},
               ),
               SizedBox(height: 15),
@@ -71,9 +75,25 @@ class _SellerHomePageState extends State<SellerHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildExploreCard(),
-                  _buildExploreCard(),
-                  _buildExploreCard(),
+                  ExploreCard(
+                      title: 'ADD\nNEW ITEM',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddItem()),
+                        );
+                      }),
+                  ExploreCard(
+                      title: 'ADD\nOFFER',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OfferScreen(),
+                          ),
+                        );
+                      }),
+                  ExploreCard(title: 'CHECKOUT\nOFFERS', onTap: () {}),
                 ],
               ),
               SizedBox(height: 5),
@@ -132,40 +152,6 @@ class _SellerHomePageState extends State<SellerHomePage> {
       ),
     );
   }
-}
-
-Widget _buildExploreCard(
-    // BuildContext context, String title, IconData icon, Color color, VoidCallback onTap
-    ) {
-  return GestureDetector(
-    // onTap: ,
-    child: Container(
-      width: 100,
-      height: 60,
-      decoration: ShapeDecoration(
-        color: AppColors.secondaryText,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: 1,
-            color: AppColors.borderSide,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-          ),
-          SizedBox(height: 8),
-        ],
-      ),
-    ),
-  );
 }
 
 Widget _buildSellingCard(

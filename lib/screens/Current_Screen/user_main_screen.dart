@@ -32,12 +32,12 @@ class _UserMainScreenState extends State<UserMainScreen> {
     'Maintain',
     'Chatbot',
     'Market',
-    'Profile',
+    'Account',
   ];
 
   final List<String> _icons = [
     'assets/svg/home.svg',
-    'assets/svg/mnt.svg',
+    'assets/svg/wrench2.svg',
     'assets/svg/chat.svg',
     'assets/svg/shop.svg',
     'assets/svg/user.svg',
