@@ -17,7 +17,13 @@ class StoreNotVerified extends StatelessWidget {
           children: [
             Expanded(
               child: Center(
-                child: Text('Please wait until our team review your account, and you will recieve an email shortly.'),
+                child: Text(
+                  'Please wait while we review your account.',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.buttonColor,
+                  ),),
               ),
             ),
             buildButton(
