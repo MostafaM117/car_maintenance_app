@@ -25,7 +25,7 @@ class _PeriodicpageState extends State<Periodicpage> {
   String? filterModel;
   double? minPrice;
   double? maxPrice;
-  String? selectedLocation;
+  String? searchQuery;
   final List<String> _carMakes = CarData.getAllMakes();
   final TextEditingController _searchController = TextEditingController();
 
@@ -90,7 +90,15 @@ class _PeriodicpageState extends State<Periodicpage> {
                                   horizontal: 15,
                                   vertical: 10,
                                 ),
-                                suffixIcon: Icon(Icons.search)),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.search),
+                                  onPressed: () {
+                                    setState(() {
+                                      // Trigger search with current text
+                                      searchQuery = _searchController.text;
+                                    });
+                                  },
+                                )),
                           ),
                         ),
                       ),
@@ -108,7 +116,9 @@ class _PeriodicpageState extends State<Periodicpage> {
                           model: filterModel,
                           minPrice: minPrice,
                           maxPrice: maxPrice,
-                          location: selectedLocation,
+                          searchQuery: _searchController.text.isNotEmpty
+                              ? _searchController.text
+                              : null,
                         ),
                         builder: (context, snapshot) {
                           final products =
@@ -253,6 +263,8 @@ class _PeriodicpageState extends State<Periodicpage> {
                               filterModel = null;
                               minPrice = null;
                               maxPrice = null;
+                              _searchController.clear();
+                              searchQuery = null;
                             });
                             checkFormCompletion();
                             Navigator.of(context).pop();

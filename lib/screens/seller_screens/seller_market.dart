@@ -28,7 +28,7 @@ class _MarketPageState extends State<MarketPage> {
   String? filterModel;
   double? minPrice;
   double? maxPrice;
-  String? selectedLocation;
+  String? searchQuery;
   final OfferService offerService = OfferService();
   String? businessName;
   final List<String> _carMakes = CarData.getAllMakes();
@@ -79,8 +79,10 @@ class _MarketPageState extends State<MarketPage> {
               ),
               const SizedBox(height: 20),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
+                    // ← هذا يملأ المساحة المتاحة
                     child: Container(
                       height: 40,
                       decoration: ShapeDecoration(
@@ -96,36 +98,26 @@ class _MarketPageState extends State<MarketPage> {
                       child: TextField(
                         controller: _searchController,
                         decoration: InputDecoration(
-                          hintText: 'Search',
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                        ),
+                            hintText: 'Search',
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 10,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                setState(() {
+                                  // Trigger search with current text
+                                  searchQuery = _searchController.text;
+                                });
+                              },
+                            )),
                       ),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
+                  const SizedBox(width: 10),
                   _buildFilterButton('Filters'),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Periodicpage(
-                            title: 'Periodic',
-                          ),
-                        ),
-                      );
-                    },
-                    icon: Icon(Icons.filter_list),
-                  ),
-                  // const SizedBox(width: 8),
-                  // _buildFilterButton('Filter'),
                 ],
               ),
               const SizedBox(height: 20),
@@ -178,7 +170,9 @@ class _MarketPageState extends State<MarketPage> {
                       model: filterModel,
                       minPrice: minPrice,
                       maxPrice: maxPrice,
-                      location: selectedLocation,
+                      searchQuery: _searchController.text.isNotEmpty
+                          ? _searchController.text
+                          : null,
                       businessName: businessName,
                     ),
                     builder: (context, snapshot) {
@@ -385,6 +379,8 @@ class _MarketPageState extends State<MarketPage> {
                               filterModel = null;
                               minPrice = null;
                               maxPrice = null;
+                              _searchController.clear();
+                              searchQuery = null;
                             });
                             checkFormCompletion();
                             Navigator.of(context).pop();

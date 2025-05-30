@@ -130,8 +130,8 @@ class FirestoreService {
     String? model,
     double? minPrice,
     double? maxPrice,
-    String? location,
     String? businessName,
+    String? searchQuery,
   }) {
     Query query = productsCollection;
     if (businessName != null && businessName.isNotEmpty) {
@@ -190,6 +190,11 @@ class FirestoreService {
             }
           })
           .whereType<ProductItem>()
+          .where((product) {
+            if (searchQuery == null || searchQuery.trim().isEmpty) return true;
+            final lower = searchQuery.toLowerCase();
+            return product.name.toLowerCase().contains(lower);
+          })
           .toList();
 
       print("🏷️ Building grid with ${products.length} products");

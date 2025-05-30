@@ -201,14 +201,14 @@ class _EditItemState extends State<EditItem> {
                 },
               ),
 
-              const SizedBox(height: 15),
+              // const SizedBox(height: 15),
 
-              // Stock Count
-              buildTextField(
-                label: 'Stock Count',
-                hintText: 'Add Count',
-                controller: stockCountController,
-              ),
+              // // Stock Count
+              // buildTextField(
+              //   label: 'Stock Count',
+              //   hintText: 'Add Count',
+              //   controller: stockCountController,
+              // ),
 
               const SizedBox(height: 15),
 
