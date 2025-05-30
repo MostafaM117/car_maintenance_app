@@ -1,16 +1,13 @@
-import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
 import 'package:car_maintenance/screens/seller_screens/my_stores.dart';
-import 'package:car_maintenance/services/seller/seller_data_helper.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../widgets/darkmode_toggle_widget.dart';
 import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
@@ -65,7 +62,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return CircleAvatar(
-                            radius: 60,
+                            radius: 65,
                             backgroundColor: AppColors.lightGray,
                             child: CircularProgressIndicator());
                       }
@@ -74,19 +71,19 @@ class _SellerProfileState extends State<SellerProfile> {
 
                       if (imageUrl == null || imageUrl.isEmpty) {
                         return CircleAvatar(
-                          radius: 60,
+                          radius: 65,
                           backgroundColor: AppColors.lightGray,
                           child:
-                              Icon(Icons.person, size: 60, color: Colors.grey),
+                              Icon(Icons.person, size: 65, color: Colors.grey),
                         );
                       }
                       return CircleAvatar(
-                        radius: 60,
+                        radius: 65,
                         backgroundColor: AppColors.lightGray,
                         child: ClipOval(
                           child: SizedBox(
-                            width: 130,
-                            height: 130,
+                            width: 126,
+                            height: 126,
                             child: Image.network(
                               imageUrl,
                               fit: BoxFit.cover,
