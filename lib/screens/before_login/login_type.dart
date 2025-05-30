@@ -1,3 +1,4 @@
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_auth_page.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/user/user_auth_page.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
@@ -11,6 +12,7 @@ class LoginType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -28,31 +30,28 @@ class LoginType extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(
-                          height: 120,
+                          height: 100,
                         ),
                         Text(
-                          "Let's get started",
+                          S.of(context).get_started,
                           style: textStyleWhite.copyWith(
                               fontSize: 28, fontWeight: FontWeight.w800),
-                          textAlign: TextAlign.left,
+                          
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          "Whether you're a car owner looking to stay on top of maintenance, or a seller offering trusted parts, we've got you covered.",
+                          S.of(context).get_starteddis,
                           style: textStyleGray.copyWith(fontSize: 14),
-                          textAlign: TextAlign.left,
                         ),
                       ],
                     ),
                   ),
-                  // الأزرار في الأسفل
                   Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 30.0), // المسافة من الأسفل
+                    padding: const EdgeInsets.only(bottom: 30.0),
                     child: Column(
                       children: [
                         buildButton(
-                          'Continue as User',
+                          S.of(context).car_owner,
                           AppColors.buttonColor,
                           AppColors.buttonText,
                           onPressed: () {
@@ -67,7 +66,7 @@ class LoginType extends StatelessWidget {
                           height: 20,
                         ),
                         buildButton(
-                          'Continue as Seller',
+                          S.of(context).parts_seller,
                           AppColors.buttonColor,
                           AppColors.buttonText,
                           onPressed: () {

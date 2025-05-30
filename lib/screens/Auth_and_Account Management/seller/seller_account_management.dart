@@ -143,9 +143,11 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                 children: [
                   Text(
                     "Profile",
-                    style: textStyleWhite.copyWith(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 40,
+                      fontFamily: 'Inter',
+                      height: 0,
                       letterSpacing: 9.20,
                     ),
                   ),

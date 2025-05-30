@@ -1,4 +1,3 @@
-import 'dart:io';
 
 class ProductItem {
   // stock count and price need to be  also stored from add_item
