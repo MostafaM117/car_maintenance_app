@@ -1,10 +1,13 @@
+import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:car_maintenance/screens/before_login/login_type.dart';
+import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
-import '../../constants/app_colors.dart';
-import '../../widgets/custom_widgets.dart';
 
 class WelcomePage extends StatefulWidget {
-  const WelcomePage({super.key});
+  final Function(Locale) onChangeLanguage; // ← صح مكانها هنا
+
+  const WelcomePage({super.key, required this.onChangeLanguage});
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();
@@ -15,12 +18,34 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+    bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
           Positioned(
-            left: -screenWidth * 0.2,
+            top: screenHeight * 0.05,
+            right: screenWidth * 0.05,
+            child: IconButton(
+              icon: Text(
+                isArabic ? 'EN' : 'AR',
+                style: TextStyle(
+                  color: AppColors.primaryText,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+                Locale newLocale = isArabic ? Locale('en') : Locale('ar');
+                widget.onChangeLanguage(newLocale);
+              },
+            ),
+          ),
+          // باقي تصميم الصفحة
+          Positioned(
+            left: isArabic ? null : -screenWidth * 0.2,
+            right: isArabic ? -screenWidth * 0.2 : null,
             top: screenHeight * 0.2,
             child: Container(
               width: screenWidth * 0.9,
@@ -33,8 +58,12 @@ class _WelcomePageState extends State<WelcomePage> {
           ),
           Positioned(
             top: screenHeight * 0.22,
+            left: isArabic ? null : 0,
+            right: isArabic ? 0 : null,
             child: Image.asset(
-              "assets/images/Hyundai.png",
+              isArabic
+                  ? "assets/images/Hyundair.png"
+                  : "assets/images/Hyundai.png",
               width: screenWidth * 0.8,
               fit: BoxFit.cover,
             ),
@@ -45,10 +74,11 @@ class _WelcomePageState extends State<WelcomePage> {
               top: screenHeight * 0.68,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  isArabic ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Welcome to Motorgy',
+                  S.of(context).welcome,
                   style: TextStyle(
                     color: AppColors.primaryText,
                     fontSize: screenWidth * 0.09,
@@ -56,7 +86,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   ),
                 ),
                 Text(
-                  'Your all-in-one solution for car maintenance and spare parts',
+                  S.of(context).welcomedis,
                   style: TextStyle(
                     color: AppColors.primaryText,
                     fontSize: screenWidth * 0.05,
@@ -77,13 +107,13 @@ class _WelcomePageState extends State<WelcomePage> {
                 bottom: screenHeight * 0.05,
               ),
               child: buildButton(
-                'Get Started',
+                S.of(context).get_started,
                 AppColors.buttonColor,
                 AppColors.buttonText,
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginType()),
+                    MaterialPageRoute(builder: (context) => const LoginType()),
                   );
                 },
               ),
