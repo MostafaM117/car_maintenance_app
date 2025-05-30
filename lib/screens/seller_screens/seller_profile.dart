@@ -1,17 +1,12 @@
-import 'dart:io';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/screens/Terms_and_conditionspage%20.dart';
-import 'package:car_maintenance/screens/seller_screens/my_stores.dart';
-import 'package:car_maintenance/services/seller/seller_data_helper.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../widgets/darkmode_toggle_widget.dart';
 import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
 
@@ -45,14 +40,17 @@ class _SellerProfileState extends State<SellerProfile> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                SizedBox(
+                  height: 25,
+                ),
                 const Text(
-                  'Profile',
+                  'Account',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2,
                     color: Colors.black,
+                    fontSize: 40,
                     fontFamily: 'Inter',
+                    height: 0,
+                    letterSpacing: 9.20,
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -69,8 +67,9 @@ class _SellerProfileState extends State<SellerProfile> {
                             backgroundColor: AppColors.lightGray,
                             child: CircularProgressIndicator());
                       }
-                        final data = snapshot.data!.data() as Map<String, dynamic>;
-                        final imageUrl = data['shop_imageUrl'] as String?;
+                      final data =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      final imageUrl = data['shop_imageUrl'] as String?;
 
                       if (imageUrl == null || imageUrl.isEmpty) {
                         return CircleAvatar(
@@ -128,31 +127,10 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    ProfileOptionTile(
-                      text: 'MyStores',
-                      onBackTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyStores(),
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 20),
                     LanguageToggle(
                       isEnglish: isEnglish,
                       onToggle: (value) {
                         setState(() => isEnglish = value);
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    DarkModeToggle(
-                      isDarkMode: isDarkMode,
-                      onChanged: (value) {
-                        setState(() => isDarkMode = value);
                       },
                     ),
                     const SizedBox(height: 20),

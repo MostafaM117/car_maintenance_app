@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/custom_widgets.dart';
-import '../../widgets/darkmode_toggle_widget.dart';
 import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
 import '../Auth_and_Account Management/user/user_account_management.dart';
@@ -51,7 +50,7 @@ class _ProfileState extends State<Profile> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 15),
+                const SizedBox(height: 25),
 
                 const Text(
                   'Account',
@@ -181,15 +180,6 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: 20,
                     ),
-                    DarkModeToggle(
-                      isDarkMode: isDarkMode,
-                      onChanged: (value) {
-                        setState(() => isDarkMode = value);
-                      },
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
                     ProfileOptionTile(
                       text: 'Terms & Conditions',
                       onBackTap: () {
@@ -204,9 +194,7 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: 20,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: buildButton(
+                    buildButton(
                         'Log Out',
                         AppColors.buttonColor,
                         AppColors.buttonText,
@@ -214,7 +202,7 @@ class _ProfileState extends State<Profile> {
                           AuthService().signOut(context);
                         },
                       ),
-                    ),
+                    
 
                     
                   ],
