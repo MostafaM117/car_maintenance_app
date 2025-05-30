@@ -186,7 +186,11 @@ Widget buildButton(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(text, style: textStyleWhite.copyWith(color: textColor)),
+          Text(text,
+              style: textStyleWhite.copyWith(
+                color: textColor,
+                fontWeight: FontWeight.w600,
+              )),
         ],
       ),
     ),

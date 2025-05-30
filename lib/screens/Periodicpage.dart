@@ -53,7 +53,6 @@ class _PeriodicpageState extends State<Periodicpage> {
                   const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
               child: Column(
                 children: [
-                  SizedBox(height: 50),
                   Center(
                     child: Text(
                       widget.title,

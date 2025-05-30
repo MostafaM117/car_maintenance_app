@@ -3,7 +3,7 @@ import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:car_maintenance/screens/addMaintenance.dart';
-import 'package:car_maintenance/screens/user_offers.dart';
+import 'package:car_maintenance/screens/user_screens/user_offers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

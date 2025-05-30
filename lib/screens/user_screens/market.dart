@@ -7,7 +7,7 @@ import '../Periodicpage.dart';
 
 class Market extends StatelessWidget {
   Market({super.key});
-  final List<String> categories = ['Periodic', 'Used', 'Unused'];
+  final List<String> categories = ['Used', 'Unused'];
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class Market extends StatelessWidget {
                     // width: 250,
                     height: 450,
                     child: Swiper(
-                      itemCount: 3,
+                      itemCount: 2,
                       layout: SwiperLayout.DEFAULT,
                       itemWidth: MediaQuery.of(context).size.width * 0.75,
                       viewportFraction: 0.8,
