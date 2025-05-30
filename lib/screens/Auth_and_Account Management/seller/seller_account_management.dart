@@ -162,8 +162,8 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                           children: [
                             ClipOval(
                               child: SizedBox(
-                                width: 120,
-                                height: 120,
+                                width: 116,
+                                height: 116,
                                 child: _isImageLoading
                                     ? Center(
                                         child: CircularProgressIndicator(),
@@ -319,44 +319,137 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                             )),
                       ],
                     ),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('Update Business Name'),
-                          content: TextField(
-                            controller: _businessnameEditcontroller,
-                            decoration: InputDecoration(
-                              labelText: 'Business Name',
-                              errorText: errorText,
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                errorText = null;
-                              },
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                final businessname =
-                                    _businessnameEditcontroller.text.trim();
-                                if (businessname.isEmpty) {
-                                  setState(() {
-                                    errorText = "Businessname can't be empty.";
-                                  });
-                                } else {
-                                  await _updateBusinessname();
-                                  Navigator.pop(context);
-                                }
-                              },
-                              child: Text('Update'),
-                            ),
-                          ],
-                        ),
-                      );
+                    onTap: () async{
+                      final sellerDoc = await FirebaseFirestore.instance
+                          .collection('sellers')
+                          .doc(seller.uid)
+                          .get();
+                      final latestUsername = sellerDoc.data()?['business_name'] ?? '';
+                      _businessnameEditcontroller.text = latestUsername;
+                      final result = await showDialog(
+                          context: context,
+                          builder: (context) =>
+                              StatefulBuilder(builder: (context, setState) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFFF4F4F4),
+                                  title: Text(
+                                    'Update your Business name below',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                            'This name will be used across your account and may be visible to others.'),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextField(
+                                          controller: _businessnameEditcontroller,
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            label: Text('Business name'),
+                                            labelStyle: TextStyle(
+                                                color: errorText != null
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .error
+                                                    : Colors.black),
+                                            errorText: errorText,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.transparent,
+                                        elevation: 0,
+                                        side: BorderSide(
+                                          color: Color(0xFFD9D9D9),
+                                          width: 1,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        fixedSize: Size(250, 45),
+                                      ),
+                                      onPressed: () {
+                                        final username =
+                                            _businessnameEditcontroller.text.trim();
+                                        if (username.isEmpty) {
+                                          setState(() {
+                                            errorText =
+                                                "business name can't be empty.";
+                                            return;
+                                          });
+                                        } else {
+                                          Navigator.of(context).pop(username);
+                                          _updateBusinessname();
+                                        }
+                                      },
+                                      child: Text(
+                                        'Save Changes',
+                                        style: textStyleWhite.copyWith(
+                                          fontSize: 18,
+                                          color: AppColors.buttonColor,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primaryText,
+                                        elevation: 0,
+                                        side: BorderSide(
+                                          color: Color(0xFFD9D9D9),
+                                          width: 1,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        fixedSize: Size(250, 45),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        errorText = null;
+                                      },
+                                      child: Text(
+                                        'Cancel',
+                                        style: textStyleWhite.copyWith(
+                                          fontSize: 18,
+                                          color: AppColors.buttonText,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              }));
+                      return result;
                     },
                   ),
                   SizedBox(
@@ -406,85 +499,179 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                                 ))),
                       ],
                     ),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('Change Password'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                  'Please enter your email to receive a password reset link.'),
-                              SizedBox(height: 20),
-                              TextField(
-                                controller: _businessemailcontroller,
-                                decoration: InputDecoration(
-                                  labelText: 'Email',
-                                  errorText: errorText,
-                                ),
-                              ),
-                            ],
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                                errorText = null;
-                              },
-                              child: Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                final email =
-                                    _businessemailcontroller.text.trim();
-                                if (email.isEmpty) {
-                                  setState(() {
-                                    errorText = "email can't be empty.";
-                                  });
-                                } else {
-                                  try {
-                                    await FirebaseAuth.instance
-                                        .sendPasswordResetEmail(email: email);
-                                    _businessemailcontroller.clear();
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                            'A password reset email has been sent successfully.'),
-                                        backgroundColor: Colors.green.shade400,
-                                        duration: Duration(seconds: 3),
-                                      ),
-                                    );
-                                    errorText = null;
-                                    Navigator.pop(context);
-                                  } catch (e) {
-                                    if (e
-                                        .toString()
-                                        .contains('badly formatted')) {
-                                      setState(() {
-                                        errorText =
-                                            'Please enter a valid email address';
-                                      });
-                                    } else {
-                                      _businessemailcontroller.clear();
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                          content: Text(e.toString()),
-                                          backgroundColor: Colors.red,
-                                          duration: Duration(seconds: 3),
+                    onTap: () async{
+                      final result = await showDialog(
+                          context: context,
+                          builder: (context) =>
+                              StatefulBuilder(builder: (context, setState) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFFF4F4F4),
+                                  title: Text(
+                                    'Change your Password',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  content: SingleChildScrollView(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                            'Please enter your email and you will receive an email with a link to change your password.'),
+                                        SizedBox(
+                                          height: 20,
                                         ),
-                                      );
-                                    }
-                                    print(e.toString());
-                                  }
-                                }
-                              },
-                              child: Text('Send Reset Link'),
-                            ),
-                          ],
-                        ),
-                      );
+                                        TextField(
+                                          controller: _businessemailcontroller,
+                                          cursorColor: Colors.black,
+                                          decoration: InputDecoration(
+                                            label: Text('Enter your email'),
+                                            labelStyle: TextStyle(
+                                                color: errorText != null
+                                                    ? Theme.of(context)
+                                                        .colorScheme
+                                                        .error
+                                                    : Colors.black),
+                                            errorText: errorText,
+                                            border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actionsAlignment: MainAxisAlignment.center,
+                                  actions: [
+                                    Column(
+                                      children: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            elevation: 0,
+                                            side: BorderSide(
+                                              color: Color(0xFFD9D9D9),
+                                              width: 1,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            fixedSize: Size(250, 45),
+                                          ),
+                                          child: Text(
+                                            'Send E-mail',
+                                            style: textStyleWhite.copyWith(
+                                              fontSize: 18,
+                                              color: AppColors.buttonColor,
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            final email =
+                                                _businessemailcontroller.text.trim();
+                                            if (email.isEmpty) {
+                                              setState(() {
+                                                errorText =
+                                                    "email can't be empty.";
+                                                return;
+                                              });
+                                            } else {
+                                              try {
+                                                await FirebaseAuth.instance
+                                                    .sendPasswordResetEmail(
+                                                        email: email);
+                                                _businessemailcontroller.clear();
+                                                Navigator.of(context).pop();
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        'A password reset email has been sent successfully.'),
+                                                    backgroundColor:
+                                                        Colors.green.shade400,
+                                                    duration:
+                                                        Duration(seconds: 3),
+                                                  ),
+                                                );
+                                                errorText = null;
+                                              } catch (e) {
+                                                if (e.toString().contains(
+                                                    'badly formatted')) {
+                                                  setState(() {
+                                                    errorText =
+                                                        'Please enter a valid email address';
+                                                    return;
+                                                  });
+                                                } else {
+                                                  _businessemailcontroller.clear();
+                                                  Navigator.of(context).pop();
+                                                  errorText = null;
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content:
+                                                          Text(e.toString()),
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      duration:
+                                                          Duration(seconds: 3),
+                                                    ),
+                                                  );
+                                                }
+                                                print(e.toString());
+                                              }
+                                            }
+                                          },
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                AppColors.primaryText,
+                                            elevation: 0,
+                                            side: BorderSide(
+                                              color: Color(0xFFD9D9D9),
+                                              width: 1,
+                                            ),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            fixedSize: Size(250, 45),
+                                          ),
+                                          onPressed: () {
+                                            _businessemailcontroller.clear();
+                                            Navigator.of(context).pop();
+                                            errorText = null;
+                                          },
+                                          child: Text(
+                                            'Cancel',
+                                            style: textStyleWhite.copyWith(
+                                              fontSize: 18,
+                                              color: AppColors.buttonText,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                );
+                              }));
+                      return result;
                     },
                   ),
                   SizedBox(

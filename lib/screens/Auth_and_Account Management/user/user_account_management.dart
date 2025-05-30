@@ -158,8 +158,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                           children: [
                             ClipOval(
                               child: SizedBox(
-                                width: 120,
-                                height: 120,
+                                width: 116,
+                                height: 116,
                                 child: _isImageLoading
                                     ? Center(
                                         child: CircularProgressIndicator(),

@@ -72,7 +72,7 @@ class _ProfileState extends State<Profile> {
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return CircleAvatar(
-                            radius: 60,
+                            radius: 65,
                             backgroundColor: AppColors.lightGray,
                             child: CircularProgressIndicator());
                       }
@@ -82,20 +82,20 @@ class _ProfileState extends State<Profile> {
 
                       if (imageUrl == null || imageUrl.isEmpty) {
                         return CircleAvatar(
-                          radius: 60,
+                          radius: 65,
                           backgroundColor: AppColors.lightGray,
                           child:
-                              Icon(Icons.person, size: 60, color: Colors.grey),
+                              Icon(Icons.person, size: 65, color: Colors.grey),
                         );
                       }
 
                       return CircleAvatar(
-                        radius: 60,
+                        radius: 65,
                         backgroundColor: AppColors.lightGray,
                         child: ClipOval(
                           child: SizedBox(
-                            width: 130,
-                            height: 130,
+                            width: 126,
+                            height: 126,
                             child: Image.network(
                               imageUrl,
                               fit: BoxFit.cover,

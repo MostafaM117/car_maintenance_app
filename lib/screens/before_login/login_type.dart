@@ -12,7 +12,6 @@ class LoginType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return Scaffold(
       backgroundColor: AppColors.background,
