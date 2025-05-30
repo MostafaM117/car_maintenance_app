@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:car_maintenance/Back-end/offer_service.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/offer_model.dart';
@@ -141,6 +139,13 @@ class _OfferScreenState extends State<OfferScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              OfferImg(
+                onImageUploaded: (url) {
+                  setState(() {
+                    _selectedImage = url;
+                  });
+                },
+              ),
               customFormField(
                 controller: _titleController,
                 label: 'Title',
@@ -177,13 +182,6 @@ class _OfferScreenState extends State<OfferScreen> {
                   final n = double.tryParse(v);
                   if (n == null || n < 0 || n > 100) return 'Enter 0-100%';
                   return null;
-                },
-              ),
-              OfferImg(
-                onImageUploaded: (url) {
-                  setState(() {
-                    _selectedImage = url;
-                  });
                 },
               ),
               SizedBox(height: 8),
@@ -238,21 +236,17 @@ class _OfferScreenState extends State<OfferScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          clearForm();
-          showOfferFormDialog();
-        },
-        label: Text('Add Offer'),
-        icon: Icon(Icons.add),
-      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Offers",
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700)),
+            Center(
+              child: Text(
+                "Offers",
+                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+              ),
+            ),
             SizedBox(height: 16),
             Expanded(
               child: StreamBuilder<List<Offer>>(
@@ -269,74 +263,31 @@ class _OfferScreenState extends State<OfferScreen> {
                     itemCount: offers.length,
                     itemBuilder: (context, index) {
                       final offer = offers[index];
-                      return Card(
-                        elevation: 2,
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Show image if URL is available
-                              if (offer.imageUrl.isNotEmpty)
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: FadeInImage.assetNetwork(
-                                    placeholder: 'assets/images/offer.jpg',
-                                    image: offer.imageUrl,
-                                    height: 180,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                    imageErrorBuilder:
-                                        (context, error, stackTrace) {
-                                      return Image.asset(
-                                        'assets/images/offer.jpg',
-                                        height: 100,
-                                        width: double.infinity,
-                                        fit: BoxFit.contain,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              SizedBox(height: 8),
-                              Text(offer.title,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
-                              SizedBox(height: 6),
-                              Text(offer.description),
-                              SizedBox(height: 6),
-                              Text('Seller: ${offer.business_name}'),
-                              Text(
-                                  'Original Price: \$${offer.originalPrice.toStringAsFixed(2)}'),
-                              Text('Discount: ${offer.discountPercentage}%'),
-                              Text(
-                                  'Price After Discount: \$${offer.priceAfterDiscount.toStringAsFixed(2)}'),
-                              Text(
-                                  'Valid Until: ${offer.validUntil.toLocal().toString().split(' ')[0]}'),
-                              SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.edit, color: Colors.blue),
-                                    onPressed: () => startEditing(offer),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () => deleteOffer(offer.id),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+
+                      return OfferCard(
+                        title: offer.title,
+                        date:
+                            'Valid Until: ${offer.validUntil.toLocal().toString().split(' ')[0]}',
+                        imageUrl:
+                            offer.imageUrl.isNotEmpty ? offer.imageUrl : null,
+                        onEdit: () => startEditing(offer),
+                        onDelete: () => deleteOffer(offer.id),
                       );
                     },
                   );
                 },
               ),
             ),
+            SizedBox(height: 16),
+            buildButton(
+              'Add Offer',
+              AppColors.buttonColor,
+              AppColors.buttonText,
+              onPressed: () {
+                clearForm();
+                showOfferFormDialog();
+              },
+            )
           ],
         ),
       ),
