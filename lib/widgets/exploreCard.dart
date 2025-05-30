@@ -17,7 +17,7 @@ class ExploreCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 115,
+        width: 105,
         height: 95,
         decoration: BoxDecoration(
           border: Border.all(

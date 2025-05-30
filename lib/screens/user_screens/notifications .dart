@@ -65,7 +65,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           SafeArea(
             child: Padding(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               child: Column(
                 children: [
                   SizedBox(height: 20),

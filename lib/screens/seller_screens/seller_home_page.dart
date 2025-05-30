@@ -1,22 +1,29 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:car_maintenance/Back-end/firestore_service.dart';
+import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/models/MaintID.dart';
+import 'package:car_maintenance/models/ProductItemModel.dart';
 import 'package:car_maintenance/screens/seller_screens/add_item.dart';
-import 'package:car_maintenance/screens/seller_screens/offer_feed.dart';
+import 'package:car_maintenance/services/seller/seller_data_helper.dart';
+import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-import '../../constants/app_colors.dart';
-import '../../services/seller/seller_data_helper.dart';
 import '../../widgets/SubtractWave_widget.dart';
-import '../../widgets/exploreCard.dart';
+import 'edit_item.dart';
 
 class SellerHomePage extends StatefulWidget {
-  const SellerHomePage({super.key});
+  const SellerHomePage({Key? key}) : super(key: key);
 
   @override
   State<SellerHomePage> createState() => _SellerHomePageState();
 }
 
 class _SellerHomePageState extends State<SellerHomePage> {
+  List<String> items = [];
+  FirestoreService firestoreService = FirestoreService(MaintID());
   String username = 'Loading...';
   final seller = FirebaseAuth.instance.currentUser!;
   final CollectionReference users =
@@ -35,155 +42,243 @@ class _SellerHomePageState extends State<SellerHomePage> {
     });
   }
 
+  void checkFormCompletion() {
+    setState(() {});
+  }
+
+  void _editItem(ProductItem item) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditItem(item: item),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            right: 11,
-            left: 11,
-            top: 20,
-          ),
-          child: Column(
-            children: [
-              SizedBox(height: 10),
-              SubtractWave(
-                text: 'Welcome Back, ${username.split(' ').first}',
-                svgAssetPath: 'assets/svg/notification.svg',
-                suptext: 'Tap here and we’ll help you out!',
-                onTap: () {},
-              ),
-              SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Explore',
-                    style: TextStyle(
-                      color: const Color(0xFF0F0F0F),
-                      fontSize: 24,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ExploreCard(
-                      title: 'ADD\nNEW ITEM',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AddItem()),
-                        );
-                      }),
-                  ExploreCard(
-                      title: 'ADD\nOFFER',
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => OfferScreen(),
+      body: Padding(
+        padding: const EdgeInsets.only(
+          right: 11,
+          left: 11,
+          top: 20,
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            SubtractWave(
+              text: 'Welcome Back, ${username.split(' ').first}',
+              svgAssetPath: 'assets/svg/notification.svg',
+              suptext: 'Tap here and we’ll help you out!',
+              onTap: () {},
+            ),
+
+            const SizedBox(height: 20),
+            // Items List
+            Expanded(
+              child: StreamBuilder<List<ProductItem>>(
+                  stream: firestoreService.getStock(),
+                  builder: (context, snapshot) {
+                    final productList = snapshot.data ?? [];
+                    return GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                        childAspectRatio: 0.80,
+                      ),
+                      itemCount:
+                          productList.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return GestureDetector(
+                            onTap: () async {
+                              final newItemName = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AddItem(),
+                                ),
+                              );
+
+                              if (newItemName != null) {
+                                setState(() {
+                                  items.add(
+                                      newItemName); 
+                                });
+                              }
+                            },
+                            child: Container(
+                              decoration: ShapeDecoration(
+                                color: const Color(0x7FF4F4F4),
+                                shape: RoundedRectangleBorder(
+                                  side: const BorderSide(
+                                      width: 1, color: Color(0xFFD9D9D9)),
+                                  borderRadius: BorderRadius.circular(22),
+                                ),
+                              ),
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/svg/add.svg',
+                                  width: 40,
+                                  height: 40,
+                                  color: AppColors.primaryText,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+
+                        final product = productList[index - 1];
+                        return Container(
+                          decoration: ShapeDecoration(
+                            color: Color(0x7FF4F4F4),
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  width: 1, color: Color(0xFFD9D9D9)),
+                              borderRadius: BorderRadius.circular(22),
+                            ),
+                          ),
+                          child: Column(
+                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(16),
+                                  topRight: Radius.circular(16),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/motor_oil.png',
+                                  height: 100,
+                                  width: double.infinity,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 11, ),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFF4F4F4),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(70),
+                                    bottomLeft: Radius.circular(22),
+                                    bottomRight: Radius.circular(22),
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(product.name,
+                                        maxLines: 2, style: textStyleWhite),
+                                    Text('In Stock', style: textStyleGray),
+                                    Text('${product.price} LE',
+                                        style: textStyleGray),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                          icon: SvgPicture.asset(
+                                            'assets/svg/edit.svg',
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                          onPressed: () => _editItem(product),
+                                        ),
+                                        IconButton(
+                                          icon: SvgPicture.asset(
+                                            'assets/svg/delete.svg',
+                                            width: 20,
+                                            height: 20,
+                                          ),
+                                          onPressed: () async {
+                                            bool confirmDelete = false;
+
+                                            await AwesomeDialog(
+                                              context: context,
+                                              dialogType: DialogType.noHeader,
+                                              animType: AnimType.scale,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 10),
+                                              dialogBackgroundColor:
+                                                  AppColors.borderSide,
+                                              dismissOnTouchOutside: true,
+                                              body: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    'Are you sure you want to delete this Item?',
+                                                    style: textStyleWhite,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  Text(
+                                                    'This action is permanent and cannot be undone.',
+                                                    style: textStyleGray,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  const SizedBox(height: 20),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      popUpBotton(
+                                                        'Cancel',
+                                                        AppColors.primaryText,
+                                                        AppColors.buttonText,
+                                                        onPressed: () {
+                                                          confirmDelete = false;
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                      const SizedBox(width: 15),
+                                                      popUpBotton(
+                                                        'Delete',
+                                                        AppColors.buttonColor,
+                                                        AppColors.buttonText,
+                                                        onPressed: () {
+                                                          firestoreService
+                                                              .deleteProduct(
+                                                                  product.id);
+                                                          confirmDelete = true;
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ).show();
+
+                                            if (confirmDelete) {
+                                              setState(() {
+                                                items.removeAt(index);
+                                              });
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         );
-                      }),
-                  ExploreCard(title: 'CHECKOUT\nOFFERS', onTap: () {}),
-                ],
-              ),
-              SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Best Selling',
-                    style: TextStyle(
-                      color: const Color(0xFF0F0F0F),
-                      fontSize: 24,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildSellingCard(),
-                  _buildSellingCard(),
-                  _buildSellingCard(),
-                ],
-              ),
-              SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Low Stock',
-                    style: TextStyle(
-                      color: const Color(0xFF0F0F0F),
-                      fontSize: 24,
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 5),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildSellingCard(),
-                  _buildSellingCard(),
-                  _buildSellingCard(),
-                ],
-              ),
-            ],
-          ),
+                      },
+                    );
+                  }),
+            ),
+          ],
         ),
       ),
     );
   }
-}
-
-Widget _buildSellingCard(
-    // BuildContext context, String title, IconData icon, Color color, VoidCallback onTap
-    ) {
-  return GestureDetector(
-    // onTap: ,
-    child: Container(
-      width: 100,
-      height: 125,
-      decoration: ShapeDecoration(
-        color: AppColors.secondaryText,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            width: 1,
-            color: AppColors.borderSide,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-            ),
-          ),
-          SizedBox(height: 8),
-        ],
-      ),
-    ),
-  );
 }

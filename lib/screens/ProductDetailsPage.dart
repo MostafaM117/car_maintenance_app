@@ -1,5 +1,6 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../widgets/custom_widgets.dart';
 
 class ProductDetailsPage extends StatelessWidget {
