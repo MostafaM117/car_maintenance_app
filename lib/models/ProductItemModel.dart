@@ -7,22 +7,24 @@ class ProductItem {
   final String description;
   final String selectedMake;
   final String selectedModel;
-  File? image; // Optional image field
+  final String imageUrl; // Optional image URL
   final String selectedCategory;
   final String selectedAvailability;
   final int stockCount;
   final double price;
+  final String businessName;
   ProductItem({
     required this.id,
     required this.name,
     required this.description,
     required this.selectedMake,
     required this.selectedModel,
-    this.image,
+    required this.imageUrl,
     required this.selectedCategory,
     required this.selectedAvailability,
     required this.stockCount,
     required this.price,
+    required this.businessName,
   });
 
   factory ProductItem.fromJson(Map<String, dynamic> data, String docId) {
@@ -36,6 +38,8 @@ class ProductItem {
       selectedAvailability: data['selectedAvailability'] ?? '',
       stockCount: data['stockCount'] ?? 0,
       price: data['price']?.toDouble() ?? 0.0,
+      imageUrl: data['imageUrl'], // Optional image URL
+      businessName: data['Store Name'] ?? '',
     );
   }
 }

@@ -6,12 +6,14 @@ class ProductCard extends StatelessWidget {
   final String image;
   final String title;
   final String price;
+  final String businessName;
 
   const ProductCard({
     super.key,
     required this.image,
     required this.title,
     required this.price,
+    required this.businessName,
   });
 
   @override
@@ -29,11 +31,20 @@ class ProductCard extends StatelessWidget {
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            child: Image.asset(
-              image,
+            child: FadeInImage.assetNetwork(
+              placeholder: 'assets/images/motor_oil.png',
+              image: image,
               height: 100,
               width: double.infinity,
               fit: BoxFit.contain,
+              imageErrorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'assets/images/motor_oil.png',
+                  height: 100,
+                  width: double.infinity,
+                  fit: BoxFit.contain,
+                );
+              },
             ),
           ),
           Expanded(
@@ -59,7 +70,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Seller Name',
+                    businessName,
                     style: textStyleGray.copyWith(
                       color: AppColors.buttonText,
                     ),

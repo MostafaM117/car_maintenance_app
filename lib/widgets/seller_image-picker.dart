@@ -1,10 +1,15 @@
+import 'package:car_maintenance/Back-end/offer_service.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:path/path.dart' as path;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ImagePickerContainer extends StatefulWidget {
-  const ImagePickerContainer({super.key});
+  final Function(String) onImageUploaded;
+  const ImagePickerContainer({super.key, required this.onImageUploaded});
 
   @override
   _ImagePickerContainerState createState() => _ImagePickerContainerState();
@@ -12,6 +17,43 @@ class ImagePickerContainer extends StatefulWidget {
 
 class _ImagePickerContainerState extends State<ImagePickerContainer> {
   File? _image;
+  String? imageUrl;
+  final OfferService offerService = OfferService();
+  Future<void> uploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      return;
+    }
+    final File imageFile = File(pickedFile.path);
+    final businessName = await offerService.getBusinessName();
+    final String fileName = '${businessName}_${path.basename(pickedFile.path)}';
+    final storage = Supabase.instance.client.storage;
+    const bucket = 'products-images';
+    try {
+      final existingFiles = await storage.from(bucket).list();
+      final fileExists = existingFiles.any((file) => file.name == fileName);
+      String? publicUrl;
+      if (fileExists) {
+        publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        print('File already exists: $fileName, reusing URL.');
+        setState(() {
+          imageUrl = publicUrl;
+        });
+      } else {
+        await storage.from(bucket).upload(fileName, imageFile);
+        publicUrl = storage.from(bucket).getPublicUrl(fileName);
+        print('Image uploaded successfully: $publicUrl');
+        setState(() {
+          imageUrl = publicUrl;
+          _image = imageFile;
+        });
+        widget.onImageUploaded(publicUrl);
+      }
+    } catch (e) {
+      print('Upload error: $e');
+    }
+  }
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -34,7 +76,7 @@ class _ImagePickerContainerState extends State<ImagePickerContainer> {
                 fontSize: 16, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         GestureDetector(
-          onTap: _pickImage,
+          onTap: uploadImage,
           child: Container(
             width: 350,
             height: 133.79,

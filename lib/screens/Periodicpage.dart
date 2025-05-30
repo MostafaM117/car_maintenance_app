@@ -19,14 +19,13 @@ class Periodicpage extends StatefulWidget {
   State<Periodicpage> createState() => _PeriodicpageState();
 }
 
-
 class _PeriodicpageState extends State<Periodicpage> {
   FirestoreService firestoreService = FirestoreService(MaintID());
   String? filterMake;
   String? filterModel;
   double? minPrice;
   double? maxPrice;
-  String? selectedLocation;
+  String? searchQuery;
   final List<String> _carMakes = CarData.getAllMakes();
   final TextEditingController _searchController = TextEditingController();
 
@@ -56,7 +55,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                 children: [
                   Center(
                     child: Text(
-                    widget.title,
+                      widget.title,
                       style:
                           TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                     ),
@@ -83,14 +82,21 @@ class _PeriodicpageState extends State<Periodicpage> {
                           child: TextField(
                             controller: _searchController,
                             decoration: InputDecoration(
-                              hintText: 'Search',
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 15,
-                                vertical: 10,
-                              ),
-                              suffixIcon: Icon(Icons.search_rounded)
-                            ),
+                                hintText: 'Search',
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 15,
+                                  vertical: 10,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(Icons.search),
+                                  onPressed: () {
+                                    setState(() {
+                                      // Trigger search with current text
+                                      searchQuery = _searchController.text;
+                                    });
+                                  },
+                                )),
                           ),
                         ),
                       ),
@@ -108,10 +114,17 @@ class _PeriodicpageState extends State<Periodicpage> {
                           model: filterModel,
                           minPrice: minPrice,
                           maxPrice: maxPrice,
-                          location: selectedLocation,
+                          searchQuery: _searchController.text.isNotEmpty
+                              ? _searchController.text
+                              : null,
                         ),
                         builder: (context, snapshot) {
-                          final products = snapshot.data ?? [];
+                          final products =
+                              snapshot.data?.where((p) => p != null).toList() ??
+                                  [];
+                          print("📦 Final product count: ${products.length}");
+                          print(
+                              "🏷️ Building grid with ${products.length} products");
                           return GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -123,6 +136,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                             itemBuilder: (context, index) {
                               final product = products[index];
                               return OpenContainer(
+                                // opencontainers can't have null values, guess what my filter function requires
                                 transitionType:
                                     ContainerTransitionType.fadeThrough,
                                 transitionDuration: Duration(milliseconds: 500),
@@ -133,21 +147,20 @@ class _PeriodicpageState extends State<Periodicpage> {
                                   return GestureDetector(
                                     onTap: openContainer,
                                     child: ProductCard(
-                                      image: 'assets/images/motor_oil.png',
+                                      image: product.imageUrl,
                                       title: product.name,
                                       price: product.price.toString(),
+                                      businessName: product.businessName,
                                     ),
                                   );
                                 },
                                 openBuilder: (context, _) {
                                   return ProductDetailsPage(
-                                    image: 'assets/images/motor_oil.png',
+                                    image: product.imageUrl,
                                     title: product.name,
                                     price: product.price.toString(),
                                     description: product.description,
-                                    shopName: '',
-                                    shopLocation: '',
-                                    shopPhone: '',
+                                    businessName: product.businessName,
                                   );
                                 },
                               );
@@ -168,10 +181,9 @@ class _PeriodicpageState extends State<Periodicpage> {
     return ElevatedButton(
       onPressed: () {
         AwesomeDialog(
-          
           context: context,
           dialogType: DialogType.noHeader,
-          animType: AnimType.scale, 
+          animType: AnimType.scale,
           dialogBackgroundColor: AppColors.secondaryText,
           padding: const EdgeInsets.all(16),
           body: StatefulBuilder(
@@ -249,7 +261,10 @@ class _PeriodicpageState extends State<Periodicpage> {
                               filterModel = null;
                               minPrice = null;
                               maxPrice = null;
+                              _searchController.clear();
+                              searchQuery = null;
                             });
+                            checkFormCompletion();
                             Navigator.of(context).pop();
                           },
                         ),
@@ -259,6 +274,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                           AppColors.buttonColor,
                           AppColors.buttonText,
                           onPressed: () {
+                            checkFormCompletion();
                             Navigator.of(context).pop();
                           },
                         ),
