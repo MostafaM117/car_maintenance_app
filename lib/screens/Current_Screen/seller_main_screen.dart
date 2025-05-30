@@ -24,13 +24,13 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
 
   final List<String> _labels = [
     'Home',
-    'Account',
     'Offers',
+    'Account',
   ];
 
   final List<String> _icons = [
     'assets/svg/home.svg',
-    'assets/svg/user.svg',
+    'assets/svg/offer.svg',
     'assets/svg/user.svg',
     // 'assets/svg/feed.svg',
   ];

@@ -1,5 +1,6 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import '../widgets/custom_widgets.dart';
 
 class ProductDetailsPage extends StatelessWidget {
@@ -7,13 +8,18 @@ class ProductDetailsPage extends StatelessWidget {
   final String title;
   final String price;
   final String description;
-
+final String shopName;
+  final String shopPhone;
+  final String shopLocation;
   const ProductDetailsPage({
     super.key,
     required this.image,
     required this.title,
     required this.price,
     required this.description,
+    required this.shopName,
+    required this.shopPhone,
+    required this.shopLocation,
   });
 
   @override
@@ -118,29 +124,59 @@ class ProductDetailsPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    'Shop Name',
-                    style: textStyleGray.copyWith(
-                      fontSize: 14,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Name: $shopName",
+                          style: textStyleGray,
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        'assets/svg/shopname.svg',
+                        width: 20,
+                        height: 20,
+                        color: Colors.grey,
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 5,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Phone: $shopPhone",
+                          style: textStyleGray,
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        'assets/svg/shopphone.svg',
+                        width: 20,
+                        height: 20,
+                        color: Colors.grey,
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Shop Phone Number',
-                    style: textStyleGray.copyWith(
-                      fontSize: 14,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    'Shop Location',
-                    style: textStyleGray.copyWith(
-                      fontSize: 14,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "Location: $shopLocation",
+                          style: textStyleGray,
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      SvgPicture.asset(
+                        'assets/svg/shoplocation.svg',
+                        width: 20,
+                        height: 20,
+                        color: Colors.grey,
+                      ),
+                    ],
                   ),
                 ],
               ),

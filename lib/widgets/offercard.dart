@@ -12,13 +12,13 @@ class OfferCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   const OfferCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.date,
     this.imageUrl,
     required this.onEdit,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +104,8 @@ class OfferCard extends StatelessWidget {
                                     children: [
                                       Text(
                                         'Are you sure you want to delete this offer?',
-                                        style: textStyleWhite.copyWith(fontWeight: FontWeight.w600),
+                                        style: textStyleWhite.copyWith(
+                                            fontWeight: FontWeight.w600),
                                         textAlign: TextAlign.center,
                                       ),
                                       const SizedBox(height: 15),
@@ -115,7 +116,8 @@ class OfferCard extends StatelessWidget {
                                       ),
                                       const SizedBox(height: 25),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           popUpBotton(
                                             'Cancel',
@@ -156,3 +158,101 @@ class OfferCard extends StatelessWidget {
     );
   }
 }
+class UserOfferCard extends StatelessWidget {
+  final String title;
+  final String discount;
+  final String sellerName;
+  final String date;
+  final String? imageUrl;
+
+  const UserOfferCard({
+    super.key,
+    required this.title,
+    required this.discount,
+    required this.sellerName,
+    required this.date,
+    this.imageUrl,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4,
+      margin: EdgeInsets.symmetric(vertical: 8),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: SizedBox(
+          height: 180,
+          child: Stack(
+            children: [
+              imageUrl != null
+                  ? Image.network(
+                      imageUrl!,
+                      height: 180,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      height: 180,
+                      color: Colors.grey[200],
+                      child: const Center(child: Text('No Image')),
+                    ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.secondaryText,
+                    borderRadius:  BorderRadius.circular(16)
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Row: Title + Discount
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: textStyleWhite.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            discount,
+                            style: textStyleWhite
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        sellerName,
+                        style: textStyleWhite.copyWith(fontSize: 14),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        date,
+                        style: textStyleWhite.copyWith(
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
