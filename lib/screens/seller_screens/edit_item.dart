@@ -32,7 +32,7 @@ class _EditItemState extends State<EditItem> {
   final List<String> _carMakes = CarData.getAllMakes();
 
   late FirestoreService firestoreService;
-
+  String? uploadedImageUrl;
   @override
   void initState() {
     super.initState();
@@ -65,8 +65,13 @@ class _EditItemState extends State<EditItem> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ImagePickerContainer(),
-
+              ImagePickerContainer(
+                onImageUploaded: (String url) {
+                  setState(() {
+                    uploadedImageUrl = url;
+                  });
+                },
+              ),
               const SizedBox(height: 15),
 
               // Product Name
@@ -196,14 +201,14 @@ class _EditItemState extends State<EditItem> {
                 },
               ),
 
-              const SizedBox(height: 15),
+              // const SizedBox(height: 15),
 
-              // Stock Count
-              buildTextField(
-                label: 'Stock Count',
-                hintText: 'Add Count',
-                controller: stockCountController,
-              ),
+              // // Stock Count
+              // buildTextField(
+              //   label: 'Stock Count',
+              //   hintText: 'Add Count',
+              //   controller: stockCountController,
+              // ),
 
               const SizedBox(height: 15),
 
@@ -247,6 +252,7 @@ class _EditItemState extends State<EditItem> {
                         _selectedAvailability!,
                         int.tryParse(stockCountController.text) ?? 0,
                         double.tryParse(priceController.text) ?? 0.0,
+                        uploadedImageUrl ?? widget.item.imageUrl,
                       );
                       Navigator.pop(context);
                     },

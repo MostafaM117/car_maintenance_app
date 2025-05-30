@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
+import 'package:car_maintenance/Back-end/offer_service.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/ProductItemModel.dart';
@@ -27,8 +28,21 @@ class _MarketPageState extends State<MarketPage> {
   String? filterModel;
   double? minPrice;
   double? maxPrice;
-  String? selectedLocation;
+  String? searchQuery;
+  final OfferService offerService = OfferService();
+  String? businessName;
   final List<String> _carMakes = CarData.getAllMakes();
+
+  void getMyBusinessName() async {
+    businessName = await offerService.getBusinessName();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    getMyBusinessName();
+    super.initState();
+  }
 
   void checkFormCompletion() {
     setState(() {});
@@ -68,6 +82,7 @@ class _MarketPageState extends State<MarketPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
+                    // ← هذا يملأ المساحة المتاحة
                     child: Container(
                       height: 40,
                       decoration: ShapeDecoration(
@@ -89,7 +104,15 @@ class _MarketPageState extends State<MarketPage> {
                               horizontal: 15,
                               vertical: 10,
                             ),
-                            suffixIcon: Icon(Icons.search_rounded)),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search_rounded),
+                              onPressed: () {
+                                setState(() {
+                                  // Trigger search with current text
+                                  searchQuery = _searchController.text;
+                                });
+                              },
+                            )),
                       ),
                     ),
                   ),
@@ -155,7 +178,16 @@ class _MarketPageState extends State<MarketPage> {
               // Items List
               Expanded(
                 child: StreamBuilder<List<ProductItem>>(
-                    stream: firestoreService.getStock(),
+                    stream: firestoreService.getFilteredProducts(
+                      make: filterMake,
+                      model: filterModel,
+                      minPrice: minPrice,
+                      maxPrice: maxPrice,
+                      searchQuery: _searchController.text.isNotEmpty
+                          ? _searchController.text
+                          : null,
+                      businessName: businessName,
+                    ),
                     builder: (context, snapshot) {
                       final productList = snapshot.data ?? [];
 
@@ -459,7 +491,11 @@ class _MarketPageState extends State<MarketPage> {
                               filterModel = null;
                               minPrice = null;
                               maxPrice = null;
+                              _searchController.clear();
+                              searchQuery = null;
                             });
+                            checkFormCompletion();
+
                             Navigator.of(context).pop();
                           },
                         ),
@@ -469,6 +505,7 @@ class _MarketPageState extends State<MarketPage> {
                           AppColors.buttonColor,
                           AppColors.buttonText,
                           onPressed: () {
+                            checkFormCompletion();
                             Navigator.of(context).pop();
                           },
                         ),

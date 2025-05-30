@@ -25,6 +25,7 @@ class _AddItemState extends State<AddItem> {
   final TextEditingController itemNameController = TextEditingController();
   final TextEditingController stockCountController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  String? uploadedImageUrl;
 
   final List<String> _carMakes = CarData.getAllMakes();
   @override
@@ -47,7 +48,13 @@ class _AddItemState extends State<AddItem> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ImagePickerContainer(),
+              ImagePickerContainer(
+                onImageUploaded: (String url) {
+                  setState(() {
+                    uploadedImageUrl = url;
+                  });
+                },
+              ),
               const SizedBox(height: 15),
               //item name
               Column(
@@ -207,14 +214,14 @@ class _AddItemState extends State<AddItem> {
                 hintText: 'Add Price',
                 controller: priceController,
               ),
-              SizedBox(
-                height: 25,
-              ),
+              // SizedBox(
+              //   height: 25,
+              // ),
 
-              buildTextField(
-                label: 'Store Location',
-                hintText: 'Add Store Location',
-              ),
+              // buildTextField(
+              //   label: 'Store Location',
+              //   hintText: 'Add Store Location',
+              // ),
               SizedBox(
                 height: 25,
               ),
@@ -233,18 +240,20 @@ class _AddItemState extends State<AddItem> {
                     AppColors.buttonText,
                     onPressed: () {
                       firestoreService.addProduct(
-                          itemNameController.text,
-                          descriptionController.text,
-                          _selectedMake!,
-                          _selectedModel!,
-                          _selectedCategory!,
-                          _selectedAvailability!,
-                          stockCountController.text.isEmpty
-                              ? 0
-                              : int.parse(stockCountController.text),
-                          priceController.text.isEmpty
-                              ? 0.0
-                              : double.parse(priceController.text));
+                        itemNameController.text,
+                        descriptionController.text,
+                        _selectedMake!,
+                        _selectedModel!,
+                        _selectedCategory!,
+                        _selectedAvailability!,
+                        stockCountController.text.isEmpty
+                            ? 0
+                            : int.parse(stockCountController.text),
+                        priceController.text.isEmpty
+                            ? 0.0
+                            : double.parse(priceController.text),
+                        uploadedImageUrl!,
+                      );
                       Navigator.pop(context, itemNameController.text);
                     },
                   ),

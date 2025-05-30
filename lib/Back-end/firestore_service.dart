@@ -75,8 +75,10 @@ class FirestoreService {
     String selectedAvailability,
     int stockCount,
     double price,
+    String imageUrl, // Added imageUrl parameter
   ) async {
     final businessName = await offerService.getBusinessName();
+    print(businessName);
     try {
       await stockCollection.add({
         'name': name,
@@ -87,7 +89,8 @@ class FirestoreService {
         'selectedAvailability': selectedAvailability,
         'stockCount': stockCount,
         'price': price,
-        'Store Name': businessName
+        'Store Name': businessName,
+        'imageUrl': imageUrl,
       });
       await productsCollection.add({
         'name': name,
@@ -98,7 +101,8 @@ class FirestoreService {
         'selectedAvailability': selectedAvailability,
         'stockCount': stockCount,
         'price': price,
-        'Store Name': businessName
+        'Store Name': businessName,
+        'imageUrl': imageUrl, // Added imageUrl to products collection
       });
       print("✅ Added product item");
     } catch (e) {
@@ -121,6 +125,8 @@ class FirestoreService {
           selectedCategory: data['selectedCategory'] ?? '',
           selectedAvailability: data['selectedAvailability'] ?? '',
           stockCount: data['stockCount'] ?? 0,
+          imageUrl: data['imageUrl'] ?? '',
+          businessName: data['Store Name'] ?? '', // Added imageUrl field
         );
       }).toList();
     });
@@ -131,9 +137,13 @@ class FirestoreService {
     String? model,
     double? minPrice,
     double? maxPrice,
-    String? location,
+    String? businessName,
+    String? searchQuery,
   }) {
     Query query = productsCollection;
+    if (businessName != null && businessName.isNotEmpty) {
+      query = query.where('Store Name', isEqualTo: businessName);
+    }
 
     if (make != null && make.isNotEmpty) {
       query = query.where('selectedMake', isEqualTo: make);
@@ -156,20 +166,47 @@ class FirestoreService {
     // }
 
     return query.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        return ProductItem(
-          id: doc.id,
-          name: data['name'],
-          price: data['price'],
-          description: data['Description'],
-          selectedMake: data['selectedMake'],
-          selectedModel: data['selectedModel'],
-          selectedCategory: data['selectedCategory'],
-          selectedAvailability: data['selectedAvailability'],
-          stockCount: data['stockCount'],
-        );
-      }).toList();
+      print("🔍 query returned ${snapshot.docs.length} docs");
+      print("🏷️ Filtering products with businessName: $businessName");
+
+      final products = snapshot.docs
+          .map((doc) {
+            try {
+              final data = doc.data() as Map<String, dynamic>;
+              print("📦 Mapping product: $data");
+
+              final product = ProductItem(
+                id: doc.id,
+                name: data['name'] ?? 'Unnamed',
+                price: (data['price'] ?? 0).toDouble(),
+                description: data['Description'] ?? '',
+                selectedMake: data['selectedMake'] ?? '',
+                selectedModel: data['selectedModel'] ?? '',
+                selectedCategory: data['selectedCategory'] ?? '',
+                selectedAvailability: data['selectedAvailability'] ?? '',
+                stockCount: data['stockCount'] ?? 0,
+                imageUrl: data['imageUrl'] ?? '',
+                businessName: data['Store Name'] ?? '',
+              );
+
+              print("✅ Created ProductItem: ${product.name}");
+              return product;
+            } catch (e, stack) {
+              print("❌ Failed to map product doc ${doc.id}: $e");
+              return null;
+            }
+          })
+          .whereType<ProductItem>()
+          .where((product) {
+            if (searchQuery == null || searchQuery.trim().isEmpty) return true;
+            final lower = searchQuery.toLowerCase();
+            return product.name.toLowerCase().contains(lower);
+          })
+          .toList();
+
+      print("🏷️ Building grid with ${products.length} products");
+
+      return products;
     });
   }
 
@@ -187,6 +224,8 @@ class FirestoreService {
           selectedCategory: data['selectedCategory'] ?? '',
           selectedAvailability: data['selectedAvailability'] ?? '',
           stockCount: data['stockCount'] ?? 0,
+          imageUrl: data['imageUrl'] ?? '',
+          businessName: data['Store Name'] ?? '',
         );
       }).toList();
     });
@@ -202,9 +241,10 @@ class FirestoreService {
     String selectedAvailability,
     int stockCount,
     double price,
+    String imageUrl, // Optional image URL
   ) async {
     try {
-      await stockCollection.doc(docId).update({
+      await productsCollection.doc(docId).update({
         'name': name,
         'Description': description,
         'selectedMake': selectedMake,
@@ -212,7 +252,9 @@ class FirestoreService {
         'selectedCategory': selectedCategory,
         'selectedAvailability': selectedAvailability,
         'stockCount': stockCount,
-        'price': price
+        'price': price,
+        'imageUrl': imageUrl, // Update image URL
+        'Store Name': await offerService.getBusinessName(),
       });
       print("✅ Updated product item with ID: $docId");
     } catch (e) {
@@ -222,7 +264,7 @@ class FirestoreService {
 
   Future<void> deleteProduct(String docId) async {
     try {
-      await stockCollection.doc(docId).delete();
+      await productsCollection.doc(docId).delete();
       // await productsCollection.doc(docId).delete();
       print("✅ Deleted product with ID: $docId");
     } catch (e) {
