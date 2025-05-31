@@ -203,7 +203,7 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             SubtractWave(
               text: username != null
                   ? 'Welcome Back, ${username!.split(' ').first}'
@@ -352,7 +352,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 20),
                     // Add Explore cards
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

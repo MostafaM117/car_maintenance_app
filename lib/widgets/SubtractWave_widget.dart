@@ -21,7 +21,7 @@ class SubtractWave extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 53,
       decoration: BoxDecoration(
         color: AppColors.primaryText,
         borderRadius: BorderRadius.circular(30),
@@ -35,7 +35,7 @@ class SubtractWave extends StatelessWidget {
               children: [
                 Text(
                   text,
-                  style: textStyleWhite.copyWith(color: Colors.white),
+                  style: textStyleWhite.copyWith(color: Colors.white,fontWeight: FontWeight.w600),
                 ),
                 Text(
                   suptext,

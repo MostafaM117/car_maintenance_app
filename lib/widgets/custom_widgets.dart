@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -95,22 +96,26 @@ Widget buildInputField({
   );
 }
 
-Widget buildOrSeparator() {
+Widget buildOrSeparator(BuildContext context) {
   return Row(
     children: [
       const Expanded(child: Divider(color: Colors.black, thickness: 1)),
-      const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12),
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Text(
-          'or',
-          style: TextStyle(
-              color: Colors.black, fontSize: 20, fontWeight: FontWeight.w600),
+          S.of(context).or,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
       const Expanded(child: Divider(color: Colors.black, thickness: 1)),
     ],
   );
 }
+
 
 void showErrorDialog(BuildContext context, String message) {
   showDialog(
@@ -128,7 +133,7 @@ void showErrorDialog(BuildContext context, String message) {
   );
 }
 
-Widget googleButton(VoidCallback onPressed) {
+Widget googleButton(BuildContext context, VoidCallback onPressed) {
   return SizedBox(
     width: double.infinity,
     height: 45,
@@ -139,30 +144,7 @@ Widget googleButton(VoidCallback onPressed) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       ),
       icon: Image.asset('assets/images/Google_logo.png', height: 25),
-      label: Text('Continue with Google', style: textStyleWhite),
-      onPressed: onPressed,
-    ),
-  );
-}
-
-Widget appleButton(VoidCallback onPressed) {
-  return SizedBox(
-    width: double.infinity,
-    height: 45,
-    child: ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.background,
-        side: const BorderSide(color: AppColors.borderSide),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-      ),
-      icon: Icon(
-        Icons.apple,
-        color: Colors.white,
-        size: 30,
-      ),
-      label: Text('Continue with Apple', style: textStyleWhite),
+      label: Text(S.of(context).with_Google, style: textStyleWhite),
       onPressed: onPressed,
     ),
   );

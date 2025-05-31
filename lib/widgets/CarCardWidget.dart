@@ -53,7 +53,9 @@ class CarCardWidget extends StatelessWidget {
                           children: [
                             Text(
                               '$make $model',
-                              style: textStyleWhite,
+                              style: textStyleWhite.copyWith(
+                                fontWeight: FontWeight.w600
+                              ),
                             ),
                             const SizedBox(width: 7),
                             Text(
