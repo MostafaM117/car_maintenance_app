@@ -250,8 +250,15 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                   color: Colors.black54,
                                 ),
                                 padding: const EdgeInsets.all(8),
-                                child: const Icon(Icons.edit,
-                                    color: Colors.white, size: 20),
+                                child: SvgPicture.asset(
+                                  'assets/svg/edit.svg',
+                                  height: 18,
+                                  width: 18,
+                                  colorFilter: ColorFilter.mode(
+                                  Colors.white,
+                                  BlendMode.srcIn,
+                                ),
+                                ),
                               ),
                             ),
                           ],
@@ -300,13 +307,23 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                 borderRadius: BorderRadius.circular(22),
                               ),
                             ),
-                            child: UsernameDisplay(
-                              uid: user.uid,
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
-                                fontFamily: 'Inter',
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                UsernameDisplay(
+                                  uid: user.uid,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                    fontFamily: 'Inter',
+                                  ),
+                                ),
+                                SvgPicture.asset(
+                                  'assets/svg/edit.svg',
+                                  height: 18,
+                                  width: 18,
+                                ),
+                              ],
                             )),
                       ],
                     ),
@@ -490,15 +507,25 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                                 borderRadius: BorderRadius.circular(22),
                               ),
                             ),
-                            child: Text('************',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                  fontFamily: 'Inter',
-                                ))),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('************',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                      fontFamily: 'Inter',
+                                    )),
+                                SvgPicture.asset(
+                                  'assets/svg/edit.svg',
+                                  height: 18,
+                                  width: 18,
+                                ),
+                              ],
+                            )),
                       ],
                     ),
-                    onTap: () {
+                    onTap: () async{
                       AwesomeDialog(
                         padding: EdgeInsets.all(12),
                           context: context,
@@ -687,54 +714,74 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                     AppColors.buttonColor,
                     AppColors.buttonText,
                     onPressed: () {
-                      showDialog(
+                      AwesomeDialog(
                         context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            backgroundColor: AppColors.secondaryText,
-                            title: const Text(
-                              'Are you sure you want to delete your account?',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
-                              ),
-                            ),
-                            content: SizedBox(
-                              height: 100,
-                              child: Center(
-                                child: const Text(
-                                  'This action cannot be undone.\nAll of your data will be permanently deleted.',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ),
-                            actions: [
-                              popUpBotton(
-                                'Cancel',
-                                AppColors.primaryText,
-                                AppColors.buttonText,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                              ),
-                              SizedBox(
-                                width: 15,
-                              ),
-                              popUpBotton(
-                                'Delete',
-                                AppColors.buttonColor,
-                                AppColors.buttonText,
-                                onPressed: () {
-                                  UserDeleteAccount()
-                                      .userdeleteAccount(context);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                        dialogType: DialogType.noHeader,
+                        dialogBackgroundColor: AppColors.secondaryText,
+                        dialogBorderRadius: BorderRadius.circular(15),
+                        animType: AnimType.scale,
+                        body: StatefulBuilder(builder: (context, setState) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                    bottom: 10,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        'Are you sure you want to delete your account?',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                      'This action cannot be undone.\nAll of your data will be permanently deleted.',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 16),
+                                      ),
+                                      SizedBox(
+                                        height: 40,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          popUpBotton(
+                                          'Cancel',
+                                          AppColors.primaryText,
+                                          AppColors.buttonText,
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        popUpBotton(
+                                          'Delete',
+                                          AppColors.buttonColor,
+                                          AppColors.buttonText,
+                                          onPressed: () {
+                                            UserDeleteAccount()
+                                                .userdeleteAccount(context);
+                                          },
+                                        ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      )
+                                    ],
+                                  ),
+                            );
+                        }
+                        )
+                        ).show();
                     },
                   ),
                 ],

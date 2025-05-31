@@ -70,14 +70,26 @@ class _ProfileState extends State<Profile> {
                         .doc(user.uid)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
+                      if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
                         return CircleAvatar(
                             radius: 65,
                             backgroundColor: AppColors.lightGray,
                             child: CircularProgressIndicator());
                       }
-                      final data =
-                          snapshot.data!.data() as Map<String, dynamic>;
+                      if (snapshot.hasError) {
+                        print('Something went wrong, Error: ${snapshot.error}');
+                        return Center(child: Text('Something went wrong'));
+                      }
+                      if (!snapshot.data!.exists) {
+                        print('Document does not exist');
+                        return Center(child: Text('Document does not exist'));
+                      }
+                      final rawData = snapshot.data!.data();
+                      if(rawData == null ){
+                        print('Data is null');
+                        return Center(child: Text('No data found'));
+                      }
+                      final data = rawData as Map<String, dynamic>;
                       final imageUrl = data['imageUrl'] as String?;
 
                       if (imageUrl == null || imageUrl.isEmpty) {
