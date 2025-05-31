@@ -10,9 +10,11 @@ class ProductItem {
   final String imageUrl; // Optional image URL
   final String selectedCategory;
   final String selectedAvailability;
-  final int stockCount;
   final double price;
   final String businessName;
+  final String phoneNumber;
+  final double longitude;
+  final double latitude;
   ProductItem({
     required this.id,
     required this.name,
@@ -22,9 +24,11 @@ class ProductItem {
     required this.imageUrl,
     required this.selectedCategory,
     required this.selectedAvailability,
-    required this.stockCount,
     required this.price,
     required this.businessName,
+    required this.phoneNumber,
+    required this.longitude,
+    required this.latitude,
   });
 
   factory ProductItem.fromJson(Map<String, dynamic> data, String docId) {
@@ -36,10 +40,12 @@ class ProductItem {
       name: data['name'] ?? '',
       selectedCategory: data['selectedCategory'] ?? '',
       selectedAvailability: data['selectedAvailability'] ?? '',
-      stockCount: data['stockCount'] ?? 0,
       price: data['price']?.toDouble() ?? 0.0,
       imageUrl: data['imageUrl'], // Optional image URL
       businessName: data['Store Name'] ?? '',
+      phoneNumber: data['phone_number'] ?? '',
+      longitude: data['longitude'] ?? '',
+      latitude: data['latitude'] ?? '',
     );
   }
 }

@@ -1,7 +1,9 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../widgets/custom_widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   final String image;
@@ -9,15 +11,40 @@ class ProductDetailsPage extends StatelessWidget {
   final String price;
   final String description;
   final String businessName;
-
-  const ProductDetailsPage({
+  final String selectedAvailability;
+  final String phoneNumber;
+  final double longitude;
+  final double latitude;
+  late final String url;
+  ProductDetailsPage({
     super.key,
     required this.image,
     required this.title,
     required this.price,
     required this.description,
     required this.businessName,
-  });
+    required this.selectedAvailability, // Default value
+    required this.phoneNumber,
+    required this.longitude,
+    required this.latitude,
+  }) {
+    url =
+        "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude";
+  }
+  Future<void> _openGoogleMaps() async {
+    final url = Uri.parse(
+        "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude");
+
+    if (await canLaunchUrl(url)) {
+      final launched =
+          await launchUrl(url, mode: LaunchMode.externalApplication);
+      if (!launched) {
+        debugPrint("Failed to launch $url");
+      }
+    } else {
+      debugPrint("Can't launch $url");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +67,21 @@ class ProductDetailsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              child: Image.network(image, height: 200),
+              child: FadeInImage.assetNetwork(
+                placeholder: 'assets/images/motor_oil.png',
+                image: image,
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.contain,
+                imageErrorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'assets/images/motor_oil.png',
+                    height: 100,
+                    width: double.infinity,
+                    fit: BoxFit.contain,
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -74,7 +115,7 @@ class ProductDetailsPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'In Stock',
+                    selectedAvailability,
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       color: Colors.black,
@@ -95,7 +136,7 @@ class ProductDetailsPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'About Item Name',
+                    'About $title',
                     style: textStyleWhite.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -113,7 +154,7 @@ class ProductDetailsPage extends StatelessWidget {
                     height: 10,
                   ),
                   Text(
-                    'About Seller Market',
+                    'About this business',
                     style: textStyleWhite.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -131,7 +172,7 @@ class ProductDetailsPage extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    'Shop Phone Number',
+                    'Shop Phone Number: $phoneNumber',
                     style: textStyleGray.copyWith(
                       fontSize: 14,
                     ),
@@ -140,11 +181,40 @@ class ProductDetailsPage extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    'Shop Location',
+                    textAlign: TextAlign.left,
+                    'Shop Location: copy the link below to open in Google Maps',
                     style: textStyleGray.copyWith(
                       fontSize: 14,
                     ),
                   ),
+                  const SizedBox(width: 10),
+                  SelectableText(
+                    'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
+                    style: const TextStyle(color: Colors.blue),
+                  ),
+                  // Text.rich(
+                  //   TextSpan(
+                  //     text: 'Open in Google Maps',
+                  //     style: const TextStyle(
+                  //       color: Colors.blue,
+                  //       decoration: TextDecoration.underline,
+                  //       fontSize: 16,
+                  //     ),
+                  //     recognizer: TapGestureRecognizer()
+                  //       ..onTap = () async {
+                  //         final uri = Uri.parse(url);
+                  //         if (await canLaunchUrl(uri)) {
+                  //           await launchUrl(uri,
+                  //               mode: LaunchMode.externalApplication);
+                  //         } else {
+                  //           ScaffoldMessenger.of(context).showSnackBar(
+                  //             SnackBar(
+                  //                 content: Text('Could not open the link.')),
+                  //           );
+                  //         }
+                  //       },
+                  //   ),
+                  // ),
                 ],
               ),
             ),

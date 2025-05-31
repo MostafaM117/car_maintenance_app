@@ -161,6 +161,11 @@ class _PeriodicpageState extends State<Periodicpage> {
                                     price: product.price.toString(),
                                     description: product.description,
                                     businessName: product.businessName,
+                                    selectedAvailability:
+                                        product.selectedAvailability,
+                                    phoneNumber: product.phoneNumber,
+                                    latitude: product.latitude,
+                                    longitude: product.longitude,
                                   );
                                 },
                               );
