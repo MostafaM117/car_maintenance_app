@@ -1,4 +1,5 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -27,13 +28,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
     Profile(),
   ];
 
-  final List<String> _labels = [
-    'Home',
-    'Maintain',
-    'Chatbot',
-    'Market',
-    'Account',
-  ];
+ 
 
   final List<String> _icons = [
     'assets/svg/home.svg',
@@ -50,7 +45,14 @@ class _UserMainScreenState extends State<UserMainScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,) {
+     final List<String> labels = [
+    S.of(context).home,
+    S.of(context).maintain,
+    S.of(context).chatbot,
+    S.of(context).market,
+    S.of(context).account,
+  ];
     return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
@@ -71,7 +73,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
           onTabChange: _onItemTapped,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           tabs: List.generate(
-            _labels.length,
+            labels.length,
             (index) => GButton(
               icon: Icons.circle,
               leading: _selectedIndex == index
@@ -82,7 +84,7 @@ class _UserMainScreenState extends State<UserMainScreen> {
                       width: 25,
                       color: Colors.white,
                     ),
-              text: _labels[index],
+              text: labels[index],
               backgroundColor: AppColors.buttonColor,
             ),
           ),
