@@ -22,28 +22,112 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Donot_account": MessageLookupByLibrary.simpleMessage("ليس لديك حساب"),
+    "Sign_carPal": MessageLookupByLibrary.simpleMessage(
+      "تسجيل الدخول الي كاربال",
+    ),
+    "Sigup_carPal": MessageLookupByLibrary.simpleMessage(
+      "إنشاء حساب في كاربال",
+    ),
     "account": MessageLookupByLibrary.simpleMessage("الحساب"),
     "add_car_details": MessageLookupByLibrary.simpleMessage(
       "الآن يمكنك إضافة تفاصيل سيارتك للبدء.",
     ),
     "add_maintenance": MessageLookupByLibrary.simpleMessage("إضافة صيانة"),
     "add_new_car": MessageLookupByLibrary.simpleMessage("إضافة سيارة جديدة"),
+    "agree_terms_text": MessageLookupByLibrary.simpleMessage(
+      "بالتسجيل، فإنك توافق على ",
+    ),
+    "already_have_account": MessageLookupByLibrary.simpleMessage(
+      "هل لديك حساب بالفعل؟ ",
+    ),
     "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "car_make": MessageLookupByLibrary.simpleMessage("نوع السيارة"),
     "car_model": MessageLookupByLibrary.simpleMessage("طراز السيارة"),
     "car_owner": MessageLookupByLibrary.simpleMessage("أنا مالك سيارة"),
     "car_year": MessageLookupByLibrary.simpleMessage("سنة الصنع"),
     "chatbot": MessageLookupByLibrary.simpleMessage("المساعد الذكي"),
+    "check_terms_warning": MessageLookupByLibrary.simpleMessage(
+      "يرجى الموافقة على الشروط للمتابعة",
+    ),
+    "confirm_password": MessageLookupByLibrary.simpleMessage(
+      "تأكيد كلمة المرور",
+    ),
     "congratulations": MessageLookupByLibrary.simpleMessage(
       "تم إنشاء حسابك بنجاح!",
+    ),
+    "create_business_account": MessageLookupByLibrary.simpleMessage(
+      "أنشئ حساب نشاطك التجاري الآن",
     ),
     "delete": MessageLookupByLibrary.simpleMessage("حذف"),
     "delete_maintenance": MessageLookupByLibrary.simpleMessage("حذف الصيانة"),
     "dismiss": MessageLookupByLibrary.simpleMessage("تجاهل"),
     "edit": MessageLookupByLibrary.simpleMessage("تعديل"),
-    "email_or_phone": MessageLookupByLibrary.simpleMessage(
-      "أدخل بريدك الإلكتروني ",
+    "email": MessageLookupByLibrary.simpleMessage("أدخل بريدك الإلكتروني "),
+    "emailS": MessageLookupByLibrary.simpleMessage(
+      "أدخل بريدك الإلكتروني الخاص بالعمل",
     ),
+    "email_already_registered": MessageLookupByLibrary.simpleMessage(
+      "هذا البريد الإلكتروني مسجل بالفعل",
+    ),
+    "enter_business_name": MessageLookupByLibrary.simpleMessage(
+      "أدخل اسم النشاط التجاري",
+    ),
+    "enter_national_id": MessageLookupByLibrary.simpleMessage(
+      "أدخل رقم القومي",
+    ),
+    "error_enter_businessname": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال اسم النشاط التجاري",
+    ),
+    "error_enter_email": MessageLookupByLibrary.simpleMessage(
+      "البريد الإلكتروني مطلوب",
+    ),
+    "error_enter_national_id": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال رقم الهوية الوطنية",
+    ),
+    "error_enter_password": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال كلمة مرور لإنشاء الحساب",
+    ),
+    "error_general": MessageLookupByLibrary.simpleMessage("حدث خطأ"),
+    "error_generic": MessageLookupByLibrary.simpleMessage("خطأ:"),
+    "error_id_images": MessageLookupByLibrary.simpleMessage(
+      "يرجى رفع صور البطاقة الأمامية والخلفية",
+    ),
+    "error_invalid_email": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال بريد إلكتروني صحيح",
+    ),
+    "error_invalid_national_id": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال رقم هوية وطنية صحيح",
+    ),
+    "error_location": MessageLookupByLibrary.simpleMessage("يرجى إدخال موقعك"),
+    "error_more_than_two": MessageLookupByLibrary.simpleMessage(
+      "لا يمكنك رفع أكثر من صورتين",
+    ),
+    "error_passwords_not_match": MessageLookupByLibrary.simpleMessage(
+      "كلمتا المرور غير متطابقتين",
+    ),
+    "error_phone_empty": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال رقم الهاتف",
+    ),
+    "error_phone_invalid": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال رقم هاتف صحيح",
+    ),
+    "error_select_two": MessageLookupByLibrary.simpleMessage(
+      "يرجى تحديد صورتي البطاقة الأمامية والخلفية",
+    ),
+    "error_short_password": MessageLookupByLibrary.simpleMessage(
+      "يجب أن تكون كلمة المرور على الأقل 6 أحرف",
+    ),
+    "error_tax_empty": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال رقم التسجيل الضريبي",
+    ),
+    "error_tax_invalid": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال رقم ضريبي صحيح",
+    ),
+    "error_terms": MessageLookupByLibrary.simpleMessage(
+      "يجب الموافقة على شروط الخدمة",
+    ),
+    "finish_signup": MessageLookupByLibrary.simpleMessage("إكمال التسجيل"),
     "forgot_password": MessageLookupByLibrary.simpleMessage(
       "هل نسيت كلمة المرور؟ إعادة التعيين",
     ),
@@ -51,6 +135,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "get_starteddis": MessageLookupByLibrary.simpleMessage(
       "سواء كنت مالك سيارة وترغب في متابعة الصيانة، أو بائعًا يقدم قطع غيار موثوقة، فلدينا ما يلبي احتياجاتك",
     ),
+    "location": MessageLookupByLibrary.simpleMessage("احصل على موقعك الحالي"),
     "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "market": MessageLookupByLibrary.simpleMessage("السوق"),
     "mileage": MessageLookupByLibrary.simpleMessage("عدد الكيلومترات (كم)"),
@@ -61,19 +146,43 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
     "offers": MessageLookupByLibrary.simpleMessage("العروض"),
+    "or": MessageLookupByLibrary.simpleMessage("أو"),
     "parts_seller": MessageLookupByLibrary.simpleMessage("أنا بائع قطع غيار"),
     "password": MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور"),
+    "phone_number": MessageLookupByLibrary.simpleMessage(
+      "أدخل رقم هاتف النشاط التجاري",
+    ),
+    "please_enter_username": MessageLookupByLibrary.simpleMessage(
+      "من فضلك أدخل اسم المستخدم",
+    ),
+    "registered_successfully": MessageLookupByLibrary.simpleMessage(
+      "تم التسجيل بنجاح، أكمل إعداداتك لأول مرة",
+    ),
     "save": MessageLookupByLibrary.simpleMessage("حفظ"),
     "search": MessageLookupByLibrary.simpleMessage("بحث"),
     "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "sign_up": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
     "submit": MessageLookupByLibrary.simpleMessage("إرسال"),
+    "tax_number": MessageLookupByLibrary.simpleMessage(
+      "أدخل رقم التسجيل الضريبي",
+    ),
+    "terms_and_privacy": MessageLookupByLibrary.simpleMessage(
+      "شروط الاستخدام وسياسة الخصوصية.",
+    ),
+    "title": MessageLookupByLibrary.simpleMessage("أكمل بيانات حسابك التجاري"),
+    "upload_images": MessageLookupByLibrary.simpleMessage("قم برفع صور بطاقتك"),
+    "user_name": MessageLookupByLibrary.simpleMessage("اسم المستخدم"),
     "welcome": MessageLookupByLibrary.simpleMessage("مرحبًا بك في كار بال"),
     "welcome_back": MessageLookupByLibrary.simpleMessage(
+      "مرحبًا بك،  يُرجى إدخال بياناتك",
+    ),
+    "welcome_home": MessageLookupByLibrary.simpleMessage(
       "مرحبًا بعودتك، المستخدم",
     ),
+    "welcome_seller": MessageLookupByLibrary.simpleMessage("مرحبًا بك "),
     "welcomedis": MessageLookupByLibrary.simpleMessage(
       "حل متكامل لصيانة السيارات وقطع الغيار",
     ),
+    "with_Google": MessageLookupByLibrary.simpleMessage("متابعة مع جوجل"),
   };
 }
