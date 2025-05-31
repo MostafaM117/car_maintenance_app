@@ -133,7 +133,7 @@ class OfferService {
   /// (Optional) Get offers filtered by seller ID (business_name)
   Stream<List<Offer>> getOffersByBusinessName(String business_name) {
     return offersCollection
-        .where('businessname', isEqualTo: business_name)
+        .where('business_name', isEqualTo: business_name)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Offer.fromFirestore(doc)).toList());

@@ -10,7 +10,9 @@ class Offer {
   final DateTime validUntil;
   final String business_name;
   final String imageUrl;
-
+  final String phoneNumber;
+  final double longitude;
+  final double latitude;
   Offer({
     required this.id,
     required this.title,
@@ -21,6 +23,9 @@ class Offer {
     required this.validUntil,
     required this.business_name,
     this.imageUrl = '',
+    required this.phoneNumber,
+    required this.longitude,
+    required this.latitude,
   });
 
   Offer copyWith({
@@ -31,6 +36,9 @@ class Offer {
     DateTime? validUntil,
     String? business_name,
     String? imageUrl,
+    String? phoneNumber,
+    double? longitude,
+    double? latitude,
   }) {
     return Offer(
       id: id ?? this.id,
@@ -42,6 +50,9 @@ class Offer {
       validUntil: validUntil ?? this.validUntil,
       business_name: business_name ?? this.business_name,
       imageUrl: imageUrl ?? this.imageUrl,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      longitude: longitude ?? this.longitude,
+      latitude: latitude ?? this.latitude,
     );
   }
 
@@ -55,6 +66,9 @@ class Offer {
       'validUntil': validUntil,
       'business_name': business_name,
       'imageUrl': imageUrl,
+      'phoneNumber': phoneNumber,
+      'longitude': longitude,
+      'latitude': latitude,
     };
   }
 
@@ -70,6 +84,9 @@ class Offer {
       validUntil: (data['validUntil'] as Timestamp).toDate(),
       business_name: data['business_name'] ?? 'Unknown Business',
       imageUrl: data['imageUrl'] ?? '',
+      phoneNumber: data['phoneNumber'] ?? '',
+      longitude: data['longitude'] ?? '',
+      latitude: data['latitude'] ?? '',
     );
   }
 }

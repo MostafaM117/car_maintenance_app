@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../widgets/custom_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:android_intent_plus/android_intent.dart';
 
 class ProductDetailsPage extends StatelessWidget {
   final String image;
@@ -31,9 +32,21 @@ class ProductDetailsPage extends StatelessWidget {
     url =
         "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude";
   }
+  void openGoogleSearch(double latitude, double longitude) {
+    final intent = AndroidIntent(
+      action: 'action_view',
+      data:
+          'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
+    );
+
+    intent.launch().catchError((e) {
+      print("Error launching intent: $e");
+    });
+  }
+
   Future<void> _openGoogleMaps() async {
     final url = Uri.parse(
-        "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude");
+        "https://www.google.com/maps/search/?api=1&query=$longitude,$latitude");
 
     if (await canLaunchUrl(url)) {
       final launched =
@@ -180,41 +193,36 @@ class ProductDetailsPage extends StatelessWidget {
                   SizedBox(
                     height: 5,
                   ),
-                  Text(
-                    textAlign: TextAlign.left,
-                    'Shop Location: copy the link below to open in Google Maps',
-                    style: textStyleGray.copyWith(
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  SelectableText(
-                    'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
-                    style: const TextStyle(color: Colors.blue),
-                  ),
-                  // Text.rich(
-                  //   TextSpan(
-                  //     text: 'Open in Google Maps',
-                  //     style: const TextStyle(
-                  //       color: Colors.blue,
-                  //       decoration: TextDecoration.underline,
-                  //       fontSize: 16,
-                  //     ),
-                  //     recognizer: TapGestureRecognizer()
-                  //       ..onTap = () async {
-                  //         final uri = Uri.parse(url);
-                  //         if (await canLaunchUrl(uri)) {
-                  //           await launchUrl(uri,
-                  //               mode: LaunchMode.externalApplication);
-                  //         } else {
-                  //           ScaffoldMessenger.of(context).showSnackBar(
-                  //             SnackBar(
-                  //                 content: Text('Could not open the link.')),
-                  //           );
-                  //         }
-                  //       },
-                  //   ),
-                  // ),
+                  Row(
+                    children: [
+                      Text(
+                        textAlign: TextAlign.left,
+                        'Shop Location: ',
+                        style: textStyleGray.copyWith(
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          openGoogleSearch(latitude, longitude);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.buttonColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          'Open Maps',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),

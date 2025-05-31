@@ -29,6 +29,27 @@ class _OfferScreenState extends State<OfferScreen> {
   String? _selectedImage;
   DateTime? _validUntil;
   String? editingOfferId;
+  late String business_name;
+  late String phoneNumber;
+  late double longitude;
+  late double latitude;
+  void getMyBusinessInfo() async {
+    business_name = await offerService.getBusinessName();
+    phoneNumber = await offerService.getPhoneNumber();
+    longitude = await offerService.getLongitude();
+    latitude = await offerService.getLatitude();
+    setState(() {});
+    print('Business Name: $business_name');
+    print('Phone Number: $phoneNumber');
+    print('Longitude: $longitude');
+    print('Latitude: $latitude');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getMyBusinessInfo();
+  }
 
   @override
   void dispose() {
@@ -69,6 +90,9 @@ class _OfferScreenState extends State<OfferScreen> {
       validUntil: _validUntil!,
       business_name: business_name,
       imageUrl: _selectedImage ?? '',
+      phoneNumber: phoneNumber,
+      longitude: longitude,
+      latitude: latitude,
     );
 
     try {
@@ -250,7 +274,7 @@ class _OfferScreenState extends State<OfferScreen> {
             SizedBox(height: 16),
             Expanded(
               child: StreamBuilder<List<Offer>>(
-                stream: offerService.getOffers(),
+                stream: offerService.getOffersByBusinessName(business_name),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) return Text('Error loading offers');
                   if (!snapshot.hasData)
@@ -287,7 +311,8 @@ class _OfferScreenState extends State<OfferScreen> {
                 clearForm();
                 showOfferFormDialog();
               },
-            )
+            ),
+            SizedBox(height: 51),
           ],
         ),
       ),

@@ -55,7 +55,8 @@ class _PeriodicpageState extends State<Periodicpage> {
                 children: [
                   Center(
                     child: Text(
-                      widget.title,
+                      widget
+                          .title, // use the the title value to filter products to used/new
                       style:
                           TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                     ),
@@ -117,6 +118,8 @@ class _PeriodicpageState extends State<Periodicpage> {
                           searchQuery: _searchController.text.isNotEmpty
                               ? _searchController.text
                               : null,
+                          selectedCategory:
+                              widget.title, // use the title to filter products
                         ),
                         builder: (context, snapshot) {
                           final products =

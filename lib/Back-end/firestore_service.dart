@@ -145,6 +145,7 @@ class FirestoreService {
     double? maxPrice,
     String? businessName,
     String? searchQuery,
+    String? selectedCategory,
   }) {
     Query query = productsCollection;
     if (businessName != null && businessName.isNotEmpty) {
@@ -167,6 +168,9 @@ class FirestoreService {
       query = query.where('price', isLessThanOrEqualTo: maxPrice);
     }
 
+    if (selectedCategory != null && selectedCategory.isNotEmpty) {
+      query = query.where('selectedCategory', isEqualTo: selectedCategory);
+    }
     // if (location != null && location.isNotEmpty) {
     //   query = query.where('selectedAvailability', isEqualTo: location);
     // }

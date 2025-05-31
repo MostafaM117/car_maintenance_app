@@ -7,7 +7,7 @@ import '../Periodicpage.dart';
 
 class Market extends StatelessWidget {
   Market({super.key});
-  final List<String> categories = ['Used', 'Unused'];
+  final List<String> categories = ['Used', 'New'];
 
   @override
   Widget build(BuildContext context) {
