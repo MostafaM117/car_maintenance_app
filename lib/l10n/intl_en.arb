@@ -118,7 +118,11 @@
   "description": "Description",
   "back": "Back",
   "Upcoming":"Upcoming",
-  "Completed":"Completed"
-
-
+  "Completed":"Completed",
+  "skip": "Skip",
+  "tutorialHome": "This is the home page",
+  "tutorialMaintain": "This is maintenance",
+  "tutorialChatbot": "This is the chatbot",
+  "tutorialMarket": "This is the market",
+  "tutorialProfile": "This is your profile"
 }

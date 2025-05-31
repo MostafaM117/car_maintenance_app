@@ -233,6 +233,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("Search"),
     "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
     "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
+    "skip": MessageLookupByLibrary.simpleMessage("Skip"),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "support_text": MessageLookupByLibrary.simpleMessage(
       "Tap here and we’ll help you out!",
@@ -248,6 +249,21 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "title": MessageLookupByLibrary.simpleMessage(
       "Complete your business account details",
+    ),
+    "tutorialChatbot": MessageLookupByLibrary.simpleMessage(
+      "This is the chatbot",
+    ),
+    "tutorialHome": MessageLookupByLibrary.simpleMessage(
+      "This is the home page",
+    ),
+    "tutorialMaintain": MessageLookupByLibrary.simpleMessage(
+      "This is maintenance",
+    ),
+    "tutorialMarket": MessageLookupByLibrary.simpleMessage(
+      "This is the market",
+    ),
+    "tutorialProfile": MessageLookupByLibrary.simpleMessage(
+      "This is your profile",
     ),
     "upload_images": MessageLookupByLibrary.simpleMessage("Upload Your Images"),
     "used": MessageLookupByLibrary.simpleMessage("Used"),

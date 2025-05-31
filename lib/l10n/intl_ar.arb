@@ -117,6 +117,13 @@
   "expectedDate": "التاريخ المتوقع",
   "maintenanceStatus": "حالة الصيانة",
   "description": "الوصف",
-  "back": "رجوع"
+  "back": "رجوع",
+  "skip": "تخطي",
+  "tutorialHome": "هنا الصفحة الرئيسية",
+   "tutorialMaintain": "هنا الصيانة",
+  "tutorialChatbot": "هنا الدردشة مع الذكاء الاصطناعي",
+ "tutorialMarket": "هنا المتجر",
+"tutorialProfile": "هنا الملف الشخصي"
+
 
 }

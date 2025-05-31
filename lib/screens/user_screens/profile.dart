@@ -1,5 +1,4 @@
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:car_maintenance/main.dart';
 import 'package:car_maintenance/screens/user_screens/MyCars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -172,15 +171,7 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: 20,
                     ),
-                    LanguageToggle(
-                      isEnglish: isEnglish,
-                      onToggle: (Locale locale) {
-                        MyApp.setLocale(context, locale);
-                        setState(() {
-                          isEnglish = locale.languageCode == 'en';
-                        });
-                      },
-                    ),
+                   LanguageToggle(),
                     SizedBox(
                       height: 20,
                     ),
