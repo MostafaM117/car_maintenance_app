@@ -1048,6 +1048,61 @@ class S {
   String get Completed {
     return Intl.message('Completed', name: 'Completed', desc: '', args: []);
   }
+
+  /// `Skip`
+  String get skip {
+    return Intl.message('Skip', name: 'skip', desc: '', args: []);
+  }
+
+  /// `This is the home page`
+  String get tutorialHome {
+    return Intl.message(
+      'This is the home page',
+      name: 'tutorialHome',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is maintenance`
+  String get tutorialMaintain {
+    return Intl.message(
+      'This is maintenance',
+      name: 'tutorialMaintain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is the chatbot`
+  String get tutorialChatbot {
+    return Intl.message(
+      'This is the chatbot',
+      name: 'tutorialChatbot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is the market`
+  String get tutorialMarket {
+    return Intl.message(
+      'This is the market',
+      name: 'tutorialMarket',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This is your profile`
+  String get tutorialProfile {
+    return Intl.message(
+      'This is your profile',
+      name: 'tutorialProfile',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -14,8 +14,8 @@ import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
 
 class SellerProfile extends StatefulWidget {
-  const SellerProfile({super.key,this.onChangeLanguage});
-   final Function(Locale)? onChangeLanguage;   
+  const SellerProfile({super.key, this.onChangeLanguage});
+  final Function(Locale)? onChangeLanguage;
 
   @override
   State<SellerProfile> createState() => _SellerProfileState();
@@ -131,16 +131,7 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                     LanguageToggle(
-                      isEnglish: isEnglish,
-                      onToggle: (Locale locale) {
-                        MyApp.setLocale(
-                            context, locale);
-                        setState(() {
-                          isEnglish = locale.languageCode == 'en';
-                        });
-                      },
-                    ),
+                    LanguageToggle(),
                     const SizedBox(height: 20),
                     ProfileOptionTile(
                       text: 'Terms & Conditions',

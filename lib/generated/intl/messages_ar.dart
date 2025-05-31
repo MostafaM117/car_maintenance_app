@@ -223,6 +223,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "search": MessageLookupByLibrary.simpleMessage("بحث"),
     "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "sign_up": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
+    "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
     "submit": MessageLookupByLibrary.simpleMessage("إرسال"),
     "support_text": MessageLookupByLibrary.simpleMessage("اضغط هنا وسنساعدك!"),
     "tax_number": MessageLookupByLibrary.simpleMessage(
@@ -233,6 +234,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "terms_conditions": MessageLookupByLibrary.simpleMessage("الشروط والأحكام"),
     "title": MessageLookupByLibrary.simpleMessage("أكمل بيانات حسابك التجاري"),
+    "tutorialChatbot": MessageLookupByLibrary.simpleMessage(
+      "هنا الدردشة مع الذكاء الاصطناعي",
+    ),
+    "tutorialHome": MessageLookupByLibrary.simpleMessage("هنا الصفحة الرئيسية"),
+    "tutorialMaintain": MessageLookupByLibrary.simpleMessage("هنا الصيانة"),
+    "tutorialMarket": MessageLookupByLibrary.simpleMessage("هنا المتجر"),
+    "tutorialProfile": MessageLookupByLibrary.simpleMessage("هنا الملف الشخصي"),
     "upload_images": MessageLookupByLibrary.simpleMessage("قم برفع صور بطاقتك"),
     "used": MessageLookupByLibrary.simpleMessage("مستعمل"),
     "user_name": MessageLookupByLibrary.simpleMessage("اسم المستخدم"),

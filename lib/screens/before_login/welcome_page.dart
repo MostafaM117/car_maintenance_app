@@ -3,11 +3,14 @@ import 'package:car_maintenance/generated/l10n.dart';
 import 'package:car_maintenance/screens/before_login/login_type.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/locale_provider.dart';
 
 class WelcomePage extends StatefulWidget {
-  final Function(Locale) onChangeLanguage; // ← صح مكانها هنا
-
-  const WelcomePage({super.key, required this.onChangeLanguage});
+  const WelcomePage({
+    super.key,
+  });
 
   @override
   State<WelcomePage> createState() => _WelcomePageState();
@@ -18,7 +21,8 @@ class _WelcomePageState extends State<WelcomePage> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-    bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
+    final localeProvider = Provider.of<LocaleProvider>(context);
+    bool isArabic = localeProvider.locale.languageCode == 'ar';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -38,7 +42,7 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
               onPressed: () {
                 Locale newLocale = isArabic ? Locale('en') : Locale('ar');
-                widget.onChangeLanguage(newLocale);
+                localeProvider.setLocale(newLocale);
               },
             ),
           ),

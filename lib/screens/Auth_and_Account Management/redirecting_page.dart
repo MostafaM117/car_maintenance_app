@@ -25,9 +25,7 @@ class RedirectingPage extends StatelessWidget {
             }
             if (!snapshot.hasData || snapshot.data == null) {
               // print("AuthWrapper: No user signed in, navigating to WelcomePage...");
-              return WelcomePage(
-                onChangeLanguage: (locale) => MyApp.setLocale(context, locale),
-              );
+              return WelcomePage();
             } else {
               final user = snapshot.data!;
               return FutureBuilder<DocumentSnapshot>(
@@ -77,10 +75,7 @@ class RedirectingPage extends StatelessWidget {
                               }
                             } else {
                               print('returned here');
-                              return WelcomePage(
-                                onChangeLanguage: (locale) =>
-                                    MyApp.setLocale(context, locale),
-                              );
+                              return WelcomePage();
                             }
                           });
                     }

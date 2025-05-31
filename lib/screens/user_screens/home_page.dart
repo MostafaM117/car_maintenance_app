@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 // import 'package:flutter_svg/svg.dart';
+import '../../services/ltutorial_service.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/CarCardWidget.dart';
 import '../../widgets/SubtractWave_widget.dart';
@@ -186,6 +187,18 @@ class _HomePageState extends State<HomePage> {
     await notiService.initNotification();
   }
 
+  // void _showTutorial() {
+  //   TutorialCoachMark(
+  //     targets: targets,
+  //     colorShadow: Colors.black,
+  //     textSkip: "تخطي",
+  //     opacityShadow: 0.8,
+  //   ).show(context: context);
+  // }
+  void someFunction(BuildContext context) {
+    TutorialService().showTutorial(context);
+  }
+
   @override
   void dispose() {
     MaintID().removeListener(_updateService);
@@ -217,6 +230,9 @@ class _HomePageState extends State<HomePage> {
                     MaterialPageRoute(
                       builder: (context) => NotificationsPage(),
                     ));
+              },
+              onSuptextTap: () {
+                TutorialService().showTutorial(context, forceShow: true);
               },
             ),
             SizedBox(height: 15),
@@ -339,22 +355,25 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 20),
 
                     Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 12.0, ),
-  child: Align(
-                      alignment: Directionality.of(context) == TextDirection.rtl
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Text(
-                        S.of(context).explore,
-                        // textAlign: TextAlign.start,
-                        style: TextStyle(
-                          color: const Color(0xFF0F0F0F),
-                          fontSize: 24,
-                          fontFamily: 'Inter',
-                          fontWeight: FontWeight.w600,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                      ),
+                      child: Align(
+                        alignment:
+                            Directionality.of(context) == TextDirection.rtl
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                        child: Text(
+                          S.of(context).explore,
+                          // textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: const Color(0xFF0F0F0F),
+                            fontSize: 24,
+                            fontFamily: 'Inter',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
                     ),
 
                     SizedBox(height: 20),
