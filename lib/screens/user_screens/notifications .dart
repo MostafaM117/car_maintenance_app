@@ -1,3 +1,4 @@
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -64,20 +65,18 @@ class _NotificationsPageState extends State<NotificationsPage> {
         children: [
           SafeArea(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               child: Column(
                 children: [
                   SizedBox(height: 20),
                   Text(
-                    'Notifications',
+                    S.of(context).notifications,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 40,
                       fontFamily: 'Inter',
                       height: 0,
-                      letterSpacing: 8,
                     ),
                   ),
                   SizedBox(height: 20),
@@ -125,7 +124,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             notification.title,

@@ -18,6 +18,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isArabic = Directionality.of(context) == TextDirection.rtl;
+
     return Container(
       padding: const EdgeInsets.only(top: 3),
       decoration: BoxDecoration(
@@ -51,13 +53,19 @@ class ProductCard extends StatelessWidget {
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-              decoration: const BoxDecoration(
-                color: Color(0xFF1C1C1C),
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(80),
-                  bottomLeft: Radius.circular(22),
-                  bottomRight: Radius.circular(22),
-                ),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1C1C1C),
+                borderRadius: isArabic
+                    ? BorderRadius.only(
+                        topLeft: Radius.circular(80),
+                        bottomLeft: Radius.circular(22),
+                        bottomRight: Radius.circular(22),
+                      )
+                    : BorderRadius.only(
+                        topRight: Radius.circular(80),
+                        bottomLeft: Radius.circular(22),
+                        bottomRight: Radius.circular(22),
+                      ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

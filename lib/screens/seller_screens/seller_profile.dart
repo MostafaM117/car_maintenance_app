@@ -1,4 +1,5 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/main.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
@@ -13,7 +14,8 @@ import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
 
 class SellerProfile extends StatefulWidget {
-  const SellerProfile({super.key});
+  const SellerProfile({super.key,this.onChangeLanguage});
+   final Function(Locale)? onChangeLanguage;   
 
   @override
   State<SellerProfile> createState() => _SellerProfileState();
@@ -129,10 +131,14 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    LanguageToggle(
+                     LanguageToggle(
                       isEnglish: isEnglish,
-                      onToggle: (value) {
-                        setState(() => isEnglish = value);
+                      onToggle: (Locale locale) {
+                        MyApp.setLocale(
+                            context, locale);
+                        setState(() {
+                          isEnglish = locale.languageCode == 'en';
+                        });
                       },
                     ),
                     const SizedBox(height: 20),

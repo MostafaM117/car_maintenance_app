@@ -1,11 +1,12 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 
+import '../generated/l10n.dart';
 import 'custom_widgets.dart';
 
 class LanguageToggle extends StatefulWidget {
   final bool isEnglish;
-  final Function(bool) onToggle;
+  final Function(Locale) onToggle;
 
   const LanguageToggle({
     super.key,
@@ -29,7 +30,8 @@ class _LanguageToggleState extends State<LanguageToggle> {
   void _toggleLanguage(bool english) {
     setState(() {
       _isEnglish = english;
-      widget.onToggle(_isEnglish);
+      Locale newLocale = english ? Locale('en') : Locale('ar');
+      widget.onToggle(newLocale);
     });
   }
 
@@ -56,7 +58,7 @@ class _LanguageToggleState extends State<LanguageToggle> {
             Row(
               children: [
                 Text(
-                  "Language",
+                  S.of(context).language,
                   style: textStyleGray.copyWith(
                     fontSize: 14,
                     color: AppColors.primaryText,
@@ -76,10 +78,15 @@ class _LanguageToggleState extends State<LanguageToggle> {
                     child: Container(
                       decoration: BoxDecoration(
                         color: !_isEnglish ? Colors.red : Colors.transparent,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          bottomLeft: Radius.circular(15),
-                        ),
+                        borderRadius: !_isEnglish
+                            ? BorderRadius.only(
+                                topRight: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
+                              )
+                            : BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                bottomLeft: Radius.circular(15),
+                              ),
                       ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 6),
@@ -93,12 +100,17 @@ class _LanguageToggleState extends State<LanguageToggle> {
                     onTap: () => _toggleLanguage(true),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: _isEnglish ? Colors.red : Colors.transparent,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(15),
-                          bottomRight: Radius.circular(15),
-                        ),
-                      ),
+                          color: _isEnglish ? Colors.red : Colors.transparent,
+                          borderRadius: !_isEnglish
+                              ? BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  bottomLeft: Radius.circular(15),
+                                )
+                              : BorderRadius.only(
+                                  topRight: Radius.circular(15),
+                                  bottomRight: Radius.circular(15),
+                                )
+                                ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 6),
                       child: Text(

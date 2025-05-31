@@ -289,24 +289,29 @@ class S {
     return Intl.message('Car Make', name: 'car_make', desc: '', args: []);
   }
 
-  /// `Next Maintenance`
-  String get next_maintenance {
+  /// `Welcome Back, {name}!`
+  String welcome_home(Object name) {
     return Intl.message(
-      'Next Maintenance',
-      name: 'next_maintenance',
+      'Welcome Back, $name!',
+      name: 'welcome_home',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Tap here and we’ll help you out!`
+  String get support_text {
+    return Intl.message(
+      'Tap here and we’ll help you out!',
+      name: 'support_text',
       desc: '',
       args: [],
     );
   }
 
-  /// `Welcome Back, User`
-  String get welcome_home {
-    return Intl.message(
-      'Welcome Back, User',
-      name: 'welcome_home',
-      desc: '',
-      args: [],
-    );
+  /// `Explore`
+  String get explore {
+    return Intl.message('Explore', name: 'explore', desc: '', args: []);
   }
 
   /// `Notifications`
@@ -324,16 +329,6 @@ class S {
     return Intl.message(
       'No notifications at the moment',
       name: 'no_notifications',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Add Maintenance`
-  String get add_maintenance {
-    return Intl.message(
-      'Add Maintenance',
-      name: 'add_maintenance',
       desc: '',
       args: [],
     );
@@ -747,6 +742,311 @@ class S {
   /// `Error`
   String get error_general {
     return Intl.message('Error', name: 'error_general', desc: '', args: []);
+  }
+
+  /// `ADD \nMaintenance`
+  String get add_maintenanceh {
+    return Intl.message(
+      'ADD \nMaintenance',
+      name: 'add_maintenanceh',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `ASK \nCHAT BOT`
+  String get ask_chatbot {
+    return Intl.message(
+      'ASK \nCHAT BOT',
+      name: 'ask_chatbot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CHECKOUT\nOFFERS`
+  String get checkout_offers {
+    return Intl.message(
+      'CHECKOUT\nOFFERS',
+      name: 'checkout_offers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Next Maintenance`
+  String get next_maintenance {
+    return Intl.message(
+      'Next Maintenance',
+      name: 'next_maintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View All`
+  String get view_all {
+    return Intl.message('View All', name: 'view_all', desc: '', args: []);
+  }
+
+  /// `No maintenance records available.`
+  String get no_maintenance_records {
+    return Intl.message(
+      'No maintenance records available.',
+      name: 'no_maintenance_records',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No upcoming maintenance needed.`
+  String get no_upcoming_maintenance {
+    return Intl.message(
+      'No upcoming maintenance needed.',
+      name: 'no_upcoming_maintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please add a car to see maintenance items`
+  String get please_add_car_to_see_maintenance {
+    return Intl.message(
+      'Please add a car to see maintenance items',
+      name: 'please_add_car_to_see_maintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All Upcoming Maintenance`
+  String get all_upcoming_maintenance {
+    return Intl.message(
+      'All Upcoming Maintenance',
+      name: 'all_upcoming_maintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `add_maintenance`
+  String get add_maintenance {
+    return Intl.message(
+      'add_maintenance',
+      name: 'add_maintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No cars found. Add a car to see it here.`
+  String get no_cars_found {
+    return Intl.message(
+      'No cars found. Add a car to see it here.',
+      name: 'no_cars_found',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete your car?`
+  String get confirm_delete_car {
+    return Intl.message(
+      'Are you sure you want to delete your car?',
+      name: 'confirm_delete_car',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This action is permanent and cannot be undone. All your data will be permanently removed.`
+  String get delete_warning {
+    return Intl.message(
+      'This action is permanent and cannot be undone. All your data will be permanently removed.',
+      name: 'delete_warning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Car deleted successfully`
+  String get car_deleted_successfully {
+    return Intl.message(
+      'Car deleted successfully',
+      name: 'car_deleted_successfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Average monthly usage (KM)`
+  String get average_monthly_usage_km {
+    return Intl.message(
+      'Average monthly usage (KM)',
+      name: 'average_monthly_usage_km',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Average (KM)`
+  String get average_km {
+    return Intl.message('Average (KM)', name: 'average_km', desc: '', args: []);
+  }
+
+  /// `Please enter average usage`
+  String get please_enter_average_usage {
+    return Intl.message(
+      'Please enter average usage',
+      name: 'please_enter_average_usage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current car mileage (Approx.)`
+  String get current_car_mileage {
+    return Intl.message(
+      'Current car mileage (Approx.)',
+      name: 'current_car_mileage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mileage (KM)`
+  String get mileage_hint {
+    return Intl.message(
+      'Mileage (KM)',
+      name: 'mileage_hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter mileage`
+  String get please_enter_mileage {
+    return Intl.message(
+      'Please enter mileage',
+      name: 'please_enter_mileage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Used`
+  String get used {
+    return Intl.message('Used', name: 'used', desc: '', args: []);
+  }
+
+  /// `Unused`
+  String get Unused {
+    return Intl.message('Unused', name: 'Unused', desc: '', args: []);
+  }
+
+  /// `Home`
+  String get home {
+    return Intl.message('Home', name: 'home', desc: '', args: []);
+  }
+
+  /// `Maintain`
+  String get maintain {
+    return Intl.message('Maintain', name: 'maintain', desc: '', args: []);
+  }
+
+  /// `maintenance`
+  String get maintenance {
+    return Intl.message('maintenance', name: 'maintenance', desc: '', args: []);
+  }
+
+  /// `Terms & Conditions`
+  String get terms_conditions {
+    return Intl.message(
+      'Terms & Conditions',
+      name: 'terms_conditions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Profile`
+  String get profile {
+    return Intl.message('Profile', name: 'profile', desc: '', args: []);
+  }
+
+  /// `Language`
+  String get language {
+    return Intl.message('Language', name: 'language', desc: '', args: []);
+  }
+
+  /// `Maintenance Details`
+  String get maintenanceDetails {
+    return Intl.message(
+      'Maintenance Details',
+      name: 'maintenanceDetails',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maintenance Type`
+  String get maintenanceType {
+    return Intl.message(
+      'Maintenance Type',
+      name: 'maintenanceType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Current mileage`
+  String get currentMileage {
+    return Intl.message(
+      'Current mileage',
+      name: 'currentMileage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expected Date`
+  String get expectedDate {
+    return Intl.message(
+      'Expected Date',
+      name: 'expectedDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Maintenance Status`
+  String get maintenanceStatus {
+    return Intl.message(
+      'Maintenance Status',
+      name: 'maintenanceStatus',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get description {
+    return Intl.message('Description', name: 'description', desc: '', args: []);
+  }
+
+  /// `Back`
+  String get back {
+    return Intl.message('Back', name: 'back', desc: '', args: []);
+  }
+
+  /// `Upcoming`
+  String get Upcoming {
+    return Intl.message('Upcoming', name: 'Upcoming', desc: '', args: []);
+  }
+
+  /// `Completed`
+  String get Completed {
+    return Intl.message('Completed', name: 'Completed', desc: '', args: []);
   }
 }
 

@@ -1,16 +1,17 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
-// import '../widgets/BackgroundDecoration.dart';
+import '../../generated/l10n.dart';
 import '../../widgets/custom_widgets.dart';
 import '../Periodicpage.dart';
 
 class Market extends StatelessWidget {
   Market({super.key});
-  final List<String> categories = ['Used', 'Unused'];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,) {
+      final List<String> categories = [S.of(context ).used, S.of(context ).Unused];
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
@@ -25,7 +26,7 @@ class Market extends StatelessWidget {
                   SizedBox(height: 70),
                   Center(
                     child: Text(
-                      "Market",
+                      S.of(context).market,
                       style:
                           TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                     ),

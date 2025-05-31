@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -51,24 +52,24 @@ class _CarMaintState extends State<CarMaint> {
                 ),
                 const SizedBox(height: 15),
                 buildTextField(
-                  label: 'Current car mileage (Approx.)',
+                  label: S.of(context).current_car_mileage,
                   controller: mileageController,
-                  hintText: 'Mileage (KM)',
+                  hintText: S.of(context).mileage_hint,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter mileage';
+                      return S.of(context).please_enter_mileage;
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 15),
                 buildTextField(
-                  label: 'Average monthly usage (KM)',
+                  label: S.of(context).average_monthly_usage_km,
                   controller: avgKmController,
-                  hintText: 'Average (KM)',
+                  hintText: S.of(context).average_km,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Please enter average usage';
+                      return S.of(context).please_enter_average_usage;
                     }
                     return null;
                   },
@@ -80,7 +81,7 @@ class _CarMaintState extends State<CarMaint> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           popUpBotton(
-                            'Cancel',
+                            S.of(context).cancel,
                             AppColors.primaryText,
                             AppColors.buttonText,
                             onPressed: () {
@@ -88,7 +89,7 @@ class _CarMaintState extends State<CarMaint> {
                             },
                           ),
                           popUpBotton(
-                            'Save',
+                            S.of(context).save,
                             AppColors.buttonColor,
                             AppColors.buttonText,
                             onPressed: () async {
@@ -180,7 +181,7 @@ class _CarMaintState extends State<CarMaint> {
                 children: [
                   SizedBox(height: 70),
                   Text(
-                    "My Cars",
+                    S.of(context).my_cars,
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
                   ),
                   SizedBox(height: 20),
@@ -202,8 +203,8 @@ class _CarMaintState extends State<CarMaint> {
 
                         if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                           return Center(
-                              child: Text(
-                                  'No cars found. Add a car to see it here.'));
+                            child: Text(S.of(context).no_cars_found),
+                          );
                         }
 
                         // Convert documents to List of Maps
@@ -254,13 +255,13 @@ class _CarMaintState extends State<CarMaint> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Text(
-                                            'Are you sure you want to delete your car?',
+                                            S.of(context).confirm_delete_car,
                                             style: textStyleWhite,
                                             textAlign: TextAlign.center,
                                           ),
                                           const SizedBox(height: 15),
                                           Text(
-                                            'This action is permanent and cannot be undone. All your data will be permanently removed.',
+                                            S.of(context).delete_warning,
                                             style: textStyleGray,
                                             textAlign: TextAlign.center,
                                           ),
@@ -270,7 +271,7 @@ class _CarMaintState extends State<CarMaint> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               popUpBotton(
-                                                'Cancel',
+                                                S.of(context).cancel,
                                                 AppColors.primaryText,
                                                 AppColors.buttonText,
                                                 onPressed: () {
@@ -280,7 +281,7 @@ class _CarMaintState extends State<CarMaint> {
                                               ),
                                               const SizedBox(width: 15),
                                               popUpBotton(
-                                                'Delete',
+                                                S.of(context).delete,
                                                 AppColors.buttonColor,
                                                 AppColors.buttonText,
                                                 onPressed: () {
@@ -324,7 +325,7 @@ class _CarMaintState extends State<CarMaint> {
 
                   SizedBox(height: 20),
                   buildButton(
-                    'Add Car',
+                    S.of(context).add_new_car,
                     AppColors.buttonColor,
                     AppColors.secondaryText,
                     onPressed: () {
