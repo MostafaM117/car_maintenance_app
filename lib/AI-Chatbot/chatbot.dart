@@ -1,6 +1,8 @@
 import 'package:car_maintenance/AI-Chatbot/gemini.dart';
 import 'package:car_maintenance/AI-Chatbot/send_message.dart';
 import 'package:car_maintenance/AI-Chatbot/speech_to_text.dart';
+import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -178,7 +180,9 @@ class _ChatbotState extends State<Chatbot> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
         appBar: AppBar(
+          backgroundColor: AppColors.background,
             leading: Builder(builder: (context) {
               return IconButton(
                 icon: Icon(Icons.menu),
@@ -188,90 +192,109 @@ class _ChatbotState extends State<Chatbot> {
               );
             }),
             centerTitle: true,
-            title: const Text('Chatbot')),
-        drawer: Drawer(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('users')
-                  .doc(widget.userId)
-                  .collection('chats')
-                  .orderBy('createdAt', descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                final docs = snapshot.data!.docs;
-                return ListView(
-                  children: [
-                    DrawerHeader(child: Text('past chats')),
-                    ListTile(
-                      leading: Icon(Icons.add),
-                      title: Text('New Chat'),
-                      onTap: () {
-                        createNewChat();
-                      },
-                    ),
-                    Divider(),
-                    if (docs.isEmpty) 
-                      const ListTile(
-                        title: Text('No past chats yet'),
-                        )
-                    else 
-                    ...docs.map((doc) {
-                      final data = doc.data() as Map<String, dynamic>;
-                      final title = data['title'] ?? 'Untitled';
-                      final chatId = doc.id;
-                      return ListTile(
-                        title: InkWell(
-                          onTap: () {
-                              print("Chat tapped: $chatId");
-                              switchChat(chatId);
-                            },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(title, overflow: TextOverflow.ellipsis,),
-                              IconButton(
-                                onPressed: () async{
-                                  bool confirmDelete = await showDialog(
-                                    context: context, 
-                                    builder: (_)=> AlertDialog(
-                                      title: Text('Confirm Delete'),
-                                      content: Text('Are you sure you want to delete this chat?\n This action can\'t be undone.'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: (){
-                                            Navigator.pop(context, true);
-                                          }, 
-                                          child: Text('Confirm')),
-                                        TextButton(
-                                          onPressed: (){
-                                            Navigator.pop(context, false);
-                                          }, 
-                                          child: Text('Cancel')),
-                                      ],
-                                    ));
-                                    if(confirmDelete){
-                                      await deleteChat(chatId);
-                                      if(activeChatId == null){
-                                      await createNewChat();
+            title: const Text(
+              'Chatbot',
+              style: TextStyle(
+                fontSize: 26,
+                fontFamily: 'Inter',
+              ),)
+            ),
+        drawer: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.70,
+          child: Drawer(
+            backgroundColor: AppColors.background,
+            child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(widget.userId)
+                    .collection('chats')
+                    .orderBy('createdAt', descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  final docs = snapshot.data!.docs;
+                  return ListView(
+                    children: [
+                      DrawerHeader(
+                        child: 
+                      Text('History',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold
+                      ),)),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: buildButton(
+                          'New Chat', 
+                          AppColors.secondaryText, 
+                          AppColors.primaryText, 
+                          onPressed: (){
+                            createNewChat();
+                          }),
+                      ),
+                      Divider(),
+                      if (docs.isEmpty) 
+                        const ListTile(
+                          title: Text('No history yet'),
+                          )
+                      else 
+                      ...docs.map((doc) {
+                        final data = doc.data() as Map<String, dynamic>;
+                        final title = data['title'] ?? 'Untitled';
+                        final chatId = doc.id;
+                        return ListTile(
+                          title: InkWell(
+                            onTap: () {
+                                print("Chat tapped: $chatId");
+                                switchChat(chatId);
+                              },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(title, overflow: TextOverflow.ellipsis,),
+                                IconButton(
+                                  onPressed: () async{
+                                    bool confirmDelete = await showDialog(
+                                      context: context, 
+                                      builder: (_)=> AlertDialog(
+                                        title: Text('Confirm Delete'),
+                                        content: Text('Are you sure you want to delete this chat?\n This action can\'t be undone.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: (){
+                                              Navigator.pop(context, true);
+                                            }, 
+                                            child: Text('Confirm')),
+                                          TextButton(
+                                            onPressed: (){
+                                              Navigator.pop(context, false);
+                                            }, 
+                                            child: Text('Cancel')),
+                                        ],
+                                      ));
+                                      if(confirmDelete){
+                                        await deleteChat(chatId);
+                                        if(activeChatId == null){
+                                        await createNewChat();
+                                        }
                                       }
-                                    }
-                                }, 
-                                icon: SvgPicture.asset('assets/svg/delete.svg', width: 24, height: 24,),
-                                )
-                            ],
+                                  }, 
+                                  icon: SvgPicture.asset('assets/svg/delete.svg', width: 24, height: 24,),
+                                  )
+                              ],
+                            ),
                           ),
-                        ),
-                        
-                      );
-                    })
-                  ],
-                );
-              }),
+                          
+                        );
+                      })
+                    ],
+                  );
+                }),
+          ),
         ),
         body:
         DashChat(
@@ -285,10 +308,20 @@ class _ChatbotState extends State<Chatbot> {
                     onPressed: () {
                       _isListening ? _stopListening() : _startSpeechToText();
                     },
-                    icon: Icon(_isListening ? Icons.stop : Icons.mic))
-              ]),
+                    icon: Icon(_isListening ? Icons.stop : Icons.mic)),
+                    
+              ],
+              sendButtonBuilder: (onSend) {
+                return IconButton(
+                icon: Icon(Icons.send, color: AppColors.primaryText),
+                onPressed: onSend,
+                );
+              },
+              ),
           messageOptions: MessageOptions(
             showOtherUsersName: true,
+            currentUserContainerColor: AppColors.primaryText,
+            currentUserTextColor: Colors.white,
             messageTextBuilder: (message, previousMessage, nextMessage) {
               bool rtl = isArabic(message.text);
               final isBot = message.user.id == geminiBot.id;
