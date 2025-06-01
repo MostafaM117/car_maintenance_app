@@ -107,7 +107,8 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   child: Text(
                     S.of(context).forgot_password,
                     style: textStyleWhite.copyWith(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
@@ -144,7 +145,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                         TextSpan(
                           text: S.of(context).sign_up,
                           style: textStyleWhite.copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w900,
                           ),
                         ),

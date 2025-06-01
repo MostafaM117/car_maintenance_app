@@ -27,10 +27,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Completed": MessageLookupByLibrary.simpleMessage("Completed"),
     "Done": MessageLookupByLibrary.simpleMessage("Done"),
     "Donot_account": MessageLookupByLibrary.simpleMessage(
-      "Don’t have an account?",
+      "Don’t have an account? ",
     ),
     "Sign_carPal": MessageLookupByLibrary.simpleMessage("Sign in to CarPal"),
-    "Sigup_carPal": MessageLookupByLibrary.simpleMessage("sign up to CarPal"),
+    "Sigup_carPal": MessageLookupByLibrary.simpleMessage("Sign up to CarPal"),
     "Unused": MessageLookupByLibrary.simpleMessage("Unused"),
     "Upcoming": MessageLookupByLibrary.simpleMessage("Upcoming"),
     "account": MessageLookupByLibrary.simpleMessage("Account"),
@@ -116,9 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "dismiss": MessageLookupByLibrary.simpleMessage("Dismiss"),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "email": MessageLookupByLibrary.simpleMessage("Enter your email"),
-    "emailS": MessageLookupByLibrary.simpleMessage(
-      "Enter your business  email",
-    ),
+    "emailS": MessageLookupByLibrary.simpleMessage("Enter your business email"),
     "email_already_registered": MessageLookupByLibrary.simpleMessage(
       "This email is already registered",
     ),
@@ -185,7 +183,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "explore": MessageLookupByLibrary.simpleMessage("Explore"),
     "finish_signup": MessageLookupByLibrary.simpleMessage("Finish Signing up"),
     "forgot_password": MessageLookupByLibrary.simpleMessage(
-      "Forget Password? Reset it",
+      "Forgot Password? Reset it",
     ),
     "get_started": MessageLookupByLibrary.simpleMessage("Let’s get started"),
     "get_starteddis": MessageLookupByLibrary.simpleMessage(

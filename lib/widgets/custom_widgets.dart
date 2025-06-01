@@ -144,7 +144,7 @@ Widget googleButton(BuildContext context, VoidCallback onPressed) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       ),
       icon: Image.asset('assets/images/Google_logo.png', height: 25),
-      label: Text(S.of(context).with_Google, style: textStyleWhite),
+      label: Text(S.of(context).with_Google, style: textStyleWhite.copyWith(fontWeight: FontWeight.bold)),
       onPressed: onPressed,
     ),
   );

@@ -75,8 +75,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
       );
     } else if (password.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(S.of(context).error_short_password)),
+        SnackBar(content: Text(S.of(context).error_short_password)),
       );
     } else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -108,7 +107,10 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
               const SizedBox(height: 50),
               Text(
                 S.of(context).create_business_account,
-                style: textStyleWhite.copyWith(fontSize: 24),
+                style: textStyleWhite.copyWith(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
               Text(
@@ -204,7 +206,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   width: 20,
                   height: 24,
                 ),
-                hintText:S.of(context).confirm_password,
+                hintText: S.of(context).confirm_password,
                 obscureText: _obscureText,
               ),
               const SizedBox(height: 40), //60
@@ -237,14 +239,14 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   },
                   child: Text.rich(
                     TextSpan(
-                      text:S.of(context).already_have_account,
+                      text: S.of(context).already_have_account,
                       style: textStyleWhite.copyWith(
                           fontSize: 12, fontWeight: FontWeight.w500),
                       children: [
                         TextSpan(
                           text: S.of(context).sign_in,
                           style: textStyleWhite.copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w900,
                           ),
                         ),
