@@ -143,7 +143,7 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                         TextSpan(
                           text: S.of(context).sign_up,
                           style: textStyleWhite.copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w900,
                           ),
                         ),

@@ -81,8 +81,7 @@ class _UserSignupState extends State<UserSignupPage> {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text(S.of(context).registered_successfully),
+            content: Text(S.of(context).registered_successfully),
             duration: Duration(milliseconds: 4000),
             backgroundColor: Colors.green.shade400,
           ),
@@ -96,7 +95,7 @@ class _UserSignupState extends State<UserSignupPage> {
           return null;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(S.of(context).error_generic +e.toString())),
+            SnackBar(content: Text(S.of(context).error_generic + e.toString())),
           );
           return null;
         }
@@ -136,7 +135,8 @@ class _UserSignupState extends State<UserSignupPage> {
 
               Text(
                 S.of(context).Sigup_carPal,
-                style: textStyleWhite.copyWith(fontSize: 24),
+                style: textStyleWhite.copyWith(
+                    fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(
@@ -209,8 +209,7 @@ class _UserSignupState extends State<UserSignupPage> {
                       text: TextSpan(
                           style: textStyleGray.copyWith(fontSize: 12),
                           children: [
-                         TextSpan(
-                            text: S.of(context).agree_terms_text),
+                        TextSpan(text: S.of(context).agree_terms_text),
                         TextSpan(
                             text: S.of(context).terms_and_privacy,
                             style: textStyleGray.copyWith(
@@ -246,7 +245,9 @@ class _UserSignupState extends State<UserSignupPage> {
                         ? signup()
                         : SnackBar(
                             content: ScaffoldMessenger(
-                                child: Text(S.of(context).check_terms_warning,)));
+                                child: Text(
+                            S.of(context).check_terms_warning,
+                          )));
                   },
                   style: TextButton.styleFrom(
                     backgroundColor:
@@ -282,7 +283,7 @@ class _UserSignupState extends State<UserSignupPage> {
                         TextSpan(
                           text: S.of(context).sign_in,
                           style: textStyleWhite.copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w900,
                           ),
                         ),

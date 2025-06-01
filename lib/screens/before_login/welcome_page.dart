@@ -89,14 +89,21 @@ class _WelcomePageState extends State<WelcomePage> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  S.of(context).welcomedis,
-                  style: TextStyle(
-                    color: AppColors.primaryText,
-                    fontSize: screenWidth * 0.05,
-                    fontWeight: FontWeight.w500,
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: Directionality.of(context) == TextDirection.rtl
+                        ? 6.0
+                        : 0,
                   ),
-                ),
+                  child: Text(
+                    S.of(context).welcomedis,
+                    style: TextStyle(
+                      color: AppColors.primaryText,
+                      fontSize: screenWidth * 0.05,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                )
               ],
             ),
           ),

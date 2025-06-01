@@ -139,10 +139,10 @@ class S {
     return Intl.message('Enter your email', name: 'email', desc: '', args: []);
   }
 
-  /// `Enter your business  email`
+  /// `Enter your business email`
   String get emailS {
     return Intl.message(
-      'Enter your business  email',
+      'Enter your business email',
       name: 'emailS',
       desc: '',
       args: [],
@@ -169,20 +169,20 @@ class S {
     );
   }
 
-  /// `sign up to CarPal`
+  /// `Sign up to CarPal`
   String get Sigup_carPal {
     return Intl.message(
-      'sign up to CarPal',
+      'Sign up to CarPal',
       name: 'Sigup_carPal',
       desc: '',
       args: [],
     );
   }
 
-  /// `Don’t have an account?`
+  /// `Don’t have an account? `
   String get Donot_account {
     return Intl.message(
-      'Don’t have an account?',
+      'Don’t have an account? ',
       name: 'Donot_account',
       desc: '',
       args: [],
@@ -229,10 +229,10 @@ class S {
     );
   }
 
-  /// `Forget Password? Reset it`
+  /// `Forgot Password? Reset it`
   String get forgot_password {
     return Intl.message(
-      'Forget Password? Reset it',
+      'Forgot Password? Reset it',
       name: 'forgot_password',
       desc: '',
       args: [],
