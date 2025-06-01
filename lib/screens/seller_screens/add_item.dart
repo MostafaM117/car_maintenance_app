@@ -92,19 +92,7 @@ class _AddItemState extends State<AddItem> {
                   ),
                 ],
               ),
-              // SizedBox(
-              //   height: 15,
-              // ),
-              // buildDropdownField(
-              //   label: 'Product Category',
-              //   value: _selectedCategory,
-              //   onChanged: (String? newValue) {
-              //     setState(() {
-              //       _selectedCategory = newValue;
-              //     });
-              //   },
-              //   options: categories,
-              // ),
+
               SizedBox(
                 height: 15,
               ), // Description Field
@@ -171,10 +159,6 @@ class _AddItemState extends State<AddItem> {
                 },
               ),
               const SizedBox(height: 15),
-
-              // SizedBox(
-              //   height: 15,
-              // ),
               buildDropdownField(
                 label: 'Product Category',
                 value: _selectedCategory,

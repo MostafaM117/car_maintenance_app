@@ -33,6 +33,10 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "Unused": MessageLookupByLibrary.simpleMessage("جديد"),
     "account": MessageLookupByLibrary.simpleMessage("الحساب"),
+    "add": MessageLookupByLibrary.simpleMessage("إضافة"),
+    "addCount": MessageLookupByLibrary.simpleMessage("أضف الكمية"),
+    "addPrice": MessageLookupByLibrary.simpleMessage("أضف السعر"),
+    "addProductName": MessageLookupByLibrary.simpleMessage("أضف اسم المنتج"),
     "add_car_details": MessageLookupByLibrary.simpleMessage(
       "الآن يمكنك إضافة تفاصيل سيارتك للبدء.",
     ),
@@ -49,16 +53,25 @@ class MessageLookup extends MessageLookupByLibrary {
       "هل لديك حساب بالفعل؟ ",
     ),
     "ask_chatbot": MessageLookupByLibrary.simpleMessage("اسأل\nشات بوت"),
+    "availability": MessageLookupByLibrary.simpleMessage("التوفر"),
+    "averageUsageError": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال المتوسط الشهري",
+    ),
+    "averageUsageHint": MessageLookupByLibrary.simpleMessage("المتوسط (كم)"),
+    "averageUsageLabel": MessageLookupByLibrary.simpleMessage(
+      "متوسط الاستخدام الشهري (كم)",
+    ),
     "average_km": MessageLookupByLibrary.simpleMessage("المتوسط (كم)"),
     "average_monthly_usage_km": MessageLookupByLibrary.simpleMessage(
       "متوسط الاستخدام الشهري (كم)",
     ),
     "back": MessageLookupByLibrary.simpleMessage("رجوع"),
     "cancel": MessageLookupByLibrary.simpleMessage("إلغاء"),
+    "carMake": MessageLookupByLibrary.simpleMessage("نوع السيارة"),
+    "carModel": MessageLookupByLibrary.simpleMessage("طراز السيارة"),
     "car_deleted_successfully": MessageLookupByLibrary.simpleMessage(
       "تم حذف السيارة بنجاح",
     ),
-    "car_make": MessageLookupByLibrary.simpleMessage("نوع السيارة"),
     "car_model": MessageLookupByLibrary.simpleMessage("طراز السيارة"),
     "car_owner": MessageLookupByLibrary.simpleMessage("أنا مالك سيارة"),
     "car_year": MessageLookupByLibrary.simpleMessage("سنة الصنع"),
@@ -85,12 +98,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_car_mileage": MessageLookupByLibrary.simpleMessage(
       "عداد السيارة الحالي (تقريباً)",
     ),
+    "defaultUsername": MessageLookupByLibrary.simpleMessage("المستخدم"),
     "delete": MessageLookupByLibrary.simpleMessage("حذف"),
     "delete_maintenance": MessageLookupByLibrary.simpleMessage("حذف الصيانة"),
     "delete_warning": MessageLookupByLibrary.simpleMessage(
       "هذا الإجراء دائم ولا يمكن التراجع عنه. سيتم حذف جميع بياناتك بشكل نهائي.",
     ),
     "description": MessageLookupByLibrary.simpleMessage("الوصف"),
+    "discard": MessageLookupByLibrary.simpleMessage("إلغاء"),
     "dismiss": MessageLookupByLibrary.simpleMessage("تجاهل"),
     "edit": MessageLookupByLibrary.simpleMessage("تعديل"),
     "email": MessageLookupByLibrary.simpleMessage("أدخل بريدك الإلكتروني "),
@@ -163,12 +178,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "forgot_password": MessageLookupByLibrary.simpleMessage(
       "هل نسيت كلمة المرور؟ إعادة التعيين",
     ),
-    "get_started": MessageLookupByLibrary.simpleMessage("يلا بينا"),
+    "get_started": MessageLookupByLibrary.simpleMessage("ابدأ الآن"),
     "get_starteddis": MessageLookupByLibrary.simpleMessage(
       "سواء كنت مالك سيارة وترغب في متابعة الصيانة، أو بائعًا يقدم قطع غيار موثوقة، فلدينا ما يلبي احتياجاتك",
     ),
+    "greeting": MessageLookupByLibrary.simpleMessage("مرحبًا"),
     "home": MessageLookupByLibrary.simpleMessage("الرئيسية"),
+    "instruction": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال تفاصيل سيارتك للمتابعة.",
+    ),
     "language": MessageLookupByLibrary.simpleMessage("اللغة"),
+    "lastMaintenance": MessageLookupByLibrary.simpleMessage("آخر صيانة دورية"),
     "location": MessageLookupByLibrary.simpleMessage("احصل على موقعك الحالي"),
     "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "maintain": MessageLookupByLibrary.simpleMessage("الصيانة"),
@@ -180,7 +200,17 @@ class MessageLookup extends MessageLookupByLibrary {
     "maintenanceType": MessageLookupByLibrary.simpleMessage("نوع الصيانة"),
     "market": MessageLookupByLibrary.simpleMessage("المتجر"),
     "mileage": MessageLookupByLibrary.simpleMessage("عدد الكيلومترات (كم)"),
+    "mileageError": MessageLookupByLibrary.simpleMessage(
+      "يرجى إدخال عدد الكيلومترات",
+    ),
+    "mileageHint": MessageLookupByLibrary.simpleMessage(
+      "المسافة المقطوعة (كم)",
+    ),
+    "mileageLabel": MessageLookupByLibrary.simpleMessage(
+      "عدد الكيلومترات الحالي (تقريبًا)",
+    ),
     "mileage_hint": MessageLookupByLibrary.simpleMessage("المسافة (كم)"),
+    "modelYear": MessageLookupByLibrary.simpleMessage("سنة الصنع"),
     "my_cars": MessageLookupByLibrary.simpleMessage("سياراتي"),
     "next_maintenance": MessageLookupByLibrary.simpleMessage("الصيانة القادمة"),
     "no_cars_found": MessageLookupByLibrary.simpleMessage(
@@ -200,6 +230,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "or": MessageLookupByLibrary.simpleMessage("أو"),
     "parts_seller": MessageLookupByLibrary.simpleMessage("أنا بائع قطع غيار"),
     "password": MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور"),
+    "permanentDeleteMessage": MessageLookupByLibrary.simpleMessage(
+      "هذا الإجراء دائم ولا يمكن التراجع عنه.",
+    ),
+    "permanentDeleteTitle": MessageLookupByLibrary.simpleMessage(
+      "هل أنت متأكد أنك تريد حذف هذا العنصر؟",
+    ),
     "phone_number": MessageLookupByLibrary.simpleMessage(
       "أدخل رقم هاتف النشاط التجاري",
     ),
@@ -215,15 +251,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_username": MessageLookupByLibrary.simpleMessage(
       "من فضلك أدخل اسم المستخدم",
     ),
+    "price": MessageLookupByLibrary.simpleMessage("السعر"),
+    "productCategory": MessageLookupByLibrary.simpleMessage("فئة المنتج"),
+    "productName": MessageLookupByLibrary.simpleMessage("اسم المنتج"),
     "profile": MessageLookupByLibrary.simpleMessage("الملف الشخصي"),
     "registered_successfully": MessageLookupByLibrary.simpleMessage(
       "تم التسجيل بنجاح، أكمل إعداداتك لأول مرة",
     ),
     "save": MessageLookupByLibrary.simpleMessage("حفظ"),
     "search": MessageLookupByLibrary.simpleMessage("بحث"),
+    "selectMaintenanceDate": MessageLookupByLibrary.simpleMessage(
+      "اختر تاريخ الصيانة",
+    ),
     "sign_in": MessageLookupByLibrary.simpleMessage("تسجيل الدخول"),
     "sign_up": MessageLookupByLibrary.simpleMessage("إنشاء حساب"),
     "skip": MessageLookupByLibrary.simpleMessage("تخطي"),
+    "stockCount": MessageLookupByLibrary.simpleMessage("الكمية بالمخزون"),
     "submit": MessageLookupByLibrary.simpleMessage("إرسال"),
     "support_text": MessageLookupByLibrary.simpleMessage("اضغط هنا وسنساعدك!"),
     "tax_number": MessageLookupByLibrary.simpleMessage(
@@ -245,12 +288,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "used": MessageLookupByLibrary.simpleMessage("مستعمل"),
     "user_name": MessageLookupByLibrary.simpleMessage("اسم المستخدم"),
     "view_all": MessageLookupByLibrary.simpleMessage("عرض الكل"),
-    "welcome": MessageLookupByLibrary.simpleMessage("مرحبًا بك في كار بال"),
+    "welcome": MessageLookupByLibrary.simpleMessage("مرحباً بك في كار بال"),
     "welcome_back": MessageLookupByLibrary.simpleMessage(
-      "مرحبًا بك،  يُرجى إدخال بياناتك",
+      "مرحباً بك،  يُرجى إدخال بياناتك",
     ),
     "welcome_home": m0,
-    "welcome_seller": MessageLookupByLibrary.simpleMessage("مرحبًا بك "),
+    "welcome_seller": MessageLookupByLibrary.simpleMessage("مرحباً بك "),
     "welcomedis": MessageLookupByLibrary.simpleMessage(
       "حل متكامل لصيانة السيارات وقطع الغيار",
     ),
