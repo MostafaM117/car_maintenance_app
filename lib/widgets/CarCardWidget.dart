@@ -56,9 +56,10 @@ class CarCardWidget extends StatelessWidget {
                               Text(
                                 '$make $model',
                                 style: textStyleWhite.copyWith(
-                                    fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18),
                               ),
-                              const SizedBox(width: 7),
+                              const SizedBox(width: 6),
                               Text(
                                 '$year',
                                 style: textStyleGray,
@@ -70,7 +71,8 @@ class CarCardWidget extends StatelessWidget {
                               Text.rich(
                                 TextSpan(
                                   text: 'Mileage: ',
-                                  style: textStyleWhite,
+                                  style: textStyleWhite.copyWith(
+                                    fontSize: 16),
                                   children: [
                                     TextSpan(
                                         text: mileage.toString(),
@@ -107,7 +109,8 @@ class CarCardWidget extends StatelessWidget {
                         children: [
                           Text(
                             'Car ID',
-                            style: textStyleWhite,
+                            style: textStyleWhite.copyWith(
+                                    fontSize: 16),
                           ),
                           Text(
                             carId
