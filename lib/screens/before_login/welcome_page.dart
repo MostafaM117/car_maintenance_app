@@ -86,7 +86,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   style: TextStyle(
                     color: AppColors.primaryText,
                     fontSize: screenWidth * 0.09,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
@@ -94,7 +94,7 @@ class _WelcomePageState extends State<WelcomePage> {
                   style: TextStyle(
                     color: AppColors.primaryText,
                     fontSize: screenWidth * 0.05,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
               ],

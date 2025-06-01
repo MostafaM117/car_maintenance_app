@@ -33,10 +33,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unused": MessageLookupByLibrary.simpleMessage("Unused"),
     "Upcoming": MessageLookupByLibrary.simpleMessage("Upcoming"),
     "account": MessageLookupByLibrary.simpleMessage("Account"),
+    "add": MessageLookupByLibrary.simpleMessage("Add"),
+    "addCount": MessageLookupByLibrary.simpleMessage("Add Count"),
+    "addPrice": MessageLookupByLibrary.simpleMessage("Add Price"),
+    "addProductName": MessageLookupByLibrary.simpleMessage("Add Product Name"),
     "add_car_details": MessageLookupByLibrary.simpleMessage(
       "Now you can add your car details to get started.",
     ),
-    "add_maintenance": MessageLookupByLibrary.simpleMessage("add_maintenance"),
+    "add_maintenance": MessageLookupByLibrary.simpleMessage("Add maintenance"),
     "add_maintenanceh": MessageLookupByLibrary.simpleMessage(
       "ADD \nMaintenance",
     ),
@@ -51,12 +55,22 @@ class MessageLookup extends MessageLookupByLibrary {
       "Already have an account? ",
     ),
     "ask_chatbot": MessageLookupByLibrary.simpleMessage("ASK \nCHAT BOT"),
+    "availability": MessageLookupByLibrary.simpleMessage("Availability"),
+    "averageUsageError": MessageLookupByLibrary.simpleMessage(
+      "Please enter average usage",
+    ),
+    "averageUsageHint": MessageLookupByLibrary.simpleMessage("Average (KM)"),
+    "averageUsageLabel": MessageLookupByLibrary.simpleMessage(
+      "Average monthly usage (KM)",
+    ),
     "average_km": MessageLookupByLibrary.simpleMessage("Average (KM)"),
     "average_monthly_usage_km": MessageLookupByLibrary.simpleMessage(
       "Average monthly usage (KM)",
     ),
     "back": MessageLookupByLibrary.simpleMessage("Back"),
     "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+    "carMake": MessageLookupByLibrary.simpleMessage("Car Make"),
+    "carModel": MessageLookupByLibrary.simpleMessage("Car Model"),
     "car_deleted_successfully": MessageLookupByLibrary.simpleMessage(
       "Car deleted successfully",
     ),
@@ -85,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "current_car_mileage": MessageLookupByLibrary.simpleMessage(
       "Current car mileage (Approx.)",
     ),
+    "defaultUsername": MessageLookupByLibrary.simpleMessage("User"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
     "delete_maintenance": MessageLookupByLibrary.simpleMessage(
       "Delete Maintenance",
@@ -93,6 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "This action is permanent and cannot be undone. All your data will be permanently removed.",
     ),
     "description": MessageLookupByLibrary.simpleMessage("Description"),
+    "discard": MessageLookupByLibrary.simpleMessage("Discard"),
     "dismiss": MessageLookupByLibrary.simpleMessage("Dismiss"),
     "edit": MessageLookupByLibrary.simpleMessage("Edit"),
     "email": MessageLookupByLibrary.simpleMessage("Enter your email"),
@@ -171,8 +187,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "get_starteddis": MessageLookupByLibrary.simpleMessage(
       "Whether you\'re a car owner looking to stay on top of maintenance, or a seller offering trusted parts, we\'ve got you covered.",
     ),
+    "greeting": MessageLookupByLibrary.simpleMessage("Hi"),
     "home": MessageLookupByLibrary.simpleMessage("Home"),
+    "instruction": MessageLookupByLibrary.simpleMessage(
+      "Please fill in your car details to continue.",
+    ),
     "language": MessageLookupByLibrary.simpleMessage("Language"),
+    "lastMaintenance": MessageLookupByLibrary.simpleMessage(
+      "Last periodic Maintenance",
+    ),
     "location": MessageLookupByLibrary.simpleMessage(
       "Get your current location",
     ),
@@ -188,7 +211,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "maintenanceType": MessageLookupByLibrary.simpleMessage("Maintenance Type"),
     "market": MessageLookupByLibrary.simpleMessage("Market"),
     "mileage": MessageLookupByLibrary.simpleMessage("Mileage (KM)"),
+    "mileageError": MessageLookupByLibrary.simpleMessage(
+      "Please enter mileage",
+    ),
+    "mileageHint": MessageLookupByLibrary.simpleMessage("Mileage (KM)"),
+    "mileageLabel": MessageLookupByLibrary.simpleMessage(
+      "Current car mileage (Approx.)",
+    ),
     "mileage_hint": MessageLookupByLibrary.simpleMessage("Mileage (KM)"),
+    "modelYear": MessageLookupByLibrary.simpleMessage("Model Year"),
     "my_cars": MessageLookupByLibrary.simpleMessage("My Cars"),
     "next_maintenance": MessageLookupByLibrary.simpleMessage(
       "Next Maintenance",
@@ -210,6 +241,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "or": MessageLookupByLibrary.simpleMessage("or"),
     "parts_seller": MessageLookupByLibrary.simpleMessage("I\'m a Parts Seller"),
     "password": MessageLookupByLibrary.simpleMessage("Enter your password"),
+    "permanentDeleteMessage": MessageLookupByLibrary.simpleMessage(
+      "This action is permanent and cannot be undone.",
+    ),
+    "permanentDeleteTitle": MessageLookupByLibrary.simpleMessage(
+      "Are you sure you want to delete this item?",
+    ),
     "phone_number": MessageLookupByLibrary.simpleMessage(
       "Enter your business phone number",
     ),
@@ -225,15 +262,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "please_enter_username": MessageLookupByLibrary.simpleMessage(
       "Please enter a username",
     ),
+    "price": MessageLookupByLibrary.simpleMessage("Price"),
+    "productCategory": MessageLookupByLibrary.simpleMessage("Product Category"),
+    "productName": MessageLookupByLibrary.simpleMessage("Product Name"),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "registered_successfully": MessageLookupByLibrary.simpleMessage(
       "Registered Successfully, Complete Your First time setup",
     ),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
+    "selectMaintenanceDate": MessageLookupByLibrary.simpleMessage(
+      "Select Maintenance Date",
+    ),
     "sign_in": MessageLookupByLibrary.simpleMessage("Sign In"),
     "sign_up": MessageLookupByLibrary.simpleMessage("Sign Up"),
     "skip": MessageLookupByLibrary.simpleMessage("Skip"),
+    "stockCount": MessageLookupByLibrary.simpleMessage("Stock Count"),
     "submit": MessageLookupByLibrary.simpleMessage("Submit"),
     "support_text": MessageLookupByLibrary.simpleMessage(
       "Tap here and we’ll help you out!",
@@ -278,7 +322,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Welcome Back ,Seller",
     ),
     "welcomedis": MessageLookupByLibrary.simpleMessage(
-      "Your all-in-one solution for car maintenance and spare parts,",
+      "Your all-in-one solution for car maintenance and spare parts",
     ),
     "with_Google": MessageLookupByLibrary.simpleMessage("Continue with Google"),
   };

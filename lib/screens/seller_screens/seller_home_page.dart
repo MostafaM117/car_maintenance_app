@@ -11,6 +11,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../generated/l10n.dart';
+import '../../services/ltutorial_service.dart';
 import '../../widgets/SubtractWave_widget.dart';
 import 'edit_item.dart';
 
@@ -69,12 +71,14 @@ class _SellerHomePageState extends State<SellerHomePage> {
           children: [
             SizedBox(height: 10),
             SubtractWave(
-              text: 'Welcome Back, ${username.split(' ').first}',
+              text: S.of(context).welcome_home(username.split(' ').first),
               svgAssetPath: 'assets/svg/notification.svg',
-              suptext: 'Tap here and we’ll help you out!',
+              suptext: S.of(context).support_text,
               onTap: () {},
+              onSuptextTap: () {
+                TutorialService().showTutorial(context, forceShow: true);
+              },
             ),
-
             const SizedBox(height: 20),
             // Items List
             Expanded(
@@ -90,8 +94,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                         mainAxisSpacing: 20,
                         childAspectRatio: 0.80,
                       ),
-                      itemCount:
-                          productList.length + 1,
+                      itemCount: productList.length + 1,
                       itemBuilder: (context, index) {
                         if (index == 0) {
                           return GestureDetector(
@@ -105,8 +108,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
 
                               if (newItemName != null) {
                                 setState(() {
-                                  items.add(
-                                      newItemName); 
+                                  items.add(newItemName);
                                 });
                               }
                             },
@@ -159,7 +161,8 @@ class _SellerHomePageState extends State<SellerHomePage> {
                               Container(
                                 width: double.infinity,
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 11, ),
+                                  horizontal: 11,
+                                ),
                                 decoration: const BoxDecoration(
                                   color: Color(0xFFF4F4F4),
                                   borderRadius: BorderRadius.only(
@@ -211,13 +214,17 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Text(
-                                                    'Are you sure you want to delete this Item?',
+                                                    S
+                                                        .of(context)
+                                                        .permanentDeleteTitle,
                                                     style: textStyleWhite,
                                                     textAlign: TextAlign.center,
                                                   ),
                                                   const SizedBox(height: 10),
                                                   Text(
-                                                    'This action is permanent and cannot be undone.',
+                                                    S
+                                                        .of(context)
+                                                        .permanentDeleteMessage,
                                                     style: textStyleGray,
                                                     textAlign: TextAlign.center,
                                                   ),
@@ -228,7 +235,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                                             .center,
                                                     children: [
                                                       popUpBotton(
-                                                        'Cancel',
+                                                        S.of(context).cancel,
                                                         AppColors.primaryText,
                                                         AppColors.buttonText,
                                                         onPressed: () {
@@ -239,7 +246,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                                       ),
                                                       const SizedBox(width: 15),
                                                       popUpBotton(
-                                                        'Delete',
+                                                        S.of(context).delete,
                                                         AppColors.buttonColor,
                                                         AppColors.buttonText,
                                                         onPressed: () {

@@ -74,10 +74,10 @@ class S {
     );
   }
 
-  /// `Your all-in-one solution for car maintenance and spare parts,`
+  /// `Your all-in-one solution for car maintenance and spare parts`
   String get welcomedis {
     return Intl.message(
-      'Your all-in-one solution for car maintenance and spare parts,',
+      'Your all-in-one solution for car maintenance and spare parts',
       name: 'welcomedis',
       desc: '',
       args: [],
@@ -829,10 +829,10 @@ class S {
     );
   }
 
-  /// `add_maintenance`
+  /// `Add maintenance`
   String get add_maintenance {
     return Intl.message(
-      'add_maintenance',
+      'Add maintenance',
       name: 'add_maintenance',
       desc: '',
       args: [],
@@ -1102,6 +1102,211 @@ class S {
       desc: '',
       args: [],
     );
+  }
+
+  /// `Hi`
+  String get greeting {
+    return Intl.message('Hi', name: 'greeting', desc: '', args: []);
+  }
+
+  /// `User`
+  String get defaultUsername {
+    return Intl.message('User', name: 'defaultUsername', desc: '', args: []);
+  }
+
+  /// `Please fill in your car details to continue.`
+  String get instruction {
+    return Intl.message(
+      'Please fill in your car details to continue.',
+      name: 'instruction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Car Make`
+  String get carMake {
+    return Intl.message('Car Make', name: 'carMake', desc: '', args: []);
+  }
+
+  /// `Car Model`
+  String get carModel {
+    return Intl.message('Car Model', name: 'carModel', desc: '', args: []);
+  }
+
+  /// `Model Year`
+  String get modelYear {
+    return Intl.message('Model Year', name: 'modelYear', desc: '', args: []);
+  }
+
+  /// `Current car mileage (Approx.)`
+  String get mileageLabel {
+    return Intl.message(
+      'Current car mileage (Approx.)',
+      name: 'mileageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mileage (KM)`
+  String get mileageHint {
+    return Intl.message(
+      'Mileage (KM)',
+      name: 'mileageHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter mileage`
+  String get mileageError {
+    return Intl.message(
+      'Please enter mileage',
+      name: 'mileageError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Average monthly usage (KM)`
+  String get averageUsageLabel {
+    return Intl.message(
+      'Average monthly usage (KM)',
+      name: 'averageUsageLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Average (KM)`
+  String get averageUsageHint {
+    return Intl.message(
+      'Average (KM)',
+      name: 'averageUsageHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please enter average usage`
+  String get averageUsageError {
+    return Intl.message(
+      'Please enter average usage',
+      name: 'averageUsageError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last periodic Maintenance`
+  String get lastMaintenance {
+    return Intl.message(
+      'Last periodic Maintenance',
+      name: 'lastMaintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Maintenance Date`
+  String get selectMaintenanceDate {
+    return Intl.message(
+      'Select Maintenance Date',
+      name: 'selectMaintenanceDate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete this item?`
+  String get permanentDeleteTitle {
+    return Intl.message(
+      'Are you sure you want to delete this item?',
+      name: 'permanentDeleteTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This action is permanent and cannot be undone.`
+  String get permanentDeleteMessage {
+    return Intl.message(
+      'This action is permanent and cannot be undone.',
+      name: 'permanentDeleteMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product Name`
+  String get productName {
+    return Intl.message(
+      'Product Name',
+      name: 'productName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add Product Name`
+  String get addProductName {
+    return Intl.message(
+      'Add Product Name',
+      name: 'addProductName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Product Category`
+  String get productCategory {
+    return Intl.message(
+      'Product Category',
+      name: 'productCategory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Availability`
+  String get availability {
+    return Intl.message(
+      'Availability',
+      name: 'availability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Stock Count`
+  String get stockCount {
+    return Intl.message('Stock Count', name: 'stockCount', desc: '', args: []);
+  }
+
+  /// `Add Count`
+  String get addCount {
+    return Intl.message('Add Count', name: 'addCount', desc: '', args: []);
+  }
+
+  /// `Price`
+  String get price {
+    return Intl.message('Price', name: 'price', desc: '', args: []);
+  }
+
+  /// `Add Price`
+  String get addPrice {
+    return Intl.message('Add Price', name: 'addPrice', desc: '', args: []);
+  }
+
+  /// `Discard`
+  String get discard {
+    return Intl.message('Discard', name: 'discard', desc: '', args: []);
+  }
+
+  /// `Add`
+  String get add {
+    return Intl.message('Add', name: 'add', desc: '', args: []);
   }
 }
 

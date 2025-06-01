@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../seller_screens/seller_home_page.dart';
+import 'package:car_maintenance/generated/l10n.dart';
 
 class SellerMainScreen extends StatefulWidget {
   const SellerMainScreen({super.key});
@@ -22,17 +23,11 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
     SellerProfile(),
   ];
 
-  final List<String> _labels = [
-    'Home',
-    'Offers',
-    'Account',
-  ];
-
+  
   final List<String> _icons = [
     'assets/svg/home.svg',
     'assets/svg/offer.svg',
     'assets/svg/user.svg',
-    // 'assets/svg/feed.svg',
   ];
 
   void _onItemTapped(int index) {
@@ -43,6 +38,13 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
 
   @override
   Widget build(BuildContext context) {
+      final List<String> labels = [
+      S.of(context).home,
+      S.of(context).offers,
+      S.of(context).account,
+    ];
+
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
@@ -75,7 +77,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                 tabs: List.generate(
-                  _labels.length,
+                  labels.length,
                   (index) => GButton(
                     icon: Icons.circle,
                     leading: _selectedIndex == index
@@ -86,7 +88,7 @@ class _SellerMainScreenState extends State<SellerMainScreen> {
                             width: 25,
                             color: Colors.white,
                           ),
-                    text: _labels[index],
+                    text: labels[index],
                     backgroundColor: AppColors.buttonColor,
                   ),
                 ),

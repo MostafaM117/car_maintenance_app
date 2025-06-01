@@ -1,5 +1,5 @@
 import 'package:car_maintenance/constants/app_colors.dart';
-import 'package:car_maintenance/main.dart';
+// import 'package:car_maintenance/main.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
+import '../../generated/l10n.dart';
 import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
 
@@ -47,8 +48,8 @@ class _SellerProfileState extends State<SellerProfile> {
                 SizedBox(
                   height: 25,
                 ),
-                const Text(
-                  'Account',
+                Text(
+                  S.of(context).account,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 40,
@@ -65,7 +66,8 @@ class _SellerProfileState extends State<SellerProfile> {
                         .doc(seller.uid)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
+                      if (!snapshot.hasData ||
+                          snapshot.connectionState == ConnectionState.waiting) {
                         return CircleAvatar(
                             radius: 65,
                             backgroundColor: AppColors.lightGray,
@@ -80,7 +82,7 @@ class _SellerProfileState extends State<SellerProfile> {
                         return Center(child: Text('Document does not exist'));
                       }
                       final rawData = snapshot.data!.data();
-                      if(rawData == null ){
+                      if (rawData == null) {
                         print('Data is null');
                         return Center(child: Text('No data found'));
                       }
@@ -132,7 +134,7 @@ class _SellerProfileState extends State<SellerProfile> {
                   children: [
                     const SizedBox(height: 8),
                     ProfileOptionTile(
-                      text: 'Profile',
+                      text: S.of(context).profile,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -146,7 +148,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     LanguageToggle(),
                     const SizedBox(height: 20),
                     ProfileOptionTile(
-                      text: 'Terms & Conditions',
+                      text: S.of(context).terms_conditions,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -158,7 +160,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     ),
                     const SizedBox(height: 20),
                     buildButton(
-                      'Log Out',
+                      S.of(context).logout,
                       AppColors.buttonColor,
                       AppColors.buttonText,
                       onPressed: () async {

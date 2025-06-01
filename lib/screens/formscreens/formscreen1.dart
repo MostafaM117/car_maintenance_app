@@ -9,6 +9,8 @@ import 'package:car_maintenance/widgets/maintenance_date_picker.dart';
 import 'package:car_maintenance/screens/Current_Screen/user_main_screen.dart';
 import 'package:flutter/services.dart';
 
+import '../../generated/l10n.dart';
+
 class AddCarScreen extends StatefulWidget {
   @override
   State<AddCarScreen> createState() => _AddCarScreenState();
@@ -95,165 +97,170 @@ class _AddCarScreenState extends State<AddCarScreen> {
     avgKmController.dispose();
     super.dispose();
   }
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: AppColors.background,
+    body: SafeArea(
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ProgressStepsBar(
+                filledCount: _filledFieldsCount(),
+                totalCount: 12,
+              ),
+              const SizedBox(height: 24),
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ProgressStepsBar(
-                  filledCount: _filledFieldsCount(),
-                  totalCount: 12,
-                ),
-                const SizedBox(height: 24),
-                Text(username != null ? 'Hi $username' : 'Hi User',
-                    style: textStyleWhite.copyWith(fontSize: 24)),
-                const SizedBox(height: 8),
-                Text(
-                  'Please fill in your car details to continue.',
-                  style: textStyleGray,
-                ),
-                const SizedBox(height: 25),
+              // Greeting
+              Text(
+                '${S.of(context).greeting} ${username ?? S.of(context).defaultUsername}',
+                style: textStyleWhite.copyWith(fontSize: 24),
+              ),
+              const SizedBox(height: 8),
 
-                // Car Make
-                buildDropdownField(
-                  label: 'Car Make',
-                  value: _selectedMake,
-                  options: _carMakes,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedMake = newValue;
-                      _selectedModel = null;
-                      _selectedYear = null;
-                      checkFormCompletion();
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
+              // Instruction
+              Text(
+                S.of(context).instruction,
+                style: textStyleGray,
+              ),
+              const SizedBox(height: 25),
 
-                // Car Model
-                buildDropdownField(
-                  label: 'Car Model',
-                  value: _selectedModel,
-                  options: _selectedMake == null
-                      ? []
-                      : CarData.getModelsForMake(_selectedMake),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedModel = newValue;
-                      _selectedYear = null;
-                      checkFormCompletion();
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
+              // Car Make
+              buildDropdownField(
+                label: S.of(context).carMake,
+                value: _selectedMake,
+                options: _carMakes,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedMake = newValue;
+                    _selectedModel = null;
+                    _selectedYear = null;
+                    checkFormCompletion();
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
 
-                // Model Year
-                buildDropdownField(
-                  label: 'Model Year',
-                  value: _selectedYear?.toString(),
-                  options: (_selectedMake == null || _selectedModel == null)
-                      ? []
-                      : CarData.getYearsForModel(_selectedMake, _selectedModel)
-                          .map((year) => year.toString())
-                          .toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedYear = int.tryParse(value!);
-                      checkFormCompletion();
-                    });
-                  },
-                ),
-                const SizedBox(height: 20),
+              // Car Model
+              buildDropdownField(
+                label: S.of(context).carModel,
+                value: _selectedModel,
+                options: _selectedMake == null
+                    ? []
+                    : CarData.getModelsForMake(_selectedMake),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedModel = newValue;
+                    _selectedYear = null;
+                    checkFormCompletion();
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
 
-                // Mileage
-                buildTextField(
-                  label: 'Current car mileage (Approx.)',
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(7),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  controller: mileageController,
-                  hintText: 'Mileage (KM)',
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter mileage';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
+              // Model Year
+              buildDropdownField(
+                label: S.of(context).modelYear,
+                value: _selectedYear?.toString(),
+                options: (_selectedMake == null || _selectedModel == null)
+                    ? []
+                    : CarData.getYearsForModel(_selectedMake, _selectedModel)
+                        .map((year) => year.toString())
+                        .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedYear = int.tryParse(value!);
+                    checkFormCompletion();
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
 
-                // Avg usage
-                buildTextField(
-                  label: 'Average monthly usage (KM)',
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(6),
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  controller: avgKmController,
-                  hintText: 'Average (KM)',
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Please enter average usage';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
+              // Mileage
+              buildTextField(
+                label: S.of(context).mileageLabel,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(7),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                controller: mileageController,
+                hintText: S.of(context).mileageHint,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return S.of(context).mileageError;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
 
-                // Maintenance date
-                MaintenanceDatePicker(
-                  onDateSelected: (DateTime date) {
-                    FocusScope.of(context).requestFocus(FocusNode());
-                    setState(() {
-                      lastMaintenanceDate = date;
-                      checkFormCompletion();
-                    });
-                  },
-                ),
+              // Average Monthly Usage
+              buildTextField(
+                label: S.of(context).averageUsageLabel,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(6),
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+                controller: avgKmController,
+                hintText: S.of(context).averageUsageHint,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return S.of(context).averageUsageError;
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
 
-                const SizedBox(height: 65),
+              // Maintenance Date Picker
+              MaintenanceDatePicker(
+                onDateSelected: (DateTime date) {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  setState(() {
+                    lastMaintenanceDate = date;
+                    checkFormCompletion();
+                  });
+                },
+              ),
+              const SizedBox(height: 65),
 
-                // Submit button
-                isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : buildButton(
-                        'Submit',
-                        isFormComplete
-                            ? AppColors.buttonColor
-                            : AppColors.secondaryText,
-                        AppColors.buttonText,
-                        onPressed: isFormComplete ? _submitForm : null,
-                      ),
+              // Submit Button
+              isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : buildButton(
+                      S.of(context).submit,
+                      isFormComplete
+                          ? AppColors.buttonColor
+                          : AppColors.secondaryText,
+                      AppColors.buttonText,
+                      onPressed: isFormComplete ? _submitForm : null,
+                    ),
 
-                const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-                // Dismiss button
-                buildButton(
-                  'Dismiss',
-                  AppColors.buttonText,
-                  AppColors.buttonColor,
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (_) => UserMainScreen()),
-                      (route) => false,
-                    );
-                  },
-                ),
-              ],
-            ),
+              // Dismiss Button
+              buildButton(
+                S.of(context).dismiss,
+                AppColors.buttonText,
+                AppColors.buttonColor,
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (_) => UserMainScreen()),
+                    (route) => false,
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 }
