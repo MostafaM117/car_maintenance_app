@@ -1,9 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../widgets/custom_widgets.dart';
@@ -120,108 +120,244 @@ class UserDeleteAccount {
   Future<String?> showPasswordDialog(BuildContext context, String email) async {
     String? errorText;
     final formKey = GlobalKey<FormState>();
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: Color(0xFFF4F4F4),
-              title: Text(
-                "Please enter your password to confirm this action",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18
-                ),
-              ),
-              content: SizedBox(
-                height: 120,
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        controller: passwordcontroller,
-                        obscureText: _obscureText,
-                        cursorColor: Colors.black,
-                        decoration: InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: TextStyle(color: errorText != null? Theme.of(context).colorScheme.error : Colors.black),
-                            errorText: errorText,
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                              borderRadius: BorderRadius.circular(22),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                              borderRadius: BorderRadius.circular(22),
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: (){
-                                setState((){
-                                  _obscureText = !_obscureText;
-                                });
-                              }, 
-                              icon: Icon(
-                                _obscureText ? Icons.visibility_off : Icons.visibility,
-                              )
-                                )
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              actions: [
-                popUpBotton(
-                  "Cancel",
-                  AppColors.primaryText,
-                  AppColors.buttonText,
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
+    String? result;
+    await AwesomeDialog(
+      padding: EdgeInsets.all(12),
+      context: context,
+      dialogType: DialogType.noHeader,
+      dialogBackgroundColor: AppColors.secondaryText,
+      dialogBorderRadius: BorderRadius.circular(15),
+      animType: AnimType.scale,
+      body: 
+      StatefulBuilder(builder: (context, setState) {
+        return Form(
+          key: formKey,
+          child: Padding(
+            padding: 
+            const EdgeInsets.only(
+              left: 10,
+              right: 10,
+              bottom: 10,
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Please enter your password to confirm this action',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18),
                 ),
                 SizedBox(
-                  width: 15,
+                  height: 20,
                 ),
-                popUpBotton(
-                  "Confirm",
-                  AppColors.buttonColor,
-                  AppColors.buttonText,
-                  onPressed: () async {
-                    String password = passwordcontroller.text.trim();
-                    if (password.isEmpty) {
-                      setState(() {
-                        errorText = "Password can't be empty.";
-                      });
-                      return;
-                    }
-                    try {
-                      AuthCredential credential = EmailAuthProvider.credential(
-                          email: email, password: password);
-                      await FirebaseAuth.instance.currentUser!
-                          .reauthenticateWithCredential(credential);
-                      Navigator.pop(context, password);
-                    } catch (e) {
-                      if (e
-                          .toString()
-                          .contains('We have blocked all requests')) {
+                TextField(
+                  controller: passwordcontroller,
+                  obscureText: _obscureText,
+                  cursorColor: Colors.black,
+                  decoration: InputDecoration(
+                      labelText: 'Password',
+                      labelStyle: TextStyle(color: errorText != null? Theme.of(context).colorScheme.error : Colors.black),
+                      errorText: errorText,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                        borderRadius: BorderRadius.circular(22),
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: (){
+                          setState((){
+                            _obscureText = !_obscureText;
+                          });
+                        }, 
+                        icon: Icon(
+                          _obscureText ? Icons.visibility_off : Icons.visibility,
+                        )
+                          )
+                      ),
+                ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      popUpBotton(
+                    "Cancel",
+                    AppColors.primaryText,
+                    AppColors.buttonText,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  popUpBotton(
+                    "Confirm",
+                    AppColors.buttonColor,
+                    AppColors.buttonText,
+                    onPressed: () async {
+                      String password = passwordcontroller.text.trim();
+                      if (password.isEmpty) {
                         setState(() {
-                          errorText = "Request blocked, Try again later.";
+                          errorText = "Password can't be empty.";
                         });
-                      } else {
+                        return;
+                      }
+                      try {
+                        AuthCredential credential = EmailAuthProvider.credential(
+                            email: email, password: password);
+                        await FirebaseAuth.instance.currentUser!
+                            .reauthenticateWithCredential(credential);
+                            result = password;
+                        Navigator.pop(context, password);
+                      } catch (e) {
+                        if (e
+                            .toString()
+                            .contains('We have blocked all requests')) {
+                          setState(() {
+                            errorText = "Request blocked, Try again later.";
+                          });
+                        } 
+                        else if (e
+                          .toString()
+                          .contains('invalid-credential')) {
                         setState(() {
                           errorText = "Incorrect password.";
                         });
+                      } 
+                      else {
+                        setState(() {
+                          errorText = e.toString().substring(0, 30);
+                        });
                       }
-                    }
-                  },
-                )
+                      }
+                    },
+                  )
+                    ],
+                  )
               ],
-            );
-          });
-        });
+            ),
+            ),
+        );
+      })
+      ).show();
+      return result;
+    // return showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return StatefulBuilder(builder: (context, setState) {
+    //         return AlertDialog(
+    //           backgroundColor: Color(0xFFF4F4F4),
+    //           title: Text(
+    //             "Please enter your password to confirm this action",
+    //             textAlign: TextAlign.center,
+    //             style: TextStyle(
+    //               fontWeight: FontWeight.bold,
+    //               fontSize: 18
+    //             ),
+    //           ),
+    //           content: SizedBox(
+    //             height: 120,
+    //             child: Form(
+    //               key: formKey,
+    //               child: Column(
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 mainAxisSize: MainAxisSize.min,
+    //                 children: [
+    //                   TextField(
+    //                     controller: passwordcontroller,
+    //                     obscureText: _obscureText,
+    //                     cursorColor: Colors.black,
+    //                     decoration: InputDecoration(
+    //                         labelText: 'Password',
+    //                         labelStyle: TextStyle(color: errorText != null? Theme.of(context).colorScheme.error : Colors.black),
+    //                         errorText: errorText,
+    //                         border: OutlineInputBorder(
+    //                           borderSide: BorderSide(color: Colors.black),
+    //                           borderRadius: BorderRadius.circular(22),
+    //                         ),
+    //                         focusedBorder: OutlineInputBorder(
+    //                           borderSide: BorderSide(color: Colors.black),
+    //                           borderRadius: BorderRadius.circular(22),
+    //                         ),
+    //                         suffixIcon: IconButton(
+    //                           onPressed: (){
+    //                             setState((){
+    //                               _obscureText = !_obscureText;
+    //                             });
+    //                           }, 
+    //                           icon: Icon(
+    //                             _obscureText ? Icons.visibility_off : Icons.visibility,
+    //                           )
+    //                             )
+    //                         ),
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //           ),
+    //           actions: [
+    //             popUpBotton(
+    //               "Cancel",
+    //               AppColors.primaryText,
+    //               AppColors.buttonText,
+    //               onPressed: () {
+    //                 Navigator.pop(context);
+    //               },
+    //             ),
+    //             SizedBox(
+    //               width: 15,
+    //             ),
+    //             popUpBotton(
+    //               "Confirm",
+    //               AppColors.buttonColor,
+    //               AppColors.buttonText,
+    //               onPressed: () async {
+    //                 String password = passwordcontroller.text.trim();
+    //                 if (password.isEmpty) {
+    //                   setState(() {
+    //                     errorText = "Password can't be empty.";
+    //                   });
+    //                   return;
+    //                 }
+    //                 try {
+    //                   AuthCredential credential = EmailAuthProvider.credential(
+    //                       email: email, password: password);
+    //                   await FirebaseAuth.instance.currentUser!
+    //                       .reauthenticateWithCredential(credential);
+    //                   Navigator.pop(context, password);
+    //                 } catch (e) {
+    //                   print("ERROR: ${e.toString()}");
+    //                   if (e
+    //                       .toString()
+    //                       .contains('We have blocked all requests')) {
+    //                     setState(() {
+    //                       errorText = "Request blocked, Try again later.";
+    //                     });
+    //                   } 
+    //                   else if (e
+    //                       .toString()
+    //                       .contains('invalid-credential')) {
+    //                     setState(() {
+    //                       errorText = "Incorrect password.";
+    //                     });
+    //                   } 
+    //                   else {
+    //                     setState(() {
+    //                       errorText = e.toString().substring(0, 30);
+    //                     });
+    //                   }
+    //                 }
+    //               },
+    //             )
+    //           ],
+    //         );
+    //       });
+    //     });
   }
 }

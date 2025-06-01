@@ -1,40 +1,24 @@
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'custom_widgets.dart';
+import '../generated/l10n.dart';
+import '../providers/locale_provider.dart';
+import 'custom_widgets.dart'; // استيراد الـ Provider
 
-class LanguageToggle extends StatefulWidget {
-  final bool isEnglish;
-  final Function(bool) onToggle;
-
-  const LanguageToggle({
-    super.key,
-    required this.isEnglish,
-    required this.onToggle,
-  });
-
-  @override
-  State<LanguageToggle> createState() => _LanguageToggleState();
-}
-
-class _LanguageToggleState extends State<LanguageToggle> {
-  late bool _isEnglish;
-
-  @override
-  void initState() {
-    super.initState();
-    _isEnglish = widget.isEnglish;
-  }
-
-  void _toggleLanguage(bool english) {
-    setState(() {
-      _isEnglish = english;
-      widget.onToggle(_isEnglish);
-    });
-  }
+class LanguageToggle extends StatelessWidget {
+  const LanguageToggle({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final localeProvider = Provider.of<LocaleProvider>(context);
+    bool isEnglish = localeProvider.locale.languageCode == 'en';
+
+    void _toggleLanguage(bool english) {
+      Locale newLocale = english ? const Locale('en') : const Locale('ar');
+      localeProvider.setLocale(newLocale);
+    }
+
     return Container(
       width: 320,
       height: 55,
@@ -53,16 +37,12 @@ class _LanguageToggleState extends State<LanguageToggle> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Text(
-                  "Language",
-                  style: textStyleGray.copyWith(
-                    fontSize: 14,
-                    color: AppColors.primaryText,
-                  ),
-                ),
-              ],
+            Text(
+              S.of(context).language,
+              style: textStyleGray.copyWith(
+                fontSize: 14,
+                color: AppColors.primaryText,
+              ),
             ),
             Container(
               decoration: BoxDecoration(
@@ -75,36 +55,46 @@ class _LanguageToggleState extends State<LanguageToggle> {
                     onTap: () => _toggleLanguage(false),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: !_isEnglish ? Colors.red : Colors.transparent,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          bottomLeft: Radius.circular(15),
+                        color: !isEnglish ? Colors.red : Colors.transparent,
+                        borderRadius: !isEnglish
+                            ? const BorderRadius.only(
+                                topRight: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
+                              )
+                            : const BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                bottomLeft: Radius.circular(15),
+                              ),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      child: Text(
+                        "ع",
+                        style: TextStyle(
+                          color: !isEnglish ? Colors.white : Colors.black,
                         ),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
-                      child: Text("ع",
-                          style: TextStyle(
-                            color: !_isEnglish ? Colors.white : Colors.black,
-                          )),
                     ),
                   ),
                   GestureDetector(
                     onTap: () => _toggleLanguage(true),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: _isEnglish ? Colors.red : Colors.transparent,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(15),
-                          bottomRight: Radius.circular(15),
-                        ),
+                        color: isEnglish ? Colors.red : Colors.transparent,
+                        borderRadius: !isEnglish
+                            ? const BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                bottomLeft: Radius.circular(15),
+                              )
+                            : const BorderRadius.only(
+                                topRight: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
+                              ),
                       ),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       child: Text(
                         "Eng",
                         style: TextStyle(
-                          color: !_isEnglish ? Colors.black : Colors.white,
+                          color: !isEnglish ? Colors.black : Colors.white,
                         ),
                       ),
                     ),

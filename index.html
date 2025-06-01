@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Download Car Maintenance App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      text-align: center;
+    }
+    h1 {
+      color: #007bff;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: red;
+      display: none;
+    }
+    #download-button, #open-browser-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+    }
+    #open-browser-btn {
+      background-color: #28a745;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Car Maintenance App</h1>
+  <p>Click the button below to download the APK.</p>
+
+  <button id="download-button">Download APK</button>
+
+  <p id="message">
+    It looks like you're opening this in an app that doesn't support downloads.<br />
+    Please open this page in your browser (like Chrome) to download the app.
+  </p>
+
+  <button id="open-browser-btn">Open in Browser</button>
+
+  <script>
+    const apkUrl = 'https://github.com/MostafaM117/car_maintenance_app/releases/download/V2.0/Car_Maintenance_app.apk';
+
+    // Detect WebView environment
+    function isInWebView() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+      const isAndroid = /Android/.test(userAgent);
+      const isWebViewAndroid = isAndroid && /wv|WebView/.test(userAgent);
+
+      const isIOS = /iPhone|iPad|iPod/.test(userAgent);
+      const standalone = window.navigator.standalone;
+      const isWebViewIOS = isIOS && !/Safari/.test(userAgent) && !standalone;
+
+      return isWebViewAndroid || isWebViewIOS;
+    }
+
+    // Open APK URL in new window/tab (external browser)
+    function openInBrowser() {
+      window.open(apkUrl, '_blank', 'noopener');
+    }
+
+    const downloadBtn = document.getElementById('download-button');
+    const openBrowserBtn = document.getElementById('open-browser-btn');
+    const message = document.getElementById('message');
+
+    if (isInWebView()) {
+      // Show message and open browser button, hide normal download button
+      downloadBtn.style.display = 'none';
+      message.style.display = 'block';
+      openBrowserBtn.style.display = 'inline-block';
+
+      openBrowserBtn.onclick = openInBrowser;
+    } else {
+      // Normal environment - clicking download button opens link in external browser too
+      downloadBtn.onclick = openInBrowser;
+    }
+  </script>
+</body>
+</html>

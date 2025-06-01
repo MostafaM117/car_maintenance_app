@@ -1,3 +1,4 @@
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -53,14 +54,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
                   SizedBox(height: 20),
                   
                   Text(
-                    'Notifications',
+                    S.of(context).notifications,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 40,
                       fontFamily: 'Inter',
                       height: 0,
-                      letterSpacing: 8,
                     ),
                   ),
                   
@@ -155,11 +155,13 @@ class _NotificationsPageState extends State<NotificationsPage> {
                                   ),
                                   child: Row(
                                     children: [
+
                                       CircleAvatar(
                                         backgroundColor: Colors.grey[200],
                                         radius: 22,
                                         child: Icon(Icons.notifications,
                                             color: Colors.grey),
+
                                       ),
                                       SizedBox(width: 12),
                                       Expanded(

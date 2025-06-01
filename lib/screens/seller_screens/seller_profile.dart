@@ -1,4 +1,5 @@
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/main.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/seller/seller_account_management.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
@@ -13,7 +14,8 @@ import '../../widgets/language_toggle_widget.dart';
 import '../../widgets/profile_option_tile.dart.dart';
 
 class SellerProfile extends StatefulWidget {
-  const SellerProfile({super.key});
+  const SellerProfile({super.key, this.onChangeLanguage});
+  final Function(Locale)? onChangeLanguage;
 
   @override
   State<SellerProfile> createState() => _SellerProfileState();
@@ -63,15 +65,27 @@ class _SellerProfileState extends State<SellerProfile> {
                         .doc(seller.uid)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
+                      if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
                         return CircleAvatar(
                             radius: 65,
                             backgroundColor: AppColors.lightGray,
                             child: CircularProgressIndicator());
                       }
-                      final data =
-                          snapshot.data!.data() as Map<String, dynamic>;
-                      final imageUrl = data['shop_imageUrl'] as String?;
+                      if (snapshot.hasError) {
+                        print('Something went wrong, Error: ${snapshot.error}');
+                        return Center(child: Text('Something went wrong'));
+                      }
+                      if (!snapshot.data!.exists) {
+                        print('Document does not exist');
+                        return Center(child: Text('Document does not exist'));
+                      }
+                      final rawData = snapshot.data!.data();
+                      if(rawData == null ){
+                        print('Data is null');
+                        return Center(child: Text('No data found'));
+                      }
+                      final data = rawData as Map<String, dynamic>;
+                      final imageUrl = data['imageUrl'] as String?;
 
                       if (imageUrl == null || imageUrl.isEmpty) {
                         return CircleAvatar(
@@ -129,12 +143,7 @@ class _SellerProfileState extends State<SellerProfile> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    LanguageToggle(
-                      isEnglish: isEnglish,
-                      onToggle: (value) {
-                        setState(() => isEnglish = value);
-                      },
-                    ),
+                    LanguageToggle(),
                     const SizedBox(height: 20),
                     ProfileOptionTile(
                       text: 'Terms & Conditions',

@@ -3,6 +3,7 @@ import 'package:car_maintenance/screens/user_screens/MyCars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../generated/l10n.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/language_toggle_widget.dart';
@@ -52,14 +53,13 @@ class _ProfileState extends State<Profile> {
               children: [
                 const SizedBox(height: 25),
 
-                const Text(
-                  'Account',
+                Text(
+                  S.of(context).account,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 40,
                     fontFamily: 'Inter',
                     height: 0,
-                    letterSpacing: 9.20,
                   ),
                 ),
                 const SizedBox(height: 15),
@@ -70,14 +70,26 @@ class _ProfileState extends State<Profile> {
                         .doc(user.uid)
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if (!snapshot.hasData) {
+                      if (!snapshot.hasData || snapshot.connectionState == ConnectionState.waiting) {
                         return CircleAvatar(
                             radius: 65,
                             backgroundColor: AppColors.lightGray,
                             child: CircularProgressIndicator());
                       }
-                      final data =
-                          snapshot.data!.data() as Map<String, dynamic>;
+                      if (snapshot.hasError) {
+                        print('Something went wrong, Error: ${snapshot.error}');
+                        return Center(child: Text('Something went wrong'));
+                      }
+                      if (!snapshot.data!.exists) {
+                        print('Document does not exist');
+                        return Center(child: Text('Document does not exist'));
+                      }
+                      final rawData = snapshot.data!.data();
+                      if(rawData == null ){
+                        print('Data is null');
+                        return Center(child: Text('No data found'));
+                      }
+                      final data = rawData as Map<String, dynamic>;
                       final imageUrl = data['imageUrl'] as String?;
 
                       if (imageUrl == null || imageUrl.isEmpty) {
@@ -147,7 +159,7 @@ class _ProfileState extends State<Profile> {
                   children: [
                     const SizedBox(height: 8),
                     ProfileOptionTile(
-                      text: 'Profile',
+                      text: S.of(context).profile,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -160,7 +172,7 @@ class _ProfileState extends State<Profile> {
                       height: 20,
                     ),
                     ProfileOptionTile(
-                      text: 'MyCars',
+                      text: S.of(context).my_cars,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -171,17 +183,12 @@ class _ProfileState extends State<Profile> {
                     SizedBox(
                       height: 20,
                     ),
-                    LanguageToggle(
-                      isEnglish: isEnglish,
-                      onToggle: (value) {
-                        setState(() => isEnglish = value);
-                      },
-                    ),
+                   LanguageToggle(),
                     SizedBox(
                       height: 20,
                     ),
                     ProfileOptionTile(
-                      text: 'Terms & Conditions',
+                      text: S.of(context).terms_conditions,
                       onBackTap: () {
                         Navigator.push(
                           context,
@@ -195,16 +202,13 @@ class _ProfileState extends State<Profile> {
                       height: 20,
                     ),
                     buildButton(
-                        'Log Out',
-                        AppColors.buttonColor,
-                        AppColors.buttonText,
-                        onPressed: () {
-                          AuthService().signOut(context);
-                        },
-                      ),
-                    
-
-                    
+                      S.of(context).logout,
+                      AppColors.buttonColor,
+                      AppColors.buttonText,
+                      onPressed: () {
+                        AuthService().signOut(context);
+                      },
+                    ),
                   ],
                 ),
               ),
