@@ -12,14 +12,20 @@ import 'notifications/notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NotiService().initNotification();
+  
+  // Initialize Firebase first
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
+  // Initialize Supabase
   await Supabase.initialize(
       url: 'https://rqcercxrslptgjffolve.supabase.co',
       anonKey:
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJxY2VyY3hyc2xwdGdqZmZvbHZlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc1NDcxNjMsImV4cCI6MjA2MzEyMzE2M30.pbkTibeAAiRrFUyhK4A9An0qfISYLHsTo509ReKqTxw');
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  
+  await NotiService().initNotification();
+  
   try {
     await dotenv.load(fileName: ".env");
   } catch (e) {

@@ -236,6 +236,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                               NotiService().showNotification(
                                 title: 'Maintenance Added!',
                                 body: descriptionController.text,
+                                type: 'maintenance',
                               );
                             } else {
                               // Handle case when date is not selected

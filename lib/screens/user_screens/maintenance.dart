@@ -84,6 +84,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
 
                       return ListView.builder(
                         itemCount: historyList.length,
+                        padding: EdgeInsets.only(bottom: 50),
                         itemBuilder: (context, index) {
                           final maintenanceItem = historyList[index];
 

@@ -209,7 +209,7 @@ class _HomePageState extends State<HomePage> {
                   ? 'Welcome Back, ${username!.split(' ').first}'
                   : 'Welcome Back, User',
               svgAssetPath: 'assets/svg/notification.svg',
-              suptext: 'Tap here and we’ll help you out!',
+              suptext: 'Tap here and we\'ll help you out!',
               onTap: () {
                 Navigator.push(
                     context,
@@ -532,13 +532,13 @@ class _HomePageState extends State<HomePage> {
 
                                       // Schedule the notification if it's in the future
                                       if (notifyDate.isAfter(DateTime.now())) {
-                                        notiService.scheduleNotificationAtDate(
+                                        notiService.scheduleMaintenanceReminder(
                                           id: item.id.hashCode,
                                           title:
                                               'Maintenance Reminder: $carInfo',
                                           body:
                                               '${item.mileage} KM maintenance is due on $formattedDate',
-                                          dateTime: notifyDate,
+                                          reminderDate: notifyDate,
                                         );
                                       }
                                     }
