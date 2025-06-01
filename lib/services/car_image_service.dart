@@ -54,12 +54,24 @@ class CarImageService {
       imagePath = '${basePath}Hyundai_Elantra_HD_2017_2024.png';
     }
     else if (make == 'Hyundai' && model == 'Elantra AD') {
-      if (year >= 2023) {
-        imagePath = '${basePath}Hyundai_Elantra_AD_2023_2025.png';
-      } else if (year >= 2017 && year <= 2022) {
-        imagePath = '${basePath}Hyundai_Elantra_AD_2017_2022.png';
+      if (year >= 2019 && year <= 2025) {
+        imagePath = '${basePath}Hyundai_Elantra_AD_2019_2025.png';
+      } else if (year >= 2017 && year <= 2018) {
+        imagePath = '${basePath}Hyundai_Elantra_AD_2017_2018.png';
       } else {
         imagePath = '${basePath}Hyundai_Elantra_AD_2015_2016.png';
+      }
+    }
+    else if (make == 'Hyundai' && model == 'Elantra CN 7') {
+      imagePath = '${basePath}Hyundai_Elantra_CN_7_2021_2025.png';
+    }
+    else if (make == 'Hyundai' && model == 'Tucson') {
+      if (year >= 2021 && year <= 2025) {
+        imagePath = '${basePath}Hyundai_Tucson_2021_2025.png';
+      } else if (year >= 2017 && year <= 2020) {
+        imagePath = '${basePath}Hyundai_Tucson_2017_2020.png';
+      } else {
+        imagePath = '${basePath}Hyundai_Tucson_2015_2016.png';
       }
     }
     

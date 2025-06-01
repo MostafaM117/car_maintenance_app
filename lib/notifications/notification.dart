@@ -3,16 +3,23 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
+import '../services/notification_storage_service.dart';
 
 class NotiService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
+  NotificationStorageService? _storageService;
+  
+  NotificationStorageService get _storageServiceInstance {
+    _storageService ??= NotificationStorageService();
+    return _storageService!;
+  }
+
   bool _isInitialized = false;
 
   bool get isInitialized => _isInitialized;
 
-  // Request Notification Permissions
   Future<void> requestPermissions() async {
     final status = await Permission.notification.request();
     if (status.isDenied || status.isPermanentlyDenied) {
@@ -26,7 +33,6 @@ class NotiService {
       return;
     }
     
-    // Request permission before initializing
     await requestPermissions();
 
     // Initialize the timezone
@@ -46,7 +52,34 @@ class NotiService {
     );
 
     try {
-      await notificationsPlugin.initialize(initSettings);
+      await notificationsPlugin.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse response) async {
+          // Handle notification when it's actually triggered
+          final payload = response.payload;
+          if (payload != null && payload.startsWith('maintenance_reminder:')) {
+            try {
+              final parts = payload.split(':');
+              if (parts.length >= 4) {
+                final id = int.tryParse(parts[1]) ?? 0;
+                final title = parts[2];
+                final body = parts[3];
+                
+                await _storageServiceInstance.saveNotification(
+                  id: id,
+                  title: title,
+                  body: body,
+                  type: 'maintenance',
+                );
+                
+                print("✅ Maintenance reminder saved to Firestore: $title");
+              }
+            } catch (e) {
+              print("Error handling maintenance reminder: $e");
+            }
+          }
+        },
+      );
       _isInitialized = true;
     } catch (e) {
       print("Failed to initialize notification service: $e");
@@ -81,11 +114,11 @@ class NotiService {
     );
   }
 
-  // Show Notification
   Future<void> showNotification({
     int id = 0,
     String? title,
     String? body,
+    String type = 'general',
   }) async {
     try {
       if (!_isInitialized) {
@@ -99,7 +132,16 @@ class NotiService {
         body,
         notificationDetails(), // Use defined notification details
       );
-      print("✅ Immediate notification shown: $title");
+      
+      // Save notification to Firestore
+      await _storageServiceInstance.saveNotification(
+        id: id,
+        title: title ?? '',
+        body: body ?? '',
+        type: type,
+      );
+      
+      print("✅ Immediate notification shown and saved: $title");
     } catch (e) {
       print("❌ Failed to show notification: $e");
     }
@@ -112,6 +154,7 @@ class NotiService {
     required String body,
     required int hour,
     required int minute,
+    String type = 'scheduled',
   }) async {
     if (!_isInitialized) await initNotification();
 
@@ -123,7 +166,6 @@ class NotiService {
     var scheduledDate =
         tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
 
-    // If scheduled time is in the past, schedule it for the next day
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
@@ -138,15 +180,23 @@ class NotiService {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
 
-    print("Notification scheduled for $scheduledDate");
+    await _storageServiceInstance.saveNotification(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate.toLocal(),
+      type: type,
+    );
+
+    print("Notification scheduled for $scheduledDate and saved to Firestore");
   }
 
-  // Schedule Notification at a specific DateTime
   Future<void> scheduleNotificationAtDate({
     int id = 1,
     required String title,
     required String body,
     required DateTime dateTime,
+    String type = 'maintenance',
   }) async {
     try {
       if (!_isInitialized) {
@@ -155,10 +205,8 @@ class NotiService {
 
       final scheduledDate = tz.TZDateTime.from(dateTime, tz.local);
       
-      // Cancel any existing notification with this ID to avoid duplicates
       await notificationsPlugin.cancel(id);
 
-      // Schedule the notification
       await notificationsPlugin.zonedSchedule(
         id,
         title,
@@ -168,12 +216,45 @@ class NotiService {
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.dateAndTime,
       );
+      
+      print("✅ Notification scheduled for $scheduledDate (maintenance reminder)");
     } catch (e) {
       print("Failed to schedule notification: $e");
     }
   }
 
-  // Cancel all notifications
+  Future<void> scheduleMaintenanceReminder({
+    int id = 1,
+    required String title,
+    required String body,
+    required DateTime reminderDate,
+  }) async {
+    try {
+      if (!_isInitialized) {
+        await initNotification();
+      }
+
+      final scheduledDate = tz.TZDateTime.from(reminderDate, tz.local);
+      
+      await notificationsPlugin.cancel(id);
+
+      await notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledDate,
+        notificationDetails(isScheduled: true),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.dateAndTime,
+        payload: 'maintenance_reminder:$id:$title:$body',
+      );
+      
+      print("✅ Maintenance reminder scheduled for $scheduledDate");
+    } catch (e) {
+      print("Failed to schedule maintenance reminder: $e");
+    }
+  }
+
   Future<void> cancelNotification() async {
     await notificationsPlugin.cancelAll();
   }
