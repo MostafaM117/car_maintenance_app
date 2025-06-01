@@ -56,7 +56,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                 Text(
+                Text(
                   S.of(context).maintenance,
                   style: TextStyle(
                     color: Colors.black,
@@ -102,7 +102,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black,
                                   icon: Icons.undo,
-                                  label: 'Undo',
+                                  label: S.of(context).undo,
                                 ),
                                 SlidableAction(
                                   onPressed: (context) {
@@ -111,7 +111,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black,
                                   icon: Icons.delete,
-                                  label: 'Delete',
+                                  label: S.of(context).delete,
                                 ),
                               ],
                             ),

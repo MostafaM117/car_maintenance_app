@@ -25,6 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "Completed": MessageLookupByLibrary.simpleMessage("Completed"),
+    "Done": MessageLookupByLibrary.simpleMessage("Done"),
     "Donot_account": MessageLookupByLibrary.simpleMessage(
       "Don’t have an account?",
     ),
@@ -34,6 +35,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "Upcoming": MessageLookupByLibrary.simpleMessage("Upcoming"),
     "account": MessageLookupByLibrary.simpleMessage("Account"),
     "add": MessageLookupByLibrary.simpleMessage("Add"),
+    "addCarToViewMaintenance": MessageLookupByLibrary.simpleMessage(
+      "Please add a car to see maintenance items",
+    ),
     "addCount": MessageLookupByLibrary.simpleMessage("Add Count"),
     "addPrice": MessageLookupByLibrary.simpleMessage("Add Price"),
     "addProductName": MessageLookupByLibrary.simpleMessage("Add Product Name"),
@@ -309,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tutorialProfile": MessageLookupByLibrary.simpleMessage(
       "This is your profile",
     ),
+    "undo": MessageLookupByLibrary.simpleMessage("undo"),
     "upload_images": MessageLookupByLibrary.simpleMessage("Upload Your Images"),
     "used": MessageLookupByLibrary.simpleMessage("Used"),
     "user_name": MessageLookupByLibrary.simpleMessage("username"),

@@ -149,5 +149,9 @@
   "price": "Price",
   "addPrice": "Add Price",
   "discard": "Discard",
-  "add": "Add"
+  "add": "Add",
+  "Done":"Done",
+  "addCarToViewMaintenance": "Please add a car to see maintenance items",
+    "undo": "undo"
+
 }

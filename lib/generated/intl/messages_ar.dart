@@ -24,6 +24,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "Done": MessageLookupByLibrary.simpleMessage("تم"),
     "Donot_account": MessageLookupByLibrary.simpleMessage("ليس لديك حساب"),
     "Sign_carPal": MessageLookupByLibrary.simpleMessage(
       "تسجيل الدخول الي كاربال",
@@ -34,6 +35,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unused": MessageLookupByLibrary.simpleMessage("جديد"),
     "account": MessageLookupByLibrary.simpleMessage("الحساب"),
     "add": MessageLookupByLibrary.simpleMessage("إضافة"),
+    "addCarToViewMaintenance": MessageLookupByLibrary.simpleMessage(
+      "يرجى إضافة سيارة لعرض عناصر الصيانة",
+    ),
     "addCount": MessageLookupByLibrary.simpleMessage("أضف الكمية"),
     "addPrice": MessageLookupByLibrary.simpleMessage("أضف السعر"),
     "addProductName": MessageLookupByLibrary.simpleMessage("أضف اسم المنتج"),
@@ -192,7 +196,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "location": MessageLookupByLibrary.simpleMessage("احصل على موقعك الحالي"),
     "logout": MessageLookupByLibrary.simpleMessage("تسجيل الخروج"),
     "maintain": MessageLookupByLibrary.simpleMessage("الصيانة"),
-    "maintenance": MessageLookupByLibrary.simpleMessage("الصيانه"),
+    "maintenance": MessageLookupByLibrary.simpleMessage("الصيانة"),
     "maintenanceDetails": MessageLookupByLibrary.simpleMessage(
       "تفاصيل الصيانة",
     ),
@@ -284,11 +288,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "tutorialMaintain": MessageLookupByLibrary.simpleMessage("هنا الصيانة"),
     "tutorialMarket": MessageLookupByLibrary.simpleMessage("هنا المتجر"),
     "tutorialProfile": MessageLookupByLibrary.simpleMessage("هنا الملف الشخصي"),
+    "undo": MessageLookupByLibrary.simpleMessage("تراجع"),
     "upload_images": MessageLookupByLibrary.simpleMessage("قم برفع صور بطاقتك"),
     "used": MessageLookupByLibrary.simpleMessage("مستعمل"),
     "user_name": MessageLookupByLibrary.simpleMessage("اسم المستخدم"),
     "view_all": MessageLookupByLibrary.simpleMessage("عرض الكل"),
-    "welcome": MessageLookupByLibrary.simpleMessage("مرحباً بك في كار بال"),
+    "welcome": MessageLookupByLibrary.simpleMessage("مرحباً بك في كاربال"),
     "welcome_back": MessageLookupByLibrary.simpleMessage(
       "مرحباً بك،  يُرجى إدخال بياناتك",
     ),

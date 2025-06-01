@@ -146,7 +146,6 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                       fontSize: 40,
                       fontFamily: 'Inter',
                       height: 0,
-                      letterSpacing: 9.20,
                     ),
                   ),
                   Column(

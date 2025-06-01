@@ -1,5 +1,5 @@
 {
-  "welcome": "مرحباً بك في كار بال",
+  "welcome": "مرحباً بك في كاربال",
   "welcome_seller": "مرحباً بك ",
   "welcomedis": "حل متكامل لصيانة السيارات وقطع الغيار",
   "get_started": "ابدأ الآن",
@@ -106,7 +106,7 @@
   "Unused":"جديد",
    "home": "الرئيسية",
   "maintain": "الصيانة",
-"maintenance":"الصيانه",
+"maintenance":"الصيانة",
 "terms_conditions": "الشروط والأحكام",
   "profile": "الملف الشخصي",
   "language": "اللغة",
@@ -146,5 +146,10 @@
   "price": "السعر",
   "addPrice": "أضف السعر",
   "discard": "إلغاء",
-  "add": "إضافة"
+  "add": "إضافة",
+  "Done":"تم",
+    "addCarToViewMaintenance": "يرجى إضافة سيارة لعرض عناصر الصيانة",
+      "undo": "تراجع"
+
+
 }

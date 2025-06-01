@@ -1308,6 +1308,26 @@ class S {
   String get add {
     return Intl.message('Add', name: 'add', desc: '', args: []);
   }
+
+  /// `Done`
+  String get Done {
+    return Intl.message('Done', name: 'Done', desc: '', args: []);
+  }
+
+  /// `Please add a car to see maintenance items`
+  String get addCarToViewMaintenance {
+    return Intl.message(
+      'Please add a car to see maintenance items',
+      name: 'addCarToViewMaintenance',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `undo`
+  String get undo {
+    return Intl.message('undo', name: 'undo', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -223,7 +223,6 @@ class _HomePageState extends State<HomePage> {
                   ? S.of(context).welcome_home(username!.split(' ').first)
                   : S.of(context).welcome_home('user'),
               svgAssetPath: 'assets/svg/notification.svg',
-
               suptext: S.of(context).support_text,
               onTap: () {
                 Navigator.push(
@@ -452,8 +451,9 @@ class _HomePageState extends State<HomePage> {
                       // Use a key based on the car ID to force rebuild when car changes
                       child: selectedCar == null
                           ? Center(
-                              child: Text(
-                                  "Please add a car to see maintenance items"))
+                              child:
+                                  Text(S.of(context).addCarToViewMaintenance),
+                            )
                           : StreamBuilder<List<MaintenanceList>>(
                               key: ValueKey(
                                   'maintenance-${selectedCar?['id'] ?? 'none'}-${DateTime.now().millisecondsSinceEpoch}'),
@@ -606,14 +606,14 @@ class _HomePageState extends State<HomePage> {
                                                 backgroundColor: Colors.white,
                                                 foregroundColor: Colors.black,
                                                 icon: Icons.check,
-                                                label: 'Done',
+                                                label: S.of(context).Done,
                                               ),
                                               SlidableAction(
                                                 onPressed: (context) {},
                                                 backgroundColor: Colors.white,
                                                 foregroundColor: Colors.black,
                                                 icon: Icons.close,
-                                                label: 'Cancel',
+                                                label: S.of(context).cancel,
                                               ),
                                             ],
                                           ),
