@@ -96,7 +96,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
           children: [
             SizedBox(height: 10),
             SubtractWave(
-              text: 'Welcome Back, $businessName',
+              text: S.of(context).welcome_home(username.split(' ').first),
               svgAssetPath: 'assets/svg/notification.svg',
               suptext: S.of(context).support_text,
               onTap: () {},
