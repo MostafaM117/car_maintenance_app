@@ -1,3 +1,4 @@
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/auth_service.dart';
 import 'package:car_maintenance/services/forgot_password.dart';
 import 'package:flutter/material.dart';
@@ -61,13 +62,13 @@ class _UserLoginPageState extends State<UserLoginPage> {
             children: [
               const SizedBox(height: 50),
               Text(
-                'Sign in to Motorgy',
+                S.of(context).Sign_carPal,
                 style: textStyleWhite.copyWith(
                     fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(
-                'Welcome back! Please enter your details!',
+                S.of(context).welcome_back,
                 style: textStyleGray.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -81,7 +82,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     width: 24,
                     height: 24,
                   ),
-                  hintText: 'Enter your email '),
+                  hintText: S.of(context).email),
               const SizedBox(height: 20),
               buildInputField(
                   controller: _passwordcontroller,
@@ -90,7 +91,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     width: 20,
                     height: 24,
                   ),
-                  hintText: 'Enter your password',
+                  hintText: S.of(context).password,
                   obscureText: _obscureText,
                   togglePasswordView: _toggletoviewpassword),
               const SizedBox(height: 15),
@@ -104,16 +105,16 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     ),
                   ),
                   child: Text(
-                    'Forgot Password?',
+                    S.of(context).forgot_password,
                     style: textStyleWhite.copyWith(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: 80),
-              buildButton(
-                  'Sign In', AppColors.buttonColor, AppColors.buttonText,
-                  onPressed: () {
+              buildButton(S.of(context).sign_in, AppColors.buttonColor,
+                  AppColors.buttonText, onPressed: () {
                 AuthService().signInWithEmailAndPassword(
                     context,
                     _emailcontroller.text.trim(),
@@ -121,9 +122,12 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     'user');
               }),
               const SizedBox(height: 15),
-              buildOrSeparator(),
+              buildOrSeparator(context),
               const SizedBox(height: 15),
-              googleButton(handleGoogleSignIn),
+              googleButton(context, () {
+                handleGoogleSignIn();
+              }),
+
               const SizedBox(height: 15),
               // appleButton(() {}),
               // const SizedBox(height: 15),
@@ -134,14 +138,14 @@ class _UserLoginPageState extends State<UserLoginPage> {
                   },
                   child: Text.rich(
                     TextSpan(
-                      text: 'Don’t have an account? ',
+                      text: S.of(context).Donot_account,
                       style: textStyleWhite.copyWith(
                           fontSize: 12, fontWeight: FontWeight.w500),
                       children: [
                         TextSpan(
-                          text: 'Sign up',
+                          text: S.of(context).sign_up,
                           style: textStyleWhite.copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w900,
                           ),
                         ),

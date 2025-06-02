@@ -8,20 +8,23 @@ class SubtractWave extends StatelessWidget {
   final String text;
   final String suptext;
   final String svgAssetPath;
+  final VoidCallback? onSuptextTap; // <-- خاصية جديدة
 
   final dynamic onTap;
 
-  const SubtractWave(
-      {super.key,
-      required this.text,
-      required this.suptext,
-      required this.svgAssetPath,
-      required this.onTap});
+  const SubtractWave({
+    super.key,
+    required this.text,
+    required this.suptext,
+    required this.svgAssetPath,
+    required this.onTap,
+    this.onSuptextTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 50,
+      height: 53,
       decoration: BoxDecoration(
         color: AppColors.primaryText,
         borderRadius: BorderRadius.circular(30),
@@ -35,16 +38,21 @@ class SubtractWave extends StatelessWidget {
               children: [
                 Text(
                   text,
-                  style: textStyleWhite.copyWith(color: Colors.white),
+                  style: textStyleWhite.copyWith(
+                      color: Colors.white, fontWeight: FontWeight.w600),
                 ),
-                Text(
-                  suptext,
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.5),
-                    fontSize: 13,
-                    fontFamily: 'Inter',
+                GestureDetector(
+                  onTap: onSuptextTap, 
+                  child: Text(
+                    suptext,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 13,
+                      fontFamily: 'Inter',
+                    ),
                   ),
                 ),
+         
               ],
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:car_maintenance/AI-Chatbot/chatbot.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:car_maintenance/models/MaintID.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:car_maintenance/screens/addMaintenance.dart';
@@ -9,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 // import 'package:flutter_svg/svg.dart';
+import '../../services/ltutorial_service.dart';
 import '../../services/user_data_helper.dart';
 import '../../widgets/CarCardWidget.dart';
 import '../../widgets/SubtractWave_widget.dart';
@@ -185,6 +187,18 @@ class _HomePageState extends State<HomePage> {
     await notiService.initNotification();
   }
 
+  // void _showTutorial() {
+  //   TutorialCoachMark(
+  //     targets: targets,
+  //     colorShadow: Colors.black,
+  //     textSkip: "تخطي",
+  //     opacityShadow: 0.8,
+  //   ).show(context: context);
+  // }
+  void someFunction(BuildContext context) {
+    TutorialService().showTutorial(context);
+  }
+
   @override
   void dispose() {
     MaintID().removeListener(_updateService);
@@ -203,19 +217,22 @@ class _HomePageState extends State<HomePage> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             SubtractWave(
               text: username != null
-                  ? 'Welcome Back, ${username!.split(' ').first}'
-                  : 'Welcome Back, User',
+                  ? S.of(context).welcome_home(username!.split(' ').first)
+                  : S.of(context).welcome_home('user'),
               svgAssetPath: 'assets/svg/notification.svg',
-              suptext: 'Tap here and we’ll help you out!',
+              suptext: S.of(context).support_text,
               onTap: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => NotificationsPage(),
                     ));
+              },
+              onSuptextTap: () {
+                TutorialService().showTutorial(context, forceShow: true);
               },
             ),
             SizedBox(height: 15),
@@ -338,11 +355,17 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(height: 20),
 
                     Padding(
-                      padding: const EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12.0,
+                      ),
                       child: Align(
-                        alignment: Alignment.centerLeft,
+                        alignment:
+                            Directionality.of(context) == TextDirection.rtl
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
                         child: Text(
-                          'Explore',
+                          S.of(context).explore,
+                          // textAlign: TextAlign.start,
                           style: TextStyle(
                             color: const Color(0xFF0F0F0F),
                             fontSize: 24,
@@ -352,41 +375,42 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+
+                    SizedBox(height: 20),
                     // Add Explore cards
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ExploreCard(
-                          title: "ADD \nMaintenance", 
-                          onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddMaintenance()),
-                          );
-                        }),
+                            title: S.of(context).add_maintenanceh,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddMaintenance()),
+                              );
+                            }),
                         ExploreCard(
-                          title: "ASK \nCHAT BOT",
-                          onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Chatbot(
-                                  userId:
-                                      FirebaseAuth.instance.currentUser!.uid),
-                            ),
-                          );
-                        }),
+                            title: S.of(context).ask_chatbot,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Chatbot(
+                                      userId: FirebaseAuth
+                                          .instance.currentUser!.uid),
+                                ),
+                              );
+                            }),
                         ExploreCard(
-                          title: 'CHECKOUT\nOFFERS', 
-                          onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserFeedScreen()),
-                          );
-                        }),
+                            title: S.of(context).checkout_offers,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserFeedScreen()),
+                              );
+                            }),
                       ],
                     ),
                     // SizedBox(height: 15),
@@ -397,7 +421,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Next Maintenance',
+                            S.of(context).next_maintenance,
                             style: TextStyle(
                               color: const Color(0xFF0F0F0F),
                               fontSize: 24,
@@ -410,7 +434,7 @@ class _HomePageState extends State<HomePage> {
                               _showMaintenancePopup(context);
                             },
                             child: Text(
-                              'View All',
+                              S.of(context).view_all,
                               style: TextStyle(
                                 color: AppColors.buttonColor,
                                 fontWeight: FontWeight.w500,
@@ -427,8 +451,9 @@ class _HomePageState extends State<HomePage> {
                       // Use a key based on the car ID to force rebuild when car changes
                       child: selectedCar == null
                           ? Center(
-                              child: Text(
-                                  "Please add a car to see maintenance items"))
+                              child:
+                                  Text(S.of(context).addCarToViewMaintenance),
+                            )
                           : StreamBuilder<List<MaintenanceList>>(
                               key: ValueKey(
                                   'maintenance-${selectedCar?['id'] ?? 'none'}-${DateTime.now().millisecondsSinceEpoch}'),
@@ -496,9 +521,11 @@ class _HomePageState extends State<HomePage> {
                                         a.mileage.compareTo(b.mileage));
 
                                     if (maintList.isEmpty) {
-                                      return const Center(
-                                          child: Text(
-                                              "No maintenance records available."));
+                                      return Center(
+                                        child: Text(
+                                          S.of(context).no_maintenance_records,
+                                        ),
+                                      );
                                     }
 
                                     final upcomingMaintList = maintList
@@ -532,21 +559,22 @@ class _HomePageState extends State<HomePage> {
 
                                       // Schedule the notification if it's in the future
                                       if (notifyDate.isAfter(DateTime.now())) {
-                                        notiService.scheduleNotificationAtDate(
+                                        notiService.scheduleMaintenanceReminder(
                                           id: item.id.hashCode,
                                           title:
                                               'Maintenance Reminder: $carInfo',
                                           body:
                                               '${item.mileage} KM maintenance is due on $formattedDate',
-                                          dateTime: notifyDate,
+                                          reminderDate: notifyDate,
                                         );
                                       }
                                     }
 
                                     if (displayedMaintList.isEmpty) {
-                                      return const Center(
-                                          child: Text(
-                                              "No upcoming maintenance needed."));
+                                      return Center(
+                                          child: Text(S
+                                              .of(context)
+                                              .no_upcoming_maintenance));
                                     }
                                     return ListView.builder(
                                       itemCount: displayedMaintList.length,
@@ -578,14 +606,14 @@ class _HomePageState extends State<HomePage> {
                                                 backgroundColor: Colors.white,
                                                 foregroundColor: Colors.black,
                                                 icon: Icons.check,
-                                                label: 'Done',
+                                                label: S.of(context).Done,
                                               ),
                                               SlidableAction(
                                                 onPressed: (context) {},
                                                 backgroundColor: Colors.white,
                                                 foregroundColor: Colors.black,
                                                 icon: Icons.close,
-                                                label: 'Cancel',
+                                                label: S.of(context).cancel,
                                               ),
                                             ],
                                           ),
@@ -649,7 +677,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'All Upcoming Maintenance',
+                      S.of(context).all_upcoming_maintenance,
                       style: TextStyle(
                         color: AppColors.buttonColor,
                         fontSize: 16,
@@ -676,8 +704,8 @@ class _HomePageState extends State<HomePage> {
                           .toList();
 
                       if (maintList.isEmpty) {
-                        return const Center(
-                            child: Text("No maintenance records available."));
+                        return Center(
+                            child: Text(S.of(context).no_maintenance_records));
                       }
 
                       return FutureBuilder<int>(
@@ -749,5 +777,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-

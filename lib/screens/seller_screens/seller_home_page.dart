@@ -13,6 +13,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../generated/l10n.dart';
+import '../../services/ltutorial_service.dart';
 import '../../widgets/SubtractWave_widget.dart';
 import 'edit_item.dart';
 
@@ -93,10 +95,15 @@ class _SellerHomePageState extends State<SellerHomePage> {
           children: [
             SizedBox(height: 10),
             SubtractWave(
+
               text: 'Welcome Back, $businessName',
+
               svgAssetPath: 'assets/svg/notification.svg',
-              suptext: 'Tap here and we’ll help you out!',
+              suptext: S.of(context).support_text,
               onTap: () {},
+              onSuptextTap: () {
+                TutorialService().showTutorial(context, forceShow: true);
+              },
             ),
             const SizedBox(height: 20),
             Row(
@@ -296,13 +303,17 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Text(
-                                                    'Are you sure you want to delete this Item?',
+                                                    S
+                                                        .of(context)
+                                                        .permanentDeleteTitle,
                                                     style: textStyleWhite,
                                                     textAlign: TextAlign.center,
                                                   ),
                                                   const SizedBox(height: 10),
                                                   Text(
-                                                    'This action is permanent and cannot be undone.',
+                                                    S
+                                                        .of(context)
+                                                        .permanentDeleteMessage,
                                                     style: textStyleGray,
                                                     textAlign: TextAlign.center,
                                                   ),
@@ -313,7 +324,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                                             .center,
                                                     children: [
                                                       popUpBotton(
-                                                        'Cancel',
+                                                        S.of(context).cancel,
                                                         AppColors.primaryText,
                                                         AppColors.buttonText,
                                                         onPressed: () {
@@ -324,7 +335,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                                       ),
                                                       const SizedBox(width: 15),
                                                       popUpBotton(
-                                                        'Delete',
+                                                        S.of(context).delete,
                                                         AppColors.buttonColor,
                                                         AppColors.buttonText,
                                                         onPressed: () {

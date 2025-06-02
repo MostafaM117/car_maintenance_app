@@ -39,7 +39,9 @@ class _ImagePickerContainerState extends State<ImagePickerContainer> {
         print('File already exists: $fileName, reusing URL.');
         setState(() {
           imageUrl = publicUrl;
+          _image = imageFile;
         });
+        widget.onImageUploaded(publicUrl);
       } else {
         await storage.from(bucket).upload(fileName, imageFile);
         publicUrl = storage.from(bucket).getPublicUrl(fileName);

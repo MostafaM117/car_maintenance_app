@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../constants/app_colors.dart';
+import '../../../generated/l10n.dart';
 import '../../../widgets/custom_widgets.dart';
 
 class SellerLoginPage extends StatefulWidget {
@@ -61,13 +62,13 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
             children: [
               const SizedBox(height: 50),
               Text(
-                'Welcome Back, Seller',
+                S.of(context).Sign_carPal,
                 style: textStyleWhite.copyWith(
                     fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               Text(
-                'Welcome back! Please enter your details!',
+                S.of(context).welcome_back,
                 style: textStyleGray.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -81,7 +82,7 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                     width: 24,
                     height: 24,
                   ),
-                  hintText: 'Enter your email '),
+                  hintText: S.of(context).email),
               const SizedBox(height: 20),
               buildInputField(
                   controller: _passwordcontroller,
@@ -90,7 +91,7 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                     width: 20,
                     height: 24,
                   ),
-                  hintText: 'Enter your password',
+                  hintText: S.of(context).password,
                   obscureText: _obscureText,
                   togglePasswordView: _toggletoviewpassword),
               const SizedBox(height: 15),
@@ -104,16 +105,15 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                     ),
                   ),
                   child: Text(
-                    'Forgot Password?',
+                    S.of(context).forgot_password,
                     style: textStyleWhite.copyWith(
                         fontSize: 12, fontWeight: FontWeight.w500),
                   ),
                 ),
               ),
               const SizedBox(height: 80),
-              buildButton(
-                  'Sign In', AppColors.buttonColor, AppColors.buttonText,
-                  onPressed: () {
+              buildButton(S.of(context).sign_in, AppColors.buttonColor,
+                  AppColors.buttonText, onPressed: () {
                 AuthService().signInWithEmailAndPassword(
                     context,
                     _emailcontroller.text.trim(),
@@ -121,9 +121,11 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                     'seller');
               }),
               const SizedBox(height: 15),
-              buildOrSeparator(),
+              buildOrSeparator(context),
               const SizedBox(height: 15),
-              googleButton(handleGoogleSignIn),
+              googleButton(context, () {
+                handleGoogleSignIn();
+              }),
               const SizedBox(height: 15),
               // appleButton(() {}),
               // const SizedBox(height: 15),
@@ -134,14 +136,14 @@ class _SellerLoginPageState extends State<SellerLoginPage> {
                   },
                   child: Text.rich(
                     TextSpan(
-                      text: 'Don’t have an account? ',
+                      text: S.of(context).Donot_account,
                       style: textStyleWhite.copyWith(
                           fontSize: 12, fontWeight: FontWeight.w500),
                       children: [
                         TextSpan(
-                          text: 'Sign up',
+                          text: S.of(context).sign_up,
                           style: textStyleWhite.copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w900,
                           ),
                         ),

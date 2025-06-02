@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../constants/app_colors.dart';
+import '../../../generated/l10n.dart';
 import '../../../widgets/custom_widgets.dart';
 
 class SellerSignupPage extends StatefulWidget {
@@ -41,7 +42,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
     }
   }
 
-  void checkSignupdata (){
+  void checkSignupdata() {
     final businessemail = _businessemailcontroller.text.trim();
     final businessname = _businessnameController.text.trim();
     final password = _passwordcontroller.text.trim();
@@ -50,45 +51,37 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
 
     if (businessname.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a businessname')),
+        SnackBar(content: Text(S.of(context).error_enter_businessname)),
       );
-    }
-    else if (nationalId.isEmpty) {
+    } else if (nationalId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter your national id')),
+        SnackBar(content: Text(S.of(context).error_enter_national_id)),
       );
-    }
-    else if (nationalId.length != 14) {
+    } else if (nationalId.length != 14) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a valid national id')),
+        SnackBar(content: Text(S.of(context).error_invalid_national_id)),
       );
-    }
-    else if (businessemail.isEmpty) {
+    } else if (businessemail.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An email address is required')),
+        SnackBar(content: Text(S.of(context).error_enter_email)),
       );
-    } 
-    else if (!emailRegex.hasMatch(businessemail)) {
+    } else if (!emailRegex.hasMatch(businessemail)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a valid email address')),
+        SnackBar(content: Text(S.of(context).error_invalid_email)),
       );
-    } 
-    else if (password.isEmpty) {
+    } else if (password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter a password to sign up')),
+        SnackBar(content: Text(S.of(context).error_enter_password)),
       );
-    } 
-    else if (password.length < 6) {
+    } else if (password.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Your password should be at least 6 characters')),
+        SnackBar(content: Text(S.of(context).error_short_password)),
       );
-    } 
-    else if (!confirmpassword()) {
+    } else if (!confirmpassword()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Passwords do not match')),
+        SnackBar(content: Text(S.of(context).error_passwords_not_match)),
       );
-    }
-    else{
+    } else {
       setState(() {
         _signupdatachecked = true;
       });
@@ -113,12 +106,15 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
             children: [
               const SizedBox(height: 50),
               Text(
-                'Create your business account now',
-                style: textStyleWhite.copyWith(fontSize: 24),
+                S.of(context).create_business_account,
+                style: textStyleWhite.copyWith(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
               Text(
-                'Welcome! Please enter your details!',
+                S.of(context).welcome_back,
                 style: textStyleGray.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -133,7 +129,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   width: 24,
                   height: 24,
                 ),
-                hintText: 'Enter your business name',
+                hintText: S.of(context).enter_business_name,
                 errorText: _businessnameErrorText,
               ),
               // National Id
@@ -144,11 +140,11 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                 decoration: ShapeDecoration(
                   color: AppColors.secondaryText,
                   shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                  width: 1,
-                  color: AppColors.borderSide,
-                  ),
-                borderRadius: BorderRadius.circular(22),
+                    side: BorderSide(
+                      width: 1,
+                      color: AppColors.borderSide,
+                    ),
+                    borderRadius: BorderRadius.circular(22),
                   ),
                 ),
                 alignment: Alignment.center,
@@ -164,14 +160,12 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                           LengthLimitingTextInputFormatter(14),
                           FilteringTextInputFormatter.digitsOnly,
                         ],
-                        
                         controller: _nationalIdcontroller,
                         decoration: InputDecoration(
-                          hintText: 'Enter your national id number',
+                          hintText: S.of(context).enter_national_id,
                           hintStyle: textStyleGray,
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(bottom: 12),
-                          
                         ),
                         textAlignVertical: TextAlignVertical.center,
                       ),
@@ -182,7 +176,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
               // Email address
               const SizedBox(height: 20),
               buildInputField(
-                hintText: 'Enter your business email ',
+                hintText: S.of(context).emailS,
                 controller: _businessemailcontroller,
                 iconWidget: SvgPicture.asset(
                   'assets/svg/inpox.svg',
@@ -199,7 +193,7 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   width: 20,
                   height: 24,
                 ),
-                hintText: 'Enter your password',
+                hintText: S.of(context).password,
                 obscureText: _obscureText,
                 togglePasswordView: _toggletoviewpassword,
               ),
@@ -212,31 +206,31 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   width: 20,
                   height: 24,
                 ),
-                hintText: 'Confirm your password',
+                hintText: S.of(context).confirm_password,
                 obscureText: _obscureText,
               ),
               const SizedBox(height: 40), //60
-              buildButton(
-                'Sign up',
-                AppColors.buttonColor,
-                AppColors.buttonText, 
-                onPressed: () {
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  checkSignupdata();
-                  _signupdatachecked ? 
-                  Navigator.push(context, MaterialPageRoute(
-                          builder: (context)=> CompleteSellerInfo(
-                            businessname: _businessnameController.text.trim(),
-                            nationalID: _nationalIdcontroller.text.trim(),
-                            businessemail: _businessemailcontroller.text.trim(),
-                            password: _passwordcontroller.text.trim(),
-                          )))
-                  : print('Error Signing up');
-                }
-                ),
+              buildButton(S.of(context).sign_up, AppColors.buttonColor,
+                  AppColors.buttonText, onPressed: () {
+                FocusScope.of(context).requestFocus(FocusNode());
+                checkSignupdata();
+                _signupdatachecked
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CompleteSellerInfo(
+                                  businessname:
+                                      _businessnameController.text.trim(),
+                                  nationalID: _nationalIdcontroller.text.trim(),
+                                  businessemail:
+                                      _businessemailcontroller.text.trim(),
+                                  password: _passwordcontroller.text.trim(),
+                                )))
+                    : print('Error Signing up');
+              }),
               const SizedBox(height: 10),
 
-              buildOrSeparator(),
+              buildOrSeparator(context),
               const SizedBox(height: 15),
               Center(
                 child: GestureDetector(
@@ -245,14 +239,14 @@ class _SellerSignupPageState extends State<SellerSignupPage> {
                   },
                   child: Text.rich(
                     TextSpan(
-                      text: 'Already have an accoun? ',
+                      text: S.of(context).already_have_account,
                       style: textStyleWhite.copyWith(
                           fontSize: 12, fontWeight: FontWeight.w500),
                       children: [
                         TextSpan(
-                          text: 'Sign in',
+                          text: S.of(context).sign_in,
                           style: textStyleWhite.copyWith(
-                            fontSize: 12,
+                            fontSize: 14,
                             fontWeight: FontWeight.w900,
                           ),
                         ),

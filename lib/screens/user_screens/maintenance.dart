@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:car_maintenance/Back-end/firestore_service.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import '../../generated/l10n.dart';
 import '../../widgets/custom_widgets.dart';
 import '../../widgets/maintenance_card.dart';
 
@@ -55,14 +56,13 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 30),
-                const Text(
-                  'Maintenance',
+                Text(
+                  S.of(context).maintenance,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 32,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
-                    letterSpacing: 9.20,
                   ),
                 ),
                 // const SizedBox(height: 20),
@@ -80,10 +80,12 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                       }
 
                       // Make sure the list is sorted by mileage
-                      historyList.sort((a, b) => a.mileage.compareTo(b.mileage));
+                      historyList
+                          .sort((a, b) => a.mileage.compareTo(b.mileage));
 
                       return ListView.builder(
                         itemCount: historyList.length,
+                        padding: EdgeInsets.only(bottom: 50),
                         itemBuilder: (context, index) {
                           final maintenanceItem = historyList[index];
 
@@ -100,7 +102,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black,
                                   icon: Icons.undo,
-                                  label: 'Undo',
+                                  label: S.of(context).undo,
                                 ),
                                 SlidableAction(
                                   onPressed: (context) {
@@ -109,7 +111,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black,
                                   icon: Icons.delete,
-                                  label: 'Delete',
+                                  label: S.of(context).delete,
                                 ),
                               ],
                             ),
@@ -148,7 +150,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: buildButton(
-                'Add Maintenance',
+                S.of(context).add_maintenance,
                 AppColors.buttonColor,
                 AppColors.buttonText,
                 onPressed: () {
@@ -161,13 +163,13 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             ),
           ),
           // We need to move this button somewhere else
-          IconButton(
-            icon: const Icon(Icons.delete),
-            color: Colors.grey,
-            onPressed: () {
-              firestoreService.clearHistory();
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.delete),
+          //   color: Colors.grey,
+          //   onPressed: () {
+          //     firestoreService.clearHistory();
+          //   },
+          // ),
         ],
       ),
       // floatingActionButton: FloatingActionButton(

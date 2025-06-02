@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../generated/l10n.dart';
 import 'custom_widgets.dart';
 
 class MaintenanceDatePicker extends StatefulWidget {
@@ -36,7 +37,7 @@ class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Last periodic Maintenance ',
+  S.of(context).lastMaintenance,
           style: textStyleWhite.copyWith(
               fontSize: 16, fontWeight: FontWeight.w500),
         ),
@@ -60,7 +61,7 @@ class _MaintenanceDatePickerState extends State<MaintenanceDatePicker> {
             alignment: Alignment.centerLeft,
             child: Text(
               lastMaintenanceDate == null
-                  ? 'Select Maintenance Date'
+                  ?S.of(context).selectMaintenanceDate
                   : '${lastMaintenanceDate!.day}/${lastMaintenanceDate!.month}/${lastMaintenanceDate!.year}',
               style: textStyleGray,
             ),

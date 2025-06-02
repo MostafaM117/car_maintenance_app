@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../Back-end/firestore_service.dart';
 import '../constants/app_colors.dart';
+import '../generated/l10n.dart';
 import '../models/MaintID.dart';
 import '../notifications/notification.dart';
 // import '../widgets/BackgroundDecoration.dart';
@@ -102,8 +103,8 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                   ),
                   const SizedBox(height: 12),
                   buildTextField(
-                    label: 'Mileage',
-                    hintText: 'Current mileage',
+                    label: S.of(context).mileage,
+                    hintText: S.of(context).currentMileage,
                     controller: mileageController,
                   ),
                   const SizedBox(height: 12), // Date Picker
@@ -111,7 +112,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Maintenance Date',
+                        S.of(context).selectMaintenanceDate,
                         style: textStyleWhite.copyWith(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -143,15 +144,14 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                   ),
                   const SizedBox(height: 12),
                   buildDropdownField(
-                    value: _status,
-                    options: ['Upcoming', 'Completed'],
-                    onChanged: (value) {
-                      setState(() {
-                        _status = value;
-                      });
-                    },
-                    label: ' Maintenance Status',
-                  ),
+                      value: _status,
+                      options: ['Upcoming', 'Completed'],
+                      onChanged: (value) {
+                        setState(() {
+                          _status = value;
+                        });
+                      },
+                      label: S.of(context).maintenanceStatus),
                   const SizedBox(height: 12),
                   // Attachments Field
                   buildAttachmentPicker(
@@ -167,7 +167,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Description',
+                        S.of(context).description,
                         style: textStyleWhite.copyWith(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -204,13 +204,13 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         popUpBotton(
-                          'Cancel',
+                          S.of(context).cancel,
                           AppColors.primaryText,
                           AppColors.buttonText,
                           onPressed: () => Navigator.of(context).pop(true),
                         ),
                         popUpBotton(
-                          "save",
+                          S.of(context).save,
                           AppColors.buttonColor,
                           AppColors.buttonText,
                           onPressed: () {
@@ -236,6 +236,7 @@ class _AddMaintenanceState extends State<AddMaintenance> {
                               NotiService().showNotification(
                                 title: 'Maintenance Added!',
                                 body: descriptionController.text,
+                                type: 'maintenance',
                               );
                             } else {
                               // Handle case when date is not selected

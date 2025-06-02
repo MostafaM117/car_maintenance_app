@@ -92,7 +92,9 @@ class _ProgressStepsBarState extends State<ProgressStepsBar>
                   animation: _animations[index],
                   builder: (context, child) {
                     return FractionallySizedBox(
-                      alignment: Alignment.centerLeft,
+                      alignment: Directionality.of(context) == TextDirection.rtl
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
                       widthFactor: _animations[index].value,
                       child: Container(
                         decoration: BoxDecoration(

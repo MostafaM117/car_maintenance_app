@@ -122,12 +122,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                               widget.title, // use the title to filter products
                         ),
                         builder: (context, snapshot) {
-                          final products =
-                              snapshot.data?.where((p) => p != null).toList() ??
-                                  [];
-                          print("📦 Final product count: ${products.length}");
-                          print(
-                              "🏷️ Building grid with ${products.length} products");
+                          final products = snapshot.data ?? [];
                           return GridView.builder(
                             gridDelegate:
                                 const SliverGridDelegateWithFixedCrossAxisCount(
@@ -239,7 +234,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                       label: 'Min Price',
                       validator: (value) {
                         setState(() {
-                          minPrice = double.tryParse(value);
+                          minPrice = double.tryParse(value ?? '');
                         });
                         return null;
                       },
@@ -249,7 +244,7 @@ class _PeriodicpageState extends State<Periodicpage> {
                       label: 'Max Price',
                       validator: (value) {
                         setState(() {
-                          maxPrice = double.tryParse(value);
+                          maxPrice = double.tryParse(value ?? '');
                         });
                         return null;
                       },

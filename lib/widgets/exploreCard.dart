@@ -36,7 +36,7 @@ class ExploreCard extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 45, left: 5),
+                padding: const EdgeInsets.only(top: 45, left: 5,right: 5),
                 child: Text(
                   title,
                   style: TextStyle(

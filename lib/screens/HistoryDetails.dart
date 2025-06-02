@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:car_maintenance/models/maintenanceModel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../Back-end/firestore_service.dart';
+import '../generated/l10n.dart';
 import '../models/MaintID.dart';
 // import '../widgets/BackgroundDecoration.dart';
 import '../widgets/custom_widgets.dart';
@@ -67,7 +68,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
         descriptionController.text,
         int.parse(mileageController.text),
         _selectedDate,
-        _status == 'Completed',
+        _status == S.of(context).Completed,
       );
     }
 
@@ -101,9 +102,9 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
-                  const Center(
+                  Center(
                     child: Text(
-                      'Maintenance Details',
+                      S.of(context).maintenanceDetails,
                       style: TextStyle(
                         color: AppColors.buttonColor,
                         fontSize: 24,
@@ -127,7 +128,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Maintenance Type', // هنا اسم الحقل
+                                    S.of(context).maintenanceType,
                                     style: textStyleWhite.copyWith(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -164,7 +165,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                                               border: InputBorder.none,
                                               isCollapsed: true,
                                               hintText:
-                                                  'Current mileage', // النص المساعد
+                                                  S.of(context).currentMileage,
                                               hintStyle: textStyleGray.copyWith(
                                                   fontWeight: FontWeight.w400),
                                             ),
@@ -182,8 +183,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                                               Future.delayed(
                                                   Duration(milliseconds: 100),
                                                   () {
-                                                mileageFocusNode
-                                                    .requestFocus(); // فتح الكيبورد عند الضغط على الأيقونة
+                                                mileageFocusNode.requestFocus();
                                               });
                                             },
                                             child: SvgPicture.asset(
@@ -209,7 +209,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Expected Date',
+                              S.of(context).expectedDate,
                               style: textStyleWhite.copyWith(
                                   fontSize: 16, fontWeight: FontWeight.w500),
                             ),
@@ -274,16 +274,19 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                         const SizedBox(height: 12),
                         buildDropdownField(
                           value: _status,
-                          options: ['Upcoming', 'Completed'],
+                          options: [
+                            S.of(context).Upcoming,
+                            S.of(context).Completed
+                          ],
                           onChanged: null,
-                          label: 'Maintenance Status',
+                          label: S.of(context).maintenanceStatus,
                         ),
                         const SizedBox(height: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Description',
+                              S.of(context).description,
                               style: textStyleWhite.copyWith(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -311,8 +314,6 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                                     expands: true,
                                     enabled: isEditingDescription,
                                     focusNode: descriptionFocusNode,
-                                    textDirection: TextDirection.rtl,
-                                    textAlign: TextAlign.right,
                                     decoration: const InputDecoration.collapsed(
                                         hintText: ''),
                                     style: textStyleWhite,
@@ -353,7 +354,7 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               popUpBotton(
-                                'Back',
+                                S.of(context).back,
                                 AppColors.primaryText,
                                 AppColors.buttonText,
                                 onPressed: () {
@@ -361,7 +362,9 @@ class _HistoryDetailsPageState extends State<HistoryDetailsPage> {
                                 },
                               ),
                               popUpBotton(
-                                _isEditing ? "Save" : "Edit",
+                                _isEditing
+                                    ? S.of(context).save
+                                    : S.of(context).edit,
                                 AppColors.buttonColor,
                                 AppColors.buttonText,
                                 onPressed: () {
