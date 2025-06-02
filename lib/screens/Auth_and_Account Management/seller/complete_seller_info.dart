@@ -253,6 +253,7 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
                       style: textStyleGray.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
+                        color: AppColors.primaryText
                       ),
                     ),
                     const SizedBox(height: 30),

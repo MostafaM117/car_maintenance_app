@@ -594,10 +594,10 @@ class S {
     );
   }
 
-  /// `Complete your business account details`
+  /// `Complete your business account details..`
   String get title {
     return Intl.message(
-      'Complete your business account details',
+      'Complete your business account details..',
       name: 'title',
       desc: '',
       args: [],
