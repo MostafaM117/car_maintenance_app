@@ -25,6 +25,7 @@ class OfferCard extends StatelessWidget {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
+      clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.symmetric(vertical: 8),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -36,7 +37,7 @@ class OfferCard extends StatelessWidget {
                   ? Image.network(
                       imageUrl!,
                       height: 180,
-                      width: double.infinity,
+                      width: MediaQuery.of(context).size.width - 60,
                       fit: BoxFit.cover,
                     )
                   : Container(
@@ -134,7 +135,7 @@ class OfferCard extends StatelessWidget {
                                             AppColors.buttonText,
                                             onPressed: () {
                                               Navigator.of(context).pop();
-                                              onDelete(); // نفذ الحذف هنا
+                                              onDelete(); 
                                             },
                                           ),
                                         ],
@@ -190,7 +191,7 @@ class UserOfferCard extends StatelessWidget {
                   ? Image.network(
                       imageUrl!,
                       height: 180,
-                      width: double.infinity,
+                      width: MediaQuery.of(context).size.width - 60,
                       fit: BoxFit.cover,
                     )
                   : Container(

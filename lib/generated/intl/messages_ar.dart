@@ -26,13 +26,13 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
     "Done": MessageLookupByLibrary.simpleMessage("تم"),
     "Donot_account": MessageLookupByLibrary.simpleMessage("ليس لديك حساب"),
+    "New": MessageLookupByLibrary.simpleMessage("جديد"),
     "Sign_carPal": MessageLookupByLibrary.simpleMessage(
       "تسجيل الدخول الي كاربال",
     ),
     "Sigup_carPal": MessageLookupByLibrary.simpleMessage(
       "إنشاء حساب في كاربال",
     ),
-    "Unused": MessageLookupByLibrary.simpleMessage("جديد"),
     "account": MessageLookupByLibrary.simpleMessage("الحساب"),
     "add": MessageLookupByLibrary.simpleMessage("إضافة"),
     "addCarToViewMaintenance": MessageLookupByLibrary.simpleMessage(

@@ -944,9 +944,9 @@ class S {
     return Intl.message('Used', name: 'used', desc: '', args: []);
   }
 
-  /// `Unused`
-  String get Unused {
-    return Intl.message('Unused', name: 'Unused', desc: '', args: []);
+  /// `New`
+  String get New {
+    return Intl.message('New', name: 'New', desc: '', args: []);
   }
 
   /// `Home`
