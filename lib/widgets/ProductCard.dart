@@ -34,14 +34,14 @@ class ProductCard extends StatelessWidget {
               topRight: Radius.circular(16),
             ),
             child: FadeInImage.assetNetwork(
-              placeholder: 'assets/images/motor_oil.png',
+              placeholder: 'assets/images/logo.png',
               image: image,
               height: 100,
               width: double.infinity,
               fit: BoxFit.contain,
               imageErrorBuilder: (context, error, stackTrace) {
                 return Image.asset(
-                  'assets/images/motor_oil.png',
+                  'assets/images/logo.png',
                   height: 100,
                   width: double.infinity,
                   fit: BoxFit.contain,
@@ -49,48 +49,51 @@ class ProductCard extends StatelessWidget {
               },
             ),
           ),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1C1C1C),
-                borderRadius: isArabic
-                    ? BorderRadius.only(
-                        topLeft: Radius.circular(80),
-                        bottomLeft: Radius.circular(22),
-                        bottomRight: Radius.circular(22),
-                      )
-                    : BorderRadius.only(
-                        topRight: Radius.circular(80),
-                        bottomLeft: Radius.circular(22),
-                        bottomRight: Radius.circular(22),
-                      ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    maxLines: 2,
-                    style: textStyleWhite.copyWith(color: AppColors.buttonText),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    businessName,
-                    style: textStyleGray.copyWith(
-                      color: AppColors.buttonText,
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1C1C1C),
+              borderRadius: isArabic
+                  ? BorderRadius.only(
+                      topLeft: Radius.circular(80),
+                      bottomLeft: Radius.circular(22),
+                      bottomRight: Radius.circular(22),
+                    )
+                  : BorderRadius.only(
+                      topRight: Radius.circular(80),
+                      bottomLeft: Radius.circular(22),
+                      bottomRight: Radius.circular(22),
                     ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  maxLines: 2,
+                  style: textStyleWhite.copyWith(color: AppColors.buttonText, 
+                  fontSize: 13, 
+                  fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    '$price LE',
-                    style: textStyleGray.copyWith(
-                        color: AppColors.borderSide,
-                        fontWeight: FontWeight.w400),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  businessName,
+                  style: textStyleGray.copyWith(
+                    color: AppColors.buttonText,
+                    fontSize: 10
                   ),
-                ],
-              ),
+                ),
+                Text(
+                  '$price LE',
+                  style: textStyleGray.copyWith(
+                      color: AppColors.borderSide,
+                      fontWeight: FontWeight.w400
+                      ),
+                ),
+              ],
             ),
           ),
         ],
