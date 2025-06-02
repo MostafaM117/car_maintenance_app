@@ -364,7 +364,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Terms & Conditions",
     ),
     "title": MessageLookupByLibrary.simpleMessage(
-      "Complete your business account details",
+      "Complete your business account details..",
     ),
     "tutorialChatbot": MessageLookupByLibrary.simpleMessage(
       "This is the chatbot",
