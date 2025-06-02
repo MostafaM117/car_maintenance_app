@@ -1,3 +1,5 @@
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -27,6 +29,17 @@ class OfferDetailsScreen extends StatelessWidget {
     required this.shopPhone,
     required this.shopLocation,
   });
+  void openGoogleSearch(double latitude, double longitude) {
+    final intent = AndroidIntent(
+      action: 'action_view',
+      data:
+          'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
+    );
+
+    intent.launch().catchError((e) {
+      print("Error launching intent: $e");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +118,7 @@ class OfferDetailsScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "Phone: $shopPhone",
+                    "Phone: 01016650240",
                     style: textStyleGray,
                     textAlign: TextAlign.start,
                   ),
@@ -122,12 +135,36 @@ class OfferDetailsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: Text(
-                    "Location: $shopLocation",
-                    style: textStyleGray,
-                    textAlign: TextAlign.start,
-                  ),
-                ),
+                    child: Row(
+                  children: [
+                    Text(
+                      textAlign: TextAlign.left,
+                      'Shop Location: ',
+                      style: textStyleGray.copyWith(
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        openGoogleSearch(29.9841086, 30.9383899);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.buttonColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: const Text(
+                        'Open Maps',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    )
+                  ],
+                )),
                 SvgPicture.asset(
                   'assets/svg/shoplocation.svg',
                   width: 20,

@@ -14,7 +14,7 @@ class FirestoreService {
   late final CollectionReference productsCollection;
   late final CollectionReference stockCollection;
   final OfferService offerService = OfferService();
-  
+
   FirestoreService(MaintID maintID)
       : maintCollection = FirebaseFirestore.instance
             .collection('Maintenance_Schedule_${MaintID().maintID}') {
@@ -73,25 +73,27 @@ class FirestoreService {
     String selectedModel,
     String selectedCategory,
     String selectedAvailability,
-    int stockCount,
     double price,
     String imageUrl, // Added imageUrl parameter
   ) async {
     final businessName = await offerService.getBusinessName();
+    final phoneNumber = await offerService.getPhoneNumber();
+    final longitude = await offerService.getLongitude();
+    final latitude = await offerService.getLatitude();
     print(businessName);
     try {
-      await stockCollection.add({
-        'name': name,
-        'Description': description,
-        'selectedMake': selectedMake,
-        'selectedModel': selectedModel,
-        'selectedCategory': selectedCategory,
-        'selectedAvailability': selectedAvailability,
-        'stockCount': stockCount,
-        'price': price,
-        'Store Name': businessName,
-        'imageUrl': imageUrl,
-      });
+      // await stockCollection.add({
+      //   'name': name,
+      //   'Description': description,
+      //   'selectedMake': selectedMake,
+      //   'selectedModel': selectedModel,
+      //   'selectedCategory': selectedCategory,
+      //   'selectedAvailability': selectedAvailability,
+      //   'stockCount': stockCount,
+      //   'price': price,
+      //   'Store Name': businessName,
+      //   'imageUrl': imageUrl,
+      // });
       await productsCollection.add({
         'name': name,
         'Description': description,
@@ -99,10 +101,12 @@ class FirestoreService {
         'selectedModel': selectedModel,
         'selectedCategory': selectedCategory,
         'selectedAvailability': selectedAvailability,
-        'stockCount': stockCount,
         'price': price,
         'Store Name': businessName,
-        'imageUrl': imageUrl, // Added imageUrl to products collection
+        'imageUrl': imageUrl,
+        'phoneNumber': phoneNumber,
+        'longitude': longitude,
+        'latitude': latitude
       });
       print("✅ Added product item");
     } catch (e) {
@@ -124,9 +128,11 @@ class FirestoreService {
           selectedModel: data['selectedModel'] ?? '',
           selectedCategory: data['selectedCategory'] ?? '',
           selectedAvailability: data['selectedAvailability'] ?? '',
-          stockCount: data['stockCount'] ?? 0,
           imageUrl: data['imageUrl'] ?? '',
           businessName: data['Store Name'] ?? '', // Added imageUrl field
+          phoneNumber: data['phoneNumber'] ?? '',
+          longitude: data['longitude'] ?? '',
+          latitude: data['latitude'] ?? '',
         );
       }).toList();
     });
@@ -139,6 +145,7 @@ class FirestoreService {
     double? maxPrice,
     String? businessName,
     String? searchQuery,
+    String? selectedCategory,
   }) {
     Query query = productsCollection;
     if (businessName != null && businessName.isNotEmpty) {
@@ -161,6 +168,9 @@ class FirestoreService {
       query = query.where('price', isLessThanOrEqualTo: maxPrice);
     }
 
+    if (selectedCategory != null && selectedCategory.isNotEmpty) {
+      query = query.where('selectedCategory', isEqualTo: selectedCategory);
+    }
     // if (location != null && location.isNotEmpty) {
     //   query = query.where('selectedAvailability', isEqualTo: location);
     // }
@@ -184,9 +194,11 @@ class FirestoreService {
                 selectedModel: data['selectedModel'] ?? '',
                 selectedCategory: data['selectedCategory'] ?? '',
                 selectedAvailability: data['selectedAvailability'] ?? '',
-                stockCount: data['stockCount'] ?? 0,
                 imageUrl: data['imageUrl'] ?? '',
                 businessName: data['Store Name'] ?? '',
+                phoneNumber: data['phoneNumber'] ?? '',
+                longitude: data['longitude'] ?? '',
+                latitude: data['latitude'] ?? '',
               );
 
               print("✅ Created ProductItem: ${product.name}");
@@ -210,26 +222,25 @@ class FirestoreService {
     });
   }
 
-  Stream<List<ProductItem>> getStock() {
-    return stockCollection.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>? ?? {};
-        return ProductItem(
-          id: doc.id,
-          name: data['name'] ?? '',
-          price: data['price'] ?? 0,
-          description: data['Description'] ?? '',
-          selectedMake: data['selectedMake'] ?? '',
-          selectedModel: data['selectedModel'] ?? '',
-          selectedCategory: data['selectedCategory'] ?? '',
-          selectedAvailability: data['selectedAvailability'] ?? '',
-          stockCount: data['stockCount'] ?? 0,
-          imageUrl: data['imageUrl'] ?? '',
-          businessName: data['Store Name'] ?? '',
-        );
-      }).toList();
-    });
-  }
+  // Stream<List<ProductItem>> getStock() {
+  //   return stockCollection.snapshots().map((snapshot) {
+  //     return snapshot.docs.map((doc) {
+  //       final data = doc.data() as Map<String, dynamic>? ?? {};
+  //       return ProductItem(
+  //         id: doc.id,
+  //         name: data['name'] ?? '',
+  //         price: data['price'] ?? 0,
+  //         description: data['Description'] ?? '',
+  //         selectedMake: data['selectedMake'] ?? '',
+  //         selectedModel: data['selectedModel'] ?? '',
+  //         selectedCategory: data['selectedCategory'] ?? '',
+  //         selectedAvailability: data['selectedAvailability'] ?? '',
+  //         imageUrl: data['imageUrl'] ?? '',
+  //         businessName: data['Store Name'] ?? '',
+  //       );
+  //     }).toList();
+  //   });
+  // }
 
   Future<void> updateProduct(
     String docId,
@@ -239,7 +250,6 @@ class FirestoreService {
     String selectedModel,
     String selectedCategory,
     String selectedAvailability,
-    int stockCount,
     double price,
     String imageUrl, // Optional image URL
   ) async {
@@ -251,7 +261,6 @@ class FirestoreService {
         'selectedModel': selectedModel,
         'selectedCategory': selectedCategory,
         'selectedAvailability': selectedAvailability,
-        'stockCount': stockCount,
         'price': price,
         'imageUrl': imageUrl, // Update image URL
         'Store Name': await offerService.getBusinessName(),
@@ -311,13 +320,13 @@ class FirestoreService {
       if (data != null) {
         // Make sure isDone is set to true in the data
         data['isDone'] = true;
-        
+
         // Add to history collection with isDone=true
         await historyCollection.doc(docId).set(data);
-        
+
         // Delete from personal collection after successful copy
         await personalMaintCollection.doc(docId).delete();
-        
+
         print("✅ Moved maintenance item to history: $docId");
       } else {
         print("❌ No data found for docId: $docId");
@@ -342,10 +351,10 @@ class FirestoreService {
         final data = doc.data() as Map<String, dynamic>? ?? {};
         return MaintenanceList.fromJson(data, doc.id);
       }).toList();
-      
+
       // Sort maintenance history items by mileage in ascending order
       items.sort((a, b) => a.mileage.compareTo(b.mileage));
-      
+
       return items;
     });
   }
@@ -358,13 +367,13 @@ class FirestoreService {
       if (data != null) {
         // Make sure isDone is set to false for the active item
         data['isDone'] = false;
-        
+
         // Add to personal collection with the same document ID
         await personalMaintCollection.doc(docId).set(data);
-        
+
         // Delete from history collection after successful copy
         await historyCollection.doc(docId).delete();
-        
+
         print("✅ Recovered maintenance item from history: $docId");
       } else {
         print("❌ No data found for docId: $docId");

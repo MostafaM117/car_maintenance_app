@@ -108,6 +108,7 @@ class _UserLoginPageState extends State<UserLoginPage> {
                     S.of(context).forgot_password,
                     style: textStyleWhite.copyWith(
                       fontSize: 12,
+                      fontWeight: FontWeight.bold
                     ),
                   ),
                 ),

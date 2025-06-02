@@ -18,9 +18,9 @@ class _AddItemState extends State<AddItem> {
   String? _selectedMake;
   String? _selectedModel;
   final TextEditingController descriptionController = TextEditingController();
-  final List<String> categories = ['Periodic', 'Used', 'Unused'];
+  final List<String> categories = ['Used', 'New'];
   String? _selectedCategory;
-  final List<String> availability = ['Available', 'Not Available'];
+  final List<String> availability = ['In Stock', 'Out of Stock'];
   String? _selectedAvailability;
   final TextEditingController itemNameController = TextEditingController();
   final TextEditingController stockCountController = TextEditingController();
@@ -182,13 +182,13 @@ class _AddItemState extends State<AddItem> {
                   });
                 },
               ),
-              SizedBox(
-                height: 15,
-              ),
-              buildTextField(
-                  label: 'Stock Count',
-                  hintText: 'Add Count',
-                  controller: stockCountController),
+              // SizedBox(
+              //   height: 15,
+              // ),
+              // buildTextField(
+              //     label: 'Stock Count',
+              //     hintText: 'Add Count',
+              //     controller: stockCountController),
               SizedBox(
                 height: 15,
               ),
@@ -230,9 +230,6 @@ class _AddItemState extends State<AddItem> {
                         _selectedModel!,
                         _selectedCategory!,
                         _selectedAvailability!,
-                        stockCountController.text.isEmpty
-                            ? 0
-                            : int.parse(stockCountController.text),
                         priceController.text.isEmpty
                             ? 0.0
                             : double.parse(priceController.text),

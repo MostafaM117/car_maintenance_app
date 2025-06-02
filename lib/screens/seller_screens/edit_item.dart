@@ -26,8 +26,8 @@ class _EditItemState extends State<EditItem> {
   late TextEditingController stockCountController;
   late TextEditingController priceController;
 
-  final List<String> categories = ['Used', 'Unused'];
-  final List<String> availability = ['Available', 'Not Available'];
+  final List<String> categories = ['Used', 'New'];
+  final List<String> availability = ['In Stock', 'Out of Stock'];
 
   final List<String> _carMakes = CarData.getAllMakes();
 
@@ -44,9 +44,6 @@ class _EditItemState extends State<EditItem> {
     _selectedModel = widget.item.selectedModel;
     _selectedCategory = widget.item.selectedCategory;
     _selectedAvailability = widget.item.selectedAvailability;
-
-    stockCountController =
-        TextEditingController(text: widget.item.stockCount.toString());
     priceController = TextEditingController(text: widget.item.price.toString());
 
     firestoreService = FirestoreService(MaintID());
@@ -219,12 +216,12 @@ class _EditItemState extends State<EditItem> {
                 controller: priceController,
               ),
 
-              const SizedBox(height: 25),
+              // const SizedBox(height: 25),
 
-              buildTextField(
-                label: 'Store Location',
-                hintText: 'Add Store Location',
-              ),
+              // buildTextField(
+              //   label: 'Store Location',
+              //   hintText: 'Add Store Location',
+              // ),
 
               const SizedBox(height: 25),
 
@@ -250,7 +247,6 @@ class _EditItemState extends State<EditItem> {
                         _selectedModel!,
                         _selectedCategory!,
                         _selectedAvailability!,
-                        int.tryParse(stockCountController.text) ?? 0,
                         double.tryParse(priceController.text) ?? 0.0,
                         uploadedImageUrl ?? widget.item.imageUrl,
                       );
