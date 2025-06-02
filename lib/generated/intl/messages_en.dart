@@ -203,7 +203,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "logout": MessageLookupByLibrary.simpleMessage("Log Out"),
     "maintain": MessageLookupByLibrary.simpleMessage("Maintain"),
-    "maintenance": MessageLookupByLibrary.simpleMessage("maintenance"),
+    "maintenance": MessageLookupByLibrary.simpleMessage("Maintenance"),
     "maintenanceDetails": MessageLookupByLibrary.simpleMessage(
       "Maintenance Details",
     ),
@@ -314,7 +314,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "undo": MessageLookupByLibrary.simpleMessage("undo"),
     "upload_images": MessageLookupByLibrary.simpleMessage("Upload Your Images"),
     "used": MessageLookupByLibrary.simpleMessage("Used"),
-    "user_name": MessageLookupByLibrary.simpleMessage("username"),
+    "user_name": MessageLookupByLibrary.simpleMessage("Enter your Username"),
     "view_all": MessageLookupByLibrary.simpleMessage("View All"),
     "welcome": MessageLookupByLibrary.simpleMessage("Welcome to CarPal"),
     "welcome_back": MessageLookupByLibrary.simpleMessage(
