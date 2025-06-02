@@ -1333,6 +1333,281 @@ class S {
   String get undo {
     return Intl.message('undo', name: 'undo', desc: '', args: []);
   }
+
+  /// `Terms and Conditions`
+  String get termsTitle {
+    return Intl.message(
+      'Terms and Conditions',
+      name: 'termsTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please read these Terms and Conditions carefully before using the app. By accessing or using the Application, you agree to be bound by these Terms. If you do not agree with any part of the Terms, you must not use the Application.`
+  String get termsIntro {
+    return Intl.message(
+      'Please read these Terms and Conditions carefully before using the app. By accessing or using the Application, you agree to be bound by these Terms. If you do not agree with any part of the Terms, you must not use the Application.',
+      name: 'termsIntro',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1. Service Description`
+  String get section1Title {
+    return Intl.message(
+      '1. Service Description',
+      name: 'section1Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The Application provides tools for tracking and managing vehicle maintenance, including but not limited to reminders for periodic services, repair log entries, and informational guidance based on user-input data and vehicle-specific maintenance schedules.`
+  String get section1Body {
+    return Intl.message(
+      'The Application provides tools for tracking and managing vehicle maintenance, including but not limited to reminders for periodic services, repair log entries, and informational guidance based on user-input data and vehicle-specific maintenance schedules.',
+      name: 'section1Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2. Disclaimer`
+  String get section2Title {
+    return Intl.message(
+      '2. Disclaimer',
+      name: 'section2Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `• The Application is intended for informational and assistance purposes only. It is not a substitute for professional vehicle inspections or certified maintenance services.\n• We make no warranties regarding the completeness, accuracy, or reliability of the data, and accept no liability for damages or breakdowns resulting from reliance on the Application’s content.\n• Information accuracy depends in part on user input, and actual results may vary accordingly.`
+  String get section2Body {
+    return Intl.message(
+      '• The Application is intended for informational and assistance purposes only. It is not a substitute for professional vehicle inspections or certified maintenance services.\n• We make no warranties regarding the completeness, accuracy, or reliability of the data, and accept no liability for damages or breakdowns resulting from reliance on the Application’s content.\n• Information accuracy depends in part on user input, and actual results may vary accordingly.',
+      name: 'section2Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3. Third-Party Parts and Services`
+  String get section3Title {
+    return Intl.message(
+      '3. Third-Party Parts and Services',
+      name: 'section3Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `• The Application may act as an intermediary between users and third-party parts suppliers. We do not guarantee the quality, authenticity, or suitability of any parts or services offered.\n• Any transaction conducted outside the Application is strictly between the user and the third party. We disclaim all responsibility for any issues arising from such interactions.\n• We do not warrant the availability or pricing accuracy of listed products.`
+  String get section3Body {
+    return Intl.message(
+      '• The Application may act as an intermediary between users and third-party parts suppliers. We do not guarantee the quality, authenticity, or suitability of any parts or services offered.\n• Any transaction conducted outside the Application is strictly between the user and the third party. We disclaim all responsibility for any issues arising from such interactions.\n• We do not warrant the availability or pricing accuracy of listed products.',
+      name: 'section3Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `4. Data Usage and Privacy`
+  String get section4Title {
+    return Intl.message(
+      '4. Data Usage and Privacy',
+      name: 'section4Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `• We reserve the right to use aggregated, anonymized user data to improve service quality and analyze usage patterns.\n• User data will be stored securely and not shared with third parties without prior user consent, except as required by law.`
+  String get section4Body {
+    return Intl.message(
+      '• We reserve the right to use aggregated, anonymized user data to improve service quality and analyze usage patterns.\n• User data will be stored securely and not shared with third parties without prior user consent, except as required by law.',
+      name: 'section4Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `5. Amendments to Terms`
+  String get section5Title {
+    return Intl.message(
+      '5. Amendments to Terms',
+      name: 'section5Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We reserve the right to modify these Terms at any time. Material changes will be communicated through the Application or via email. Continued use of the Application after such changes constitutes your acceptance of the updated Terms.`
+  String get section5Body {
+    return Intl.message(
+      'We reserve the right to modify these Terms at any time. Material changes will be communicated through the Application or via email. Continued use of the Application after such changes constitutes your acceptance of the updated Terms.',
+      name: 'section5Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `6. User Accounts`
+  String get section6Title {
+    return Intl.message(
+      '6. User Accounts',
+      name: 'section6Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `• You agree to provide accurate, current, and complete information when creating or updating your account.\n• You are solely responsible for maintaining the confidentiality of your login credentials and for all activities occurring under your account.\n• We reserve the right to suspend or terminate accounts that violate these Terms or contain false or misleading information.`
+  String get section6Body {
+    return Intl.message(
+      '• You agree to provide accurate, current, and complete information when creating or updating your account.\n• You are solely responsible for maintaining the confidentiality of your login credentials and for all activities occurring under your account.\n• We reserve the right to suspend or terminate accounts that violate these Terms or contain false or misleading information.',
+      name: 'section6Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `7. User-Submitted Content`
+  String get section7Title {
+    return Intl.message(
+      '7. User-Submitted Content',
+      name: 'section7Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `• You are solely responsible for the accuracy of data you submit, including mileage, vehicle information, and repair logs.\n• We reserve the right to edit or remove content that violates our policies or is deemed harmful, misleading, or inappropriate.`
+  String get section7Body {
+    return Intl.message(
+      '• You are solely responsible for the accuracy of data you submit, including mileage, vehicle information, and repair logs.\n• We reserve the right to edit or remove content that violates our policies or is deemed harmful, misleading, or inappropriate.',
+      name: 'section7Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `8. Maintenance Reminders and Notifications`
+  String get section8Title {
+    return Intl.message(
+      '8. Maintenance Reminders and Notifications',
+      name: 'section8Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `• The Application provides automated notifications based on user-entered data. We do not guarantee the accuracy or timeliness of such notifications.\n• Users are encouraged to regularly inspect their vehicles and not rely solely on the Application for maintenance alerts.`
+  String get section8Body {
+    return Intl.message(
+      '• The Application provides automated notifications based on user-entered data. We do not guarantee the accuracy or timeliness of such notifications.\n• Users are encouraged to regularly inspect their vehicles and not rely solely on the Application for maintenance alerts.',
+      name: 'section8Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `9. Prohibited Use`
+  String get section9Title {
+    return Intl.message(
+      '9. Prohibited Use',
+      name: 'section9Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You agree not to:\n• Use the Application for any unlawful, abusive, or fraudulent purposes;\n• Infringe upon the rights of others or violate intellectual property laws;\n• Attempt unauthorized access to the Application or associated systems.\nWe reserve the right to suspend or permanently delete user accounts engaged in prohibited activities.`
+  String get section9Body {
+    return Intl.message(
+      'You agree not to:\n• Use the Application for any unlawful, abusive, or fraudulent purposes;\n• Infringe upon the rights of others or violate intellectual property laws;\n• Attempt unauthorized access to the Application or associated systems.\nWe reserve the right to suspend or permanently delete user accounts engaged in prohibited activities.',
+      name: 'section9Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `10. Limitation of Liability`
+  String get section10Title {
+    return Intl.message(
+      '10. Limitation of Liability',
+      name: 'section10Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `To the fullest extent permitted by applicable law, we shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of or inability to use the Application.`
+  String get section10Body {
+    return Intl.message(
+      'To the fullest extent permitted by applicable law, we shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of or inability to use the Application.',
+      name: 'section10Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `11. Governing Law`
+  String get section11Title {
+    return Intl.message(
+      '11. Governing Law',
+      name: 'section11Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `These Terms shall be governed by and construed in accordance with the laws of Egypt.`
+  String get section11Body {
+    return Intl.message(
+      'These Terms shall be governed by and construed in accordance with the laws of Egypt.',
+      name: 'section11Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `12. Severability`
+  String get section12Title {
+    return Intl.message(
+      '12. Severability',
+      name: 'section12Title',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If any provision of these Terms is found to be invalid or unenforceable under applicable law, such provision shall be modified to the minimum extent necessary to make it valid, and the remaining provisions shall remain in full force and effect.`
+  String get section12Body {
+    return Intl.message(
+      'If any provision of these Terms is found to be invalid or unenforceable under applicable law, such provision shall be modified to the minimum extent necessary to make it valid, and the remaining provisions shall remain in full force and effect.',
+      name: 'section12Body',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Contact Us`
+  String get contactUs {
+    return Intl.message('Contact Us', name: 'contactUs', desc: '', args: []);
+  }
+
+  /// `If you have any questions about these Terms, please contact us at: carapp711@gmail.com.`
+  String get contactUsBody {
+    return Intl.message(
+      'If you have any questions about these Terms, please contact us at: carapp711@gmail.com.',
+      name: 'contactUsBody',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

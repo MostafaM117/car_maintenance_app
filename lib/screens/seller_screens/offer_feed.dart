@@ -261,7 +261,7 @@ class _OfferScreenState extends State<OfferScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -302,7 +302,7 @@ class _OfferScreenState extends State<OfferScreen> {
                 },
               ),
             ),
-            SizedBox(height: 16),
+            // SizedBox(height: 16),
             buildButton(
               'Add Offer',
               AppColors.buttonColor,
