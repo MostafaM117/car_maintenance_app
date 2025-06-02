@@ -90,14 +90,13 @@ class _SellerHomePageState extends State<SellerHomePage> {
           right: 11,
           left: 11,
           top: 20,
+          bottom: 20,
         ),
         child: Column(
           children: [
             SizedBox(height: 10),
             SubtractWave(
-
               text: 'Welcome Back, $businessName',
-
               svgAssetPath: 'assets/svg/notification.svg',
               suptext: S.of(context).support_text,
               onTap: () {},
@@ -110,7 +109,6 @@ class _SellerHomePageState extends State<SellerHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  // ← هذا يملأ المساحة المتاحة
                   child: Container(
                     height: 40,
                     decoration: ShapeDecoration(
@@ -168,50 +166,13 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
-                        childAspectRatio: 0.80,
+                        crossAxisSpacing: 19,
+                        mainAxisSpacing: 19,
+                        childAspectRatio: 0.75,
                       ),
-                      itemCount: productList.length + 1,
+                      itemCount: productList.length,
                       itemBuilder: (context, index) {
-                        if (index == 0) {
-                          return GestureDetector(
-                            onTap: () async {
-                              final newItemName = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AddItem(),
-                                ),
-                              );
-
-                              if (newItemName != null) {
-                                setState(() {
-                                  items.add(newItemName);
-                                });
-                              }
-                            },
-                            child: Container(
-                              decoration: ShapeDecoration(
-                                color: const Color(0x7FF4F4F4),
-                                shape: RoundedRectangleBorder(
-                                  side: const BorderSide(
-                                      width: 1, color: Color(0xFFD9D9D9)),
-                                  borderRadius: BorderRadius.circular(22),
-                                ),
-                              ),
-                              child: Center(
-                                child: SvgPicture.asset(
-                                  'assets/svg/add.svg',
-                                  width: 40,
-                                  height: 40,
-                                  color: AppColors.primaryText,
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-
-                        final product = productList[index - 1];
+                        final product = productList[index];
                         return Container(
                           decoration: ShapeDecoration(
                             color: Color(0x7FF4F4F4),
@@ -222,35 +183,23 @@ class _SellerHomePageState extends State<SellerHomePage> {
                             ),
                           ),
                           child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ClipRRect(
                                 borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(16),
                                   topRight: Radius.circular(16),
                                 ),
-                                child: FadeInImage.assetNetwork(
-                                  placeholder: 'assets/images/motor_oil.png',
-                                  image: product.imageUrl,
+                                child: Image.asset(
+                                  'assets/images/motor_oil.png',
                                   height: 100,
                                   width: double.infinity,
                                   fit: BoxFit.contain,
-                                  imageErrorBuilder:
-                                      (context, error, stackTrace) {
-                                    return Image.asset(
-                                      'assets/images/motor_oil.png',
-                                      height: 100,
-                                      width: double.infinity,
-                                      fit: BoxFit.contain,
-                                    );
-                                  },
                                 ),
                               ),
                               Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 11,
-                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 11),
                                 decoration: const BoxDecoration(
                                   color: Color(0xFFF4F4F4),
                                   borderRadius: BorderRadius.only(
@@ -264,8 +213,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                   children: [
                                     Text(product.name,
                                         maxLines: 2, style: textStyleWhite),
-                                    Text(product.selectedAvailability,
-                                        style: textStyleGray),
+                                    Text('In Stock', style: textStyleGray),
                                     Text('${product.price} LE',
                                         style: textStyleGray),
                                     Row(
@@ -371,6 +319,25 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       },
                     );
                   }),
+            ),
+            buildButton(
+              'Add New Item',
+              AppColors.buttonColor,
+              AppColors.buttonText,
+              onPressed: () async {
+                final newItemName = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddItem(),
+                  ),
+                );
+
+                if (newItemName != null) {
+                  setState(() {
+                    items.add(newItemName);
+                  });
+                }
+              },
             ),
           ],
         ),
