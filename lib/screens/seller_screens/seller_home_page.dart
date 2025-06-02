@@ -90,7 +90,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
           right: 11,
           left: 11,
           top: 20,
-          bottom: 20,
+          bottom: 75,
         ),
         child: Column(
           children: [
@@ -162,6 +162,20 @@ class _SellerHomePageState extends State<SellerHomePage> {
                   ),
                   builder: (context, snapshot) {
                     final productList = snapshot.data ?? [];
+
+                    if (productList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'بالله عليك اكتب لرساله اللي انت عاوزها هنا',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      );
+                    }
+
                     return GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
