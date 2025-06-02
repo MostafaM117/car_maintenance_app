@@ -74,7 +74,7 @@ class ProductCard extends StatelessWidget {
                   title,
                   maxLines: 2,
                   style: textStyleWhite.copyWith(color: AppColors.buttonText, 
-                  fontSize: 13, 
+                  fontSize: 12, 
                   fontWeight: FontWeight.bold,
                   ),
                 ),
