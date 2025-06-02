@@ -170,6 +170,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
+                            fontWeight: FontWeight.bold,
                             color: Colors.grey[600],
                           ),
                         ),
@@ -180,8 +181,8 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 19,
-                        mainAxisSpacing: 19,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
                         childAspectRatio: 0.67,
                       ),
                       itemCount: productList.length,
@@ -203,11 +204,21 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                   topLeft: Radius.circular(16),
                                   topRight: Radius.circular(16),
                                 ),
-                                child: Image.asset(
-                                  'assets/images/motor_oil.png',
+                                child: FadeInImage.assetNetwork(
+                                  placeholder: 'assets/images/logo.png',
+                                  image: product.imageUrl,
                                   height: 100,
                                   width: double.infinity,
                                   fit: BoxFit.contain,
+                                  imageErrorBuilder:
+                                      (context, error, stackTrace) {
+                                    return Image.asset(
+                                      'assets/images/logo.png',
+                                      height: 100,
+                                      width: double.infinity,
+                                      fit: BoxFit.contain,
+                                    );
+                                  },
                                 ),
                               ),
                               Container(

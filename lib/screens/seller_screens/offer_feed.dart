@@ -281,7 +281,12 @@ class _OfferScreenState extends State<OfferScreen> {
                     return Center(child: CircularProgressIndicator());
 
                   final offers = snapshot.data!;
-                  if (offers.isEmpty) return Text('No offers found.');
+                  if (offers.isEmpty) {
+                    return Center(child: Text('No offers Posted yet.', style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[600],),));
+                  }
 
                   return ListView.builder(
                     itemCount: offers.length,

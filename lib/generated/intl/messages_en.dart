@@ -29,9 +29,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "Donot_account": MessageLookupByLibrary.simpleMessage(
       "Don’t have an account? ",
     ),
+    "New": MessageLookupByLibrary.simpleMessage("New"),
     "Sign_carPal": MessageLookupByLibrary.simpleMessage("Sign in to CarPal"),
     "Sigup_carPal": MessageLookupByLibrary.simpleMessage("Sign up to CarPal"),
-    "Unused": MessageLookupByLibrary.simpleMessage("Unused"),
     "Upcoming": MessageLookupByLibrary.simpleMessage("Upcoming"),
     "account": MessageLookupByLibrary.simpleMessage("Account"),
     "add": MessageLookupByLibrary.simpleMessage("Add"),
