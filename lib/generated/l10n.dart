@@ -204,9 +204,14 @@ class S {
     return Intl.message('or', name: 'or', desc: '', args: []);
   }
 
-  /// `username`
+  /// `Enter your Username`
   String get user_name {
-    return Intl.message('username', name: 'user_name', desc: '', args: []);
+    return Intl.message(
+      'Enter your Username',
+      name: 'user_name',
+      desc: '',
+      args: [],
+    );
   }
 
   /// `Continue with Google`
@@ -954,9 +959,9 @@ class S {
     return Intl.message('Maintain', name: 'maintain', desc: '', args: []);
   }
 
-  /// `maintenance`
+  /// `Maintenance`
   String get maintenance {
-    return Intl.message('maintenance', name: 'maintenance', desc: '', args: []);
+    return Intl.message('Maintenance', name: 'maintenance', desc: '', args: []);
   }
 
   /// `Terms & Conditions`
