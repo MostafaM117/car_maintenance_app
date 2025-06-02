@@ -181,8 +181,8 @@ class _SellerHomePageState extends State<SellerHomePage> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 20,
-                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 19,
+                        mainAxisSpacing: 19,
                         childAspectRatio: 0.67,
                       ),
                       itemCount: productList.length,
