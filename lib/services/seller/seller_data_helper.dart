@@ -7,7 +7,7 @@ Future<String?> getSellername() async {
     final docSnapshot = await FirebaseFirestore.instance.collection('sellers').doc(seller.uid).get();
     if (docSnapshot.exists) {
       final data = docSnapshot.data() as Map<String, dynamic>;
-      return data['shopname'];
+      return data['business_name'];
     }
   }
   return null;

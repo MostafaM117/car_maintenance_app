@@ -28,7 +28,6 @@ class SellerHomePage extends StatefulWidget {
 class _SellerHomePageState extends State<SellerHomePage> {
   List<String> items = [];
   FirestoreService firestoreService = FirestoreService(MaintID());
-  String username = 'Loading...';
   final seller = FirebaseAuth.instance.currentUser!;
   final CollectionReference users =
       FirebaseFirestore.instance.collection('sellers');
@@ -57,6 +56,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
   @override
   void initState() {
     super.initState();
+    loadSellername();
     getMyBusinessInfo();
   }
 
@@ -64,7 +64,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
     String? fetchedUsername = await getSellername();
     if (!mounted) return;
     setState(() {
-      username = fetchedUsername ?? 'seller';
+      businessName = fetchedUsername ?? 'seller';
     });
   }
 
@@ -94,9 +94,9 @@ class _SellerHomePageState extends State<SellerHomePage> {
         ),
         child: Column(
           children: [
-            SizedBox(height: 10),
+            // SizedBox(height: 10),
             SubtractWave(
-              text: S.of(context).welcome_home(username.split(' ').first),
+              text: S.of(context).welcome_home((businessName ?? 'seller').split(' ').first),
               svgAssetPath: 'assets/svg/notification.svg',
               suptext: S.of(context).support_text,
               onTap: () {},
@@ -166,7 +166,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                     if (productList.isEmpty) {
                       return Center(
                         child: Text(
-                          'بالله عليك اكتب لرساله اللي انت عاوزها هنا',
+                          'No Items listed yet',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 18,
@@ -182,7 +182,7 @@ class _SellerHomePageState extends State<SellerHomePage> {
                         crossAxisCount: 2,
                         crossAxisSpacing: 19,
                         mainAxisSpacing: 19,
-                        childAspectRatio: 0.75,
+                        childAspectRatio: 0.67,
                       ),
                       itemCount: productList.length,
                       itemBuilder: (context, index) {
@@ -225,8 +225,11 @@ class _SellerHomePageState extends State<SellerHomePage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(product.name,
-                                        maxLines: 2, style: textStyleWhite),
+                                    Text(product.name.length < 30 ? product.name : product.name.substring(0, 35),
+                                        maxLines: 2,
+                                        style: textStyleWhite,
+                                        overflow: TextOverflow.ellipsis,
+                                        ),
                                     Text('In Stock', style: textStyleGray),
                                     Text('${product.price} LE',
                                         style: textStyleGray),
