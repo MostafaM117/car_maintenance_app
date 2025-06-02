@@ -90,9 +90,9 @@ class _OfferScreenState extends State<OfferScreen> {
       validUntil: _validUntil!,
       business_name: business_name,
       imageUrl: _selectedImage ?? '',
-      phoneNumber: phoneNumber,
-      longitude: longitude,
-      latitude: latitude,
+      // phoneNumber: phoneNumber,
+      // longitude: longitude,
+      // latitude: latitude,
     );
 
     try {
