@@ -93,6 +93,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "congratulations": MessageLookupByLibrary.simpleMessage(
       "تم إنشاء حسابك بنجاح!",
     ),
+    "contactUs": MessageLookupByLibrary.simpleMessage("للتواصل معنا"),
+    "contactUsBody": MessageLookupByLibrary.simpleMessage(
+      "إذا كانت لديك أي استفسارات بخصوص هذه الشروط، يرجى التواصل معنا عبر البريد الإلكتروني: carapp711@gmail.com",
+    ),
     "create_business_account": MessageLookupByLibrary.simpleMessage(
       "أنشئ حساب نشاطك التجاري الآن",
     ),
@@ -264,6 +268,72 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "save": MessageLookupByLibrary.simpleMessage("حفظ"),
     "search": MessageLookupByLibrary.simpleMessage("بحث"),
+    "section10Body": MessageLookupByLibrary.simpleMessage(
+      "إلى أقصى حد يسمح به القانون المعمول به، لا نتحمل أي مسؤولية عن الأضرار غير المباشرة أو العرضية أو الخاصة أو التبعية أو العقابية الناتجة عن استخدامك أو عدم قدرتك على استخدام التطبيق.",
+    ),
+    "section10Title": MessageLookupByLibrary.simpleMessage(
+      "10. تحديد المسؤولية",
+    ),
+    "section11Body": MessageLookupByLibrary.simpleMessage(
+      "تخضع هذه الشروط وتُفسر وفقًا لقوانين جمهورية مصر العربية. وتكون محاكم مصر المختصة هي صاحبة الولاية القضائية الحصرية في أي نزاع ينشأ بموجب هذه الشروط.",
+    ),
+    "section11Title": MessageLookupByLibrary.simpleMessage(
+      "11. القانون الحاكم",
+    ),
+    "section12Body": MessageLookupByLibrary.simpleMessage(
+      "إذا تبين أن أي بند من هذه الشروط غير صالح أو غير قابل للتنفيذ بموجب القانون المعمول به، فسيتم تعديل هذا البند بالقدر اللازم ليصبح صالحًا، وتظل باقي البنود سارية بكامل قوتها وأثرها.",
+    ),
+    "section12Title": MessageLookupByLibrary.simpleMessage(
+      "12. القابلية للفصل",
+    ),
+    "section1Body": MessageLookupByLibrary.simpleMessage(
+      "يوفر التطبيق أدوات لتتبع وصيانة المركبات، بما في ذلك، على سبيل المثال لا الحصر، التذكيرات بمواعيد الصيانة الدورية، تسجيل سجلات الإصلاح، وتقديم إرشادات معلوماتية استنادًا إلى البيانات المدخلة من قبل المستخدم وجداول الصيانة الخاصة بكل مركبة.",
+    ),
+    "section1Title": MessageLookupByLibrary.simpleMessage("1. وصف الخدمة"),
+    "section2Body": MessageLookupByLibrary.simpleMessage(
+      "● يُعد التطبيق أداة معلوماتية ومساعدة فقط، ولا يُعد بديلاً عن فحص السيارة من قبل المتخصصين أو مراكز الصيانة المعتمدة.\n● لا نقدم أي ضمانات بشأن اكتمال أو دقة أو موثوقية البيانات المعروضة، ولا نتحمل أي مسؤولية عن أي أضرار أو أعطال قد تنتج عن الاعتماد على محتوى التطبيق.\n● تعتمد دقة المعلومات جزئيًا على البيانات المدخلة من قبل المستخدم، وقد تختلف النتائج من حالة إلى أخرى.",
+    ),
+    "section2Title": MessageLookupByLibrary.simpleMessage("2. إخلاء مسؤولية"),
+    "section3Body": MessageLookupByLibrary.simpleMessage(
+      "● قد يعمل التطبيق كوسيط بين المستخدمين وموردي قطع الغيار من الأطراف الثالثة. لا نضمن جودة أو صحة أو ملاءمة أي قطع أو خدمات يتم عرضها.\n● أي تعامل يتم خارج نطاق التطبيق يقع ضمن مسؤولية المستخدم والطرف الثالث فقط، ولا نتحمل أي مسؤولية ناتجة عن تلك التعاملات.\n● لا نضمن توافر المنتجات أو دقة الأسعار المدرجة في جميع الأوقات.",
+    ),
+    "section3Title": MessageLookupByLibrary.simpleMessage(
+      "3. قطع الغيار والطرف الثالث",
+    ),
+    "section4Body": MessageLookupByLibrary.simpleMessage(
+      "● نحتفظ بالحق في استخدام البيانات المجملة والمجهولة الهوية لتحسين جودة الخدمة وتحليل أنماط الاستخدام.\n● سيتم تخزين بيانات المستخدم بأمان، ولن تتم مشاركتها مع أي طرف ثالث دون موافقة مسبقة من المستخدم، باستثناء الحالات التي يتطلبها القانون.",
+    ),
+    "section4Title": MessageLookupByLibrary.simpleMessage(
+      "4. استخدام البيانات والخصوصية",
+    ),
+    "section5Body": MessageLookupByLibrary.simpleMessage(
+      "نحتفظ بالحق في تعديل هذه الشروط في أي وقت. وسيتم إخطار المستخدمين بأي تغييرات جوهرية من خلال التطبيق أو عبر البريد الإلكتروني. ويُعد استمرارك في استخدام التطبيق بعد هذه التعديلات بمثابة موافقة ضمنية على الشروط المعدّلة.",
+    ),
+    "section5Title": MessageLookupByLibrary.simpleMessage("5. تعديل الشروط"),
+    "section6Body": MessageLookupByLibrary.simpleMessage(
+      "● يلتزم المستخدم بإدخال معلومات دقيقة وحديثة عند إنشاء الحساب أو تحديثه.\n● يتحمل المستخدم وحده مسؤولية الحفاظ على سرية بيانات تسجيل الدخول، وكافة الأنشطة التي تتم من خلال الحساب تقع تحت مسؤوليته.\n● نحتفظ بالحق في تعليق أو إنهاء الحسابات التي تنتهك هذه الشروط أو تحتوي على معلومات كاذبة أو مضللة.",
+    ),
+    "section6Title": MessageLookupByLibrary.simpleMessage(
+      "6. حسابات المستخدمين",
+    ),
+    "section7Body": MessageLookupByLibrary.simpleMessage(
+      "● يتحمل المستخدم المسؤولية الكاملة عن دقة وصحة البيانات التي يُدخلها، مثل: عدد الكيلومترات، معلومات السيارة، وسجلات الإصلاح.\n● نحتفظ بالحق في تعديل أو حذف أي محتوى ينتهك سياسات الاستخدام أو يحتوي على معلومات مضللة أو ضارة.",
+    ),
+    "section7Title": MessageLookupByLibrary.simpleMessage(
+      "7. المحتوى المُدخل من قبل المستخدم",
+    ),
+    "section8Body": MessageLookupByLibrary.simpleMessage(
+      "● يعتمد التطبيق على إشعارات تلقائية تستند إلى البيانات المدخلة من قبل المستخدم. لا نضمن دقة أو توقيت هذه الإشعارات.\n● يُنصح المستخدم بمراجعة حالة مركبته بانتظام وعدم الاعتماد الكامل على تنبيهات التطبيق.",
+    ),
+    "section8Title": MessageLookupByLibrary.simpleMessage(
+      "8. إشعارات وتذكيرات الصيانة",
+    ),
+    "section9Body": MessageLookupByLibrary.simpleMessage(
+      "● يوافق المستخدم على عدم:\n  • استخدام التطبيق لأي أغراض غير قانونية أو مسيئة أو احتيالية؛\n  • انتهاك حقوق الآخرين أو قوانين حماية الملكية الفكرية؛\n  • محاولة الوصول غير المصرح به إلى التطبيق أو أنظمته المرتبطة.\nنحتفظ بالحق في تعليق أو حذف الحسابات التي يتم استخدامها بشكل ينتهك هذه الشروط.",
+    ),
+    "section9Title": MessageLookupByLibrary.simpleMessage(
+      "9. الاستخدام غير المشروع",
+    ),
     "selectMaintenanceDate": MessageLookupByLibrary.simpleMessage(
       "اختر تاريخ الصيانة",
     ),
@@ -276,6 +346,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tax_number": MessageLookupByLibrary.simpleMessage(
       "أدخل رقم التسجيل الضريبي",
     ),
+    "termsIntro": MessageLookupByLibrary.simpleMessage(
+      "يرجى قراءة هذه الشروط والأحكام بعناية قبل استخدام التطبيق. من خلال الوصول إلى التطبيق أو استخدامه، فإنك توافق على الالتزام بهذه الشروط. إذا كنت لا توافق على أي جزء من هذه الشروط، فيجب عليك عدم استخدام التطبيق.",
+    ),
+    "termsTitle": MessageLookupByLibrary.simpleMessage("الشروط والأحكام"),
     "terms_and_privacy": MessageLookupByLibrary.simpleMessage(
       "شروط الاستخدام وسياسة الخصوصية.",
     ),

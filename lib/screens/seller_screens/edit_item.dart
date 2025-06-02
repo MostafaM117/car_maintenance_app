@@ -26,7 +26,7 @@ class _EditItemState extends State<EditItem> {
   late TextEditingController stockCountController;
   late TextEditingController priceController;
 
-  final List<String> categories = ['Periodic', 'Used', 'Unused'];
+  final List<String> categories = ['Used', 'Unused'];
   final List<String> availability = ['Available', 'Not Available'];
 
   final List<String> _carMakes = CarData.getAllMakes();

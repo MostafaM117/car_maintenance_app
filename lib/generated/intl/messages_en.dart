@@ -96,6 +96,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "congratulations": MessageLookupByLibrary.simpleMessage(
       "Your account is ready to use!",
     ),
+    "contactUs": MessageLookupByLibrary.simpleMessage("Contact Us"),
+    "contactUsBody": MessageLookupByLibrary.simpleMessage(
+      "If you have any questions about these Terms, please contact us at: carapp711@gmail.com.",
+    ),
     "create_business_account": MessageLookupByLibrary.simpleMessage(
       "Create your business account now",
     ),
@@ -273,6 +277,68 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "save": MessageLookupByLibrary.simpleMessage("Save"),
     "search": MessageLookupByLibrary.simpleMessage("Search"),
+    "section10Body": MessageLookupByLibrary.simpleMessage(
+      "To the fullest extent permitted by applicable law, we shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of or inability to use the Application.",
+    ),
+    "section10Title": MessageLookupByLibrary.simpleMessage(
+      "10. Limitation of Liability",
+    ),
+    "section11Body": MessageLookupByLibrary.simpleMessage(
+      "These Terms shall be governed by and construed in accordance with the laws of Egypt.",
+    ),
+    "section11Title": MessageLookupByLibrary.simpleMessage("11. Governing Law"),
+    "section12Body": MessageLookupByLibrary.simpleMessage(
+      "If any provision of these Terms is found to be invalid or unenforceable under applicable law, such provision shall be modified to the minimum extent necessary to make it valid, and the remaining provisions shall remain in full force and effect.",
+    ),
+    "section12Title": MessageLookupByLibrary.simpleMessage("12. Severability"),
+    "section1Body": MessageLookupByLibrary.simpleMessage(
+      "The Application provides tools for tracking and managing vehicle maintenance, including but not limited to reminders for periodic services, repair log entries, and informational guidance based on user-input data and vehicle-specific maintenance schedules.",
+    ),
+    "section1Title": MessageLookupByLibrary.simpleMessage(
+      "1. Service Description",
+    ),
+    "section2Body": MessageLookupByLibrary.simpleMessage(
+      "• The Application is intended for informational and assistance purposes only. It is not a substitute for professional vehicle inspections or certified maintenance services.\n• We make no warranties regarding the completeness, accuracy, or reliability of the data, and accept no liability for damages or breakdowns resulting from reliance on the Application’s content.\n• Information accuracy depends in part on user input, and actual results may vary accordingly.",
+    ),
+    "section2Title": MessageLookupByLibrary.simpleMessage("2. Disclaimer"),
+    "section3Body": MessageLookupByLibrary.simpleMessage(
+      "• The Application may act as an intermediary between users and third-party parts suppliers. We do not guarantee the quality, authenticity, or suitability of any parts or services offered.\n• Any transaction conducted outside the Application is strictly between the user and the third party. We disclaim all responsibility for any issues arising from such interactions.\n• We do not warrant the availability or pricing accuracy of listed products.",
+    ),
+    "section3Title": MessageLookupByLibrary.simpleMessage(
+      "3. Third-Party Parts and Services",
+    ),
+    "section4Body": MessageLookupByLibrary.simpleMessage(
+      "• We reserve the right to use aggregated, anonymized user data to improve service quality and analyze usage patterns.\n• User data will be stored securely and not shared with third parties without prior user consent, except as required by law.",
+    ),
+    "section4Title": MessageLookupByLibrary.simpleMessage(
+      "4. Data Usage and Privacy",
+    ),
+    "section5Body": MessageLookupByLibrary.simpleMessage(
+      "We reserve the right to modify these Terms at any time. Material changes will be communicated through the Application or via email. Continued use of the Application after such changes constitutes your acceptance of the updated Terms.",
+    ),
+    "section5Title": MessageLookupByLibrary.simpleMessage(
+      "5. Amendments to Terms",
+    ),
+    "section6Body": MessageLookupByLibrary.simpleMessage(
+      "• You agree to provide accurate, current, and complete information when creating or updating your account.\n• You are solely responsible for maintaining the confidentiality of your login credentials and for all activities occurring under your account.\n• We reserve the right to suspend or terminate accounts that violate these Terms or contain false or misleading information.",
+    ),
+    "section6Title": MessageLookupByLibrary.simpleMessage("6. User Accounts"),
+    "section7Body": MessageLookupByLibrary.simpleMessage(
+      "• You are solely responsible for the accuracy of data you submit, including mileage, vehicle information, and repair logs.\n• We reserve the right to edit or remove content that violates our policies or is deemed harmful, misleading, or inappropriate.",
+    ),
+    "section7Title": MessageLookupByLibrary.simpleMessage(
+      "7. User-Submitted Content",
+    ),
+    "section8Body": MessageLookupByLibrary.simpleMessage(
+      "• The Application provides automated notifications based on user-entered data. We do not guarantee the accuracy or timeliness of such notifications.\n• Users are encouraged to regularly inspect their vehicles and not rely solely on the Application for maintenance alerts.",
+    ),
+    "section8Title": MessageLookupByLibrary.simpleMessage(
+      "8. Maintenance Reminders and Notifications",
+    ),
+    "section9Body": MessageLookupByLibrary.simpleMessage(
+      "You agree not to:\n• Use the Application for any unlawful, abusive, or fraudulent purposes;\n• Infringe upon the rights of others or violate intellectual property laws;\n• Attempt unauthorized access to the Application or associated systems.\nWe reserve the right to suspend or permanently delete user accounts engaged in prohibited activities.",
+    ),
+    "section9Title": MessageLookupByLibrary.simpleMessage("9. Prohibited Use"),
     "selectMaintenanceDate": MessageLookupByLibrary.simpleMessage(
       "Select Maintenance Date",
     ),
@@ -287,6 +353,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tax_number": MessageLookupByLibrary.simpleMessage(
       "Enter your tax registration number",
     ),
+    "termsIntro": MessageLookupByLibrary.simpleMessage(
+      "Please read these Terms and Conditions carefully before using the app. By accessing or using the Application, you agree to be bound by these Terms. If you do not agree with any part of the Terms, you must not use the Application.",
+    ),
+    "termsTitle": MessageLookupByLibrary.simpleMessage("Terms and Conditions"),
     "terms_and_privacy": MessageLookupByLibrary.simpleMessage(
       "Terms of Service and Privacy Policy.",
     ),
