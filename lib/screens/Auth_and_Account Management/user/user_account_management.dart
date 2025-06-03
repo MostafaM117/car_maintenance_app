@@ -701,7 +701,8 @@ class _UserAccountManagementState extends State<UserAccountManagement> {
                     height: 40,
                   ),
                   buildButton(
-                    'Delete Account',
+                    // 'Delete Account',
+                    S.of(context).delete_Account,
                     AppColors.buttonColor,
                     AppColors.buttonText,
                     onPressed: () {

@@ -55,7 +55,7 @@ class _SellerProfileState extends State<SellerProfile> {
                     fontSize: 40,
                     fontFamily: 'Inter',
                     height: 0,
-                    letterSpacing: 9.20,
+                    // letterSpacing: 9.20,
                   ),
                 ),
                 const SizedBox(height: 15),
