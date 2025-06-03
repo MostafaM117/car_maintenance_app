@@ -201,25 +201,17 @@ class ProductDetailsPage extends StatelessWidget {
                           fontSize: 14,
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
+                      const SizedBox(width: 5),
+                      IconButton(
+                        icon: const Icon(
+                          Icons.location_on,
+                          color: Colors.blue,
+                          size: 30,
+                        ),
                         onPressed: () {
                           openGoogleSearch(latitude, longitude);
                         },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.buttonColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: const Text(
-                          'Open Maps',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                      )
+                      ),
                     ],
                   )
                 ],

@@ -118,7 +118,7 @@ class OfferDetailsScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "Phone: 01016650240",
+                    "Phone: 0 100 709 8944",
                     style: textStyleGray,
                     textAlign: TextAlign.start,
                   ),
@@ -144,25 +144,17 @@ class OfferDetailsScreen extends StatelessWidget {
                         fontSize: 14,
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    ElevatedButton(
+                    const SizedBox(width: 5),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.location_on,
+                        color: Colors.blue,
+                        size: 30,
+                      ),
                       onPressed: () {
-                        openGoogleSearch(29.9841086, 30.9383899);
+                        openGoogleSearch(30.0414805, 30.9839595);
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.buttonColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: const Text(
-                        'Open Maps',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                    )
+                    ),
                   ],
                 )),
                 SvgPicture.asset(
