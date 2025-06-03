@@ -256,13 +256,18 @@ class _CarMaintState extends State<CarMaint> {
                                         children: [
                                           Text(
                                             S.of(context).confirm_delete_car,
-                                            style: textStyleWhite,
+                                            style: textStyleWhite.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18,
+                                            ),
                                             textAlign: TextAlign.center,
                                           ),
                                           const SizedBox(height: 15),
                                           Text(
                                             S.of(context).delete_warning,
-                                            style: textStyleGray,
+                                            style: textStyleGray.copyWith(
+                                              fontSize: 14
+                                            ),
                                             textAlign: TextAlign.center,
                                           ),
                                           const SizedBox(height: 25),
