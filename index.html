@@ -13,7 +13,7 @@
       text-align: center;
     }
     h1 {
-      color: #007bff;
+      color: #2e2e2e;
     }
     #message {
       margin-top: 20px;
@@ -22,7 +22,7 @@
       display: none;
     }
     #download-button, #open-browser-btn {
-      background-color: #007bff;
+      background-color: #da1f11;
       color: white;
       border: none;
       padding: 15px 30px;
@@ -53,8 +53,17 @@
   <button id="open-browser-btn">Open in Browser</button>
 
   <script>
-    const apkUrl = 'https://github.com/MostafaM117/car_maintenance_app/releases/download/V2.0/Car_Maintenance_app.apk';
-
+    // const apkUrl = 'https://github.com/MostafaM117/car_maintenance_app/releases/download/V2.0/Car_Maintenance_app.apk';
+    // const apkUrl = 'https://drive.google.com/file/d/1jJyPZd7WajGKWpvNCIXYC0tZL6urmd17/view?usp=sharing';
+    const apkUrl = 'https://drive.google.com/file/d/1jJyPZd7WajGKWpvNCIXYC0tZL6urmd17/view?usp=drive_link';
+function triggerDownload() {
+    const a = document.createElement('a');
+    a.href = apkUrl;
+    a.download = 'CarPal.apk';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
     // Detect WebView environment
     function isInWebView() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
@@ -70,9 +79,9 @@
     }
 
     // Open APK URL in new window/tab (external browser)
-    function openInBrowser() {
-      window.open(apkUrl, '_blank', 'noopener');
-    }
+    // function openInBrowser() {
+    //   window.location.href = apkUrl;
+    // }
 
     const downloadBtn = document.getElementById('download-button');
     const openBrowserBtn = document.getElementById('open-browser-btn');
@@ -83,11 +92,11 @@
       downloadBtn.style.display = 'none';
       message.style.display = 'block';
       openBrowserBtn.style.display = 'inline-block';
-
-      openBrowserBtn.onclick = openInBrowser;
+      openBrowserBtn.onclick = () => window.open(apkUrl, '_blank', 'noopener');
+      // openBrowserBtn.onclick = openInBrowser;
     } else {
       // Normal environment - clicking download button opens link in external browser too
-      downloadBtn.onclick = openInBrowser;
+      downloadBtn.onclick = triggerDownload;
     }
   </script>
 </body>

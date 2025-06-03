@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/AI-Chatbot/gemini.dart';
 import 'package:car_maintenance/AI-Chatbot/send_message.dart';
 import 'package:car_maintenance/AI-Chatbot/speech_to_text.dart';
@@ -258,25 +259,74 @@ class _ChatbotState extends State<Chatbot> {
                                 Text(title, overflow: TextOverflow.ellipsis,),
                                 IconButton(
                                   onPressed: () async{
-                                    bool confirmDelete = await showDialog(
-                                      context: context, 
-                                      builder: (_)=> AlertDialog(
-                                        title: Text('Confirm Delete'),
-                                        content: Text('Are you sure you want to delete this chat?\n This action can\'t be undone.'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: (){
-                                              Navigator.pop(context, true);
-                                            }, 
-                                            child: Text('Confirm')),
-                                          TextButton(
-                                            onPressed: (){
-                                              Navigator.pop(context, false);
-                                            }, 
-                                            child: Text('Cancel')),
-                                        ],
-                                      ));
-                                      if(confirmDelete){
+                                    bool? confirmDelete;
+                                    await AwesomeDialog(
+                                      padding: EdgeInsets.all(12),
+                                      context: context,
+                                      dialogType: DialogType.noHeader,
+                                      dialogBackgroundColor: AppColors.secondaryText,
+                                      dialogBorderRadius: BorderRadius.circular(15),
+                                      animType: AnimType.scale,
+                                      body: StatefulBuilder(builder: (context, setState){
+                                        return Padding(
+                                          padding: EdgeInsets.only(
+                                            left: 10,
+                                            right: 10,
+                                            bottom: 10,
+                                          ),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                'Are you sure you want to delete this chat?',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 20,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Text(
+                                                'This Chat will be permanently deleted.\nThis action cannot be undone.',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(fontSize: 16),
+                                              ),
+                                              SizedBox(
+                                                height: 40,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  popUpBotton(
+                                                    'Cancel',
+                                                    AppColors.primaryText,
+                                                    AppColors.buttonText,
+                                                    onPressed: () {
+                                                      confirmDelete = false;
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                  SizedBox(
+                                                    width: 15,
+                                                  ),
+                                                  popUpBotton(
+                                                    'Delete',
+                                                    AppColors.buttonColor,
+                                                    AppColors.buttonText,
+                                                    onPressed: () {
+                                                      confirmDelete = true;
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      })
+                                      ).show();
+                                      if(confirmDelete == true){
                                         await deleteChat(chatId);
                                         if(activeChatId == null){
                                         await createNewChat();

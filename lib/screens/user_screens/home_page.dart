@@ -26,7 +26,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'notifications .dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final void Function(int) onNavigate;
+  const HomePage({super.key, required this.onNavigate});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -393,14 +394,15 @@ class _HomePageState extends State<HomePage> {
                         ExploreCard(
                             title: S.of(context).ask_chatbot,
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Chatbot(
-                                      userId: FirebaseAuth
-                                          .instance.currentUser!.uid),
-                                ),
-                              );
+                              widget.onNavigate(2);
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => Chatbot(
+                              //         userId: FirebaseAuth
+                              //             .instance.currentUser!.uid),
+                              //   ),
+                              // );
                             }),
                         ExploreCard(
                             title: S.of(context).checkout_offers,

@@ -22,14 +22,7 @@ class UserMainScreen extends StatefulWidget {
 
 class _UserMainScreenState extends State<UserMainScreen> {
   int _selectedIndex = 0;
-
-  final List<Widget> _pages = [
-    HomePage(),
-    const MaintenanceScreen(),
-    Chatbot(userId: FirebaseAuth.instance.currentUser!.uid),
-    Market(),
-    Profile(),
-  ];
+  late List<Widget> _pages;
 
   final GlobalKey _homeKey = GlobalKey();
   final GlobalKey _maintainKey = GlobalKey();
@@ -40,7 +33,13 @@ class _UserMainScreenState extends State<UserMainScreen> {
   @override
   void initState() {
     super.initState();
-
+    _pages = [
+    HomePage(onNavigate: _onItemTapped),
+    const MaintenanceScreen(),
+    Chatbot(userId: FirebaseAuth.instance.currentUser!.uid),
+    Market(),
+    Profile(),
+  ];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initTutorial();
     });
@@ -65,6 +64,7 @@ await TutorialService().showTutorial(context);
   }
 
   void _onItemTapped(int index) {
+    FocusScope.of(context).unfocus();
     setState(() {
       _selectedIndex = index;
     });
@@ -114,6 +114,7 @@ await TutorialService().showTutorial(context);
           gap: 5,
           tabBorderRadius: 22,
           onTabChange: _onItemTapped,
+          selectedIndex: _selectedIndex,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           tabs: List.generate(
             labels.length,
