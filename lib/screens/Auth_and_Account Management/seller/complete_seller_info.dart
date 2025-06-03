@@ -203,30 +203,30 @@ class _CompleteSellerInfoState extends State<CompleteSellerInfo> {
     }
   }
 
-  Future<void> getLocationPermission(BuildContext context) async {
-    loc.Location location = loc.Location();
-    bool serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Please enable location services to continue.')),
-        );
-        return;
-      }
-    }
-    loc.PermissionStatus permissionGranted = await location.hasPermission();
-    if (permissionGranted == loc.PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != loc.PermissionStatus.granted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Location permission is required.')),
-        );
-        return;
-      }
-    }
-  }
+  // Future<void> getLocationPermission(BuildContext context) async {
+  //   loc.Location location = loc.Location();
+  //   bool serviceEnabled = await location.serviceEnabled();
+  //   if (!serviceEnabled) {
+  //     serviceEnabled = await location.requestService();
+  //     if (!serviceEnabled) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //             content: Text('Please enable location services to continue.')),
+  //       );
+  //       return;
+  //     }
+  //   }
+  //   loc.PermissionStatus permissionGranted = await location.hasPermission();
+  //   if (permissionGranted == loc.PermissionStatus.denied) {
+  //     permissionGranted = await location.requestPermission();
+  //     if (permissionGranted != loc.PermissionStatus.granted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Location permission is required.')),
+  //       );
+  //       return;
+  //     }
+  //   }
+  // }
 
   @override
   void dispose() {

@@ -13,7 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path/path.dart' as path;
 import 'package:supabase_flutter/supabase_flutter.dart';
-
+import 'package:location/location.dart' as loc;
 import '../../../generated/l10n.dart';
 
 class EnterSellerData extends StatefulWidget {
@@ -276,6 +276,20 @@ class _EnterSellerDataState extends State<EnterSellerData> {
                       ),
                       onTap: () async {
                         FocusScope.of(context).requestFocus(FocusNode());
+                        // Check Location Permission Before Navigation
+                        loc.Location location = loc.Location();
+                        bool serviceEnabled = await location.serviceEnabled();
+                        if (!serviceEnabled) {
+                          serviceEnabled = await location.requestService();
+                          if (!serviceEnabled) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content: Text(
+                                      'Please enable location services to continue')),
+                            );
+                            return;
+                          }
+                        }
                         LatLng? selectedLocation = await Navigator.push(
                             context,
                             MaterialPageRoute(
