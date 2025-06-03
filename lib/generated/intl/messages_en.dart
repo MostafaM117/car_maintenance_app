@@ -109,9 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "defaultUsername": MessageLookupByLibrary.simpleMessage("User"),
     "delete": MessageLookupByLibrary.simpleMessage("Delete"),
-    "delete_maintenance": MessageLookupByLibrary.simpleMessage(
-      "Delete Maintenance",
-    ),
+    "delete_Account": MessageLookupByLibrary.simpleMessage("Delete Account"),
     "delete_warning": MessageLookupByLibrary.simpleMessage(
       "This action is permanent and cannot be undone. All your data will be permanently removed.",
     ),
@@ -245,7 +243,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "notifications": MessageLookupByLibrary.simpleMessage("Notifications"),
     "offers": MessageLookupByLibrary.simpleMessage("Offers"),
     "or": MessageLookupByLibrary.simpleMessage("or"),
-    "parts_seller": MessageLookupByLibrary.simpleMessage("I\'m a Parts Seller"),
+    "parts_seller": MessageLookupByLibrary.simpleMessage(
+      "I\'m a Business Owner",
+    ),
     "password": MessageLookupByLibrary.simpleMessage("Enter your password"),
     "permanentDeleteMessage": MessageLookupByLibrary.simpleMessage(
       "This action is permanent and cannot be undone.",

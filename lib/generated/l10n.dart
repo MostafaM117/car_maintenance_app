@@ -104,10 +104,10 @@ class S {
     );
   }
 
-  /// `I'm a Parts Seller`
+  /// `I'm a Business Owner`
   String get parts_seller {
     return Intl.message(
-      'I\'m a Parts Seller',
+      'I\'m a Business Owner',
       name: 'parts_seller',
       desc: '',
       args: [],
@@ -339,11 +339,11 @@ class S {
     );
   }
 
-  /// `Delete Maintenance`
-  String get delete_maintenance {
+  /// `Delete Account`
+  String get delete_Account {
     return Intl.message(
-      'Delete Maintenance',
-      name: 'delete_maintenance',
+      'Delete Account',
+      name: 'delete_Account',
       desc: '',
       args: [],
     );

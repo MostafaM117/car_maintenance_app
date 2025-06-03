@@ -56,9 +56,9 @@ class _AnimatedButtonState extends State<AnimatedButton>
           width: double.infinity,
           height: 45,
           child: ElevatedButton(
-            onPressed: widget.onPressed, // تأكد من تمرير onPressed بشكل صحيح
+            onPressed: widget.onPressed, 
             style: ElevatedButton.styleFrom(
-              backgroundColor: widget.backgroundColor, // اللون هنا
+              backgroundColor: widget.backgroundColor, 
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),
               ),

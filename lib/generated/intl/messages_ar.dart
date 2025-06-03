@@ -108,7 +108,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "defaultUsername": MessageLookupByLibrary.simpleMessage("المستخدم"),
     "delete": MessageLookupByLibrary.simpleMessage("حذف"),
-    "delete_maintenance": MessageLookupByLibrary.simpleMessage("حذف الصيانة"),
+    "delete_Account": MessageLookupByLibrary.simpleMessage("حذف الحساب"),
     "delete_warning": MessageLookupByLibrary.simpleMessage(
       "هذا الإجراء دائم ولا يمكن التراجع عنه. سيتم حذف جميع بياناتك بشكل نهائي.",
     ),
@@ -236,7 +236,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "notifications": MessageLookupByLibrary.simpleMessage("الإشعارات"),
     "offers": MessageLookupByLibrary.simpleMessage("العروض"),
     "or": MessageLookupByLibrary.simpleMessage("أو"),
-    "parts_seller": MessageLookupByLibrary.simpleMessage("أنا بائع قطع غيار"),
+    "parts_seller": MessageLookupByLibrary.simpleMessage("أنا مالك متجر "),
     "password": MessageLookupByLibrary.simpleMessage("أدخل كلمة المرور"),
     "permanentDeleteMessage": MessageLookupByLibrary.simpleMessage(
       "هذا الإجراء دائم ولا يمكن التراجع عنه.",

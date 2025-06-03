@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:car_maintenance/constants/app_colors.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/redirecting_page.dart';
 // import 'package:car_maintenance/screens/home_page.dart';
@@ -48,31 +49,39 @@ class AuthService {
   }
 
   // _getUserPassword
-  Future<String> _getUserPassword(BuildContext context) async {
+  Future<String?> _getUserPassword(BuildContext context) async {
     final TextEditingController passwordcontroller = TextEditingController();
     String? errorText;
-    final result = await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: AppColors.secondaryText,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              title: const Text(
+    String? result;
+    await AwesomeDialog(
+      padding: EdgeInsets.all(12),
+      context: context,
+      dialogType: DialogType.noHeader,
+      dialogBackgroundColor: AppColors.secondaryText,
+      dialogBorderRadius: BorderRadius.circular(15),
+      animType: AnimType.scale,
+      body: StatefulBuilder(builder: (context, setState){
+        return Padding(padding: EdgeInsets.only(
+          left: 10,
+          right: 10,
+          bottom: 10,
+        ),
+        child: Column(
+          children: [
+            Text(
                 'Please enter your password.',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
               ),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'It’s your first time using Google sign in. Please confirm your password.',
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
+              SizedBox(
+                  height: 20,
+              ),
+              Text(
+                'It’s your first time using Google sign in. Please confirm your password.',
+              ),
+              const SizedBox(height: 20),
+              TextField(
                       controller: passwordcontroller,
                       obscureText: _obscureText,
                       cursorColor: Colors.black,
@@ -105,12 +114,8 @@ class AuthService {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              actionsAlignment: MainAxisAlignment.center,
-              actions: [
-                buildButton(
+                    const SizedBox(height: 40),
+                    buildButton(
                   onPressed: () {
                     final password = passwordcontroller.text.trim();
                     if (password.isEmpty) {
@@ -118,6 +123,7 @@ class AuthService {
                         errorText = "Password can't be empty.";
                       });
                     } else {
+                      result = password;
                       Navigator.of(context).pop(password);
                     }
                   },
@@ -129,15 +135,17 @@ class AuthService {
                 buildButton(
                   onPressed: () {
                     Navigator.of(context).pop();
+                    return;
                   },
                   'Cancel',
                   AppColors.primaryText,
                   AppColors.buttonText,
                 ),
-              ],
-            );
-          });
-        });
+          ],
+        ) 
+        );
+      })
+    ).show();
     return result;
   }
 
@@ -148,9 +156,10 @@ class AuthService {
     try {
       final collection = FirebaseFirestore.instance
           .collection(role == 'user' ? 'users' : 'sellers');
-      // final existingDoc = await collection.doc(docId).get();
-      // if(existingDoc.exists){}
       final password = await _getUserPassword(context);
+      if (password == null) {
+        return;
+      }
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
 

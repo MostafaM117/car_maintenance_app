@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:car_maintenance/generated/l10n.dart';
 import 'package:car_maintenance/screens/Auth_and_Account%20Management/businessname_display.dart';
 import 'package:car_maintenance/services/seller/seller_delete_account.dart';
 import 'package:car_maintenance/widgets/custom_widgets.dart';
@@ -143,13 +144,13 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
               child: Column(
                 children: [
                   Text(
-                    "Profile",
+                    S.of(context).profile,                    // "Profile",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 40,
                       fontFamily: 'Inter',
                       height: 0,
-                      letterSpacing: 9.20,
+                      // letterSpacing: 9.20,
                     ),
                   ),
                   Column(
@@ -723,7 +724,8 @@ class _SellerAccountManagementState extends State<SellerAccountManagement> {
                     height: 40,
                   ),
                   buildButton(
-                    'Delete Account',
+                    S.of(context).delete_Account,
+                    // 'Delete Account',
                     AppColors.buttonColor,
                     AppColors.buttonText,
                     onPressed: () {
