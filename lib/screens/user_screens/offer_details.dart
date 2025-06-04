@@ -40,6 +40,12 @@ class OfferDetailsScreen extends StatelessWidget {
       print("Error launching intent: $e");
     });
   }
+  String breakTitleIfLong(String title) {
+  if (title.length > 50) {
+    return title.substring(0, 50) + '\n' + title.substring(50);
+  }
+  return title;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +71,7 @@ class OfferDetailsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  title,
-                  style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red),
-                ),
-                Text(
-                  "$price LE",
+                  breakTitleIfLong(title),
                   style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -80,6 +79,19 @@ class OfferDetailsScreen extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(
+              height: 10,
+            ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "$price LE",
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red),
+                  ),
+                ),
             const SizedBox(height: 16),
             const Text("About Offer Name",
                 style: TextStyle(fontWeight: FontWeight.bold)),
@@ -148,7 +160,7 @@ class OfferDetailsScreen extends StatelessWidget {
                     IconButton(
                       icon: const Icon(
                         Icons.location_on,
-                        color: Colors.blue,
+                        color: AppColors.buttonColor,
                         size: 30,
                       ),
                       onPressed: () {
