@@ -42,6 +42,12 @@ class ProductDetailsPage extends StatelessWidget {
       print("Error launching intent: $e");
     });
   }
+  String breakTitleIfLong(String title) {
+  if (title.length > 50) {
+    return title.substring(0, 50) + '\n' + title.substring(50);
+  }
+  return title;
+}
 
   Future<void> _openGoogleMaps() async {
     final url = Uri.parse(
@@ -99,16 +105,20 @@ class ProductDetailsPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.buttonColor),
+                Expanded(
+                  child: Text(
+                    breakTitleIfLong(title),
+                    style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.buttonColor),
+                  ),
                 ),
-                Text('$price LE', style: const TextStyle(fontSize: 18)),
               ],
             ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text('$price LE', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red))),
             SizedBox(
               height: 10,
             ),
@@ -205,7 +215,7 @@ class ProductDetailsPage extends StatelessWidget {
                       IconButton(
                         icon: const Icon(
                           Icons.location_on,
-                          color: Colors.blue,
+                          color: AppColors.buttonColor,
                           size: 30,
                         ),
                         onPressed: () {
