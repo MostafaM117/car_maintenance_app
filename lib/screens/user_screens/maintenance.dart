@@ -94,19 +94,19 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
                             startActionPane: ActionPane(
                               motion: const DrawerMotion(),
                               children: [
-                                SlidableAction(
-                                  onPressed: (context) async {
-                                    await firestoreService
-                                        .recoverFromHistory(maintenanceItem.id);
-                                  },
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black,
-                                  icon: Icons.undo,
-                                  label: S.of(context).undo,
-                                ),
+                                // SlidableAction(
+                                //   onPressed: (context) async {
+                                //     await firestoreService
+                                //         .recoverFromHistory(maintenanceItem.id);
+                                //   },
+                                //   backgroundColor: Colors.white,
+                                //   foregroundColor: Colors.black,
+                                //   icon: Icons.undo,
+                                //   label: S.of(context).undo,
+                                // ),
                                 SlidableAction(
                                   onPressed: (context) {
-                                    // delete action
+                                    firestoreService.recoverFromHistory(maintenanceItem.id);
                                   },
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black,
