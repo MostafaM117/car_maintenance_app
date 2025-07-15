@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Download CarPal App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      text-align: center;
+    }
+    h1 {
+      color: #2e2e2e;
+    }
+    #message {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: red;
+      display: none;
+    }
+    #download-button, #open-browser-btn {
+      background-color: #da1f11;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+    }
+    #open-browser-btn {
+      background-color: #28a745;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>CarPal App</h1>
+  <p>Click the button below to download the APK.</p>
+
+  <button id="download-button">Download APK</button>
+
+  <p id="message">
+    It looks like you're opening this in an app that doesn't support downloads.<br />
+    Please open this page in your browser (like Chrome) to download the app.
+  </p>
+
+  <button id="open-browser-btn">Open in Browser</button>
+
+  <script>
+    const apkUrl = 'https://github.com/MostafaM117/car_maintenance_app/releases/download/V3.0/CarPal.apk';
+    // const apkUrl = 'https://drive.google.com/file/d/1jJyPZd7WajGKWpvNCIXYC0tZL6urmd17/view?usp=sharing';
+    // const apkUrl = 'https://drive.google.com/file/d/1jJyPZd7WajGKWpvNCIXYC0tZL6urmd17/view?usp=drive_link';
+function triggerDownload() {
+    const a = document.createElement('a');
+    a.href = apkUrl;
+    a.download = 'CarPal.apk';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+    // Detect WebView environment
+    function isInWebView() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+      const isAndroid = /Android/.test(userAgent);
+      const isWebViewAndroid = isAndroid && /wv|WebView/.test(userAgent);
+
+      const isIOS = /iPhone|iPad|iPod/.test(userAgent);
+      const standalone = window.navigator.standalone;
+      const isWebViewIOS = isIOS && !/Safari/.test(userAgent) && !standalone;
+
+      return isWebViewAndroid || isWebViewIOS;
+    }
+
+    // Open APK URL in new window/tab (external browser)
+    // function openInBrowser() {
+    //   window.location.href = apkUrl;
+    // }
+
+    const downloadBtn = document.getElementById('download-button');
+    const openBrowserBtn = document.getElementById('open-browser-btn');
+    const message = document.getElementById('message');
+
+    if (isInWebView()) {
+      // Show message and open browser button, hide normal download button
+      downloadBtn.style.display = 'none';
+      message.style.display = 'block';
+      openBrowserBtn.style.display = 'inline-block';
+      openBrowserBtn.onclick = () => window.open(apkUrl, '_blank', 'noopener');
+      // openBrowserBtn.onclick = openInBrowser;
+    } else {
+      // Normal environment - clicking download button opens link in external browser too
+      downloadBtn.onclick = triggerDownload;
+    }
+  </script>
+</body>
+</html>

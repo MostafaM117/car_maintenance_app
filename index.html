@@ -1,103 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Download CarPal App</title>
-  <style>
+<!DOCTYPE html><html><head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="car_maintenance">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <title>car_maintenance</title>
+  <link rel="manifest" href="manifest.json">
+  
+  
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+  
+  
+  
+  
+  <style id="splash-screen-style">
+    html {
+      height: 100%
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 500px;
-      margin: auto;
-      text-align: center;
+      margin: 0;
+      min-height: 100%;
+      background-color: #ffffff;
+          background-size: 100% 100%;
     }
-    h1 {
-      color: #2e2e2e;
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
     }
-    #message {
-      margin-top: 20px;
-      font-size: 1rem;
-      color: red;
-      display: none;
+
+    .contain {
+      display:block;
+      width:100%; height:100%;
+      object-fit: contain;
     }
-    #download-button, #open-browser-btn {
-      background-color: #da1f11;
-      color: white;
-      border: none;
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      border-radius: 6px;
-      display: inline-block;
-      margin-top: 30px;
-      text-decoration: none;
+
+    .stretch {
+      display:block;
+      width:100%; height:100%;
     }
-    #open-browser-btn {
-      background-color: #28a745;
-      display: none;
+
+    .cover {
+      display:block;
+      width:100%; height:100%;
+      object-fit: cover;
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      -ms-transform: translate(-50%, 0);
+      transform: translate(-50%, 0);
+    }
+
+    .bottomLeft {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .bottomRight {
+      position: absolute;
+      bottom: 0;
+      right: 0;
     }
   </style>
-</head>
-<body>
-  <h1>CarPal App</h1>
-  <p>Click the button below to download the APK.</p>
-
-  <button id="download-button">Download APK</button>
-
-  <p id="message">
-    It looks like you're opening this in an app that doesn't support downloads.<br />
-    Please open this page in your browser (like Chrome) to download the app.
-  </p>
-
-  <button id="open-browser-btn">Open in Browser</button>
-
-  <script>
-    const apkUrl = 'https://github.com/MostafaM117/car_maintenance_app/releases/download/V3.0/CarPal.apk';
-    // const apkUrl = 'https://drive.google.com/file/d/1jJyPZd7WajGKWpvNCIXYC0tZL6urmd17/view?usp=sharing';
-    // const apkUrl = 'https://drive.google.com/file/d/1jJyPZd7WajGKWpvNCIXYC0tZL6urmd17/view?usp=drive_link';
-function triggerDownload() {
-    const a = document.createElement('a');
-    a.href = apkUrl;
-    a.download = 'CarPal.apk';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-    // Detect WebView environment
-    function isInWebView() {
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-      const isAndroid = /Android/.test(userAgent);
-      const isWebViewAndroid = isAndroid && /wv|WebView/.test(userAgent);
-
-      const isIOS = /iPhone|iPad|iPod/.test(userAgent);
-      const standalone = window.navigator.standalone;
-      const isWebViewIOS = isIOS && !/Safari/.test(userAgent) && !standalone;
-
-      return isWebViewAndroid || isWebViewIOS;
-    }
-
-    // Open APK URL in new window/tab (external browser)
-    // function openInBrowser() {
-    //   window.location.href = apkUrl;
-    // }
-
-    const downloadBtn = document.getElementById('download-button');
-    const openBrowserBtn = document.getElementById('open-browser-btn');
-    const message = document.getElementById('message');
-
-    if (isInWebView()) {
-      // Show message and open browser button, hide normal download button
-      downloadBtn.style.display = 'none';
-      message.style.display = 'block';
-      openBrowserBtn.style.display = 'inline-block';
-      openBrowserBtn.onclick = () => window.open(apkUrl, '_blank', 'noopener');
-      // openBrowserBtn.onclick = openInBrowser;
-    } else {
-      // Normal environment - clicking download button opens link in external browser too
-      downloadBtn.onclick = triggerDownload;
+  <script id="splash-screen-script">
+    function removeSplashFromWeb() {
+      document.getElementById("splash")?.remove();
+      document.getElementById("splash-branding")?.remove();
+      document.body.style.background = "transparent";
     }
   </script>
-</body>
-</html>
+</head>
+<body>
+  <picture id="splash">
+      <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+      <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+      <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="">
+  </picture>
+  
+  
+  
+  <script src="flutter_bootstrap.js" async=""></script>
+
+
+</body></html>
