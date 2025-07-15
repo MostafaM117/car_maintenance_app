@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="BACKGROUND_2" data-name="BACKGROUND 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 105 100">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#radial-gradient);
+      }
+    </style>
+    <radialGradient id="radial-gradient" cx="3.72" cy="-.64" fx="3.72" fy="-.64" r="137.36" gradientTransform="translate(0 -4.74) scale(1 1.12)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2e2e2e"/>
+      <stop offset=".09" stop-color="#313131"/>
+      <stop offset=".17" stop-color="#3d3d3d"/>
+      <stop offset=".25" stop-color="#515151"/>
+      <stop offset=".33" stop-color="#6d6c6c"/>
+      <stop offset=".41" stop-color="#919090"/>
+      <stop offset=".44" stop-color="#a4a2a2"/>
+      <stop offset=".59" stop-color="#a4a2a2"/>
+      <stop offset=".64" stop-color="#848383"/>
+      <stop offset=".7" stop-color="#656464"/>
+      <stop offset=".77" stop-color="#4d4c4c"/>
+      <stop offset=".84" stop-color="#3b3b3b"/>
+      <stop offset=".91" stop-color="#313131"/>
+      <stop offset="1" stop-color="#2e2e2e"/>
+    </radialGradient>
+  </defs>
+  <rect class="cls-1" x="-1.12" y="-9.91" width="107.24" height="119.83" rx="13.65" ry="13.65"/>
+</svg>
